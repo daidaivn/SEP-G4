@@ -89,180 +89,274 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //[HttpPost]
-        //public ActionResult<CreateEmployeeDTO> CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
-        //{
-        //    try
-        //    {
-        //        var newemp = _mapper.Map<CreateEmployeeDTO, Employee>(createEmployeeDTO);
-        //        _context.Employees.Add(newemp);
-        //        _context.SaveChanges();
-        //        return Ok("Create employee successfull");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
+        [HttpPost]
+        public ActionResult<CreateEmployeeDTO> CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
+        {
+            try
+            {
+                Employee newemp = new Employee();            
+                List<Role> roles = _context.Roles.ToList();
+                List<Department> departments = _context.Departments.ToList();
+                newemp.Image = createEmployeeDTO.Image;
+                newemp.FirstName = createEmployeeDTO.FirstName;
+                newemp.LastName = createEmployeeDTO.LastName;
+                newemp.Email = createEmployeeDTO.Email;
+                newemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
+                newemp.TaxId = createEmployeeDTO.TaxId;
+                newemp.Dob = DateTime.Parse(createEmployeeDTO.Dob);
+                newemp.Status = createEmployeeDTO.Status;
+                newemp.Address = createEmployeeDTO.Address;
+                newemp.Cic = createEmployeeDTO.Cic;
+                newemp.CountryId= createEmployeeDTO.CountryId;
+                if (createEmployeeDTO.Gender.Equals("Nam"))
+                {
+                    newemp.Gender = true;
+                }
+                else if (createEmployeeDTO.Gender.Equals("Nữ"))
+                {
+                    newemp.Gender = false;
+                }
 
-        //}
-        //[HttpPut("{eid}")]
-        //public IActionResult UpdateEmployee(int eid, [FromBody] CreateEmployeeDTO createEmployeeDTO)
-        //{
-        //    try
-        //    {
-        //        var currentemp = _context.Employees
-        //            .Include(x => x.Department)
-        //            .Include(x => x.Country)
-        //            .Where(x => x.EmployeeId == eid)
-        //            .FirstOrDefault();
-        //        if (currentemp == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        currentemp.Image = createEmployeeDTO.Image;
-        //        currentemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
-        //        currentemp.FirstName = createEmployeeDTO.FirstName;
-        //        currentemp.LastName = createEmployeeDTO.LastName;
-        //        currentemp.Address = createEmployeeDTO.Address;
-        //        currentemp.Cic = createEmployeeDTO.Cic;
-        //        currentemp.Dob = createEmployeeDTO.Dob;
-        //        currentemp.Gender = createEmployeeDTO.Gender;
-        //        currentemp.CountryId = createEmployeeDTO.CountryId;
-        //        currentemp.DepartmentId = createEmployeeDTO.DepartmentId;
-        //        currentemp.Status = createEmployeeDTO.Status;
-        //        //currentemp.RolesEmployees = createEmployeeDTO.RolesEmployees;
-        //        _context.Employees.Update(currentemp);
-        //        _context.SaveChanges();
-        //        return Ok("Update success");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-        //[HttpDelete]
-        //public IActionResult DeleteProduct(List<int> eid)
-        //{
-        //    var employee = _context.Employees
-        //        .Include(x => x.Country)
-        //        .ToList();
-        //    if (employee == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var useraccount = _context.UserAccounts
-        //        .ToList();
-        //    var rolesemployee = _context.RolesEmployees
-        //        .ToList();
-        //    try
-        //    {
-        //        foreach (var item in useraccount)
-        //        {
-        //            if (item.EmployeeId == employee.EmployeeId)
-        //            {
-        //                useraccount.Remove(item);
-        //                _context.SaveChanges();
-        //            }
-        //        }
-        //        foreach (var item in rolesemployee)
-        //        {
-        //            if (item.EmployeeId == employee.EmployeeId)
-        //            {
-        //                rolesemployee.Remove(item);
-        //                _context.SaveChanges();
-        //            }
-        //        }
-        //        _context.Employees.Remove(employee);
-        //        _context.SaveChanges();
-        //        return Ok("Delete product successfully");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-        //[HttpGet]
-        //public IActionResult SearchEmployee(string firstName, string lastName, string gender,
-        //    string address, string phone, string cic, DateTime? dob, string status, string departmentName, string countryName)
-        //{
-        //    try
-        //    {
-        //        List<EmployeeListDTO> searchlist = new List<EmployeeListDTO>();
-        //        var query = _context.Employees
-        //            .Include(x => x.Department)
-        //            .Include(x => x.Country)
-        //            .AsQueryable();
+                _context.Employees.Add(newemp);
+                _context.SaveChanges();
 
-        //        if (!string.IsNullOrEmpty(firstName))
-        //        {
-        //            query = query.Where(x => x.FirstName.ToLower().Contains(firstName.ToLower()));
-        //        }
-        //        if (!string.IsNullOrEmpty(lastName))
-        //        {
-        //            query = query.Where(x => x.LastName.ToLower().Contains(lastName.ToLower()));
-        //        }
-        //        if (!string.IsNullOrEmpty(address))
-        //        {
-        //            query = query.Where(x => x.Address.ToLower().Contains(address.ToLower()));
-        //        }
-        //        if (!string.IsNullOrEmpty(phone))
-        //        {
-        //            query = query.Where(x => x.PhoneNumber.ToLower().Contains(phone.ToLower()));
-        //        }
-        //        if (!string.IsNullOrEmpty(cic))
-        //        {
-        //            query = query.Where(x => x.Cic.ToLower().Contains(cic.ToLower()));
-        //        }
-        //        if (!string.IsNullOrEmpty(departmentName))
-        //        {
-        //            query = query.Where(x => x.Department.DepartmentName.ToLower().Contains(departmentName.ToLower()));
-        //        }
-        //        if (!string.IsNullOrEmpty(gender))
-        //        {
-        //            if (gender.Equals("Nam"))
-        //            {
-        //                query = query.Where(x => x.Gender == true);
-        //            }
-        //            else if (gender.Equals("Nữ"))
-        //            {
-        //                query = query.Where(x => x.Gender == false);
-        //            }
-        //        }
-        //        if (!string.IsNullOrEmpty(status))
-        //        {
-        //            if (gender.Equals("Kích hoạt"))
-        //            {
-        //                query = query.Where(x => x.Status == true);
-        //            }
-        //            else if (gender.Equals("Chưa kích hoạt"))
-        //            {
-        //                query = query.Where(x => x.Status == false);
-        //            }
-        //        }
-        //        if (!string.IsNullOrEmpty(countryName))
-        //        {
-        //            query = query.Where(x => x.Country.CountryName.ToLower().Contains(countryName.ToLower()));
-        //        }
+                foreach (var rname in createEmployeeDTO.Roles)
+                {
+                    foreach (var item in roles)
+                    {
+                        if (item.RoleName.ToLower().Equals(rname.ToLower()))
+                        {
+                            foreach (var dname in createEmployeeDTO.Department)
+                            {
+                                foreach (var department in departments)
+                                {
+                                    if (department.DepartmentName.ToLower().Equals(dname.ToLower()))
+                                    {
+                                        RolesEmployee newremp = new RolesEmployee
+                                        {
+                                            RoleId = item.RoleId,
+                                            EmployeeId = newemp.EmployeeId,
+                                            StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
+                                            EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
+                                            DepartmentId = department.DepartmentId 
+                                        };
+                                        _context.RolesEmployees.Add(newremp);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                
+                _context.SaveChanges();
+                return Ok("Create employee successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //        if (dob.HasValue)
-        //        {
-        //            query = query.Where(x => x.Dob == dob);
-        //        }
 
-        //        var employeesDTO = _mapper.Map<List<Employee>, List<EmployeeSearchDTO>>(query.ToList());
+        [HttpPut("{eid}")]
+        public IActionResult UpdateEmployee(int eid, [FromBody] CreateEmployeeDTO createEmployeeDTO)
+        {
+            try
+            {
+                Employee updateemp = _context.Employees
+                    .Include(x => x.Country)
+                    .Where(x => x.EmployeeId == eid)
+                    .FirstOrDefault();
+                    ;
+                if (updateemp == null)
+                {
+                    return NotFound();
+                }
+                List<Role> roles = _context.Roles.ToList();
+                List<Department> departments = _context.Departments.ToList();
+                updateemp.Image = createEmployeeDTO.Image;
+                updateemp.FirstName = createEmployeeDTO.FirstName;
+                updateemp.LastName = createEmployeeDTO.LastName;
+                updateemp.Email = createEmployeeDTO.Email;
+                updateemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
+                updateemp.TaxId = createEmployeeDTO.TaxId;
+                updateemp.Dob = DateTime.Parse(createEmployeeDTO.Dob);
+                updateemp.Status = createEmployeeDTO.Status;
+                updateemp.Address = createEmployeeDTO.Address;
+                updateemp.Cic = createEmployeeDTO.Cic;
+                updateemp.CountryId = createEmployeeDTO.CountryId;
+                if (createEmployeeDTO.Gender.Equals("Nam"))
+                {
+                    updateemp.Gender = true;
+                }
+                else if (createEmployeeDTO.Gender.Equals("Nữ"))
+                {
+                    updateemp.Gender = false;
+                }
+                _context.Employees.Update(updateemp);
+                _context.SaveChanges();
+                foreach (var rname in createEmployeeDTO.Roles)
+                {
+                    foreach (var item in roles)
+                    {
+                        if (item.RoleName.ToLower().Equals(rname.ToLower()))
+                        {
+                            foreach (var dname in createEmployeeDTO.Department)
+                            {
+                                foreach (var department in departments)
+                                {
+                                    if (department.DepartmentName.ToLower().Equals(dname.ToLower()))
+                                    {
+                                        RolesEmployee newremp = new RolesEmployee
+                                        {
+                                            RoleId = item.RoleId,
+                                            EmployeeId = updateemp.EmployeeId,
+                                            StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
+                                            EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
+                                            DepartmentId = department.DepartmentId
+                                        };
+                                        _context.RolesEmployees.Update(newremp);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                _context.SaveChanges();
+                return Ok("Update employee successfull");
 
-        //        if (employeesDTO.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete]
+        public IActionResult ChangeStatusEmployee(List<int> eids)
+        {
+            var employees = _context.Employees
+                .Include(x => x.Country)
+                .ToList();
+            if (employees == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                foreach (var item in employees)
+                {
+                    foreach (var id in eids)
+                    {
+                        if (item.EmployeeId == id)
+                        {
+                            if (item.Status == true)
+                            {
+                                item.Status = false;
+                            }
+                            else
+                            {
+                                item.Status = true;
+                            }
+                        }
+                    }
+                }
+                _context.SaveChanges();
+                return Ok("Change employee status successfully");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-        //        return Ok(employeesDTO);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+      
+        }
+        [HttpPost]
+        public IActionResult SearchEmployee([FromBody] EmployeeSearchDTO employeeSearchDTO)
+        {
+            try
+            {
+                List<EmployeeListDTO> searchlist = new List<EmployeeListDTO>();
+                var query = _context.Employees
+                    .Include(x => x.Country)
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(x => x.Role)
+                    .AsQueryable();
+
+                if (employeeSearchDTO.EmployeeId != 0)
+                {
+                    query = query.Where(x => x.EmployeeId == employeeSearchDTO.EmployeeId);
+                }
+                if (employeeSearchDTO.TaxId != 0)
+                {
+                    query = query.Where(x => x.TaxId == employeeSearchDTO.TaxId);
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Country))
+                {
+                    query = query.Where(x => x.Country.CountryName.ToLower().Contains(employeeSearchDTO.Country.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.FirstName))
+                {
+                    query = query.Where(x => x.FirstName.ToLower().Contains(employeeSearchDTO.FirstName.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.LastName))
+                {
+                    query = query.Where(x => x.LastName.ToLower().Contains(employeeSearchDTO.LastName.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Address))
+                {
+                    query = query.Where(x => x.Address.ToLower().Contains(employeeSearchDTO.Address.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.PhoneNumber))
+                {
+                    query = query.Where(x => x.PhoneNumber.ToLower().Contains(employeeSearchDTO.PhoneNumber.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Cic))
+                {
+                    query = query.Where(x => x.Cic.ToLower().Contains(employeeSearchDTO.Cic.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Email))
+                {
+                    query = query.Where(x => x.Email.ToLower().Contains(employeeSearchDTO.Email.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Dob))
+                {
+                    DateTime date = DateTime.Parse(employeeSearchDTO.Dob);
+                    query = query.Where(x => x.Dob == date);
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Gender))
+                {
+                    if (employeeSearchDTO.Gender.Equals("Nam"))
+                    {
+                        query = query.Where(x => x.Gender == true);
+                    }
+                    else if (employeeSearchDTO.Gender.Equals("Nữ"))
+                    {
+                        query = query.Where(x => x.Gender == false);
+                    }
+                }
+                if (employeeSearchDTO.Status == true)
+                {
+                    query = query.Where(x => x.Status == true);
+                }
+                else if (employeeSearchDTO.Status == false)
+                {
+                    query = query.Where(x => x.Status == false);
+                }
+                var employeesDTO = _mapper.Map<List<Employee>, List<EmployeeSearchDTO>>(query.ToList());
+
+                if (employeesDTO.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(employeesDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }
