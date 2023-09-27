@@ -23,17 +23,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var employeelist = from emp in _context.Employees
-                                   join roleemp in _context.RolesEmployees on emp.EmployeeId equals roleemp.EmployeeId
-                                   select new
-                                   {
-                                       EmployeeID = emp.EmployeeId,
-                                       Image = emp.Image,
-                                       FullName = emp.FirstName + " " + emp.LastName ,
-                                       Gender = (bool)emp.Gender ? "Nam": "Nữ",
-                                       PhoneNumber = emp.PhoneNumber,
-                                       Roles = roleemp.Role.RoleName,
-                                   };
+                var employeelist = _context.Employees
+                    .Include(x => x.Country)
+                    .Include(emp => emp.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .Select(emp => new EmployeeListDTO
+                    {
+                        EmployeeID = emp.EmployeeId,
+                        Image = emp.Image,
+                        FullName = $"{emp.FirstName} {emp.LastName}",
+                        Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+                        PhoneNumber = emp.PhoneNumber,
+                        Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                        Status = emp.Status,
+                    });
                 return Ok(employeelist);
             }
             catch (Exception ex)
@@ -43,55 +46,67 @@ namespace CarpentryWorkshopAPI.Controllers
            
         }
         [HttpGet("{eid}")]
-        //public IActionResult GetEmployeeDetail(int eid)
-        //{
-        //    try
-        //    {
-        //        var employeelist = from emp in _context.Employees
-        //                           join roleemp in _context.RolesEmployees on emp.EmployeeId equals roleemp.EmployeeId
-        //                           join country in _context.Countries on emp.CountryId equals country.CountryId
-        //                           join department in _context.Departments on emp.DepartmentId equals department.DepartmentId
-        //                           select new
-        //                           {
-        //                               EmployeeID = emp.EmployeeId,
-        //                               Image = emp.Image,
-        //                               FirstName = emp.FirstName ,
-        //                               LastName = emp.LastName,
-        //                               DOB = emp.Dob,
-        //                               Address = emp.Address,
-        //                               CIC = emp.Cic,
-        //                               Country= emp.Country!.CountryName,
-        //                               Department = emp.Department!.DepartmentName,
-        //                               Gender = (bool)emp.Gender ? "Nam" : "Nữ",
-        //                               PhoneNumber = emp.PhoneNumber,
-        //                               Roles = roleemp.Role!.RoleName,
-        //                               Status = (bool)emp.Status ? "Kích hoạt" : "Chưa kích hoạt",
-        //                           };
-        //        return Ok(employeelist);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-        [HttpPost]
-        public ActionResult<CreateEmployeeDTO> CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
+        public IActionResult GetEmployeeDetail(int eid)
         {
             try
             {
-                var newemp = _mapper.Map<CreateEmployeeDTO, Employee>(createEmployeeDTO);
-                _context.Employees.Add(newemp);
-                _context.SaveChanges();
-                return Ok("Create employee successfull");
+                var employeeDetail = _context.Employees
+                    .Where(emp => emp.EmployeeId == eid)
+                    .Include(emp => emp.RolesEmployees)
+                        .ThenInclude(roleemp => roleemp.Role)
+                        .ThenInclude(role => role.RolesEmployees)
+                    .Include(emp => emp.RolesEmployees)
+                        .ThenInclude(roleemp => roleemp.Department)
+                    .Select(emp => new EmployeeDetailDTO
+                    {
+                        EmployeeId = emp.EmployeeId,
+                        Image = emp.Image,
+                        FirstName = emp.FirstName,
+                        LastName = emp.LastName,
+                        Dob = emp.Dob,
+                        Address = emp.Address,
+                        Cic = emp.Cic,
+                        Country = emp.Country.CountryName,
+                        Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+                        PhoneNumber = emp.PhoneNumber,
+                        TaxId = emp.TaxId,
+                        Email= emp.Email,
+                        Status = emp.Status,
+                        Roles = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Role.RoleName),
+                        Departments = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Department.DepartmentName)
+                    })
+                    .FirstOrDefault();
+
+                if (employeeDetail == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(employeeDetail);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
+        //[HttpPost]
+        //public ActionResult<CreateEmployeeDTO> CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
+        //{
+        //    try
+        //    {
+        //        var newemp = _mapper.Map<CreateEmployeeDTO, Employee>(createEmployeeDTO);
+        //        _context.Employees.Add(newemp);
+        //        _context.SaveChanges();
+        //        return Ok("Create employee successfull");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+
+        //}
         //[HttpPut("{eid}")]
-        //public IActionResult UpdateEmployee(int eid, [FromBody] CreateEmployeeDTO createEmployeeDTO )
+        //public IActionResult UpdateEmployee(int eid, [FromBody] CreateEmployeeDTO createEmployeeDTO)
         //{
         //    try
         //    {
@@ -99,38 +114,38 @@ namespace CarpentryWorkshopAPI.Controllers
         //            .Include(x => x.Department)
         //            .Include(x => x.Country)
         //            .Where(x => x.EmployeeId == eid)
-        //            .FirstOrDefault(); 
+        //            .FirstOrDefault();
         //        if (currentemp == null)
         //        {
         //            return NotFound();
         //        }
         //        currentemp.Image = createEmployeeDTO.Image;
         //        currentemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
-        //        currentemp.FirstName= createEmployeeDTO.FirstName;
-        //        currentemp.LastName= createEmployeeDTO.LastName;
+        //        currentemp.FirstName = createEmployeeDTO.FirstName;
+        //        currentemp.LastName = createEmployeeDTO.LastName;
         //        currentemp.Address = createEmployeeDTO.Address;
         //        currentemp.Cic = createEmployeeDTO.Cic;
-        //        currentemp.Dob= createEmployeeDTO.Dob;
-        //        currentemp.Gender= createEmployeeDTO.Gender;
-        //        currentemp.CountryId= createEmployeeDTO.CountryId;
-        //        currentemp.DepartmentId= createEmployeeDTO.DepartmentId;
+        //        currentemp.Dob = createEmployeeDTO.Dob;
+        //        currentemp.Gender = createEmployeeDTO.Gender;
+        //        currentemp.CountryId = createEmployeeDTO.CountryId;
+        //        currentemp.DepartmentId = createEmployeeDTO.DepartmentId;
         //        currentemp.Status = createEmployeeDTO.Status;
         //        //currentemp.RolesEmployees = createEmployeeDTO.RolesEmployees;
         //        _context.Employees.Update(currentemp);
         //        _context.SaveChanges();
         //        return Ok("Update success");
-        //    }catch(Exception ex)
+        //    }
+        //    catch (Exception ex)
         //    {
         //        return BadRequest(ex.Message);
         //    }
         //}
-        //[HttpDelete("eid")]
-        //public IActionResult DeleteProduct(int eid)
+        //[HttpDelete]
+        //public IActionResult DeleteProduct(List<int> eid)
         //{
         //    var employee = _context.Employees
-        //        .Include(x => x.Department)
         //        .Include(x => x.Country)
-        //        .FirstOrDefault(x => x.EmployeeId == eid);
+        //        .ToList();
         //    if (employee == null)
         //    {
         //        return NotFound();
@@ -168,7 +183,7 @@ namespace CarpentryWorkshopAPI.Controllers
         //}
         //[HttpGet]
         //public IActionResult SearchEmployee(string firstName, string lastName, string gender,
-        //    string address, string phone, string cic, DateTime? dob , string status, string departmentName, string countryName)
+        //    string address, string phone, string cic, DateTime? dob, string status, string departmentName, string countryName)
         //{
         //    try
         //    {
@@ -176,8 +191,8 @@ namespace CarpentryWorkshopAPI.Controllers
         //        var query = _context.Employees
         //            .Include(x => x.Department)
         //            .Include(x => x.Country)
-        //            .AsQueryable(); 
-                
+        //            .AsQueryable();
+
         //        if (!string.IsNullOrEmpty(firstName))
         //        {
         //            query = query.Where(x => x.FirstName.ToLower().Contains(firstName.ToLower()));
@@ -204,14 +219,14 @@ namespace CarpentryWorkshopAPI.Controllers
         //        }
         //        if (!string.IsNullOrEmpty(gender))
         //        {
-        //            if (gender.Equals("Nam")) 
+        //            if (gender.Equals("Nam"))
         //            {
         //                query = query.Where(x => x.Gender == true);
         //            }
-        //            else if(gender.Equals("Nữ"))
+        //            else if (gender.Equals("Nữ"))
         //            {
         //                query = query.Where(x => x.Gender == false);
-        //            } 
+        //            }
         //        }
         //        if (!string.IsNullOrEmpty(status))
         //        {
