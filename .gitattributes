@@ -1,0 +1,30 @@
+# Set the default behavior for all files
+* text=auto
+
+# Set the default behavior for specific file types
+*.css text
+*.html text
+*.js text
+*.json text
+*.md text
+*.xml text
+
+# Set the behavior for binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.ico binary
+
+# Ignore end-of-line (EOL) changes for specific files
+*.sln eol=lf
+*.csproj eol=lf
+*.fsproj eol=lf
+*.suo eol=lf
+*.user eol=lf
+*.vcxproj eol=lf
+*.vbproj eol=lf

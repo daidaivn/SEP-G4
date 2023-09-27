@@ -1,0 +1,89 @@
+Create database [SEP-G4-CCMS]
+go 
+use [SEP-G4-CCMS]
+CREATE TABLE Countries (
+    CountryID int PRIMARY KEY IDENTITY(1,1),
+	CountryCode nvarchar(20) ,
+    CountryName nvarchar(50)
+);
+
+-- Tạo bảng Departments để sử dụng làm khóa ngoại cho trường DepartmentID
+CREATE TABLE Departments (
+    DepartmentID int PRIMARY KEY IDENTITY(1,1),
+    DepartmentName nvarchar(20),
+    [Status] bit
+);
+
+-- Tạo bảng Employees
+CREATE TABLE Employees (
+    EmployeeID int PRIMARY KEY IDENTITY(1,1),
+    Image nvarchar(max),
+    FirstName nvarchar(20),
+    LastName nvarchar(20),
+    DOB datetime,
+    Gender bit,
+    [Address] nvarchar(max),
+    PhoneNumber nvarchar(20),
+    CIC nvarchar(20),
+    CountryID int,
+    DepartmentID int,
+    FOREIGN KEY (CountryID) REFERENCES Countries(CountryID),
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID),
+    [Status] bit
+);
+CREATE TABLE DepartmentsStatusHistory (
+    HistoryID int PRIMARY KEY IDENTITY(1,1),
+    DepartmentID int,
+    [Action] nvarchar(max),
+    ActionDate datetime,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
+-- Tạo bảng EmployeesStatusHistory
+CREATE TABLE EmployeeStatusHistory (
+    HistoryID int PRIMARY KEY IDENTITY(1,1),
+    EmployeeID int,
+    [Action] nvarchar(max),
+    ActionDate datetime,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+-- Tạo bảng Roles
+CREATE TABLE Roles (
+    RoleID int PRIMARY KEY IDENTITY(1,1),
+    RoleName nvarchar(20),
+    [Status] bit
+);
+-- Tạo bảng UserAccounts
+CREATE TABLE UserAccounts (
+    AccountID int PRIMARY KEY IDENTITY(1,1),
+    UserName nvarchar(max),
+    [Password] nvarchar(max),
+	EmployeeID int,
+	FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
+    [Status] bit
+);
+-- Tạo bảng JobHistory
+CREATE TABLE RolesEmployees (
+    RoleEmployeeID int PRIMARY KEY IDENTITY(1,1),
+    EmployeeID int,
+    RoleID int,
+    StartDate datetime,
+    EndDate datetime,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+);
+-- Tạo bảng RolesStatusHistory
+CREATE TABLE RolesStatusHistory (
+    HistoryID int PRIMARY KEY IDENTITY(1,1),
+    RoleID int,
+    Action nvarchar(max),
+    ActionDate datetime,
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+);
+-- Tạo bảng UserAccountStatusHistory
+CREATE TABLE UserAccountStatusHistory (
+    HistoryID int PRIMARY KEY IDENTITY(1,1),
+    AccountID int,
+    Action nvarchar(max),
+    ActionDate datetime,
+    FOREIGN KEY (AccountID) REFERENCES UserAccounts(AccountID)
+);

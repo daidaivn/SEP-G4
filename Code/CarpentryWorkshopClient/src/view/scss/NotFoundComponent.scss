@@ -1,0 +1,22 @@
+.body-not-found img,
+.title-not-found {
+  margin: 0 auto;
+}
+.title-not-found {
+  margin: 40px auto;
+  text-align: center;
+  font-size: 20px;
+  max-width: 400px;
+  color: black;
+  border: 1px solid black;
+  padding: 0 40px;
+  border-radius: 5px;
+}
+.title-not-found:hover {
+  background-color: blueviolet;
+  color: white;
+}
+.container-not-found {
+  text-align: center;
+  padding-bottom: 20px;
+}
