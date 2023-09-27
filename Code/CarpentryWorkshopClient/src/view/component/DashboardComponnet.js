@@ -1,7 +1,11 @@
+import "../scss/reset.scss";
+import "../scss/responsive.scss";
+import "../scss/DashboardComponnet.scss";
+import MenuComponent from "./MenuComponent";
 const DashboardComponnet = () => {
   return (
     <div>
-      <h1 style={{ textAlign: "center", margin: "20%" }}>Home Management</h1>
+      <MenuComponent />
     </div>
   );
 };
