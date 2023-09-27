@@ -1,89 +1,153 @@
-Create database [SEP-G4-CCMS]
-go 
+Create Database [SEP-G4-CCMS]
+go
 use [SEP-G4-CCMS]
-CREATE TABLE Countries (
-    CountryID int PRIMARY KEY IDENTITY(1,1),
-	CountryCode nvarchar(20) ,
-    CountryName nvarchar(50)
+go
+-- Tạo bảng Departments
+CREATE TABLE Departments (
+  DepartmentID int IDENTITY(1,1) PRIMARY KEY,
+  DepartmentName nvarchar(20),
+  Status bit
 );
 
--- Tạo bảng Departments để sử dụng làm khóa ngoại cho trường DepartmentID
-CREATE TABLE Departments (
-    DepartmentID int PRIMARY KEY IDENTITY(1,1),
-    DepartmentName nvarchar(20),
-    [Status] bit
+-- Tạo bảng Countries
+CREATE TABLE Countries (
+  CountryID int IDENTITY(1,1) PRIMARY KEY,
+  CountryCode nvarchar(20),
+  CountryName nvarchar(20)
 );
 
 -- Tạo bảng Employees
 CREATE TABLE Employees (
-    EmployeeID int PRIMARY KEY IDENTITY(1,1),
-    Image nvarchar(max),
-    FirstName nvarchar(20),
-    LastName nvarchar(20),
-    DOB datetime,
-    Gender bit,
-    [Address] nvarchar(max),
-    PhoneNumber nvarchar(20),
-    CIC nvarchar(20),
-    CountryID int,
-    DepartmentID int,
-    FOREIGN KEY (CountryID) REFERENCES Countries(CountryID),
-    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID),
-    [Status] bit
+  EmployeeID int IDENTITY(1,1) PRIMARY KEY,
+  Image nvarchar(max),
+  FirstName nvarchar(20),
+  LastName nvarchar(20),
+  DOB datetime,
+  Gender bit,
+  Address nvarchar(max),
+  PhoneNumber varchar(20),
+  TaxID int,
+  Email varchar(max),
+  CountryID int FOREIGN KEY REFERENCES Countries(CountryID),
+  Status bit,
+  CIC nvarchar(20)
 );
-CREATE TABLE DepartmentsStatusHistory (
-    HistoryID int PRIMARY KEY IDENTITY(1,1),
-    DepartmentID int,
-    [Action] nvarchar(max),
-    ActionDate datetime,
-    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
-);
--- Tạo bảng EmployeesStatusHistory
-CREATE TABLE EmployeeStatusHistory (
-    HistoryID int PRIMARY KEY IDENTITY(1,1),
-    EmployeeID int,
-    [Action] nvarchar(max),
-    ActionDate datetime,
-    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
-);
--- Tạo bảng Roles
+
+
+-- Tạo bảng Roles  
 CREATE TABLE Roles (
-    RoleID int PRIMARY KEY IDENTITY(1,1),
-    RoleName nvarchar(20),
-    [Status] bit
+  RoleID int IDENTITY(1,1) PRIMARY KEY,
+  RoleName nvarchar(20),
+  Status bit
 );
+
 -- Tạo bảng UserAccounts
 CREATE TABLE UserAccounts (
-    AccountID int PRIMARY KEY IDENTITY(1,1),
-    UserName nvarchar(max),
-    [Password] nvarchar(max),
-	EmployeeID int,
-	FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
-    [Status] bit
+  EmployeeID int PRIMARY KEY, 
+  UserName nvarchar(max),
+  Password nvarchar(max),
+  Status bit
+  FOREIGN KEY (EmployeeID ) REFERENCES Employees(EmployeeID), 
 );
--- Tạo bảng JobHistory
-CREATE TABLE RolesEmployees (
-    RoleEmployeeID int PRIMARY KEY IDENTITY(1,1),
-    EmployeeID int,
-    RoleID int,
-    StartDate datetime,
-    EndDate datetime,
-    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
-    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+
+
+
+  
+
+-- Tạo bảng UserAccountsStatusHistory
+CREATE TABLE UserAccountsStatusHistory (
+  HistoryID int IDENTITY(1,1) PRIMARY KEY,
+  EmployeeID int FOREIGN KEY REFERENCES UserAccounts(EmployeeID),
+  Action nvarchar(max),
+  ActionDate datetime
 );
+
+
+-- Tạo bảng Degrees
+CREATE TABLE Degrees (
+  DegreeID int IDENTITY(1,1) PRIMARY KEY,
+  DegreeName nvarchar(50),
+  School nvarchar(150),
+  Major nvarchar(150)
+);
+
+-- Tạo bảng Dependents
+CREATE TABLE Dependents (
+  DependentID int IDENTITY(1,1) PRIMARY KEY,
+  EmployeeID int FOREIGN KEY REFERENCES Employees(EmployeeID),
+  FullName nvarchar(20),
+  IdentifierCode nvarchar(50),
+  Gender bit,
+  Relationship nvarchar(50),
+  DOB date,
+  StartDate date,
+  EndDate date,
+  IdentifierName nvarchar(50)
+);
+
+-- Tạo bảng Contracts
+CREATE TABLE Contracts (
+  ContractID int IDENTITY(1,1) PRIMARY KEY,
+  EmployeeID int FOREIGN KEY REFERENCES Employees(EmployeeID),
+  StartDate date,
+  EndDate date, 
+  LinkDoc nvarchar(max)
+);
+
+-- Tạo bảng DependentsStatusHistory
+CREATE TABLE DependentsStatusHistory (
+  HistoryID int IDENTITY(1,1) PRIMARY KEY,
+  DependentID int FOREIGN KEY REFERENCES Dependents(DependentID),
+  Action nvarchar(max),
+  ActionDate datetime
+);
+
+-- Tạo bảng ContractsStatusHistory
+CREATE TABLE ContractsStatusHistory (
+  HistoryID int IDENTITY(1,1) PRIMARY KEY,
+  ContractID int FOREIGN KEY REFERENCES Contracts(ContractID),
+  Action nvarchar(max),
+  ActionDate datetime  
+);
+
+-- Tạo bảng EmployeeDegrees
+  CREATE TABLE EmployeeDegrees (
+  DegreeID int FOREIGN KEY REFERENCES Degrees(DegreeID),
+  EmployeeID int FOREIGN KEY REFERENCES Employees(EmployeeID),
+  GraduationDate date
+);
+-- Tạo bảng EmployeesStatusHistory
+CREATE TABLE EmployeesStatusHistory(
+  HistoryID int IDENTITY(1,1) PRIMARY KEY,
+  EmployeeID int FOREIGN KEY REFERENCES Employees(EmployeeID),
+  Action nvarchar(max),
+  ActionDate datetime
+);
+
+-- Tạo bảng DepartmentsStatusHistory
+CREATE TABLE DepartmentsStatusHistory(
+  HistoryID int IDENTITY(1,1) PRIMARY KEY,
+  DepartmentID int FOREIGN KEY REFERENCES Departments(DepartmentID),
+  Action nvarchar(max),
+  ActionDate datetime
+);
+
 -- Tạo bảng RolesStatusHistory
-CREATE TABLE RolesStatusHistory (
-    HistoryID int PRIMARY KEY IDENTITY(1,1),
-    RoleID int,
-    Action nvarchar(max),
-    ActionDate datetime,
-    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+CREATE TABLE RolesStatusHistory(
+  HistoryID int IDENTITY(1,1) PRIMARY KEY,
+  RoleID int FOREIGN KEY REFERENCES Roles(RoleID),
+  Action nvarchar(max),
+  ActionDate datetime
 );
--- Tạo bảng UserAccountStatusHistory
-CREATE TABLE UserAccountStatusHistory (
-    HistoryID int PRIMARY KEY IDENTITY(1,1),
-    AccountID int,
-    Action nvarchar(max),
-    ActionDate datetime,
-    FOREIGN KEY (AccountID) REFERENCES UserAccounts(AccountID)
+CREATE TABLE RolesEmployees (
+    RoleEmployeeID INT PRIMARY KEY IDENTITY(1,1) ,
+    EmployeeID INT,
+    RoleID INT,
+    DepartmentID INT,
+    StartDate DATETIME,
+    EndDate DATETIME,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID), 
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),     
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID) 
 );
+

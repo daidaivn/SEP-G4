@@ -8,7 +8,7 @@ namespace CarpentryWorkshopAPI.Models
         public Department()
         {
             DepartmentsStatusHistories = new HashSet<DepartmentsStatusHistory>();
-            Employees = new HashSet<Employee>();
+            RolesEmployees = new HashSet<RolesEmployee>();
         }
 
         public int DepartmentId { get; set; }
@@ -16,6 +16,6 @@ namespace CarpentryWorkshopAPI.Models
         public bool? Status { get; set; }
 
         public virtual ICollection<DepartmentsStatusHistory> DepartmentsStatusHistories { get; set; }
-        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
     }
 }
