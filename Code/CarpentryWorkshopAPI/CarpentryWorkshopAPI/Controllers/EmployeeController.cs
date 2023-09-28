@@ -94,61 +94,31 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                Employee newemp = new Employee();            
+                           
                 List<Role> roles = _context.Roles.ToList();
                 List<Department> departments = _context.Departments.ToList();
-                newemp.Image = createEmployeeDTO.Image;
-                newemp.FirstName = createEmployeeDTO.FirstName;
-                newemp.LastName = createEmployeeDTO.LastName;
-                newemp.Email = createEmployeeDTO.Email;
-                newemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
-                newemp.TaxId = createEmployeeDTO.TaxId;
-                newemp.Dob = DateTime.Parse(createEmployeeDTO.Dob);
-                newemp.Status = createEmployeeDTO.Status;
-                newemp.Address = createEmployeeDTO.Address;
-                newemp.Cic = createEmployeeDTO.Cic;
-                newemp.CountryId= createEmployeeDTO.CountryId;
-                if (createEmployeeDTO.Gender.Equals("Nam"))
-                {
-                    newemp.Gender = true;
-                }
-                else if (createEmployeeDTO.Gender.Equals("Nữ"))
-                {
-                    newemp.Gender = false;
-                }
+                var newemp = _mapper.Map<Employee>(createEmployeeDTO);
 
                 _context.Employees.Add(newemp);
                 _context.SaveChanges();
 
-                foreach (var rname in createEmployeeDTO.Roles)
+              
+
+                foreach (var rd in createEmployeeDTO.rDs)
                 {
-                    foreach (var item in roles)
+                    RolesEmployee newremp = new RolesEmployee
                     {
-                        if (item.RoleName.ToLower().Equals(rname.ToLower()))
-                        {
-                            foreach (var dname in createEmployeeDTO.Department)
-                            {
-                                foreach (var department in departments)
-                                {
-                                    if (department.DepartmentName.ToLower().Equals(dname.ToLower()))
-                                    {
-                                        RolesEmployee newremp = new RolesEmployee
-                                        {
-                                            RoleId = item.RoleId,
-                                            EmployeeId = newemp.EmployeeId,
-                                            StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
-                                            EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
-                                            DepartmentId = department.DepartmentId 
-                                        };
-                                        _context.RolesEmployees.Add(newremp);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                        RoleId = rd.RoleID,
+                        EmployeeId = newemp.EmployeeId,
+                        StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
+                        EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
+                        DepartmentId = rd.DepartmentID,
+                    };
+                    _context.RolesEmployees.Add(newremp);
+
                 }
-                
-                
+
+
                 _context.SaveChanges();
                 return Ok("Create employee successful");
             }
@@ -159,69 +129,33 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
 
-        [HttpPut("{eid}")]
-        public IActionResult UpdateEmployee(int eid, [FromBody] CreateEmployeeDTO createEmployeeDTO)
+        [HttpPut]
+        public IActionResult UpdateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
             {
-                Employee updateemp = _context.Employees
-                    .Include(x => x.Country)
-                    .Where(x => x.EmployeeId == eid)
-                    .FirstOrDefault();
-                    ;
-                if (updateemp == null)
+                if (createEmployeeDTO == null)
                 {
                     return NotFound();
                 }
                 List<Role> roles = _context.Roles.ToList();
                 List<Department> departments = _context.Departments.ToList();
-                updateemp.Image = createEmployeeDTO.Image;
-                updateemp.FirstName = createEmployeeDTO.FirstName;
-                updateemp.LastName = createEmployeeDTO.LastName;
-                updateemp.Email = createEmployeeDTO.Email;
-                updateemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
-                updateemp.TaxId = createEmployeeDTO.TaxId;
-                updateemp.Dob = DateTime.Parse(createEmployeeDTO.Dob);
-                updateemp.Status = createEmployeeDTO.Status;
-                updateemp.Address = createEmployeeDTO.Address;
-                updateemp.Cic = createEmployeeDTO.Cic;
-                updateemp.CountryId = createEmployeeDTO.CountryId;
-                if (createEmployeeDTO.Gender.Equals("Nam"))
-                {
-                    updateemp.Gender = true;
-                }
-                else if (createEmployeeDTO.Gender.Equals("Nữ"))
-                {
-                    updateemp.Gender = false;
-                }
+
+                var updateemp = _mapper.Map<Employee>(createEmployeeDTO);
                 _context.Employees.Update(updateemp);
-                _context.SaveChanges();
-                foreach (var rname in createEmployeeDTO.Roles)
+               
+                foreach (var rd in createEmployeeDTO.rDs)
                 {
-                    foreach (var item in roles)
+                    RolesEmployee newremp = new RolesEmployee
                     {
-                        if (item.RoleName.ToLower().Equals(rname.ToLower()))
-                        {
-                            foreach (var dname in createEmployeeDTO.Department)
-                            {
-                                foreach (var department in departments)
-                                {
-                                    if (department.DepartmentName.ToLower().Equals(dname.ToLower()))
-                                    {
-                                        RolesEmployee newremp = new RolesEmployee
-                                        {
-                                            RoleId = item.RoleId,
-                                            EmployeeId = updateemp.EmployeeId,
-                                            StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
-                                            EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
-                                            DepartmentId = department.DepartmentId
-                                        };
-                                        _context.RolesEmployees.Update(newremp);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                        RoleId = rd.RoleID,
+                        EmployeeId = createEmployeeDTO.EmployeeId,
+                        StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
+                        EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
+                        DepartmentId = rd.DepartmentID,
+                    };
+                    _context.RolesEmployees.Add(newremp);
+                    
                 }
                 _context.SaveChanges();
                 return Ok("Update employee successfull");
@@ -233,33 +167,24 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpDelete]
-        public IActionResult ChangeStatusEmployee(List<int> eids)
+        public IActionResult ChangeStatusEmployee( int eid)
         {
             var employees = _context.Employees
                 .Include(x => x.Country)
-                .ToList();
+                .Where(x => x.EmployeeId == eid).FirstOrDefault();
             if (employees == null)
             {
                 return NotFound();
             }
             try
             {
-                foreach (var item in employees)
+                if (employees.Status == true)
                 {
-                    foreach (var id in eids)
-                    {
-                        if (item.EmployeeId == id)
-                        {
-                            if (item.Status == true)
-                            {
-                                item.Status = false;
-                            }
-                            else
-                            {
-                                item.Status = true;
-                            }
-                        }
-                    }
+                    employees.Status = false;
+                }
+                else
+                {
+                    employees.Status = true;
                 }
                 _context.SaveChanges();
                 return Ok("Change employee status successfully");
@@ -276,7 +201,6 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                List<EmployeeListDTO> searchlist = new List<EmployeeListDTO>();
                 var query = _context.Employees
                     .Include(x => x.Country)
                     .Include(x => x.RolesEmployees)
@@ -341,7 +265,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else if (employeeSearchDTO.Status == false)
                 {
-                    query = query.Where(x => x.Status == false);
+                    query = query.Where(x => x.Status == false); 
                 }
                 var employeesDTO = _mapper.Map<List<Employee>, List<EmployeeSearchDTO>>(query.ToList());
 
