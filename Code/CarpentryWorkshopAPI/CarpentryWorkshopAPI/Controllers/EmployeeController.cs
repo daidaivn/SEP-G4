@@ -265,7 +265,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else if (employeeSearchDTO.Status == false)
                 {
-                    query = query.Where(x => x.Status == false);
+                    query = query.Where(x => x.Status == false); 
                 }
                 var employeesDTO = _mapper.Map<List<Employee>, List<EmployeeSearchDTO>>(query.ToList());
 
