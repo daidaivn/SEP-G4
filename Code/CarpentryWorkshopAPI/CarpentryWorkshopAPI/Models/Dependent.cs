@@ -20,6 +20,8 @@ namespace CarpentryWorkshopAPI.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string? IdentifierName { get; set; }
+        public bool? Status { get; set; }
+        public string? NoteReason { get; set; }
 
         public virtual Employee? Employee { get; set; }
         public virtual ICollection<DependentsStatusHistory> DependentsStatusHistories { get; set; }
