@@ -17,8 +17,8 @@ namespace CarpentryWorkshopAPI.DTO
         public int? CountryId { get; set; } 
         public bool? Status { get; set; }
         public string? Cic { get; set; }
-        public string? StartDate { get; set; }
-        public string? EndDate { get; set; }
+        public  DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public List<RD> rDs { get; set; }
 
         public class RD

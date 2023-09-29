@@ -110,8 +110,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         RoleId = rd.RoleID,
                         EmployeeId = newemp.EmployeeId,
-                        StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
-                        EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
+                        StartDate = createEmployeeDTO.StartDate,
                         DepartmentId = rd.DepartmentID,
                     };
                     _context.RolesEmployees.Add(newremp);
@@ -143,19 +142,18 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 var updateemp = _mapper.Map<Employee>(createEmployeeDTO);
                 _context.Employees.Update(updateemp);
-               
+
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
                     RolesEmployee newremp = new RolesEmployee
                     {
                         RoleId = rd.RoleID,
                         EmployeeId = createEmployeeDTO.EmployeeId,
-                        StartDate = DateTime.Parse(createEmployeeDTO.StartDate),
-                        EndDate = DateTime.Parse(createEmployeeDTO.EndDate),
+                        StartDate = createEmployeeDTO.StartDate,
                         DepartmentId = rd.DepartmentID,
                     };
                     _context.RolesEmployees.Add(newremp);
-                    
+
                 }
                 _context.SaveChanges();
                 return Ok("Update employee successfull");

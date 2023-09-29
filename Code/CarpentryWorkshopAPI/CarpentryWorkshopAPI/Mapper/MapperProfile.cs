@@ -17,6 +17,8 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             CreateMap<Department, DepartmentDTO>()
                .ReverseMap();
+            CreateMap<RolesStatusHistory, RoleStatusHistoryDTO>()
+                .ReverseMap();
         }
     }
 }
