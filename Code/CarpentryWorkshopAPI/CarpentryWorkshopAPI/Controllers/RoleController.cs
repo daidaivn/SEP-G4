@@ -22,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var rolelist = _context.Roles.ToArray();
+                var rolelist = _context.Roles.ToList();
                 if (rolelist == null)
                 {
                     return NotFound();
@@ -54,7 +54,7 @@ namespace CarpentryWorkshopAPI.Controllers
         { 
             try
             {
-                var newrole = _mapper.Map<RoleDTO,Role>(roleDTO);
+                var newrole = _mapper.Map<Role>(roleDTO);
                 if (newrole == null)
                 {
                     return NotFound();
@@ -68,17 +68,16 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPut]
-        public IActionResult UpdateRole(int rid, [FromBody] RoleDTO roleDTO)
+        public IActionResult UpdateRole([FromBody] RoleDTO roleDTO)
         {
             try
             {
-                var updaterole = _context.Roles.FirstOrDefault(x => x.RoleId== rid);
+                var updaterole = _mapper.Map<Role>(roleDTO);
                 if (updaterole == null)
                 {
                     return NotFound();
                 }
-                updaterole.RoleName = roleDTO.RoleName;
-                updaterole.Status = roleDTO.Status;
+               
                 _context.Roles.Update(updaterole);
                 _context.SaveChanges();
                 return Ok("Update role successful");
@@ -89,7 +88,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpDelete]
-        public IActionResult ChangeStatusRole(List<int> ridList) 
+        public IActionResult ChangeStatusRole(int rid) 
         {
             try
             {
@@ -100,8 +99,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 foreach (var item in changeroles)
                 {
-                    foreach (var rid in ridList)
-                    {
+               
                         if (item.RoleId == rid)
                         {
                             if (item.Status == true)
@@ -113,7 +111,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                 item.Status = true;
                             }
                         }
-                    }
+                    
                 }
                 _context.SaveChanges();
                 return Ok("Change roles status succesful");

@@ -142,19 +142,19 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 var updateemp = _mapper.Map<Employee>(createEmployeeDTO);
                 _context.Employees.Update(updateemp);
-               
+
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
                     RolesEmployee newremp = new RolesEmployee
                     {
                         RoleId = rd.RoleID,
                         EmployeeId = createEmployeeDTO.EmployeeId,
-                        StartDate = DateTime.Now,
+                        StartDate = createEmployeeDTO.StartDate,
                         EndDate = createEmployeeDTO.EndDate.Value.Date,
                         DepartmentId = rd.DepartmentID,
                     };
                     _context.RolesEmployees.Add(newremp);
-                    
+
                 }
                 _context.SaveChanges();
                 return Ok("Update employee successfull");
