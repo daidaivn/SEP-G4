@@ -110,7 +110,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         RoleId = rd.RoleID,
                         EmployeeId = newemp.EmployeeId,
-                        StartDate = createEmployeeDTO.StartDate,
+                        StartDate = DateTime.Now,
                         DepartmentId = rd.DepartmentID,
                     };
                     _context.RolesEmployees.Add(newremp);
@@ -150,6 +150,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleId = rd.RoleID,
                         EmployeeId = createEmployeeDTO.EmployeeId,
                         StartDate = createEmployeeDTO.StartDate,
+                        EndDate = createEmployeeDTO.EndDate.Value.Date,
                         DepartmentId = rd.DepartmentID,
                     };
                     _context.RolesEmployees.Add(newremp);
