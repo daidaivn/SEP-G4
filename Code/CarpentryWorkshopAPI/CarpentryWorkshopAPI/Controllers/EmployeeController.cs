@@ -207,53 +207,55 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var query = _context.Employees
-                       .Include(emp => emp.RolesEmployees)
-                       .ThenInclude(roleemp => roleemp.Role)
-                       .AsQueryable();
+                    .Include(emp => emp.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .AsQueryable();
 
-                if (!string.IsNullOrEmpty(employeeSearchDTO.PhoneNumber))
+                if (!string.IsNullOrEmpty(employeeSearchDTO.InputText))
                 {
-                    query = query.Where(x => x.PhoneNumber.Equals(employeeSearchDTO.PhoneNumber));
+                    query = query.Where(x =>
+                        x.FirstName.ToLower().Contains(employeeSearchDTO.InputText.ToLower()) ||
+                        x.LastName.ToLower().Contains(employeeSearchDTO.InputText.ToLower()) ||
+                        x.PhoneNumber.ToLower().Contains(employeeSearchDTO.InputText.ToLower())
+                    );
                 }
-                if (!string.IsNullOrEmpty(employeeSearchDTO.Gender.ToString()))
-                {
-                    query = query.Where(x => x.Gender == employeeSearchDTO.Gender);
-                }
-                if (!string.IsNullOrEmpty(employeeSearchDTO.Name))
-                {
-                    query = query.Where(x => x.FirstName.ToLower().Contains(employeeSearchDTO.Name.ToLower()));
-                }
-                if (!string.IsNullOrEmpty(employeeSearchDTO.Name))
-                {
-                    query = query.Where(x => x.LastName.ToLower().Contains(employeeSearchDTO.Name.ToLower()));
-                }
-                if (employeeSearchDTO.Status == true)
-                {
-                    query = query.Where(x => x.Status == true);
-                }
-                else if (employeeSearchDTO.Status == false)
-                {
-                    query = query.Where(x => x.Status == false); 
-                }
-                if (employeeSearchDTO.RoleID.Count > 0)
-                {
-                    query = query.Where(entity => employeeSearchDTO.RoleID.Any(searchRoleId => 
-                    entity.RolesEmployees.Select(x => x.Role.RoleId).FirstOrDefault() == searchRoleId));
-                }
-                var employeesDTO = _mapper.Map<List<EmployeeListDTO>>(query.ToList());
 
-            if (employeesDTO.Count == 0)
-            {
-                return NotFound();
+                if (employeeSearchDTO.Gender.HasValue)
+                {
+                    query = query.Where(x => x.Gender == employeeSearchDTO.Gender.Value);
+                }
+
+                if (employeeSearchDTO.Status.HasValue)
+                {
+                    query = query.Where(x => x.Status == employeeSearchDTO.Status.Value);
+                }
+
+                if (employeeSearchDTO.RoleID != null && employeeSearchDTO.RoleID.Count > 0)
+                {
+                    query = query.Where(entity =>
+                        entity.RolesEmployees.Any(roleemp =>
+                            employeeSearchDTO.RoleID.Contains(roleemp.Role.RoleId)
+                        )
+                    );
+                }
+
+                var employeesDTO = query.ToList().Select(employee => new EmployeeListDTO
+                {
+                    EmployeeID = employee.EmployeeId,
+                    Image = employee.Image,
+                    FullName = $"{employee.FirstName} {employee.LastName}",
+                    Gender = (bool)employee.Gender ? "Male" : "Female",
+                    PhoneNumber = employee.PhoneNumber,
+                    Roles = employee.RolesEmployees.Select(roleemp => roleemp.Role.RoleName).ToList(),
+                    Status = employee.Status
+                }).ToList();
+
+                return Ok(employeesDTO);
             }
-
-            return Ok(employeesDTO);
-        }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
