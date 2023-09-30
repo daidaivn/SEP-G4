@@ -34,7 +34,45 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //[HttpGet]
-        //public IActionResult GetRpleHistoryByName(int id) { }
+        [HttpGet]
+        public IActionResult GetRoleHistoryByDate([FromBody] SearchRoleStatusHistoryDTO searchRoleStatusHistoryDTO)
+        {
+            try
+            {
+                var historysbydate = _context.RolesStatusHistories
+                    .Where(x => x.ActionDate == searchRoleStatusHistoryDTO.ActionDate)
+                    .ToList();
+                if (historysbydate == null)
+                {
+                    return NotFound();
+                }
+                var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
+                return Ok(historydateDTO);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetRoleHistorys([FromBody] SearchRoleStatusHistoryDTO searchRoleStatusHistoryDTO)
+        {
+            try
+            {
+                var historysbydate = _context.RolesStatusHistories
+                    .Where(x => x.ActionDate == searchRoleStatusHistoryDTO.ActionDate 
+                    && x.RoleId == searchRoleStatusHistoryDTO.RoleId)
+                    .ToList();
+                if (historysbydate == null)
+                {
+                    return NotFound();
+                }
+                var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
+                return Ok(historydateDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
