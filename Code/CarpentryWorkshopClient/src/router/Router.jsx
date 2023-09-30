@@ -1,22 +1,25 @@
-import { Route } from "react-router-dom";
-import "../view/scss/responsive.scss";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import DashboardComponnet from "../view/component/DashboardComponnet";
+import DashboardComponent from "../view/component/DashboardComponent";
 import NotFoundComponent from "../view/component/NotFoundComponent";
 import ListEmployeeComponent from "../view/component/ListEmployeeComponent";
+import Test from "../view/component/Test";
 
-const router = createBrowserRouter([
+const routes = [
   {
     path: "/",
-    element: <DashboardComponnet />,
+    element: <DashboardComponent />,
   },
   {
     path: "/list-employee",
-    element: <ListEmployeeComponent />,
+  element: <ListEmployeeComponent />,
   },
   {
     path: "*",
     element: <NotFoundComponent />,
   },
-]);
-export default router;
+  {
+    path: "/test",
+    element: <Test />,
+  },
+];
+
+export default routes;
