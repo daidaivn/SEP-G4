@@ -3,8 +3,9 @@
   background: #fff;
   padding: 43px 76px 0 89px;
 }
-.list-employee {
+.layout-menu {
   background: #386641;
+  padding: 25px;
 }
 .icon-search {
   position: absolute;
@@ -143,9 +144,7 @@ table {
     color-stop(0.6, #54de5d)
   );
 }
-thead {
-  margin-bottom: 28px;
-}
+
 .title-employee {
   border-radius: 60px;
   background: #6c8e72;
@@ -193,10 +192,11 @@ th:last-child {
   margin: 0;
 }
 .tbody-employee {
+  padding-top: 20px !important;
   padding: 0 3px;
   display: flex;
   flex-wrap: wrap;
-  height: 410px;
+  height: 490px;
   overflow-x: auto;
 
   .content-employee {
