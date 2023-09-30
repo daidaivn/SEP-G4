@@ -16,6 +16,7 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<Role, RoleDTO>()
                .ReverseMap();
             CreateMap<Department, DepartmentDTO>()
+                .ForMember(de=>de.number,option=>option.MapFrom(d=>d.RolesEmployees.Select(re=>re.EmployeeId).Count()))
                .ReverseMap();
             CreateMap<RolesStatusHistory, RoleStatusHistoryDTO>()
                 .ReverseMap();

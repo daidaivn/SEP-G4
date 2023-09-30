@@ -57,7 +57,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Dependents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult PutDependent(int id,[FromBody]DependentDTO dependentDTO)
+        public IActionResult PutDependent([FromBody]DependentDTO dependentDTO)
         {
             Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
             _context.Entry(dependent).State = EntityState.Modified;
@@ -68,7 +68,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DependentExists(id))
+                if (!DependentExists(dependentDTO.DependentId))
                 {
                     return NotFound();
                 }
@@ -112,10 +112,19 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             else
             {
-              
+                if(dependent.Status == true)
+                {
+                    dependent.Status = false;
+                }
+                else
+                {
+                    dependent.Status = true;
+                }
+                 
+                _context.Dependents.Update(dependent);
             }
 
-            
+            _context.SaveChanges();
 
             return NoContent();
         }
@@ -124,5 +133,6 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             return (_context.Dependents?.Any(e => e.DependentId == id)).GetValueOrDefault();
         }
+        //Search 
     }
 }

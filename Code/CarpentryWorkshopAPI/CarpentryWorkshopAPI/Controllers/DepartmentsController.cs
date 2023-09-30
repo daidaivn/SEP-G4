@@ -28,24 +28,25 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public IActionResult GetDepartments()
         {
-          if (_context.Departments == null)
-          {
-              return NotFound();
-          }
-          List<Department> list = _context.Departments.ToList();
-          List<DepartmentDTO> listDTO = _mapper.Map<List<DepartmentDTO>>(list);
-          return Ok(listDTO);
+            if (_context.Departments == null)
+            {
+                return NotFound();
+            }
+            var list = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).AsQueryable();
+            List<DepartmentDTO> listDTO = _mapper.Map<List<DepartmentDTO>>(list.ToList());
+
+            return Ok(listDTO);
         }
 
         // GET: api/Departments/5
         [HttpGet("{id}")]
         public IActionResult GetDepartment(int id)
         {
-          if (_context.Departments == null)
-          {
-              return NotFound();
-          }
-            var department = _context.Departments.Where(e=>e.DepartmentId == id).FirstOrDefault();
+            if (_context.Departments == null)
+            {
+                return NotFound();
+            }
+            var department = _context.Departments.Where(e => e.DepartmentId == id).FirstOrDefault();
             DepartmentDTO departmentDTO = _mapper.Map<DepartmentDTO>(department);
             if (department == null)
             {
@@ -56,13 +57,9 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public IActionResult PutDepartment(int id, [FromBody]DepartmentDTO departmentDTO)
+        [HttpPut]
+        public IActionResult PutDepartment([FromBody] DepartmentDTO departmentDTO)
         {
-            if (id != departmentDTO.DepartmentId)
-            {
-                return BadRequest();
-            }
             Department department = _mapper.Map<Department>(departmentDTO);
             _context.Entry(department).State = EntityState.Modified;
 
@@ -72,7 +69,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DepartmentExists(id))
+                if (!DepartmentExists(departmentDTO.DepartmentId))
                 {
                     return NotFound();
                 }
@@ -88,12 +85,12 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult PostDepartment([FromBody]DepartmentDTO departmentDTO)
+        public IActionResult PostDepartment([FromBody] DepartmentDTO departmentDTO)
         {
-          if (_context.Departments == null)
-          {
-              return Problem("Entity set 'SEPG4CCMSContext.Departments'  is null.");
-          }
+            if (_context.Departments == null)
+            {
+                return Problem("Entity set 'SEPG4CCMSContext.Departments'  is null.");
+            }
             Department department = _mapper.Map<Department>(departmentDTO);
             _context.Departments.Add(department);
             _context.SaveChanges();
@@ -109,7 +106,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound();
             }
-            Department department = _context.Departments.SingleOrDefault(e=>e.DepartmentId == id);
+            Department department = _context.Departments.SingleOrDefault(e => e.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
@@ -120,7 +117,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.Departments.Update(department);
             }
 
-            
+
             _context.SaveChangesAsync();
 
             return Ok("Update status success");
@@ -149,6 +146,30 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost("search")]
+        public ActionResult<DepartmentDTO> SearchAndFilterDepartment(DepartmentDTO departmentDTO)
+        {
+            if (departmentDTO == null || _context.Departments == null)
+            {
+                return BadRequest();
+            };
+            var listDepartment = _context.Departments.Include(de=>de.RolesEmployees).ThenInclude(de=>de.EmployeeId).AsQueryable();
+            if(departmentDTO.DepartmentName != null)
+            {
+                listDepartment = listDepartment.Where(ld=>ld.DepartmentName.Contains(departmentDTO.DepartmentName));
+            }
+            if(departmentDTO.Status == true)
+            {
+                listDepartment = listDepartment.Where(ld => ld.Status == true);
+            }else if (departmentDTO.Status == false)
+            {
+                listDepartment = listDepartment.Where(ld => ld.Status == false);
+            }
+            List<DepartmentDTO> departmentDTOs = _mapper.Map<List<DepartmentDTO>>(listDepartment);
+
+            return Ok(departmentDTOs);
+        } 
+        [HttpPost]
         private bool DepartmentExists(int id)
         {
             return (_context.Departments?.Any(e => e.DepartmentId == id)).GetValueOrDefault();
