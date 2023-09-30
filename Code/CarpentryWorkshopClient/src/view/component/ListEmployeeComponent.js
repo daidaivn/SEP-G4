@@ -91,70 +91,88 @@ const ListEmployeeComponent = () => {
       </div>
       <div className="table-employee">
         <table>
-          <tr className="title-employee">
-            <th>Ảnh</th>
-            <th>Họ và tên</th>
-            <th>Giới tính</th>
-            <th>Số điện thoại</th>
-            <th>Chức vụ</th>
-            <th>Trạng thái</th>
-          </tr>
-          <tr className="content-employee" onClick={showModal}>
-            <td>
-              <img src={user1} alt="" />
-            </td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr className="content-employee" onClick={showModal}>
-            <td>
-              <img src={user1} alt="" />
-            </td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr className="content-employee" onClick={showModal}>
-            <td>
-              <img src={user1} alt="" />
-            </td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr className="content-employee" onClick={showModal}>
-            <td>
-              <img src={user1} alt="" />
-            </td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch />
-              </Form.Item>
-            </td>
-          </tr>
+          <thead>
+            <tr className="title-employee">
+              <th>Ảnh</th>
+              <th>Họ và tên</th>
+              <th>Giới tính</th>
+              <th>Số điện thoại</th>
+              <th>Chức vụ</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody className="tbody-employee">
+            <tr className="content-employee" onClick={showModal}>
+              <td>
+                <img src={user1} alt="" />
+              </td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr className="content-employee" onClick={showModal}>
+              <td>
+                <img src={user1} alt="" />
+              </td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr className="content-employee" onClick={showModal}>
+              <td>
+                <img src={user1} alt="" />
+              </td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr className="content-employee" onClick={showModal}>
+              <td>
+                <img src={user1} alt="" />
+              </td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr className="content-employee" onClick={showModal}>
+              <td>
+                <img src={user1} alt="" />
+              </td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch />
+                </Form.Item>
+              </td>
+            </tr>
+          </tbody>
         </table>
         <Modal
           className="modal"
@@ -200,10 +218,7 @@ const ListEmployeeComponent = () => {
                       <tr>
                         <th className="text">Giới tính</th>
                         <td className="input-text fix">
-                          <Radio.Group
-                            onChange={onChangeRadio}
-                            value={value}
-                          >
+                          <Radio.Group onChange={onChangeRadio} value={value}>
                             <Radio value={1} className="gender">
                               Nam
                             </Radio>
@@ -225,10 +240,7 @@ const ListEmployeeComponent = () => {
                       <tr>
                         <th className="text">Số điện thoại</th>
                         <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="0123456789"
-                          />
+                          <Input placeholder="Basic usage" value="0123456789" />
                         </td>
                       </tr>
                     </tbody>
@@ -240,28 +252,19 @@ const ListEmployeeComponent = () => {
                       <tr>
                         <th className="text">CCCD</th>
                         <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="123456789"
-                          />
+                          <Input placeholder="Basic usage" value="123456789" />
                         </td>
                       </tr>
                       <tr>
                         <th className="text">Chức vụ</th>
                         <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="Nhân viên"
-                          />
+                          <Input placeholder="Basic usage" value="Nhân viên" />
                         </td>
                       </tr>
                       <tr>
                         <th className="text">Mã số thuế</th>
                         <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="0987654321"
-                          />
+                          <Input placeholder="Basic usage" value="0987654321" />
                         </td>
                       </tr>
                       <tr>

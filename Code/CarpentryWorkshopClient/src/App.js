@@ -4,12 +4,14 @@ import MenuComponent from "./view/component/MenuComponent";
 import ListEmployeeComponent from "./view/component/ListEmployeeComponent";
 import DashboardComponent from "./view/component/DashboardComponnet";
 import NotFoundComponent from "./view/component/NotFoundComponent";
-import Test from "./view/component/Test";
+
+
 import { Col, Row } from "antd";
 
 function App() {
   return (
-    <div className="list-employee">
+    <div className="layout-menu">
+
       <Row>
         <Col span={4}>
           <MenuComponent />
@@ -18,7 +20,6 @@ function App() {
           <Routes>
             <Route path="/" element={<DashboardComponent />} />
             <Route path="/list-employee" element={<ListEmployeeComponent />} />
-            <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFoundComponent />} />
           </Routes>
         </Col>
