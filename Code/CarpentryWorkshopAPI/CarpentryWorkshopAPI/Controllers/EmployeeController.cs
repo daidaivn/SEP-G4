@@ -23,17 +23,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var employeelist = from emp in _context.Employees
-                                   join roleemp in _context.RolesEmployees on emp.EmployeeId equals roleemp.EmployeeId
-                                   select new
-                                   {
-                                       EmployeeID = emp.EmployeeId,
-                                       Image = emp.Image,
-                                       FullName = emp.FirstName + " " + emp.LastName ,
-                                       Gender = (bool)emp.Gender ? "Nam": "Nữ",
-                                       PhoneNumber = emp.PhoneNumber,
-                                       Roles = roleemp.Role.RoleName,
-                                   };
+                var employeelist = _context.Employees
+                    .Include(x => x.Country)
+                    .Include(emp => emp.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .Select(emp => new EmployeeListDTO
+                    {
+                        EmployeeID = emp.EmployeeId,
+                        Image = emp.Image,
+                        FullName = $"{emp.FirstName} {emp.LastName}",
+                        Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+                        PhoneNumber = emp.PhoneNumber,
+                        Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                        Status = emp.Status,
+                    });
                 return Ok(employeelist);
             }
             catch (Exception ex)
@@ -47,27 +50,39 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var employeelist = from emp in _context.Employees
-                                   join roleemp in _context.RolesEmployees on emp.EmployeeId equals roleemp.EmployeeId
-                                   join country in _context.Countries on emp.CountryId equals country.CountryId
-                                   join department in _context.Departments on emp.DepartmentId equals department.DepartmentId
-                                   select new
-                                   {
-                                       EmployeeID = emp.EmployeeId,
-                                       Image = emp.Image,
-                                       FirstName = emp.FirstName ,
-                                       LastName = emp.LastName,
-                                       DOB = emp.Dob,
-                                       Address = emp.Address,
-                                       CIC = emp.Cic,
-                                       Country= emp.Country!.CountryName,
-                                       Department = emp.Department!.DepartmentName,
-                                       Gender = (bool)emp.Gender ? "Nam" : "Nữ",
-                                       PhoneNumber = emp.PhoneNumber,
-                                       Roles = roleemp.Role!.RoleName,
-                                       Status = (bool)emp.Status ? "Kích hoạt" : "Chưa kích hoạt",
-                                   };
-                return Ok(employeelist);
+                var employeeDetail = _context.Employees
+                    .Where(emp => emp.EmployeeId == eid)
+                    .Include(emp => emp.RolesEmployees)
+                        .ThenInclude(roleemp => roleemp.Role)
+                        .ThenInclude(role => role.RolesEmployees)
+                    .Include(emp => emp.RolesEmployees)
+                        .ThenInclude(roleemp => roleemp.Department)
+                    .Select(emp => new EmployeeDetailDTO
+                    {
+                        EmployeeId = emp.EmployeeId,
+                        Image = emp.Image,
+                        FirstName = emp.FirstName,
+                        LastName = emp.LastName,
+                        Dob = emp.Dob,
+                        Address = emp.Address,
+                        Cic = emp.Cic,
+                        Country = emp.Country.CountryName,
+                        Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+                        PhoneNumber = emp.PhoneNumber,
+                        TaxId = emp.TaxId,
+                        Email= emp.Email,
+                        Status = emp.Status,
+                        Roles = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Role.RoleName),
+                        Departments = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Department.DepartmentName)
+                    })
+                    .FirstOrDefault();
+
+                if (employeeDetail == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(employeeDetail);
             }
             catch (Exception ex)
             {
@@ -79,161 +94,178 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var newemp = _mapper.Map<CreateEmployeeDTO, Employee>(createEmployeeDTO);
+                           
+                List<Role> roles = _context.Roles.ToList();
+                List<Department> departments = _context.Departments.ToList();
+                var newemp = _mapper.Map<Employee>(createEmployeeDTO);
+
                 _context.Employees.Add(newemp);
                 _context.SaveChanges();
-                return Ok("Create employee successfull");
+
+              
+
+                foreach (var rd in createEmployeeDTO.rDs)
+                {
+                    RolesEmployee newremp = new RolesEmployee
+                    {
+                        RoleId = rd.RoleID,
+                        EmployeeId = newemp.EmployeeId,
+                        StartDate = DateTime.Now,
+                        DepartmentId = rd.DepartmentID,
+                    };
+                    _context.RolesEmployees.Add(newremp);
+
+                }
+
+
+                _context.SaveChanges();
+                return Ok("Create employee successful");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
-        [HttpPut("{eid}")]
-        public IActionResult UpdateEmployee(int eid, [FromBody] CreateEmployeeDTO createEmployeeDTO )
+
+
+        [HttpPut]
+        public IActionResult UpdateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
             {
-                var currentemp = _context.Employees
-                    .Include(x => x.Department)
-                    .Include(x => x.Country)
-                    .Where(x => x.EmployeeId == eid)
-                    .FirstOrDefault(); 
-                if (currentemp == null)
+                if (createEmployeeDTO == null)
                 {
                     return NotFound();
                 }
-                currentemp.Image = createEmployeeDTO.Image;
-                currentemp.PhoneNumber = createEmployeeDTO.PhoneNumber;
-                currentemp.FirstName= createEmployeeDTO.FirstName;
-                currentemp.LastName= createEmployeeDTO.LastName;
-                currentemp.Address = createEmployeeDTO.Address;
-                currentemp.Cic = createEmployeeDTO.Cic;
-                currentemp.Dob= createEmployeeDTO.Dob;
-                currentemp.Gender= createEmployeeDTO.Gender;
-                currentemp.CountryId= createEmployeeDTO.CountryId;
-                currentemp.DepartmentId= createEmployeeDTO.DepartmentId;
-                currentemp.Status = createEmployeeDTO.Status;
-                //currentemp.RolesEmployees = createEmployeeDTO.RolesEmployees;
-                _context.Employees.Update(currentemp);
-                _context.SaveChanges();
-                return Ok("Update success");
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpDelete("eid")]
-        public IActionResult DeleteProduct(int eid)
-        {
-            var employee = _context.Employees
-                .Include(x => x.Department)
-                .Include(x => x.Country)
-                .FirstOrDefault(x => x.EmployeeId == eid);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            var useraccount = _context.UserAccounts
-                .ToList();
-            var rolesemployee = _context.RolesEmployees
-                .ToList();
-            try
-            {
-                foreach (var item in useraccount)
+                List<Role> roles = _context.Roles.ToList();
+                List<Department> departments = _context.Departments.ToList();
+
+                var updateemp = _mapper.Map<Employee>(createEmployeeDTO);
+                _context.Employees.Update(updateemp);
+
+                foreach (var rd in createEmployeeDTO.rDs)
                 {
-                    if (item.EmployeeId == employee.EmployeeId)
+                    RolesEmployee newremp = new RolesEmployee
                     {
-                        useraccount.Remove(item);
-                        _context.SaveChanges();
-                    }
+                        RoleId = rd.RoleID,
+                        EmployeeId = createEmployeeDTO.EmployeeId,
+                        StartDate = createEmployeeDTO.StartDate,
+                        EndDate = createEmployeeDTO.EndDate.Value.Date,
+                        DepartmentId = rd.DepartmentID,
+                    };
+                    _context.RolesEmployees.Add(newremp);
+
                 }
-                foreach (var item in rolesemployee)
-                {
-                    if (item.EmployeeId == employee.EmployeeId)
-                    {
-                        rolesemployee.Remove(item);
-                        _context.SaveChanges();
-                    }
-                }
-                _context.Employees.Remove(employee);
                 _context.SaveChanges();
-                return Ok("Delete product successfully");
+                return Ok("Update employee successfull");
+
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult SearchEmployee(string firstName, string lastName, string gender,
-            string address, string phone, string cic, DateTime? dob , string status, string departmentName, string countryName)
+        [HttpDelete]
+        public IActionResult ChangeStatusEmployee( int eid)
+        {
+            var employees = _context.Employees
+                .Include(x => x.Country)
+                .Where(x => x.EmployeeId == eid).FirstOrDefault();
+            if (employees == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                if (employees.Status == true)
+                {
+                    employees.Status = false;
+                }
+                else
+                {
+                    employees.Status = true;
+                }
+                _context.SaveChanges();
+                return Ok("Change employee status successfully");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+      
+        }
+        [HttpPost]
+        public IActionResult SearchEmployee([FromBody] EmployeeSearchDTO employeeSearchDTO)
         {
             try
             {
-                List<EmployeeListDTO> searchlist = new List<EmployeeListDTO>();
                 var query = _context.Employees
-                    .Include(x => x.Department)
                     .Include(x => x.Country)
-                    .AsQueryable(); 
-                
-                if (!string.IsNullOrEmpty(firstName))
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(x => x.Role)
+                    .AsQueryable();
+
+                if (employeeSearchDTO.EmployeeId != 0)
                 {
-                    query = query.Where(x => x.FirstName.ToLower().Contains(firstName.ToLower()));
+                    query = query.Where(x => x.EmployeeId == employeeSearchDTO.EmployeeId);
                 }
-                if (!string.IsNullOrEmpty(lastName))
+                if (employeeSearchDTO.TaxId != 0)
                 {
-                    query = query.Where(x => x.LastName.ToLower().Contains(lastName.ToLower()));
+                    query = query.Where(x => x.TaxId == employeeSearchDTO.TaxId);
                 }
-                if (!string.IsNullOrEmpty(address))
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Country))
                 {
-                    query = query.Where(x => x.Address.ToLower().Contains(address.ToLower()));
+                    query = query.Where(x => x.Country.CountryName.ToLower().Contains(employeeSearchDTO.Country.ToLower()));
                 }
-                if (!string.IsNullOrEmpty(phone))
+                if (!string.IsNullOrEmpty(employeeSearchDTO.FirstName))
                 {
-                    query = query.Where(x => x.PhoneNumber.ToLower().Contains(phone.ToLower()));
+                    query = query.Where(x => x.FirstName.ToLower().Contains(employeeSearchDTO.FirstName.ToLower()));
                 }
-                if (!string.IsNullOrEmpty(cic))
+                if (!string.IsNullOrEmpty(employeeSearchDTO.LastName))
                 {
-                    query = query.Where(x => x.Cic.ToLower().Contains(cic.ToLower()));
+                    query = query.Where(x => x.LastName.ToLower().Contains(employeeSearchDTO.LastName.ToLower()));
                 }
-                if (!string.IsNullOrEmpty(departmentName))
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Address))
                 {
-                    query = query.Where(x => x.Department.DepartmentName.ToLower().Contains(departmentName.ToLower()));
+                    query = query.Where(x => x.Address.ToLower().Contains(employeeSearchDTO.Address.ToLower()));
                 }
-                if (!string.IsNullOrEmpty(gender))
+                if (!string.IsNullOrEmpty(employeeSearchDTO.PhoneNumber))
                 {
-                    if (gender.Equals("Nam")) 
+                    query = query.Where(x => x.PhoneNumber.ToLower().Contains(employeeSearchDTO.PhoneNumber.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Cic))
+                {
+                    query = query.Where(x => x.Cic.ToLower().Contains(employeeSearchDTO.Cic.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Email))
+                {
+                    query = query.Where(x => x.Email.ToLower().Contains(employeeSearchDTO.Email.ToLower()));
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Dob))
+                {
+                    DateTime date = DateTime.Parse(employeeSearchDTO.Dob);
+                    query = query.Where(x => x.Dob == date);
+                }
+                if (!string.IsNullOrEmpty(employeeSearchDTO.Gender))
+                {
+                    if (employeeSearchDTO.Gender.Equals("Nam"))
                     {
                         query = query.Where(x => x.Gender == true);
                     }
-                    else if(gender.Equals("Nữ"))
+                    else if (employeeSearchDTO.Gender.Equals("Nữ"))
                     {
                         query = query.Where(x => x.Gender == false);
-                    } 
-                }
-                if (!string.IsNullOrEmpty(status))
-                {
-                    if (gender.Equals("Kích hoạt"))
-                    {
-                        query = query.Where(x => x.Status == true);
-                    }
-                    else if (gender.Equals("Chưa kích hoạt"))
-                    {
-                        query = query.Where(x => x.Status == false);
                     }
                 }
-                if (!string.IsNullOrEmpty(countryName))
+                if (employeeSearchDTO.Status == true)
                 {
-                    query = query.Where(x => x.Country.CountryName.ToLower().Contains(countryName.ToLower()));
+                    query = query.Where(x => x.Status == true);
                 }
-
-                if (dob.HasValue)
+                else if (employeeSearchDTO.Status == false)
                 {
-                    query = query.Where(x => x.Dob == dob);
+                    query = query.Where(x => x.Status == false); 
                 }
-
                 var employeesDTO = _mapper.Map<List<Employee>, List<EmployeeSearchDTO>>(query.ToList());
 
                 if (employeesDTO.Count == 0)

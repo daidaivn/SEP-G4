@@ -4,11 +4,14 @@ import MenuComponent from "./view/component/MenuComponent";
 import ListEmployeeComponent from "./view/component/ListEmployeeComponent";
 import DashboardComponent from "./view/component/DashboardComponnet";
 import NotFoundComponent from "./view/component/NotFoundComponent";
+
+
 import { Col, Row } from "antd";
 
 function App() {
   return (
     <div className="layout-menu">
+
       <Row>
         <Col span={4}>
           <MenuComponent />

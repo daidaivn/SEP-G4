@@ -17,7 +17,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var historylist = _context.EmployeeStatusHistories.ToList();
+                var historylist = _context.EmployeesStatusHistories.ToList();
                 if (historylist == null)
                 {
                     return NotFound();
@@ -35,7 +35,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 DateTime date= DateTime.Parse(actionDate);
-                var historylistbydate = _context.EmployeeStatusHistories
+                var historylistbydate = _context.EmployeesStatusHistories
                     .Where(x => x.ActionDate == date)
                     .ToList();
                 if (historylistbydate == null)
@@ -55,7 +55,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 DateTime date = DateTime.Parse(actionDate);
-                var emphistorylistbydate = _context.EmployeeStatusHistories
+                var emphistorylistbydate = _context.EmployeesStatusHistories
                     .Where(x => x.ActionDate == date && x.EmployeeId == eid)
                     .ToList();
                 if (emphistorylistbydate == null)
