@@ -31,7 +31,7 @@ namespace CarpentryWorkshopAPI.Controllers
           {
               return NotFound();
           }
-          List<Dependent> dependents = _context.Dependents.ToList();
+          List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
           List<DependentDTO> dependentDTOs = _mapper.Map<List<DependentDTO>>(dependents);
           return Ok(dependentDTOs);
         }
@@ -133,6 +133,12 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             return (_context.Dependents?.Any(e => e.DependentId == id)).GetValueOrDefault();
         }
-        //Search 
+        //Search and filter
+        //[HttpPost("SearchDependent")]
+        //public IActionResult SearchDependents(DependentDTO dependentDTO)
+        //{
+
+        //}
+        
     }
 }

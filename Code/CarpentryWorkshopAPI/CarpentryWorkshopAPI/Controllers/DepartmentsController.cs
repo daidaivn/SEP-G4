@@ -154,9 +154,9 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest();
             };
             var listDepartment = _context.Departments.Include(de=>de.RolesEmployees).ThenInclude(de=>de.EmployeeId).AsQueryable();
-            if(departmentDTO.DepartmentName != null)
+            if(departmentDTO.DepartmentName != null || departmentDTO.DepartmentName.Trim() == "")
             {
-                listDepartment = listDepartment.Where(ld=>ld.DepartmentName.Contains(departmentDTO.DepartmentName));
+                listDepartment = listDepartment.Where(ld=>ld.DepartmentName.Trim().ToLower().Contains(departmentDTO.DepartmentName.Trim().ToLower()));
             }
             if(departmentDTO.Status == true)
             {
