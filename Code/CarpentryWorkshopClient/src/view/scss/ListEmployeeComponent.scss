@@ -1,12 +1,10 @@
 .ant-col-20 {
+  width: 100%;
   border-radius: 56px;
   background: #fff;
-  padding: 43px 76px 0 89px;
+  padding: 19px 76px 0 89px;
 }
-.layout-menu {
-  background: #386641;
-  padding: 25px;
-}
+
 .icon-search {
   position: absolute;
   top: 27px;
@@ -352,7 +350,7 @@ th:last-child {
   }
 }
 :where(.css-dev-only-do-not-override-1vr7spz).ant-col {
-  max-width: 100% !important;
+  // max-width: 100% !important;
 }
 :where(.css-dev-only-do-not-override-1vr7spz).ant-row {
   flex-wrap: nowrap;

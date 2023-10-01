@@ -69,8 +69,10 @@
 }
 .active {
   background-color: #fff;
+  width: 100%;
   i {
     background-color: #386641;
+
   }
   border-radius: 200px 56px;
   span {
@@ -92,3 +94,10 @@ i {
 .item-link {
   width: 100%;
 }
+.layout-menu {
+  width: 100%;
+  background: #386641;
+  padding: 25px;
+  height: 100vh;
+}
+
