@@ -10,10 +10,28 @@ import { Select } from "antd";
 import add from "../assets/images/icons/Frame 16.svg";
 import user1 from "../assets/images/Ellipse 72.svg";
 import userDetail from "../assets/images/Ellipse 73.svg";
-import React, { useState } from "react";
 import { Button, Modal } from "antd";
 import { Radio } from "antd";
-const ListEmployeeComponent = () => {
+import React, { useState, useEffect } from 'react';
+import { fetchAllEmplyee } from "../../sevices/EmployeeService";
+import Table from 'react-bootstrap/Table';
+
+
+function ListEmployeeComponent() {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    // Gọi hàm fetchAllEmplyee để lấy dữ liệu từ API khi component được mount
+    fetchAllEmplyee()
+      .then((response) => {
+        // Lưu dữ liệu nhân viên vào state
+        setEmployees(response);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
   const [value, setValue] = useState(1);
   const onChangeRadio = (e) => {
     console.log("radio checked", e.target.value);
@@ -37,6 +55,7 @@ const ListEmployeeComponent = () => {
   };
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
   return (
     <div className="body-list-employee">
       <div className="head-list">
@@ -102,78 +121,38 @@ const ListEmployeeComponent = () => {
             </tr>
           </thead>
           <tbody className="tbody-employee">
-            <tr className="content-employee" onClick={showModal}>
-              <td>
-                <img src={user1} alt="" />
-              </td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr className="content-employee" onClick={showModal}>
-              <td>
-                <img src={user1} alt="" />
-              </td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr className="content-employee" onClick={showModal}>
-              <td>
-                <img src={user1} alt="" />
-              </td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr className="content-employee" onClick={showModal}>
-              <td>
-                <img src={user1} alt="" />
-              </td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr className="content-employee" onClick={showModal}>
-              <td>
-                <img src={user1} alt="" />
-              </td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch />
-                </Form.Item>
-              </td>
-            </tr>
+            {employees.map((employee) => (
+              <tr className="content-employee" key={employee.employeeID} onClick={showModal}>
+                <td>
+                  <img />
+                </td>
+                <td>
+                  <p>{employee.fullName}</p>
+                </td>
+                <td>
+                  <p>{employee.gender}</p>
+                </td>
+                <td>
+                  <p>{employee.phoneNumber}</p>
+                </td>
+                <td>
+                  <p>
+                    {employee.roles.map((role, index) => (
+                      <span key={index}>{role}</span>
+                    ))}
+                  </p>
+                </td>
+                <td>
+                  <Form.Item valuePropName="checked">
+                    <Switch checked={employee.status} />
+                  </Form.Item>
+                </td>
+              </tr>
+            ))}
           </tbody>
+
         </table>
+
         <Modal
           className="modal"
           open={isModalOpen}
@@ -295,6 +274,6 @@ const ListEmployeeComponent = () => {
     </div>
 
   );
-};
+}
 
 export default ListEmployeeComponent;

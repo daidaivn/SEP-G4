@@ -172,11 +172,11 @@ table {
     padding-right: 79px;
   }
 }
-td:first-child,
-th:first-child {
-  border-top-left-radius: 60px;
-  border-bottom-left-radius: 60px;
-}
+// td:first-child,
+// th:first-child {
+//   border-top-left-radius: 60px;
+//   border-bottom-left-radius: 60px;
+// }
 td:last-child,
 th:last-child {
   border-top-right-radius: 60px;
@@ -189,6 +189,10 @@ th:last-child {
 .ant-form-item {
   margin: 0;
 }
+
+
+
+
 .tbody-employee {
   padding-top: 20px !important;
   padding: 0 3px;
@@ -214,9 +218,43 @@ th:last-child {
     font-family: "Poppins";
     font-size: 20px;
     font-weight: 500;
-    width: 1%;
   }
 }
+.table-employee
+td:nth-child(1){
+  width: 10%;
+}
+.table-employee
+td:nth-child(1) img {
+  min-width: 76px;
+  min-height: 76px;
+  border-radius: 50%; 
+  object-fit: cover; 
+  object-position: center; 
+}
+
+.table-employee
+td:nth-child(2) {
+  width: 20%;
+}
+.table-employee
+td:nth-child(3) {
+  width: 20%;
+}
+.table-employee
+td:nth-child(4) {
+  width: 20%;
+}
+.table-employee
+td:nth-child(5) {
+  width: 20%;
+}
+.table-employee
+td:nth-child(6) {
+  width: 10%;
+}
+
+
 .ant-modal-content {
   background: #f9faf5;
 }
