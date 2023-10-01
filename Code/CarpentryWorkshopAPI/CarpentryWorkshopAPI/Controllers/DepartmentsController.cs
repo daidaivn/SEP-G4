@@ -102,25 +102,49 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult UpdateDepartment(int id)
         {
-            if (_context.Departments == null)
+            try
             {
-                return NotFound();
-            }
-            Department department = _context.Departments.SingleOrDefault(e => e.DepartmentId == id);
-            if (department == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                department.Status = false;
-                _context.Departments.Update(department);
-            }
+                if (_context.Departments == null)
+                {
+                    return NotFound();
+                }
+                Department department = _context.Departments.Include(de => de.RolesEmployees).SingleOrDefault(e => e.DepartmentId == id);
+                if (department == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    if (department.Status == true)
+                    {
+                        foreach (var roleEmployee in department.RolesEmployees)
+                        {
+                            roleEmployee.Status = false;
+                        }
+                        department.Status = false;
+                    }
+                    else
+                    {
+                        foreach (var roleEmployee in department.RolesEmployees)
+                        {
+                            roleEmployee.Status = true;
+                        }
+                        department.Status = true;
+                    }
+
+                    _context.Departments.Update(department);
+                    _context.RolesEmployees.UpdateRange(department.RolesEmployees);
+                }
 
 
-            _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
 
-            return Ok("Update status success");
+                return Ok("Update status success");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("DepartmentDetail/{id}")]
         public IActionResult GetDepartmentDetail(int id)

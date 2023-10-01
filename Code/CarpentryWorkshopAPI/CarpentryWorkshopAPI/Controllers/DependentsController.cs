@@ -134,11 +134,39 @@ namespace CarpentryWorkshopAPI.Controllers
             return (_context.Dependents?.Any(e => e.DependentId == id)).GetValueOrDefault();
         }
         //Search and filter
-        //[HttpPost("SearchDependent")]
-        //public IActionResult SearchDependents(DependentDTO dependentDTO)
-        //{
+        [HttpPost("SearchDependent")]
+        public IActionResult SearchDependents(DependentsSearchDTO dependentsSearchDTO)
+        {
+            try
+            {
+                var dependentsList = _context.Dependents.Include(de => de.Employee).AsQueryable();
+                if (!string.IsNullOrEmpty(dependentsSearchDTO.InputText))
+                {
+                    dependentsList = dependentsList.Where(de => de.FullName.ToLower().Contains(dependentsSearchDTO.InputText.ToLower()) ||
+                                                    de.IdentifierCode.Contains(dependentsSearchDTO.InputText.ToLower()) ||
+                                                    (de.Employee.FirstName+de.Employee.LastName).ToLower().Contains(dependentsSearchDTO.InputText.ToLower())||
+                                                    de.EmployeeId.ToString() == dependentsSearchDTO.InputText);
+                }
+                if (dependentsSearchDTO.Status.HasValue)
+                {
+                    dependentsList = dependentsList.Where(de => de.Status == dependentsSearchDTO.Status);
+                }
+                if(dependentsSearchDTO.Gender.HasValue)
+                {
+                    dependentsList = dependentsList.Where(de => de.Gender == dependentsSearchDTO.Gender);
+                }
+                if(dependentsList == null)
+                {
+                    return NotFound("no data");
+                }
+                List<DependentDTO> dependentDTOs = _mapper.Map<List<DependentDTO>>(dependentsList.ToList());
+                return Ok(dependentDTOs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //}
-        
     }
 }
