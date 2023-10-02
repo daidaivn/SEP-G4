@@ -11,7 +11,7 @@ using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Dependents
         [HttpGet]
-        public IActionResult GetDependents()
+        public IActionResult GetAllDependentPeople()
         {
           if (_context.Dependents == null)
           {
@@ -38,7 +38,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Dependents/5
         [HttpGet("{id}")]
-        public IActionResult GetDependent(int id)
+        public IActionResult GetDependentPeopleById(int id)
         {
           if (_context.Dependents == null)
           {
@@ -57,7 +57,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Dependents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult PutDependent([FromBody]DependentDTO dependentDTO)
+        public IActionResult UpdateDependent([FromBody]DependentDTO dependentDTO)
         {
             Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
             _context.Entry(dependent).State = EntityState.Modified;
@@ -84,7 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Dependents
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult PostDependent([FromBody]DependentDTO dependentDTO)
+        public IActionResult CreateDependent([FromBody]DependentDTO dependentDTO)
         {
           if (_context.Dependents == null)
           {
@@ -99,7 +99,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // DELETE: api/Dependents/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteDependent(int id)
+        public IActionResult UpdateDependentStatus(int id)
         {
             if (_context.Dependents == null)
             {

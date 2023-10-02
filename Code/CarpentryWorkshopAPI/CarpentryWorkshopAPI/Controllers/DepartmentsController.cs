@@ -11,7 +11,7 @@ using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Departments
         [HttpGet]
-        public IActionResult GetDepartments()
+        public IActionResult GetAllDepartments()
         {
             if (_context.Departments == null)
             {
@@ -40,7 +40,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Departments/5
         [HttpGet("{id}")]
-        public IActionResult GetDepartment(int id)
+        public IActionResult GetDepartmentById(int id)
         {
             if (_context.Departments == null)
             {
@@ -58,7 +58,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult PutDepartment([FromBody] DepartmentDTO departmentDTO)
+        public IActionResult UpdateDepartment([FromBody] DepartmentDTO departmentDTO)
         {
             Department department = _mapper.Map<Department>(departmentDTO);
             _context.Entry(department).State = EntityState.Modified;
@@ -85,7 +85,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult PostDepartment([FromBody] DepartmentDTO departmentDTO)
+        public IActionResult CreateDepartment([FromBody] DepartmentDTO departmentDTO)
         {
             if (_context.Departments == null)
             {
@@ -100,7 +100,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // DELETE: api/Departments/5
         [HttpDelete("{id}")]
-        public IActionResult UpdateDepartment(int id)
+        public IActionResult UpdateDepartmentStatus(int id)
         {
             try
             {
@@ -147,7 +147,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet("DepartmentDetail/{id}")]
-        public IActionResult GetDepartmentDetail(int id)
+        public IActionResult GetEmployeeInDepartment(int id)
         {
             try
             {
