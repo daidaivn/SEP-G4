@@ -20,9 +20,13 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             CreateMap<RolesStatusHistory, RoleStatusHistoryDTO>()
                 .ReverseMap();
+            CreateMap<ContractsStatusHistory, ContractStatusHistoryDTO>()
+                .ReverseMap();
             CreateMap<Dependent, DependentDTO>()
                 .ForMember(de => de.EmployeesName, option => option.MapFrom(d => d.Employee.FirstName +" "+ d.Employee.LastName))
                 .ForMember(de => de.GenderString, option => option.MapFrom(d => d.Gender == true? "nam" : "nữ"))
+                .ReverseMap();
+            CreateMap<Contract, CreateContractDTO>()
                 .ReverseMap();
         }
     }
