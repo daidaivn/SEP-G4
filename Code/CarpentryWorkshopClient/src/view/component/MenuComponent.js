@@ -58,6 +58,18 @@ const MenuComponent = () => {
               <span className="text">Danh sách</span>
             </NavLink>
           </div>
+          <div className="item-link">
+            <NavLink
+              to={"/list-department"}
+              id="item-menu"
+              onClick={() => handleDivClick("div2")}
+              activeClassName={activeDiv === "div2" ? "active" : ""}
+            >
+              <i className="icon-profile"></i>
+
+              <span className="text">Danh sách Phòng - Ban</span>
+            </NavLink>
+          </div>
         </div>
         <div className="footer-body">
           <div className="item-menu" id="item-menu">
