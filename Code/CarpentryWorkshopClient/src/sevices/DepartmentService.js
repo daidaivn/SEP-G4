@@ -1,6 +1,6 @@
 import axios from "./customize-axios";
 
 const fetchAllDepadment = () => {
-  return axios.get("/api/Departments");
+  return axios.get("/CCMSapi/Departments/GetAllDepartments");
 };
 export { fetchAllDepadment };
