@@ -9,7 +9,7 @@ using CarpentryWorkshopAPI.Models;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsStatusHistoriesController : ControllerBase
     {

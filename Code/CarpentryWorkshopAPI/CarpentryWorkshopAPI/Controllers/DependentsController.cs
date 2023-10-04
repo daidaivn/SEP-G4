@@ -11,7 +11,7 @@ using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Dependents
         [HttpGet]
-        public IActionResult GetDependents()
+        public IActionResult GetAllDependentPeople()
         {
           if (_context.Dependents == null)
           {
@@ -38,7 +38,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Dependents/5
         [HttpGet("{id}")]
-        public IActionResult GetDependent(int id)
+        public IActionResult GetDependentPeopleById(int id)
         {
           if (_context.Dependents == null)
           {
@@ -57,7 +57,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Dependents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult PutDependent([FromBody]DependentDTO dependentDTO)
+        public IActionResult UpdateDependent([FromBody]DependentDTO dependentDTO)
         {
             Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
             _context.Entry(dependent).State = EntityState.Modified;
@@ -84,7 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Dependents
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult PostDependent([FromBody]DependentDTO dependentDTO)
+        public IActionResult CreateDependent([FromBody]DependentDTO dependentDTO)
         {
           if (_context.Dependents == null)
           {
@@ -99,7 +99,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // DELETE: api/Dependents/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteDependent(int id)
+        public IActionResult UpdateDependentStatus(int id)
         {
             if (_context.Dependents == null)
             {
@@ -134,11 +134,39 @@ namespace CarpentryWorkshopAPI.Controllers
             return (_context.Dependents?.Any(e => e.DependentId == id)).GetValueOrDefault();
         }
         //Search and filter
-        //[HttpPost("SearchDependent")]
-        //public IActionResult SearchDependents(DependentDTO dependentDTO)
-        //{
+        [HttpPost("SearchDependent")]
+        public IActionResult SearchDependents(DependentsSearchDTO dependentsSearchDTO)
+        {
+            try
+            {
+                var dependentsList = _context.Dependents.Include(de => de.Employee).AsQueryable();
+                if (!string.IsNullOrEmpty(dependentsSearchDTO.InputText))
+                {
+                    dependentsList = dependentsList.Where(de => de.FullName.ToLower().Contains(dependentsSearchDTO.InputText.ToLower()) ||
+                                                    de.IdentifierCode.Contains(dependentsSearchDTO.InputText.ToLower()) ||
+                                                    (de.Employee.FirstName+de.Employee.LastName).ToLower().Contains(dependentsSearchDTO.InputText.ToLower())||
+                                                    de.EmployeeId.ToString() == dependentsSearchDTO.InputText);
+                }
+                if (dependentsSearchDTO.Status.HasValue)
+                {
+                    dependentsList = dependentsList.Where(de => de.Status == dependentsSearchDTO.Status);
+                }
+                if(dependentsSearchDTO.Gender.HasValue)
+                {
+                    dependentsList = dependentsList.Where(de => de.Gender == dependentsSearchDTO.Gender);
+                }
+                if(dependentsList == null)
+                {
+                    return NotFound("no data");
+                }
+                List<DependentDTO> dependentDTOs = _mapper.Map<List<DependentDTO>>(dependentsList.ToList());
+                return Ok(dependentDTOs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //}
-        
     }
 }

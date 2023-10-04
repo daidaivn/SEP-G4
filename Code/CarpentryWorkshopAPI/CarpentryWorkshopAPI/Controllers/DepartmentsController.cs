@@ -11,7 +11,7 @@ using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Departments
         [HttpGet]
-        public IActionResult GetDepartments()
+        public IActionResult GetAllDepartments()
         {
             if (_context.Departments == null)
             {
@@ -40,7 +40,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/Departments/5
         [HttpGet("{id}")]
-        public IActionResult GetDepartment(int id)
+        public IActionResult GetDepartmentById(int id)
         {
             if (_context.Departments == null)
             {
@@ -58,7 +58,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult PutDepartment([FromBody] DepartmentDTO departmentDTO)
+        public IActionResult UpdateDepartment([FromBody] DepartmentDTO departmentDTO)
         {
             Department department = _mapper.Map<Department>(departmentDTO);
             _context.Entry(department).State = EntityState.Modified;
@@ -85,7 +85,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult PostDepartment([FromBody] DepartmentDTO departmentDTO)
+        public IActionResult CreateDepartment([FromBody] DepartmentDTO departmentDTO)
         {
             if (_context.Departments == null)
             {
@@ -100,30 +100,54 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // DELETE: api/Departments/5
         [HttpDelete("{id}")]
-        public IActionResult UpdateDepartment(int id)
+        public IActionResult UpdateDepartmentStatus(int id)
         {
-            if (_context.Departments == null)
+            try
             {
-                return NotFound();
-            }
-            Department department = _context.Departments.SingleOrDefault(e => e.DepartmentId == id);
-            if (department == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                department.Status = false;
-                _context.Departments.Update(department);
-            }
+                if (_context.Departments == null)
+                {
+                    return NotFound();
+                }
+                Department department = _context.Departments.Include(de => de.RolesEmployees).SingleOrDefault(e => e.DepartmentId == id);
+                if (department == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    if (department.Status == true)
+                    {
+                        foreach (var roleEmployee in department.RolesEmployees)
+                        {
+                            roleEmployee.Status = false;
+                        }
+                        department.Status = false;
+                    }
+                    else
+                    {
+                        foreach (var roleEmployee in department.RolesEmployees)
+                        {
+                            roleEmployee.Status = true;
+                        }
+                        department.Status = true;
+                    }
+
+                    _context.Departments.Update(department);
+                    _context.RolesEmployees.UpdateRange(department.RolesEmployees);
+                }
 
 
-            _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
 
-            return Ok("Update status success");
+                return Ok("Update status success");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("DepartmentDetail/{id}")]
-        public IActionResult GetDepartmentDetail(int id)
+        public IActionResult GetEmployeeInDepartment(int id)
         {
             try
             {
