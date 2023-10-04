@@ -56,7 +56,7 @@ function ListDepartmentComponent() {
               <td>STT</td>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="scrollbar" id="style-15">
             {departments.map((department, index) => (
               <tr key={department.departmentId}>
                 <td>{index + 1}</td>
@@ -69,6 +69,46 @@ function ListDepartmentComponent() {
                 </td>
               </tr>
             ))}
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
             <tr>
               <td>?</td>
               <td>Tên phòng ban</td>
