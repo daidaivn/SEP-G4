@@ -57,103 +57,122 @@ function ListEmployeeComponent() {
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
-    <div className="body-list-employee">
-      <div className="head-list">
-        <div className="input-search">
-          <div className="text">
-            <h2>Danh sách nhân viên</h2>
-            <span>
-              Hiển thị thông tin chi tiết của các nhân viên trong xưởng mộc
-            </span>
+    <div className="col-right-container">
+      <div className="list-container-header">
+          <div className="list-text-header">
+            <h2>Danh sách phòng - ban</h2>
+            <span>Hiển thị thông tin chi tiết của các nhân viên trong xưởng mộc</span>
+          </div>
+          <div className="list-user-header">
+            <span>User</span>
+            <img className="user-list" src={user} alt="" />
+            <img className="notification-list" src={notification} alt="" />
           </div>
         </div>
-        <div className="user">
-          <span className="name-user">User</span>
-          <img src={user} alt="" />
-        </div>
-        <div className="notification">
-          <img src={notification} alt="" />
-        </div>
-      </div>
 
-      <div className="filter">
-        <div className="input-search search-add">
-          <i className="icon-search"></i>
-          <Input placeholder="Tìm kiếm" />
+        <div className="list-search-filter-add">
+          <div className="list-input-search">
+            <i></i>
+            <Input placeholder="Tìm kiếm" ></Input>
+          </div>
+          <div className="list-filter">
+            <i className="list-filter-icon1"></i>
+            <span>Bộ lọc</span>
+            <i className="list-filter-icon2"></i>
+          </div>
+          <div className="list-add">
+            <i></i>
+          </div>
         </div>
-        <div className="input-filter">
-          <i className="icon-filter icon-search"></i>
-          <Select
-            showSearch
-            placeholder="Bộ lọc"
-            optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
-            filterOption={filterOption}
-            options={[
-              {
-                value: "nhanvien",
-                label: "Nhân viên",
-              },
-              {
-                value: "quanly",
-                label: "Quản Lý",
-              },
-            ]}
-          />
-        </div>
-        <div className="add-employee">
-          <span className="btn-add_employee">
-            <img src={add} alt="" />
-          </span>
-        </div>
-      </div>
-      <div className="table-employee">
-        <table>
+        <table className="list-table">
           <thead>
-            <tr className="title-employee">
-              <th>Ảnh</th>
-              <th>Họ và tên</th>
-              <th>Giới tính</th>
-              <th>Số điện thoại</th>
-              <th>Chức vụ</th>
-              <th>Trạng thái</th>
+            <tr>
+              <td>Ảnh</td>
+            <td>Họ và tên</td>
+            <td>Giới tính</td>
+            <td>Số điện thoại</td>
+            <td>Chức vụ</td>
+            <td>Trạng thái</td>
             </tr>
           </thead>
-          <tbody className="tbody-employee">
-            {employees.map((employee) => (
-              <tr className="content-employee" key={employee.employeeID} onClick={showModal}>
-                <td>
-                  <img />
-                </td>
-                <td>
-                  <p>{employee.fullName}</p>
-                </td>
-                <td>
-                  <p>{employee.gender}</p>
-                </td>
-                <td>
-                  <p>{employee.phoneNumber}</p>
-                </td>
-                <td>
-                  <p>
-                    {employee.roles.map((role, index) => (
-                      <span key={index}>{role}</span>
-                    ))}
-                  </p>
-                </td>
+          <tbody class="scrollbar" id="style-15">
+            {employees.map((employees, index) => (
+              <tr key={employees.employeesId}>
+                <td>{index + 1}</td>
+                <td>{employees.employeesName}</td>
+                <td>{employees.number}</td>
                 <td>
                   <Form.Item valuePropName="checked">
-                    <Switch checked={employee.status} />
+                    <Switch checked={employees.status} />
                   </Form.Item>
                 </td>
               </tr>
             ))}
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+            <td>Nam</td>
+            <td>0123456789</td>
+            <td>Nhân viên, trưởng phòng</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr   onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+            <td>Nam</td>
+            <td>0123456789</td>
+            <td>Nhân viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr  onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+            <td>Nam</td>
+            <td>0123456789</td>
+            <td>Nhân viên, trưởng phòng</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr  onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+            <td>Nam</td>
+            <td>0123456789</td>
+            <td>Nhân viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr  onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+            <td>Nam</td>
+            <td>0123456789</td>
+            <td>Nhân viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr  onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+            <td>Nam</td>
+            <td>0123456789</td>
+            <td>Nhân viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
           </tbody>
-
         </table>
 
-        <Modal
+
+      <Modal
           className="modal"
           open={isModalOpen}
           on
@@ -270,7 +289,6 @@ function ListEmployeeComponent() {
             </button>
           </div>
         </Modal>
-      </div>
     </div>
 
   );
