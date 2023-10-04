@@ -1,17 +1,24 @@
+import React, { useState, useEffect } from "react";
 import "../scss/index.scss"
+import "../scss/DepartmentComponent.scss"
 import user from "../assets/images/Ellipse 69.svg";
 import notification from "../assets/images/icons/notification.svg";
 import { Input, Switch, Form, Select } from "antd";
+import { fetchAllDepadment } from "../../sevices/DepartmentService";
 
 function ListDepartmentComponent() {
-  const onChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-  const onSearch = (value) => {
-    console.log("search:", value);
-  };
-  const filterOption = (input, option) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
+    fetchAllDepadment()
+      .then((data) => {
+        setDepartments(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
+      });
+  }, []);
   return (
     <>
       <div className="col-right-container">
@@ -36,8 +43,50 @@ function ListDepartmentComponent() {
             <span>Bộ lọc</span>
             <i className="list-filter-icon2"></i>
           </div>
-          <div className="list-add"></div>
+          <div className="list-add">
+            <i></i>
+          </div>
         </div>
+        <table className="list-table">
+          <thead>
+            <tr>
+              <td>STT</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td>STT</td>
+            </tr>
+          </thead>
+          <tbody>
+            {departments.map((department, index) => (
+              <tr key={department.departmentId}>
+                <td>{index + 1}</td>
+                <td>{department.departmentName}</td>
+                <td>{department.number}</td>
+                <td>
+                  <Form.Item valuePropName="checked">
+                    <Switch checked={department.status} />
+                  </Form.Item>
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+            <tr>
+              <td>?</td>
+              <td>Tên phòng ban</td>
+              <td>Số thành viên</td>
+              <td><Form.Item valuePropName="checked">
+                <Switch checked="true" />
+              </Form.Item></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </>
   )
