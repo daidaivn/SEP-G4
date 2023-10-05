@@ -28,6 +28,12 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<Contract, CreateContractDTO>()
                 .ReverseMap();
+            CreateMap<Contract, ContractDTO>()
+                .ForMember(de => de.ContractTypeName, option => option.MapFrom(d => d.ContractType!.ContractName))
+                .ForMember(de => de.EmployeeName, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
+                .ReverseMap();
+            CreateMap<ContractType, ContractTypeDTO>()
+                .ReverseMap();
         }
     }
 }
