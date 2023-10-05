@@ -7,66 +7,67 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    public class RoleStatusHistoryController : Controller
+    public class ContractStatusHistoriesController : Controller
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public RoleStatusHistoryController(SEPG4CCMSContext context, IMapper mapper)
+        public ContractStatusHistoriesController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-
         [HttpGet]
         public IActionResult GetAllHistory()
         {
             try
             {
-                var historys = _context.RolesStatusHistories.ToList();
+                var historys = _context.ContractsStatusHistories.ToList();
                 if (historys == null)
                 {
                     return NotFound();
                 }
-                var rshDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historys);
-                return Ok(rshDTO);
-            }catch(Exception ex)
+                var cshDTO = _mapper.Map<List<ContractStatusHistoryDTO>>(historys);
+                return Ok(cshDTO);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         [HttpPost]
-        public IActionResult GetRoleHistoryByDate([FromBody] SearchRoleStatusHistoryDTO searchRoleStatusHistoryDTO)
+        public IActionResult GetContractHistoryByDate([FromBody] SearchContractStatusHistoryDTO searchContractStatusHistoryDTO)
         {
             try
             {
-                var historysbydate = _context.RolesStatusHistories
-                    .Where(x => x.ActionDate == searchRoleStatusHistoryDTO.ActionDate)
+                var historysbydate = _context.ContractsStatusHistories
+                    .Where(x => x.ActionDate == searchContractStatusHistoryDTO.ActionDate)
                     .ToList();
                 if (historysbydate == null)
                 {
                     return NotFound();
                 }
-                var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
+                var historydateDTO = _mapper.Map<List<ContractStatusHistoryDTO>>(historysbydate);
                 return Ok(historydateDTO);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         [HttpPost]
-        public IActionResult GetRoleHistorys([FromBody] SearchRoleStatusHistoryDTO searchRoleStatusHistoryDTO)
+        public IActionResult GetContractHistorys([FromBody] SearchContractStatusHistoryDTO searchContractStatusHistoryDTO)
         {
             try
             {
-                var historysbydate = _context.RolesStatusHistories
-                    .Where(x => x.ActionDate == searchRoleStatusHistoryDTO.ActionDate 
-                    && x.RoleId == searchRoleStatusHistoryDTO.RoleId)
+                var historysbydate = _context.ContractsStatusHistories
+                    .Where(x => x.ActionDate ==searchContractStatusHistoryDTO.ActionDate
+                    && x.ContractId == searchContractStatusHistoryDTO.ContractId)
                     .ToList();
                 if (historysbydate == null)
                 {
                     return NotFound();
                 }
-                var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
+                var historydateDTO = _mapper.Map<List<ContractStatusHistoryDTO>>(historysbydate);
                 return Ok(historydateDTO);
             }
             catch (Exception ex)
