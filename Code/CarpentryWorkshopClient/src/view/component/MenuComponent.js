@@ -4,6 +4,7 @@ import "../scss/MenuComponent.scss";
 import { Col, Row } from "antd";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState } from "react";
+import logo from "../assets/images/logo.png"
 const MenuComponent = () => {
   const [activeDiv, setActiveDiv] = useState("div1");
 
@@ -15,23 +16,9 @@ const MenuComponent = () => {
       <div className="menu">
         <div className="logo-menu">
           <Link to="../">
-            <svg
-              width="55"
-              height="55"
-              viewBox="0 0 55 55"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                id="Ellipse 70"
-                cx="27.5"
-                cy="27.5"
-                r="27.5"
-                fill="white"
-              />
-            </svg>
+            <img src={logo} />
           </Link>
-          <h1 className="logo-name">Tên app</h1>
+          <h1 className="logo-name">Phú Cầu</h1>
         </div>
         <div className="body-menu">
           <div className="item-link">
