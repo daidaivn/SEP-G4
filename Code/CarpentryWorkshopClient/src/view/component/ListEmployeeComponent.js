@@ -113,7 +113,7 @@ function ListEmployeeComponent() {
               <td>Nguyễn Văn An</td>
             <td>Nam</td>
             <td>0123456789</td>
-            <td>Nhân viên, trưởng phòng</td>
+            <td>trưởng phòng</td>
               <td><Form.Item valuePropName="checked">
                 <Switch checked="true" />
               </Form.Item></td>
@@ -133,7 +133,7 @@ function ListEmployeeComponent() {
               <td>Nguyễn Văn An</td>
             <td>Nam</td>
             <td>0123456789</td>
-            <td>Nhân viên, trưởng phòng</td>
+            <td>trưởng phòng</td>
               <td><Form.Item valuePropName="checked">
                 <Switch checked="true" />
               </Form.Item></td>

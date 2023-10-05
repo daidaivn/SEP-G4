@@ -316,3 +316,23 @@ tr {
     color-stop(0.6, #54de5d)
   );
 }
+thead {
+  tr {
+    td {
+      color: #f6f6f6;
+      font-family: "Noto Sans";
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+}
+tbody {
+  tr {
+    td {
+      color: #24242e;
+      font-family: Noto Sans;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+}
