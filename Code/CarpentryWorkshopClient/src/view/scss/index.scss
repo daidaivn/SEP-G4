@@ -247,13 +247,11 @@
 }
 
 .list-table tbody {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  flex: 1 0 0;
-  align-self: stretch;
-  max-height: 51vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    align-self: stretch;
   overflow-y: auto;
 }
 
@@ -316,3 +314,5 @@ tr {
     color-stop(0.6, #54de5d)
   );
 }
+
+
