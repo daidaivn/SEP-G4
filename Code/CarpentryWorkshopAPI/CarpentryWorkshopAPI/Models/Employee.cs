@@ -9,6 +9,7 @@ namespace CarpentryWorkshopAPI.Models
         {
             Contracts = new HashSet<Contract>();
             Dependents = new HashSet<Dependent>();
+            EmployeeDegrees = new HashSet<EmployeeDegree>();
             EmployeesStatusHistories = new HashSet<EmployeesStatusHistory>();
             RolesEmployees = new HashSet<RolesEmployee>();
         }
@@ -31,6 +32,7 @@ namespace CarpentryWorkshopAPI.Models
         public virtual UserAccount? UserAccount { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<Dependent> Dependents { get; set; }
+        public virtual ICollection<EmployeeDegree> EmployeeDegrees { get; set; }
         public virtual ICollection<EmployeesStatusHistory> EmployeesStatusHistories { get; set; }
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
     }

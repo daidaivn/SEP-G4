@@ -9,6 +9,7 @@ namespace CarpentryWorkshopAPI.Models
         public int? ContractTypeId { get; set; }
         public string? Action { get; set; }
         public DateTime? ActionDate { get; set; }
+        public int? CurrentEmployeeId { get; set; }
 
         public virtual ContractType? ContractType { get; set; }
     }

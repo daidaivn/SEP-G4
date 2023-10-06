@@ -8,6 +8,7 @@ namespace CarpentryWorkshopAPI.Models
         public Degree()
         {
             DegreesStatusHistories = new HashSet<DegreesStatusHistory>();
+            EmployeeDegrees = new HashSet<EmployeeDegree>();
         }
 
         public int DegreeId { get; set; }
@@ -15,5 +16,6 @@ namespace CarpentryWorkshopAPI.Models
         public bool? Status { get; set; }
 
         public virtual ICollection<DegreesStatusHistory> DegreesStatusHistories { get; set; }
+        public virtual ICollection<EmployeeDegree> EmployeeDegrees { get; set; }
     }
 }
