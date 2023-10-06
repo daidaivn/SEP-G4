@@ -9,6 +9,7 @@ namespace CarpentryWorkshopAPI.Models
         {
             RolesEmployees = new HashSet<RolesEmployee>();
             RolesStatusHistories = new HashSet<RolesStatusHistory>();
+            Pages = new HashSet<Page>();
         }
 
         public int RoleId { get; set; }
@@ -17,5 +18,7 @@ namespace CarpentryWorkshopAPI.Models
 
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
         public virtual ICollection<RolesStatusHistory> RolesStatusHistories { get; set; }
+
+        public virtual ICollection<Page> Pages { get; set; }
     }
 }
