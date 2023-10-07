@@ -32,7 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetHistoriesByContractType([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
         {
             try
@@ -56,7 +56,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetHistoriesByDate([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
         {
             try

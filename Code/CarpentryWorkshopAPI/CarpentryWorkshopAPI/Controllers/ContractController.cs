@@ -141,6 +141,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    Action = "Create",
+                    ActionDate = DateTime.Now,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.Contracts.Add(newct);
                 _context.SaveChanges();
                 return Ok("Create contract successfull");
@@ -159,6 +165,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    Action = "Update",
+                    ActionDate = DateTime.Now,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.Contracts.Update(newct);
                 _context.SaveChanges();
                 return Ok("Update contract successfull");
@@ -192,6 +204,12 @@ namespace CarpentryWorkshopAPI.Controllers
                         contract.Status = true;
                     }
                 }
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.Contracts.Update(contract);
                 _context.SaveChanges();
                 return Ok("Change contract status successful");

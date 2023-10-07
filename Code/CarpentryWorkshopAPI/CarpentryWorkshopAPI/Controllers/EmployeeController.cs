@@ -126,13 +126,19 @@ namespace CarpentryWorkshopAPI.Controllers
                             };
                             _context.RolesEmployees.Add(newremp);
                         }
-                   
+                    EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                    {
+                        Action = "Create",
+                        ActionDate = DateTime.Now,
+                    };
+                    _context.EmployeesStatusHistories.Add(newhistory);
                     _context.SaveChanges();
                     return Ok("Create employee successful");
                 }
                 else
                 {
-                foreach (var rd in createEmployeeDTO.rDs)
+                    
+                    foreach (var rd in createEmployeeDTO.rDs)
                 {
 
                     var roleemployees = _context.RolesEmployees
@@ -161,8 +167,16 @@ namespace CarpentryWorkshopAPI.Controllers
                             
                         
                     }
+                    var updateemp = _mapper.Map<Employee>(createEmployeeDTO);
+                    _context.Employees.Update(updateemp);
+                    EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                    {
+                        Action = "Update",
+                        ActionDate = DateTime.Now,
+                    };
+                    _context.EmployeesStatusHistories.Add(newhistory);
                     _context.SaveChanges();
-                    return Ok("Update roleemployee successfull");
+                    return Ok("Update enployee and roleemployee successfull");
 
                 }
             }
@@ -191,6 +205,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     employees.Status = true;
                 }
+                EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                {
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                };
+                _context.EmployeesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Change employee status successfully");
             }

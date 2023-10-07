@@ -84,6 +84,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
+                RolesStatusHistory newhistory = new RolesStatusHistory
+                {
+                    Action = "Create",
+                    ActionDate = DateTime.Now,
+                };
+                _context.RolesStatusHistories.Add(newhistory);
                 _context.Roles.Add(newrole);
                 _context.SaveChanges();
                 return Ok("Create role succesful");
@@ -102,7 +108,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-               
+                RolesStatusHistory newhistory = new RolesStatusHistory
+                {
+                    Action = "Update",
+                    ActionDate = DateTime.Now,
+                };
+                _context.RolesStatusHistories.Add(newhistory);
                 _context.Roles.Update(updaterole);
                 _context.SaveChanges();
                 return Ok("Update role successful");
@@ -138,6 +149,12 @@ namespace CarpentryWorkshopAPI.Controllers
                         }
                     
                 }
+                RolesStatusHistory newhistory = new RolesStatusHistory
+                {
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                };
+                _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Change roles status succesful");
             }

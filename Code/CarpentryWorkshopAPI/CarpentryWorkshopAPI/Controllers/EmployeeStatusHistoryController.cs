@@ -1,4 +1,5 @@
-﻿using CarpentryWorkshopAPI.Models;
+﻿using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -29,18 +30,20 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             
         }
-        [HttpGet("actionDate")]
-        public IActionResult GetHistoryByDate(string actionDate)
+        [HttpPost]
+        public IActionResult GetHistoryByDate([FromBody] EmployeeStatusHistoryDTO employeeStatusHistoryDTO)
         {
             try
             {
-                DateTime date= DateTime.Parse(actionDate);
-                var historylistbydate = _context.EmployeesStatusHistories
-                    .Where(x => x.ActionDate == date)
-                    .ToList();
-                if (historylistbydate == null)
-                {
-                    return NotFound();
+                List<EmployeesStatusHistory> historylistbydate = new List<EmployeesStatusHistory>();
+                if (employeeStatusHistoryDTO.ActionDate.HasValue) {
+                    historylistbydate = _context.EmployeesStatusHistories
+                   .Where(x => x.ActionDate == employeeStatusHistoryDTO.ActionDate)
+                   .ToList();
+                    if (historylistbydate == null)
+                    {
+                        return NotFound();
+                    }
                 }
                 return Ok(historylistbydate);
             }
@@ -49,18 +52,22 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("{eid}/{actionDate}")]
-        public IActionResult GetEmployeeStatusHistoryByDate(string actionDate, int eid)
+        [HttpPost]
+        public IActionResult GetEmployeeStatusHistoryByDate([FromBody] EmployeeStatusHistoryDTO employeeStatusHistoryDTO)
         {
             try
             {
-                DateTime date = DateTime.Parse(actionDate);
-                var emphistorylistbydate = _context.EmployeesStatusHistories
-                    .Where(x => x.ActionDate == date && x.EmployeeId == eid)
-                    .ToList();
-                if (emphistorylistbydate == null)
+                List<EmployeesStatusHistory> emphistorylistbydate = new List<EmployeesStatusHistory>();
+                if (employeeStatusHistoryDTO.ActionDate.HasValue && employeeStatusHistoryDTO.EmployeeId.HasValue)
                 {
-                    return NotFound();
+                         emphistorylistbydate = _context.EmployeesStatusHistories
+                        .Where(x => x.ActionDate == employeeStatusHistoryDTO.ActionDate 
+                        && x.EmployeeId == employeeStatusHistoryDTO.EmployeeId)
+                        .ToList();
+                    if (emphistorylistbydate == null)
+                    {
+                        return NotFound();
+                    }
                 }
                 return Ok(emphistorylistbydate);
             }
