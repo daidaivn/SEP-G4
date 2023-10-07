@@ -5,11 +5,14 @@ namespace CarpentryWorkshopAPI.Models
 {
     public partial class EmployeeDegree
     {
-        public int? DegreeId { get; set; }
-        public int? EmployeeId { get; set; }
-        public DateTime? GraduationDate { get; set; }
+        public int DegreeId { get; set; }
+        public int EmployeeId { get; set; }
+        public DateTime? GraduateDate { get; set; }
+        public string? Major { get; set; }
+        public string? School { get; set; }
+        public string? LinkDoc { get; set; }
 
-        public virtual Degree? Degree { get; set; }
-        public virtual Employee? Employee { get; set; }
+        public virtual Degree Degree { get; set; } = null!;
+        public virtual Employee Employee { get; set; } = null!;
     }
 }

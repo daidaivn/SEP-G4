@@ -2,8 +2,7 @@
 {
     public class RoleSearchDTO
     {
-        public int RoleId { get; set; }
-        public string? RoleName { get; set; }
+        public string? InputText { get; set; }
         public bool? Status { get; set; }
     }
 }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace CarpentryWorkshopAPI.Models
 {
-    public partial class ContractsStatusHistory
+    public partial class DegreesStatusHistory
     {
         public int HistoryId { get; set; }
-        public int? ContractId { get; set; }
+        public int? DegreeId { get; set; }
         public string? Action { get; set; }
         public DateTime? ActionDate { get; set; }
         public int? CurrentEmployeeId { get; set; }
 
-        public virtual Contract? Contract { get; set; }
+        public virtual Degree? Degree { get; set; }
     }
 }

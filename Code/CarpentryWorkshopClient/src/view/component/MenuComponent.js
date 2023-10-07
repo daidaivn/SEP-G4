@@ -1,11 +1,10 @@
 import "../scss/reset.scss";
-import "../scss/responsive.scss";
+import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
-import { Col, Row } from "antd";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState } from "react";
 import logo from "../assets/images/logo.png"
-const MenuComponent = () => {
+const Menucomponent = () => {
   const [activeDiv, setActiveDiv] = useState("div1");
 
   const handleDivClick = (divId) => {
@@ -14,7 +13,9 @@ const MenuComponent = () => {
   return (
     <div className="list-menu">
       <div className="menu">
+     
         <div className="logo-menu">
+          
           <Link to="../">
             <img src={logo} />
           </Link>
@@ -88,7 +89,8 @@ const MenuComponent = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 
-export default MenuComponent;
+export default Menucomponent;

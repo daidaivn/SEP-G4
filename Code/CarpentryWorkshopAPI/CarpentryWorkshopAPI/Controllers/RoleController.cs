@@ -2,6 +2,8 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Reflection.Metadata.Ecma335;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -22,7 +24,18 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var rolelist = _context.Roles.ToList();
+                var rolelist = _context.Roles
+                    .Include(x =>x.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .Select(roled => new RoleDetailDTO
+                    {
+                        RoleID = roled.RoleId,
+                        RoleName = roled.RoleName,
+                        Status = roled.Status,
+                        Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                    }
+                    )
+                    ;
                 if (rolelist == null)
                 {
                     return NotFound();
@@ -38,7 +51,19 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var role = _context.Roles.FirstOrDefault(x => x.RoleId== rid);
+                var role = _context.Roles
+                    .Where(x => x.RoleId == rid)
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .Select(roled => new RoleDetailDTO
+                    {
+                        RoleID = roled.RoleId,
+                        RoleName = roled.RoleName,
+                        Status = roled.Status,
+                        Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                    }
+                    )
+                    ;
                 if (role == null)
                 {
                     return NotFound();
@@ -126,28 +151,28 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var query = _context.Roles.AsQueryable();
-                if (roleSearchDTO.RoleId != 0)
+                var query = _context.Roles
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(roleSearchDTO.InputText))
                 {
-                    query = query.Where(x => x.RoleId == roleSearchDTO.RoleId);
+                    query = query.Where(x => x.RoleName.ToLower().Contains(roleSearchDTO.InputText.ToLower()));
                 }
-                if (!string.IsNullOrEmpty(roleSearchDTO.RoleName))
+                if (roleSearchDTO.Status.HasValue)
                 {
-                    query = query.Where(x => x.RoleName.ToLower().Equals(roleSearchDTO.RoleName.ToLower()));
+                    query = query.Where(x => x.Status == roleSearchDTO.Status.Value);
                 }
-                if (roleSearchDTO.Status == true)
-                {
-                    query = query.Where(x => x.Status == true);
-                }
-                else
-                {
-                    query = query.Where(x => x.Status == false);
-                }
-                var roles = _mapper.Map<List<Role>, List<RoleSearchDTO>>(query.ToList());
-                if (roles == null)
-                {
-                    return NotFound();
-                }
+                var roles = query.Select(
+                    r => new RoleDetailDTO
+                    {
+                        RoleID = r.RoleId,
+                        RoleName = r.RoleName,
+                        Status = r.Status,
+                        Employees = r.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList()
+                    }
+                    ).ToList();
+               
                 return Ok(roles);
             }catch(Exception ex)
             {
