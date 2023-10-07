@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
+using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -14,110 +16,91 @@ namespace CarpentryWorkshopAPI.Controllers
     public class DegreesController : ControllerBase
     {
         private readonly SEPG4CCMSContext _context;
-
-        public DegreesController(SEPG4CCMSContext context)
+        private IMapper _mapper;
+        public DegreesController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        // GET: api/Degrees
+        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Degree>>> GetDegrees()
+        public IActionResult GetAllDegrees()
         {
-          if (_context.Degrees == null)
-          {
-              return NotFound();
-          }
-            return await _context.Degrees.ToListAsync();
+            List<Degree> degreeList = _context.Degrees.ToList();
+            return Ok(_mapper.Map<List<DegreeDTO>>(degreeList));
         }
 
-        // GET: api/Degrees/5
+        
         [HttpGet("{id}")]
-        public async Task<ActionResult<Degree>> GetDegree(int id)
+        public IActionResult GetDegree(int id)
         {
-          if (_context.Degrees == null)
-          {
-              return NotFound();
-          }
-            var degree = await _context.Degrees.FindAsync(id);
-
-            if (degree == null)
-            {
-                return NotFound();
-            }
-
-            return degree;
+            var degree = _context.Degrees.SingleOrDefault(de => de.DegreeId == id);
+            return Ok(_mapper.Map<DgreeDTO>(degree));
         }
 
         // PUT: api/Degrees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDegree(int id, Degree degree)
+        public IActionResult UpdateDegree([FromBody] DgreeDTO dgreeDTO)
         {
-            if (id != degree.DegreeId)
-            {
-                return BadRequest();
-            }
-
+            Degree degree = _mapper.Map<Degree>(dgreeDTO);
             _context.Entry(degree).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!DegreeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
 
-            return NoContent();
+            return Ok(degree);
         }
 
         // POST: api/Degrees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Degree>> PostDegree(Degree degree)
+        public IActionResult CreateDegree([FromBody] DegreeDTO degreeDTO)
         {
           if (_context.Degrees == null)
           {
               return Problem("Entity set 'SEPG4CCMSContext.Degrees'  is null.");
           }
+            Degree degree = _mapper.Map<Degree>(degreeDTO);
             _context.Degrees.Add(degree);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return CreatedAtAction("GetDegree", new { id = degree.DegreeId }, degree);
         }
 
         // DELETE: api/Degrees/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDegree(int id)
+        public IActionResult UpdateStatusDegree(int id)
         {
             if (_context.Degrees == null)
             {
                 return NotFound();
             }
-            var degree = await _context.Degrees.FindAsync(id);
+            var degree = _context.Degrees.SingleOrDefault(de => de.DegreeId == id);
             if (degree == null)
             {
                 return NotFound();
             }
-
-            _context.Degrees.Remove(degree);
-            await _context.SaveChangesAsync();
+            if(degree.Status == true)
+            {
+                degree.Status = false;
+            }
+            else
+            {
+                degree.Status = true;
+            }
+            _context.Degrees.Update(degree);
+            _context.SaveChanges();
 
             return NoContent();
         }
-
-        private bool DegreeExists(int id)
-        {
-            return (_context.Degrees?.Any(e => e.DegreeId == id)).GetValueOrDefault();
-        }
+        
     }
 }

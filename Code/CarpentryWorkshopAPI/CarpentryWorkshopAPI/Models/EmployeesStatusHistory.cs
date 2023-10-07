@@ -9,6 +9,7 @@ namespace CarpentryWorkshopAPI.Models
         public int? EmployeeId { get; set; }
         public string? Action { get; set; }
         public DateTime? ActionDate { get; set; }
+        public int? CurrentEmployeeId { get; set; }
 
         public virtual Employee? Employee { get; set; }
     }
