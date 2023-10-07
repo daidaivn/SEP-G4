@@ -101,6 +101,27 @@ namespace CarpentryWorkshopAPI.Controllers
 
             return NoContent();
         }
-        
+        [HttpPost]
+        public IActionResult SearchDegrees([FromBody] DegreeDTO degreeDTO)
+        {
+            if (_context.Degrees == null)
+            {
+                return NotFound();
+            }
+            var degree = _context.Degrees.AsQueryable();
+            if (!string.IsNullOrEmpty(degreeDTO.DegreeName))
+            {
+                degree = degree.Where(de => de.DegreeName.Contains(degreeDTO.DegreeName));
+            }
+            if(degreeDTO.Status == true)
+            {
+                degree = degree.Where(de => de.Status == true);
+            }
+            if (degreeDTO.Status == false)
+            {
+                degree = degree.Where(de => de.Status == false);
+            }
+            return Ok(_mapper.Map<DegreeDTO>(degree.ToList()));
+        } 
     }
 }

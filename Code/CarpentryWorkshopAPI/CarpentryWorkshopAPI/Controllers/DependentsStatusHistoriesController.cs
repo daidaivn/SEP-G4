@@ -59,7 +59,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet("{deid}/{actionDate}")]
-        public IActionResult GetEmployeeStatusHistoryByDate(string actionDate, int deid)
+        public IActionResult GetDependentsStatusHistoriesByDate(string actionDate, int deid)
         {
             try
             {
