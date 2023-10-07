@@ -27,8 +27,10 @@ function ListDepartmentComponent() {
             <h2>Danh sách phòng - ban</h2>
             <span>Hiển thị thông tin chi tiết phòng - ban trong xưởng mộc</span>
           </div>
+
           <MenuResponsive />
           <ListUserHeader />
+
         </div>
         <div className="list-search-filter-add">
           <div className="list-input-search">
