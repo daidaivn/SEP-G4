@@ -1,9 +1,9 @@
 ﻿namespace CarpentryWorkshopAPI.DTO
 {
-    public class RoleStatusHistoryDTO
+    public class ContractStatusHistoryDTO
     {
         public int HistoryId { get; set; }
-        public int? RoleId { get; set; }
+        public int? ContractId { get; set; }
         public string? Action { get; set; }
         public DateTime? ActionDate { get; set; }
     }

@@ -1,0 +1,19 @@
+.list-table tbody td:nth-child(1) {
+  display: flex;
+  width: 92px;
+  padding: 0px 29px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+.list-table thead td:nth-child(1) {
+  display: flex;
+  width: 92px;
+  padding: 0px 29px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
