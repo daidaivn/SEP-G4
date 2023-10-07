@@ -2,7 +2,6 @@ import "../scss/reset.scss";
 import "../scss/responsive.scss";
 import "../scss/ListEmployeeComponent.scss";
 import { Input, Switch, Form } from "antd";
-import MenuComponent from "./MenuComponent";
 import { Col, Row } from "antd";
 import user from "../assets/images/Ellipse 69.svg";
 import notification from "../assets/images/icons/notification.svg";

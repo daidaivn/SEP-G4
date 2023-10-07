@@ -5,7 +5,7 @@ import { Col, Row } from "antd";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState } from "react";
 import logo from "../assets/images/logo.png"
-const MenuComponent = () => {
+const Menucomponent = () => {
   const [activeDiv, setActiveDiv] = useState("div1");
 
   const handleDivClick = (divId) => {
@@ -88,7 +88,8 @@ const MenuComponent = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 
-export default MenuComponent;
+export default Menucomponent;

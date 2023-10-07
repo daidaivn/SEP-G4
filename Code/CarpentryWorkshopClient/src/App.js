@@ -1,7 +1,7 @@
 import React from "react";
 import "../src/view/scss/index.scss"
 import { Outlet, Routes, Route } from "react-router-dom";
-import MenuComponent from "./view/component/MenuComponent";
+import Menucomponent from "./view/component/Menucomponent";
 import ListEmployeeComponent from "./view/component/ListEmployeeComponent";
 import ListDepartmentComponent from "./view/component/DepartmentComponent";
 import DashboardComponent from "./view/component/DashboardComponnet";
@@ -12,9 +12,7 @@ import Container from 'react-bootstrap/Container';
 function App() {
   return (
     <div className="screen">
-        <div xxl={4} span={4}>
-          <MenuComponent />
-        </div>
+          <Menucomponent />
         <div className="col-right">
           <Routes>
             <Route path="/" element={<DashboardComponent />} />

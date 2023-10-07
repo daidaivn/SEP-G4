@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../scss/index.scss"
 import "../scss/DepartmentComponent.scss"
-import user from "../assets/images/Ellipse 69.svg";
-import notification from "../assets/images/icons/notification.svg";
 import { Input, Switch, Form, Select } from "antd";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
+import ListUserHeader from "./componentUI/ListUserHeader";
 
 function ListDepartmentComponent() {
   const [departments, setDepartments] = useState([]);
@@ -25,13 +24,9 @@ function ListDepartmentComponent() {
         <div className="list-container-header">
           <div className="list-text-header">
             <h2>Danh sách phòng - ban</h2>
-            <span>Hiển thị thông tin chi tiết của các nhân viên trong xưởng mộc</span>
+            <span>Hiển thị thông tin chi tiết phòng - ban trong xưởng mộc</span>
           </div>
-          <div className="list-user-header">
-            <span>User</span>
-            <img className="user-list" src={user} alt="" />
-            <img className="notification-list" src={notification} alt="" />
-          </div>
+          <ListUserHeader/>
         </div>
         <div className="list-search-filter-add">
           <div className="list-input-search">
