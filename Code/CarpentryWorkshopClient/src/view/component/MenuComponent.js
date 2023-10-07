@@ -1,7 +1,6 @@
 import "../scss/reset.scss";
-import "../scss/responsive.scss";
+import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
-import { Col, Row } from "antd";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState } from "react";
 import logo from "../assets/images/logo.png"
@@ -14,7 +13,9 @@ const Menucomponent = () => {
   return (
     <div className="list-menu">
       <div className="menu">
+     
         <div className="logo-menu">
+          
           <Link to="../">
             <img src={logo} />
           </Link>

@@ -1,3 +1,60 @@
+/* Poppins Regular 400 */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/NotoSans-Light.ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/NotoSans-Regular.ttf");
+}
+
+/* Poppins Medium 500 */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/NotoSans-Medium.ttf");
+}
+
+/* Poppins Bold 600 */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/NotoSans-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: italic;
+  font-weight: 800;
+  src: url("../fonts/NotoSans-ExtraBoldItalic.ttf");
+}
+/* Poppins Bold 700 */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/NotoSans-Bold.ttf");
+}
+
+/* Poppins ExtraBold 800 */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 800;
+  src: url("../fonts/NotoSans-ExtraBold.ttf");
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/NotoSans-Black.ttf");
+}
 .screen {
   display: flex;
   width: 100%;
@@ -118,17 +175,22 @@
   border: 1px solid #bc4749;
 }
 
-.list-input-search i {
-  display: flex;
-  width: 24px;
-  height: 24px;
-  justify-content: center;
-  align-items: center;
-  mask-image: url("../assets/images/icons/search-normal.svg");
-  background-color: #64966e;
+// .list-input-search i {
+//   padding-right: 20px;
+//   display: flex;
+//   width: 24px;
+//   height: 24px;
+//   justify-content: center;
+//   align-items: center;
+//   mask-image: url("../assets/images/icons/search-normal.svg");
+//   background-color: #64966e;
+// }
+i {
+  width: unset !important;
+  height: unset !important;
 }
-
 .list-input-search input {
+  padding-left: 5px !important;
   border: none;
   outline: none;
   background: transparent;
@@ -162,28 +224,28 @@
   background: #f6f6f6;
 }
 
-.list-filter-icon1 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 24px;
-  height: 24px;
-  mask-image: url("../assets/images/icons/filter-search.svg");
-  background-color: #64966e;
-}
+// .list-filter-icon1 {
+//   display: flex;
+//   align-items: center;
+//   gap: 10px;
+//   width: 24px;
+//   height: 24px;
+//   mask-image: url("../assets/images/icons/filter-search.svg");
+//   background-color: #64966e;
+// }
 
-.list-filter-icon2 {
-  display: flex;
-  width: 17px;
-  height: 13px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 10px;
-  flex-shrink: 0;
-  mask-image: url("../assets/images/Polygon\ 7.svg");
-  background-color: #64966e;
-}
+// .list-filter-icon2 {
+//   display: flex;
+//   width: 17px;
+//   height: 13px;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: flex-end;
+//   gap: 10px;
+//   flex-shrink: 0;
+//   mask-image: url("../assets/images/Polygon\ 7.svg");
+//   background-color: #64966e;
+// }
 
 .list-filter span {
   display: flex;
@@ -199,7 +261,7 @@
 
 .list-add {
   display: flex;
-  padding: 16px;
+  padding: 16px 18px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -208,12 +270,12 @@
   background: #ff8f19;
 }
 
-.list-add i {
-  width: 36px;
-  height: 36px;
-  mask-image: url("../assets/images/icons/element-plus.svg");
-  background: #fff;
-}
+// .list-add i {
+//   width: 36px;
+//   height: 36px;
+//   mask-image: url("../assets/images/icons/element-plus.svg");
+//   background: #fff;
+// }
 
 .list-table {
   display: flex;
@@ -247,11 +309,11 @@
 }
 
 .list-table tbody {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 9px;
-    align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  align-self: stretch;
   overflow-y: auto;
 }
 
@@ -335,3 +397,136 @@ tbody {
   }
 }
 
+.nav__bars-btn {
+  border-radius: 100%;
+  height: 28px;
+  padding: 5px 8px;
+  display: none;
+  background-color: #386641;
+  fill: white;
+}
+.nav__input:checked ~ .nav-mobile-input {
+  transform: translateY(0);
+}
+.nav-mobile-input {
+  transform: translateY(-180%);
+  position: fixed;
+  top: 98px;
+  bottom: 0;
+  left: 80px;
+  width: 764px;
+  max-width: 100%;
+}
+.menu-list-mobile {
+  background-color: #386641;
+}
+.menu-item-link {
+  padding: 10px 10px;
+}
+.menu-item-link a {
+  font-size: 15px;
+  color: white;
+}
+.logo-responsive {
+  color: #3a5a40;
+  font-family: "Noto Sans";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+}
+.icon-responsive {
+  display: none;
+}
+.logo-responsive {
+  display: none;
+}
+.icon-web {
+  display: block;
+}
+.list-text-header-res {
+  display: none;
+  margin-top: 24px;
+  h2 {
+    color: #1e1e1e;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-weight: 700;
+  }
+  span {
+    color: #24242e;
+    font-family: "Noto Sans";
+    font-size: 10px;
+    font-weight: 400;
+  }
+}
+.info-responsive {
+  margin: 12px 0;
+  width: 100%;
+  display: none;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid #3a5a40;
+}
+.info-head-res {
+  display: flex;
+  gap: 18px;
+}
+.info-name-gender {
+  h2 {
+    color: #24242e;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 9px;
+  }
+  p {
+    color: #24242e;
+    font-family: "Noto Sans";
+    font-size: 12px;
+    font-weight: 300;
+  }
+}
+.icon-phone-res {
+  p {
+    color: #24242e;
+    font-family: "Noto Sans";
+    font-size: 12px;
+    font-weight: 300;
+  }
+}
+.phone-res {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.icon-role-res {
+  p {
+    color: #24242e;
+    font-family: "Noto Sans";
+    font-size: 12px;
+    font-weight: 300;
+  }
+}
+.role-res {
+  display: flex;
+}
+.active-res {
+  display: flex;
+  gap: 10px;
+  p {
+    margin-top: 10px;
+    color: #34c759;
+    font-family: "Noto Sans";
+    font-size: 10px;
+    font-weight: 300;
+  }
+}
+.phone-res,
+.role-res,
+.active-res {
+  margin-top: 14px;
+}
+:where(.css-dev-only-do-not-override-1vr7spz).ant-form-item {
+  margin-bottom: 0;
+}
