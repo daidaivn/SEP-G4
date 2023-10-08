@@ -1,7 +1,10 @@
 import "../scss/reset.scss";
 import "../scss/DashboardComponnet.scss";
-import MenuResponsive from "./componentUI/MenuResponsive";
 const DashboardComponnet = () => {
-  return(<div><MenuResponsive/></div>);
+  return (
+    <div>
+      <h1>Dashboard</h1>
+    </div>
+  );
 };
 export default DashboardComponnet;
