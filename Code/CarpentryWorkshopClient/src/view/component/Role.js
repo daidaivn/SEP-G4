@@ -6,62 +6,64 @@ import { fetchAllDepadment } from "../../sevices/DepartmentService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
+import { fetchAllRole } from "../../sevices/RoleService";
 
-function ListDepartmentComponent() {
-  const [departments, setDepartments] = useState([]);
+function Role() {
+  const [role, setRole] = useState([]);
 
   useEffect(() => {
     // Sử dụng fetchAllDepadment để tải dữ liệu từ API
-    fetchAllDepadment()
+    fetchAllRole()
       .then((data) => {
-        setDepartments(data);
+        setRole(data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu phòng ban:", error);
       });
   }, []);
+
   return (
     <>
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Danh sách phòng - ban</h2>
-            <span>Hiển thị thông tin chi tiết phòng - ban trong xưởng mộc</span>
+            <h2>Danh sách chức vụ</h2>
+            <span>Hiển thị các chức vụ có trong xưởng mộc</span>
           </div>
           <MenuResponsive />
           <ListUserHeader />
         </div>
         <Filter />
         <div className="list-text-header-res">
-          <h2>Danh sách phòng - ban</h2>
-          <span>Hiển thị thông tin chi tiết phòng - ban trong xưởng mộc</span>
+          <h2>Danh sách chức vụ</h2>
+          <span>Hiển thị các chức vụ có trong xưởng mộc</span>
         </div>
         <table className="list-table">
           <thead>
             <tr>
               <td>STT</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>STT</td>
+              <td>Chức vụ</td>
+              <td>Số thành viên chức vụ</td>
+              <td>Trạng thái</td>
             </tr>
           </thead>
           <tbody class="scrollbar" id="style-15">
-            {departments.map((department, index) => (
-              <tr key={department.departmentId}>
+            {role.map((role, index) => (
+              <tr key={role.roleID}>
                 <td>{index + 1}</td>
-                <td>{department.departmentName}</td>
-                <td>{department.number}</td>
+                <td>{role.roleName}</td>
+                <td>{role.employees.length}</td>
                 <td>
                   <Form.Item valuePropName="checked">
-                    <Switch checked={department.status} />
+                    <Switch checked={role.status} />
                   </Form.Item>
                 </td>
               </tr>
             ))}
             <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
+              <td>1</td>
+              <td>Kế toán</td>
+              <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
                   <Switch checked="true" />
@@ -69,9 +71,9 @@ function ListDepartmentComponent() {
               </td>
             </tr>
             <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
+              <td>1</td>
+              <td>Kế toán</td>
+              <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
                   <Switch checked="true" />
@@ -79,9 +81,9 @@ function ListDepartmentComponent() {
               </td>
             </tr>
             <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
+              <td>1</td>
+              <td>Kế toán</td>
+              <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
                   <Switch checked="true" />
@@ -89,39 +91,9 @@ function ListDepartmentComponent() {
               </td>
             </tr>
             <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
+              <td>1</td>
+              <td>Kế toán</td>
+              <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
                   <Switch checked="true" />
@@ -135,4 +107,4 @@ function ListDepartmentComponent() {
   );
 }
 
-export default ListDepartmentComponent;
+export default Role;
