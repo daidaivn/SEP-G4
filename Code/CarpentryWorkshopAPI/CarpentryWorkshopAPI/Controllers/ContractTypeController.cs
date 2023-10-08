@@ -48,13 +48,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.ContractTypes.Add(newctt);
                     ContractTypeStatusHistory newhistory = new ContractTypeStatusHistory
                     {
+                        ContractTypeId = newctt.ContractTypeId,
                         Action = "Create",
                         ActionDate = DateTime.Now,
+                        CurrentEmployeeId = null,
                     };
                     _context.ContractTypeStatusHistories.Add(newhistory);
-                    _context.ContractTypes.Add(newctt);
                     _context.SaveChanges();
                     return Ok("Create contracttype successful");
                 }
@@ -65,13 +67,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.ContractTypes.Update(newctt);
                     ContractTypeStatusHistory newhistory = new ContractTypeStatusHistory
                     {
+                        ContractTypeId = newctt.ContractTypeId,
                         Action = "Update",
                         ActionDate = DateTime.Now,
+                        CurrentEmployeeId = null,
                     };
                     _context.ContractTypeStatusHistories.Add(newhistory);
-                    _context.ContractTypes.Update(newctt);
                     _context.SaveChanges();
                     return Ok("Update contracttype successful");
                 }

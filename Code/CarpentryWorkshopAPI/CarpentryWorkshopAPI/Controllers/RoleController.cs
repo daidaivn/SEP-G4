@@ -33,9 +33,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleName = roled.RoleName,
                         Status = roled.Status,
                         Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
-                    }
-                    )
-                    ;
+                        NumberOfEmployee = roled.RolesEmployees.Select(x => x.Employee).Count(),
+                    });
                 if (rolelist == null)
                 {
                     return NotFound();
@@ -61,9 +60,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleName = roled.RoleName,
                         Status = roled.Status,
                         Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
-                    }
-                    )
-                    ;
+                        NumberOfEmployee = roled.RolesEmployees.Select(x => x.Employee).Count(),
+                    });
                 if (role == null)
                 {
                     return NotFound();
@@ -84,13 +82,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
+                _context.Roles.Add(newrole);
                 RolesStatusHistory newhistory = new RolesStatusHistory
                 {
+                    RoleId= newrole.RoleId,
                     Action = "Create",
                     ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
                 };
                 _context.RolesStatusHistories.Add(newhistory);
-                _context.Roles.Add(newrole);
                 _context.SaveChanges();
                 return Ok("Create role succesful");
             }catch(Exception ex)
@@ -108,13 +108,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
+                _context.Roles.Update(updaterole);
                 RolesStatusHistory newhistory = new RolesStatusHistory
                 {
+                    RoleId = updaterole.RoleId,
                     Action = "Update",
                     ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
                 };
-                _context.RolesStatusHistories.Add(newhistory);
-                _context.Roles.Update(updaterole);
+                _context.RolesStatusHistories.Add(newhistory);               
                 _context.SaveChanges();
                 return Ok("Update role successful");
 
@@ -151,8 +153,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 RolesStatusHistory newhistory = new RolesStatusHistory
                 {
+                    RoleId = rid,
                     Action = "Change Status",
                     ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
                 };
                 _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
@@ -186,7 +190,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleID = r.RoleId,
                         RoleName = r.RoleName,
                         Status = r.Status,
-                        Employees = r.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList()
+                        Employees = r.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                        NumberOfEmployee = r.RolesEmployees.Select(x => x.Employee).Count(),
                     }
                     ).ToList();
                
