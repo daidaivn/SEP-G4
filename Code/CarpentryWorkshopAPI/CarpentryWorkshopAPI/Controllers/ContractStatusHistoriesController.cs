@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -21,7 +22,9 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var historys = _context.ContractsStatusHistories.ToList();
+                var historys = _context.ContractsStatusHistories
+                    .Include(x => x.Contract)
+                    .ToList();
                 if (historys == null)
                 {
                     return NotFound();
@@ -40,6 +43,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var historysbydate = _context.ContractsStatusHistories
+                    .Include(x => x.Contract)
                     .Where(x => x.ActionDate == searchContractStatusHistoryDTO.ActionDate)
                     .ToList();
                 if (historysbydate == null)
@@ -60,6 +64,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var historysbydate = _context.ContractsStatusHistories
+                    .Include(x => x.Contract)
                     .Where(x => x.ActionDate ==searchContractStatusHistoryDTO.ActionDate
                     && x.ContractId == searchContractStatusHistoryDTO.ContractId)
                     .ToList();
