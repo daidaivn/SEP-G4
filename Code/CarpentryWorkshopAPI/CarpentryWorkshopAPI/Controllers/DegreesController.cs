@@ -42,9 +42,9 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Degrees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult UpdateDegree([FromBody] DgreeDTO degreeDTO)
+        public IActionResult UpdateDegree([FromBody] DegreeDTO degreeDTO)
         {
-            Degree degree = _mapper.Map<Degree>(dgreeDTO);
+            Degree degree = _mapper.Map<Degree>(degreeDTO);
             _context.Entry(degree).State = EntityState.Modified;
             DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory()
             {
