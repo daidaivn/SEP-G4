@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace CarpentryWorkshopAPI.DTO
+namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
@@ -23,13 +24,14 @@ namespace CarpentryWorkshopAPI.DTO
             try
             {
                 var contracttypes = _context.ContractTypes.ToList();
-                if (contracttypes ==null)
+                if (contracttypes == null)
                 {
                     return NotFound();
                 }
                 var dto = _mapper.Map<List<ContractTypeDTO>>(contracttypes);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -47,6 +49,14 @@ namespace CarpentryWorkshopAPI.DTO
                         return NotFound();
                     }
                     _context.ContractTypes.Add(newctt);
+                    ContractTypeStatusHistory newhistory = new ContractTypeStatusHistory
+                    {
+                        ContractTypeId = newctt.ContractTypeId,
+                        Action = "Create",
+                        ActionDate = DateTime.Now,
+                        CurrentEmployeeId = null,
+                    };
+                    _context.ContractTypeStatusHistories.Add(newhistory);
                     _context.SaveChanges();
                     return Ok("Create contracttype successful");
                 }
@@ -58,10 +68,19 @@ namespace CarpentryWorkshopAPI.DTO
                         return NotFound();
                     }
                     _context.ContractTypes.Update(newctt);
+                    ContractTypeStatusHistory newhistory = new ContractTypeStatusHistory
+                    {
+                        ContractTypeId = newctt.ContractTypeId,
+                        Action = "Update",
+                        ActionDate = DateTime.Now,
+                        CurrentEmployeeId = null,
+                    };
+                    _context.ContractTypeStatusHistories.Add(newhistory);
                     _context.SaveChanges();
                     return Ok("Update contracttype successful");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -74,14 +93,15 @@ namespace CarpentryWorkshopAPI.DTO
                 List<ContractType> contracttypefilter = new List<ContractType>();
                 if (contractTypeDTO.Status.HasValue)
                 {
-                         contracttypefilter = _context.ContractTypes
-                        .Where(x => x.Status == contractTypeDTO.Status)
-                        .ToList();
-                  
+                    contracttypefilter = _context.ContractTypes
+                   .Where(x => x.Status == contractTypeDTO.Status)
+                   .ToList();
+
                 }
                 var dto = _mapper.Map<List<ContractType>>(contracttypefilter);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

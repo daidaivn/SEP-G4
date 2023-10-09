@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -21,18 +22,21 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var histories = _context.ContractTypeStatusHistories.ToList();
+                var histories = _context.ContractTypeStatusHistories
+                    .Include(x => x.ContractType)
+                    .ToList();
                 if (histories == null)
                 {
                     return NotFound();
                 }
-                return Ok(histories);
+                var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(histories);
+                return Ok(dto);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetHistoriesByContractType([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
         {
             try
@@ -41,6 +45,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (contractTypeStatusHistoryDTO.ContractTypeId != 0)
                 {
                         cth = _context.ContractTypeStatusHistories
+                        .Include(x => x.ContractType)
                         .Where(x => x.ContractTypeId == contractTypeStatusHistoryDTO.ContractTypeId)
                         .ToList();
                     if (cth == null)
@@ -49,14 +54,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                   
                 }
-                return Ok(cth);
+                var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
+                return Ok(dto);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetHistoriesByDate([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
         {
             try
@@ -65,6 +71,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (contractTypeStatusHistoryDTO.ActionDate.HasValue)
                 {
                     cth = _context.ContractTypeStatusHistories
+                    .Include(x => x.ContractType)
                     .Where(x => x.ActionDate == contractTypeStatusHistoryDTO.ActionDate)
                     .ToList();
                     if (cth == null)
@@ -73,7 +80,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
 
                 }
-                return Ok(cth);
+                var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
+                return Ok(dto);
             }
             catch (Exception ex)
             {

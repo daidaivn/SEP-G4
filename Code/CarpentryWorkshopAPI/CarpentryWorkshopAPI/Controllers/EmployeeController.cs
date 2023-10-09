@@ -91,8 +91,27 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet]
+        public IActionResult GetEmployeeDependent(int eid)
+        {
+            try
+            {
+                var employeeDepend = _context.Dependents
+                    .Where(x => x.EmployeeId == eid)
+                    .ToList();
+                if (employeeDepend == null)
+                {
+                    return NotFound();
+                }
+                var edDTO = _mapper.Map<List<EmployeeDependentDTO>>(employeeDepend);
+                return Ok(edDTO);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost]
-        public ActionResult<CreateEmployeeDTO> CreateandUpdateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
+        public ActionResult<CreateEmployeeDTO> CreateAndUpdateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
             {
@@ -126,13 +145,20 @@ namespace CarpentryWorkshopAPI.Controllers
                             };
                             _context.RolesEmployees.Add(newremp);
                         }
-                   
+                    EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                    {
+                        EmployeeId = newemp.EmployeeId,
+                        Action = "Create",
+                        ActionDate = DateTime.Now,
+                        CurrentEmployeeId = null,
+                    };
+                    _context.EmployeesStatusHistories.Add(newhistory);
                     _context.SaveChanges();
                     return Ok("Create employee successful");
                 }
                 else
                 {
-                foreach (var rd in createEmployeeDTO.rDs)
+                    foreach (var rd in createEmployeeDTO.rDs)
                 {
 
                     var roleemployees = _context.RolesEmployees
@@ -158,11 +184,31 @@ namespace CarpentryWorkshopAPI.Controllers
                               };
                             _context.RolesEmployees.Add(newremp);
                             }
-                            
-                        
+                        employee.Image = createEmployeeDTO.Image;
+                        employee.FirstName = createEmployeeDTO.FirstName;
+                        employee.LastName = createEmployeeDTO.LastName;
+                        employee.Email = createEmployeeDTO.Email;
+                        employee.Address = createEmployeeDTO.Address;
+                        employee.Dob = createEmployeeDTO.Dob;
+                        employee.Gender = createEmployeeDTO.Gender;
+                        employee.PhoneNumber= createEmployeeDTO.PhoneNumber;
+                        employee.TaxId= createEmployeeDTO.TaxId;
+                        employee.Status = createEmployeeDTO.Status;
+                        employee.Cic = createEmployeeDTO.Cic;
+                        employee.CountryId= createEmployeeDTO.CountryId;    
+                        _context.Employees.Update(employee);
+                        EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Action = "Update",
+                            ActionDate = DateTime.Now,
+                            CurrentEmployeeId = null,
+                        };
+                        _context.EmployeesStatusHistories.Add(newhistory);
+
                     }
                     _context.SaveChanges();
-                    return Ok("Update roleemployee successfull");
+                    return Ok("Update employee and roleemployee successfull");
 
                 }
             }
@@ -171,6 +217,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+       
         [HttpDelete]
         public IActionResult ChangeStatusEmployee( int eid)
         {
@@ -191,6 +238,14 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     employees.Status = true;
                 }
+                EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                {
+                    EmployeeId= employees.EmployeeId,
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.EmployeesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Change employee status successfully");
             }

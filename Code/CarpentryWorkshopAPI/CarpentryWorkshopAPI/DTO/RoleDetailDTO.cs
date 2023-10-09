@@ -8,5 +8,6 @@ namespace CarpentryWorkshopAPI.DTO
         public string? RoleName { get; set; }
         public bool? Status { get; set; }
         public List<string> Employees { get; set; }
+        public int? NumberOfEmployee { get; set; }
     }
 }
