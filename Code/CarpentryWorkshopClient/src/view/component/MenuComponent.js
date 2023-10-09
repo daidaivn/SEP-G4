@@ -2,10 +2,16 @@ import "../scss/reset.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
 import { Link, NavLink } from "react-router-dom";
+import Home from "./Home";
+import DashboardComponnet from "./DashboardComponnet";
 import React, { useState } from "react";
-import logo from "../assets/images/logo.png"
+import logo from "../assets/images/logo.png";
 const Menucomponent = () => {
   const [activeDiv, setActiveDiv] = useState("div1");
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
 
   const handleDivClick = (divId) => {
     setActiveDiv(divId);
@@ -13,9 +19,7 @@ const Menucomponent = () => {
   return (
     <div className="list-menu">
       <div className="menu">
-     
         <div className="logo-menu">
-          
           <Link to="../">
             <img src={logo} />
           </Link>
@@ -29,34 +33,89 @@ const Menucomponent = () => {
               onClick={() => handleDivClick("div1")}
               activeClassName={activeDiv === "div1" ? "active" : ""}
             >
+              <i className="icon-home"></i>
+
+              <span className="text">Trang chủ</span>
+            </NavLink>
+          </div>
+          <div className="item-link">
+            <NavLink
+              to={"/dashboard"}
+              id="item-menu"
+              onClick={() => handleDivClick("div2")}
+              activeClassName={activeDiv === "div2" ? "active" : ""}
+            >
               <i className="icon-activity"></i>
 
               <span className="text">Dashboard</span>
             </NavLink>
           </div>
-          <div className="item-link">
-            <NavLink
-              to={"/list-employee"}
-              id="item-menu"
-              onClick={() => handleDivClick("div2")}
-              activeClassName={activeDiv === "div2" ? "active" : ""}
-            >
-              <i className="icon-profile"></i>
+          <div className="dropdown-item">
+            <div className="item-link">
+              <div id="item-menu" onClick={toggleDropdown}>
+                <i className="icon-profile"></i>
+                <span className="text">Danh sách</span>
+                <i
+                  className={`dropdown-icon ${isDropdownOpen ? "open" : ""}`}
+                ></i>
+              </div>
+              {isDropdownOpen && (
+                <div className="dropdown-content">
+                  <div className="item-link">
+                    <NavLink
+                      to={"/list-employee"}
+                      id="item-menu"
+                      onClick={() => handleDivClick("div3")}
+                      activeClassName={activeDiv === "div3" ? "active" : ""}
+                      className={"item-child"}
+                    >
+                      <i className="icon-list"></i>
 
-              <span className="text">Danh sách</span>
-            </NavLink>
-          </div>
-          <div className="item-link">
-            <NavLink
-              to={"/list-department"}
-              id="item-menu"
-              onClick={() => handleDivClick("div2")}
-              activeClassName={activeDiv === "div2" ? "active" : ""}
-            >
-              <i className="icon-profile"></i>
+                      <span className="text">Người lao động </span>
+                    </NavLink>
+                  </div>
+                  <div className="item-link">
+                    <NavLink
+                      to={"/list-department"}
+                      id="item-menu"
+                      onClick={() => handleDivClick("div4")}
+                      activeClassName={activeDiv === "div4" ? "active" : ""}
+                      className={"item-child"}
+                    >
+                      <i className="icon-add"></i>
 
-              <span className="text">Danh sách Phòng - Ban</span>
-            </NavLink>
+                      <span className="text">Phòng - Ban </span>
+                    </NavLink>
+                  </div>
+                  <div className="item-link">
+                    <NavLink
+                      to={"/dependent-person"}
+                      id="item-menu"
+                      onClick={() => handleDivClick("div5")}
+                      activeClassName={activeDiv === "div5" ? "active" : ""}
+                      className={"item-child"}
+                    >
+                      <i className="icon-add"></i>
+
+                      <span className="text">Người phụ thộc </span>
+                    </NavLink>
+                  </div>
+                  <div className="item-link">
+                    <NavLink
+                      to={"/role"}
+                      id="item-menu"
+                      onClick={() => handleDivClick("div6")}
+                      activeClassName={activeDiv === "div6" ? "active" : ""}
+                      className={"item-child"}
+                    >
+                      <i className="icon-add"></i>
+
+                      <span className="text">Chức vụ </span>
+                    </NavLink>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="footer-body">
@@ -89,7 +148,6 @@ const Menucomponent = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 

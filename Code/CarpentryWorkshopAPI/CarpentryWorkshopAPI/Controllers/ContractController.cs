@@ -142,6 +142,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 _context.Contracts.Add(newct);
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    ContractId = newct.ContractId,
+                    Action = "Create",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Create contract successfull");
             }catch(Exception ex)
@@ -154,12 +162,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var newct = _mapper.Map<Models.Contract>(createContractDTO);
-                if (newct == null)
+                var updatect = _mapper.Map<Models.Contract>(createContractDTO);
+                if (updatect == null)
                 {
                     return NotFound();
                 }
-                _context.Contracts.Update(newct);
+                _context.Contracts.Update(updatect);
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    ContractId= updatect.ContractId,
+                    Action = "Update",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Update contract successfull");
             }
@@ -193,6 +209,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                 }
                 _context.Contracts.Update(contract);
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    ContractId = contract.ContractId,
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Change contract status successful");
             }catch(Exception ex)
