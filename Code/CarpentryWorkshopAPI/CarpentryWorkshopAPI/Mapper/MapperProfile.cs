@@ -30,6 +30,9 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<ContractType, ContractTypeDTO>()
                 .ReverseMap();
+
+            CreateMap<Degree, DegreeDTO>().ReverseMap();
+
             CreateMap<Dependent, EmployeeDependentDTO>()
                 .ReverseMap();
             CreateMap<EmployeesStatusHistory, EmployeeHistoryDTO>()
@@ -43,6 +46,7 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<ContractTypeStatusHistory, ContractTypeHistoryDTO>()
                 .ForMember(de => de.ContractTypeName, option => option.MapFrom(d => d.ContractType!.ContractName))
                 .ReverseMap();
+
         }
     }
 }

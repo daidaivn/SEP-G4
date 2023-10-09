@@ -42,11 +42,18 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Degrees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult UpdateDegree([FromBody] DgreeDTO dgreeDTO)
+        public IActionResult UpdateDegree([FromBody] DegreeDTO degreeDTO)
         {
-            Degree degree = _mapper.Map<Degree>(dgreeDTO);
+            Degree degree = _mapper.Map<Degree>(degreeDTO);
             _context.Entry(degree).State = EntityState.Modified;
-
+            DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory()
+            {
+                Action = "Update",
+                ActionDate= DateTime.Now,
+                CurrentEmployeeId = 1,
+                DegreeId= degreeDTO.DegreeId,
+            };
+            _context.DegreesStatusHistories.Add(degreesStatusHistory);
             try
             {
                 _context.SaveChanges();
@@ -71,6 +78,15 @@ namespace CarpentryWorkshopAPI.Controllers
             Degree degree = _mapper.Map<Degree>(degreeDTO);
             _context.Degrees.Add(degree);
             _context.SaveChanges();
+            DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory()
+            {
+                Action = "Insert",
+                ActionDate = DateTime.Now,
+                CurrentEmployeeId = 1,
+                DegreeId = degree.DegreeId,
+            };
+            _context.DegreesStatusHistories.Add(degreesStatusHistory);
+            _context.SaveChanges();
 
             return CreatedAtAction("GetDegree", new { id = degree.DegreeId }, degree);
         }
@@ -84,16 +100,25 @@ namespace CarpentryWorkshopAPI.Controllers
                 return NotFound();
             }
             var degree = _context.Degrees.SingleOrDefault(de => de.DegreeId == id);
+            DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory();
             if (degree == null)
             {
                 return NotFound();
             }
             if(degree.Status == true)
             {
+                degreesStatusHistory.DegreeId = id;
+                degreesStatusHistory.Action = "Deactive";
+                degreesStatusHistory.ActionDate = DateTime.Now;
+                degreesStatusHistory.CurrentEmployeeId = 1;
                 degree.Status = false;
             }
             else
             {
+                degreesStatusHistory.DegreeId = id;
+                degreesStatusHistory.Action = "Active";
+                degreesStatusHistory.ActionDate = DateTime.Now;
+                degreesStatusHistory.CurrentEmployeeId = 1;
                 degree.Status = true;
             }
             _context.Degrees.Update(degree);

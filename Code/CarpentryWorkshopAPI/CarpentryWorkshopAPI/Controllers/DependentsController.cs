@@ -31,6 +31,10 @@ namespace CarpentryWorkshopAPI.Controllers
           {
               return NotFound();
           }
+          var deEndDate = _context.Dependents.Where(de=>(de.EndDate == null? DateTime.MaxValue : de.EndDate) < DateTime.Now && de.Status == true).ToList();
+          deEndDate.Select(de=>de.Status = false);
+          _context.UpdateRange(deEndDate);
+          _context.SaveChanges();
           List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
           List<DependentDTO> dependentDTOs = _mapper.Map<List<DependentDTO>>(dependents);
           return Ok(dependentDTOs);
@@ -61,12 +65,19 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
             _context.Entry(dependent).State = EntityState.Modified;
-
+            DependentsStatusHistory dependentsStatusHistory= new DependentsStatusHistory() 
+            {
+                Action = "Update",
+                ActionDate= DateTime.Now,
+                CurrentEmployeeId= 1,
+                DependentId = dependentDTO.DependentId
+            };
+            _context.DependentsStatusHistories.Add(dependentsStatusHistory);
             try
             {
                 _context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
                 if (!DependentExists(dependentDTO.DependentId))
                 {
@@ -74,7 +85,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(ex.Message);
                 }
             }
 
@@ -90,11 +101,29 @@ namespace CarpentryWorkshopAPI.Controllers
           {
               return Problem("Entity set 'SEPG4CCMSContext.Dependents'  is null.");
           }
-            Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
-            _context.Dependents.Add(dependent);
-            _context.SaveChanges();
+            try 
+            {
+                var dependent = _mapper.Map<Dependent>(dependentDTO);
+                _context.Dependents.Add(dependent);               
+                _context.SaveChanges();
+                DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory()
+                {
+                    Action = "Insert",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = 1,
+                    DependentId = dependentDTO.DependentId
+                };
+                _context.DependentsStatusHistories.Add(dependentsStatusHistory);
+                _context.SaveChanges();
+                return CreatedAtAction("GetDependent", new { id = dependent.DependentId }, dependent);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
 
-            return CreatedAtAction("GetDependent", new { id = dependent.DependentId }, dependent);
+            
         }
 
         // DELETE: api/Dependents/5
@@ -106,6 +135,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 return NotFound();
             }
             Dependent dependent = _context.Dependents.Where(de=>de.DependentId == id).SingleOrDefault();
+            DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory();            
+            
             if (dependent == null)
             {
                 return NotFound();
@@ -114,13 +145,21 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if(dependent.Status == true)
                 {
+                    dependentsStatusHistory.DependentId = id;
+                    dependentsStatusHistory.Action = "Deactive";
+                    dependentsStatusHistory.ActionDate = DateTime.Now;
+                    dependentsStatusHistory.CurrentEmployeeId = 1;
                     dependent.Status = false;
                 }
                 else
                 {
+                    dependentsStatusHistory.DependentId = id;
+                    dependentsStatusHistory.Action = "Active";
+                    dependentsStatusHistory.ActionDate = DateTime.Now;
+                    dependentsStatusHistory.CurrentEmployeeId = 1;
                     dependent.Status = true;
                 }
-                 
+                _context.DependentsStatusHistories.Add(dependentsStatusHistory);
                 _context.Dependents.Update(dependent);
             }
 
