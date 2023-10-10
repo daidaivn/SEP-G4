@@ -134,7 +134,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 Department department = _context.Departments.Include(de => de.RolesEmployees).SingleOrDefault(e => e.DepartmentId == id);
-                DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory()
+                DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory();
                 if (department == null)
                 {
                     return NotFound();

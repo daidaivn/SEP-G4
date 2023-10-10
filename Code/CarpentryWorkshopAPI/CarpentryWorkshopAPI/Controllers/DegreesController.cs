@@ -36,7 +36,7 @@ namespace CarpentryWorkshopAPI.Controllers
         public IActionResult GetDegree(int id)
         {
             var degree = _context.Degrees.SingleOrDefault(de => de.DegreeId == id);
-            return Ok(_mapper.Map<DgreeDTO>(degree));
+            return Ok(_mapper.Map<DegreeDTO>(degree));
         }
 
         // PUT: api/Degrees/5
