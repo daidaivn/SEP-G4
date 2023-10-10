@@ -41,6 +41,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                
                 List<ContractTypeStatusHistory> cth = new List<ContractTypeStatusHistory>();
                 if (contractTypeStatusHistoryDTO.ContractTypeId != 0)
                 {
@@ -67,12 +68,14 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                DateTime startDate = contractTypeStatusHistoryDTO.ActionDate!.Value.Date;
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 List<ContractTypeStatusHistory> cth = new List<ContractTypeStatusHistory>();
                 if (contractTypeStatusHistoryDTO.ActionDate.HasValue)
                 {
                     cth = _context.ContractTypeStatusHistories
                     .Include(x => x.ContractType)
-                    .Where(x => x.ActionDate == contractTypeStatusHistoryDTO.ActionDate)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
                     if (cth == null)
                     {

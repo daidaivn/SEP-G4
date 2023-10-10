@@ -42,9 +42,11 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                DateTime startDate = searchRoleStatusHistoryDTO.ActionDate!.Value.Date;
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historysbydate = _context.RolesStatusHistories
                     .Include(x => x.Role)
-                    .Where(x => x.ActionDate == searchRoleStatusHistoryDTO.ActionDate)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
                 if (historysbydate == null)
                 {
@@ -62,9 +64,11 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                DateTime startDate = searchRoleStatusHistoryDTO.ActionDate!.Value.Date;
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historysbydate = _context.RolesStatusHistories
                     .Include(x => x.Role)
-                    .Where(x => x.ActionDate == searchRoleStatusHistoryDTO.ActionDate 
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate 
                     && x.RoleId == searchRoleStatusHistoryDTO.RoleId)
                     .ToList();
                 if (historysbydate == null)

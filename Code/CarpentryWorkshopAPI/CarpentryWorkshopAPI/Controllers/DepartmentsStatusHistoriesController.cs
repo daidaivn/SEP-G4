@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
+using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -44,8 +45,9 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 DateTime date = DateTime.Parse(actionDate);
+                DateTime endDate = date.AddDays(1).AddSeconds(-1);
                 var historylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate == date)
+                    .Where(x => x.ActionDate >= date && x.ActionDate <= endDate)
                     .ToList();
                 if (historylistbydate == null)
                 {
@@ -64,8 +66,9 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 DateTime date = DateTime.Parse(actionDate);
+                DateTime endDate = date.AddDays(1).AddSeconds(-1);
                 var dephistorylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate == date && x.DepartmentId == did)
+                    .Where(x => x.ActionDate >= date && x.ActionDate <= endDate && x.DepartmentId == did)
                     .ToList();
                 if (dephistorylistbydate == null)
                 {
