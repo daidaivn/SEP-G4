@@ -125,7 +125,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpPut]
         public IActionResult ChangeStatusRole(int rid) 
         {
             try
