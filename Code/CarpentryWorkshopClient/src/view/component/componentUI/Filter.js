@@ -1,6 +1,10 @@
 import React from "react";
 import { Input } from "antd";
+import { Select, Space } from "antd";
 function Filter() {
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
   return (
     <div className="list-search-filter-add">
       <div className="list-input-search">
@@ -99,21 +103,32 @@ function Filter() {
             />
           </svg>
         </i>
-        <span>Bộ lọc</span>
-        <i className="list-filter-icon2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="13"
-            viewBox="0 0 16 13"
-            fill="none"
-          >
-            <path
-              d="M9.73205 12C8.96225 13.3333 7.03775 13.3333 6.26795 12L1.0718 3C0.301995 1.66667 1.26425 -1.46309e-06 2.80385 -1.32849e-06L13.1961 -4.19966e-07C14.7358 -2.8537e-07 15.698 1.66667 14.9282 3L9.73205 12Z"
-              fill="#A1A1AB"
-            />
-          </svg>
-        </i>
+        <Select
+          className="select-input"
+          defaultValue="lucy"
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={[
+            {
+              value: "jack",
+              label: "Jack",
+            },
+            {
+              value: "lucy",
+              label: "Lucy",
+            },
+            {
+              value: "Yiminghe",
+              label: "yiminghe",
+            },
+            {
+              value: "disabled",
+              label: "Disabled",
+            },
+          ]}
+        />
       </div>
       <i className="icon-responsive icon-filter">
         <svg

@@ -82,7 +82,7 @@ const Menucomponent = () => {
                       activeClassName={activeDiv === "div4" ? "active" : ""}
                       className={"item-child"}
                     >
-                      <i className="icon-add"></i>
+                      <i className="icon-add1"></i>
 
                       <span className="text">Phòng - Ban </span>
                     </NavLink>
@@ -95,7 +95,7 @@ const Menucomponent = () => {
                       activeClassName={activeDiv === "div5" ? "active" : ""}
                       className={"item-child"}
                     >
-                      <i className="icon-add"></i>
+                      <i className="icon-add1"></i>
 
                       <span className="text">Người phụ thộc </span>
                     </NavLink>
@@ -108,7 +108,7 @@ const Menucomponent = () => {
                       activeClassName={activeDiv === "div6" ? "active" : ""}
                       className={"item-child"}
                     >
-                      <i className="icon-add"></i>
+                      <i className="icon-add1"></i>
 
                       <span className="text">Chức vụ </span>
                     </NavLink>
