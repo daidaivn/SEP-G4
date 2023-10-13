@@ -236,6 +236,7 @@ i {
   gap: 10px;
   border-radius: 56px;
   background: #ff8f19;
+  cursor: pointer;
 }
 
 .list-table {
@@ -490,4 +491,72 @@ tbody {
 }
 :where(.css-dev-only-do-not-override-1vr7spz).ant-form-item {
   margin-bottom: 0;
+}
+.select-input {
+  border: none;
+}
+:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border: none;
+  background: #f6f6f6;
+}
+// .list-filter-icon2 {
+//   display: none;
+// }
+.list-filter {
+  .ant-select {
+    width: 250px !important;
+  }
+}
+
+:where(.css-dev-only-do-not-override-1vr7spz).ant-select .ant-select-arrow {
+  mask-image: url("../assets/images/icons/Polygon\ 7.svg");
+  width: 15px;
+  height: 14px;
+  background-color: #a1a1ab;
+}
+
+:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover
+  .ant-select-selector,
+:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector,
+.ant-select .ant-select-selector {
+  border-color: initial;
+  box-shadow: none;
+}
+.modal-head {
+  height: 149px;
+  background: #386641;
+  h3 {
+    color: #fff;
+    font-family: "Noto Sans";
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 50px;
+    padding-left: 55px;
+  }
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 40px;
+  padding: 24px 0;
+  margin-right: 180px;
+  button {
+    padding: 14px 64px;
+    color: #fff;
+    font-family: "Noto Sans";
+    font-size: 21px;
+    font-weight: 400;
+    border-radius: 20px;
+    border: none;
+  }
+}
+.btn-save {
+  background: #1967ff !important;
+}
+.modal-footer-deparment {
+  margin-right: 20px !important;
+  gap: 10px;
 }
