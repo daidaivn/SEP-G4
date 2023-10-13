@@ -36,7 +36,7 @@ namespace CarpentryWorkshopAPI.Controllers
           _context.UpdateRange(deEndDate);
           _context.SaveChanges();
           List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
-          List<DependentDTO> dependentDTOs = _mapper.Map<List<DependentDTO>>(dependents);
+          List<DependentListDTO> dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependents);
           return Ok(dependentDTOs);
         }
 
@@ -49,7 +49,7 @@ namespace CarpentryWorkshopAPI.Controllers
               return NotFound();
           }
             Dependent dependent = _context.Dependents.SingleOrDefault(de=>de.DependentId == id);
-            DependentDTO dependentDTO = _mapper.Map<DependentDTO>(dependent);
+            DependentListDTO dependentDTO = _mapper.Map<DependentListDTO>(dependent);
             if (dependent == null)
             {
                 return NotFound();
