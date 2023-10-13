@@ -218,8 +218,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
        
-        [HttpDelete]
-        public IActionResult ChangeStatusEmployee( int eid)
+        [HttpPut]
+        public IActionResult ChangeStatusEmployee(int eid)
         {
             var employees = _context.Employees
                 .Include(x => x.Country)

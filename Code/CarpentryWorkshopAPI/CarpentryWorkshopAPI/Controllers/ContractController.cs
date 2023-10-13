@@ -184,7 +184,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpPut]
         public IActionResult ChangeContractStatus([FromBody] ContractChangeDTO contractChangeDTO)
         {
             try
