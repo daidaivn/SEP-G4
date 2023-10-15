@@ -92,8 +92,8 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
         // DELETE: api/Degrees/5
-        [HttpDelete("{id}")]
-        public IActionResult UpdateStatusDegree(int id)
+        [HttpPut("{id}")]
+        public IActionResult ChangeStatusDegree(int id)
         {
             if (_context.Degrees == null)
             {
@@ -108,7 +108,7 @@ namespace CarpentryWorkshopAPI.Controllers
             if(degree.Status == true)
             {
                 degreesStatusHistory.DegreeId = id;
-                degreesStatusHistory.Action = "Deactive";
+                degreesStatusHistory.Action = "Change status false";
                 degreesStatusHistory.ActionDate = DateTime.Now;
                 degreesStatusHistory.CurrentEmployeeId = 1;
                 degree.Status = false;
@@ -116,7 +116,7 @@ namespace CarpentryWorkshopAPI.Controllers
             else
             {
                 degreesStatusHistory.DegreeId = id;
-                degreesStatusHistory.Action = "Active";
+                degreesStatusHistory.Action = "Change status true";
                 degreesStatusHistory.ActionDate = DateTime.Now;
                 degreesStatusHistory.CurrentEmployeeId = 1;
                 degree.Status = true;
