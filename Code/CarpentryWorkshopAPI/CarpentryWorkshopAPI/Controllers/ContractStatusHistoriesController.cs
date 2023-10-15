@@ -38,11 +38,12 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetContractHistoryByDate([FromBody] SearchContractStatusHistoryDTO searchContractStatusHistoryDTO)
+        public IActionResult GetContractHistoryByDate(string date)
         {
             try
             {
-                DateTime startDate = searchContractStatusHistoryDTO.ActionDate!.Value.Date;
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historysbydate = _context.ContractsStatusHistories
                     .Include(x => x.Contract)
@@ -61,16 +62,17 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetContractHistorys([FromBody] SearchContractStatusHistoryDTO searchContractStatusHistoryDTO)
+        public IActionResult GetContractHistorys(string date, int cid)
         {
             try
             {
-                DateTime startDate = searchContractStatusHistoryDTO.ActionDate!.Value.Date;
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historysbydate = _context.ContractsStatusHistories
                     .Include(x => x.Contract)
                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
-                    && x.ContractId == searchContractStatusHistoryDTO.ContractId)
+                    && x.ContractId == cid)
                     .ToList();
                 if (historysbydate == null)
                 {

@@ -37,14 +37,18 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<EmployeesStatusHistory, EmployeeHistoryDTO>()
                 .ForMember(de => de.EmployeeName, option => option.MapFrom(d => d.Employee!.FirstName + " " + d.Employee!.LastName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
             CreateMap<RolesStatusHistory, RoleStatusHistoryDTO>()
                 .ForMember(de => de.RoleName, option => option.MapFrom(d => d.Role!.RoleName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
             CreateMap<ContractsStatusHistory, ContractStatusHistoryDTO>()
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
             CreateMap<ContractTypeStatusHistory, ContractTypeHistoryDTO>()
                 .ForMember(de => de.ContractTypeName, option => option.MapFrom(d => d.ContractType!.ContractName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
         }
     }
