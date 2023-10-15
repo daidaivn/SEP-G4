@@ -33,8 +33,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         ContractId = c.ContractId,
                         ContractTypeName = c.ContractType.ContractName,
                         EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
-                        StartDate = c.StartDate,
-                        EndDate = c.EndDate,
+                        StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        EndDate = c.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
                         LinkDoc = c.LinkDoc,
                         Status= c.Status,
                         ContractCode= c.ContractCode,
@@ -66,8 +66,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         ContractId = c.ContractId,
                         ContractTypeName = c.ContractType.ContractName,
                         EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
-                        StartDate = c.StartDate,
-                        EndDate = c.EndDate,
+                        StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        EndDate = c.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
                         LinkDoc = c.LinkDoc,
                         Status = c.Status,
                         ContractCode = c.ContractCode,
@@ -111,17 +111,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         return NotFound();
                     }
                 }
-                //else if(contractChangeDTO.StartDate.HasValue && contractChangeDTO.EndDate.HasValue)
-                //{
-                //    ctbystart = _context.Contracts
-                //      .Where(x => x.StartDate >= contractChangeDTO.StartDate || x.EndDate <= contractChangeDTO.EndDate)
-                //      .Include(emp => emp.Employee)
-                //      .ToList();
-                //    if (ctbystart == null)
-                //    {
-                //        return NotFound();
-                //    }
-                //}
+              
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
                 return Ok(ctDTO);
 
@@ -184,7 +174,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpPut]
         public IActionResult ChangeContractStatus([FromBody] ContractChangeDTO contractChangeDTO)
         {
             try

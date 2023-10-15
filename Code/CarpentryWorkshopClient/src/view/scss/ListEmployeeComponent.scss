@@ -25,11 +25,34 @@
   display: none;
 }
 .modal-head {
-  height: 193px;
+  height: 149px;
   background: #386641;
+  h3 {
+    color: #fff;
+    font-family: "Noto Sans";
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 50px;
+    padding-left: 55px;
+  }
 }
 .avatar {
   gap: 46px;
+  .dependent {
+    margin-bottom: 52px;
+    margin-left: 266px;
+    span {
+      cursor: pointer;
+      border-radius: 20px;
+      background: #fc1e1e;
+      padding: 14px 43px;
+      color: #fff;
+      font-family: "Noto Sans";
+      font-size: 21px;
+      font-weight: 400;
+    }
+  }
 }
 .name-avatar {
   h2 {
@@ -37,6 +60,9 @@
     font-size: 34px;
     font-weight: 600;
     margin-bottom: 16px;
+    border-radius: 60px;
+    border: 1px solid #e6e5ea;
+    padding: 6px 31px;
   }
 }
 .activiti {
@@ -58,16 +84,16 @@
 .avatar {
   align-items: flex-end;
 }
-.info-detail {
-  border-radius: 60px;
-  background: #fff;
-  padding: 30px;
-}
+
 .info-detail {
   color: #386641;
   font-family: "Noto Sans";
   font-size: 36px;
   font-weight: 600;
+  border-radius: 60px;
+  background: #fff;
+  padding: 30px;
+  width: 1254px;
 }
 .modal-info {
   margin-top: 154px;
@@ -140,4 +166,15 @@
 .ant-modal-body {
   background: #f9faf5;
   border-radius: 60px;
+}
+.ant-select-show-search:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  padding: 14px 24px;
+  border-radius: 56px;
+  border: 1px solid #e6e5ea;
+  background: #fff;
+  color: #000;
+  font-family: "Noto Sans";
+  font-size: 22px;
+  font-weight: 400;
 }

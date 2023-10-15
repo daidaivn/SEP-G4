@@ -38,13 +38,14 @@ namespace CarpentryWorkshopAPI.Controllers
             
         }
         [HttpPost]
-        public IActionResult GetHistoryByDate([FromBody] EmployeeStatusHistoryDTO employeeStatusHistoryDTO)
+        public IActionResult GetHistoryByDate(string date)
         {
             try
             {
                 List<EmployeesStatusHistory> historylistbydate = new List<EmployeesStatusHistory>();
-                if (employeeStatusHistoryDTO.ActionDate.HasValue) {
-                    DateTime startDate = employeeStatusHistoryDTO.ActionDate.Value.Date; 
+                
+                    DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
                     DateTime endDate = startDate.AddDays(1).AddSeconds(-1); 
                     historylistbydate = _context.EmployeesStatusHistories
                    .Include(x => x.Employee)
@@ -54,7 +55,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
-                }
+                
                 var dto = _mapper.Map<List<EmployeeHistoryDTO>>(historylistbydate);
                 return Ok(dto);
             }
@@ -64,25 +65,25 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetEmployeeStatusHistoryByDate([FromBody] EmployeeStatusHistoryDTO employeeStatusHistoryDTO)
+        public IActionResult GetEmployeeStatusHistoryByDate(string date, int eid)
         {
             try
             {
                 List<EmployeesStatusHistory> emphistorylistbydate = new List<EmployeesStatusHistory>();
-                if (employeeStatusHistoryDTO.ActionDate.HasValue && employeeStatusHistoryDTO.EmployeeId.HasValue)
-                {
-                    DateTime startDate = employeeStatusHistoryDTO.ActionDate.Value.Date;
+               
+                    DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
                     DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                     emphistorylistbydate = _context.EmployeesStatusHistories
                         .Include(x => x.Employee)
                         .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
-                        && x.EmployeeId == employeeStatusHistoryDTO.EmployeeId)
+                        && x.EmployeeId == eid)
                         .ToList();
                     if (emphistorylistbydate == null)
                     {
                         return NotFound();
                     }
-                }
+                
                 var dto = _mapper.Map<List<EmployeeHistoryDTO>>(emphistorylistbydate);
                 return Ok(dto);
             }

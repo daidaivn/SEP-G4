@@ -65,7 +65,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Image = emp.Image,
                         FirstName = emp.FirstName,
                         LastName = emp.LastName,
-                        Dob = emp.Dob,
+                        Dobstring = emp.Dob.Value.ToString("dd'-'MM'-'yyyy"),
                         Address = emp.Address,
                         Cic = emp.Cic,
                         Country = emp.Country.CountryName,
@@ -139,7 +139,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 RoleId = rd.RoleID,
                                 EmployeeId = newemp.EmployeeId,
-                                StartDate = createEmployeeDTO.StartDate,
+                                StartDate = createEmployeeDTO.StartDate ,
                                 DepartmentId = rd.DepartmentID,
                                 Status = true,
                             };
@@ -218,8 +218,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
        
-        [HttpDelete]
-        public IActionResult ChangeStatusEmployee( int eid)
+        [HttpPut]
+        public IActionResult ChangeStatusEmployee(int eid)
         {
             var employees = _context.Employees
                 .Include(x => x.Country)
