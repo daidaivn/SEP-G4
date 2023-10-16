@@ -1,7 +1,10 @@
 import "../scss/reset.scss";
-import "../scss/responsive.scss";
 import "../scss/DashboardComponnet.scss";
 const DashboardComponnet = () => {
-  return;
+  return (
+    <div>
+      <h1>Dashboard</h1>
+    </div>
+  );
 };
 export default DashboardComponnet;

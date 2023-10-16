@@ -62,7 +62,14 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             Department department = _mapper.Map<Department>(departmentDTO);
             _context.Entry(department).State = EntityState.Modified;
-
+            DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory()
+            {
+                Action = "Update",
+                ActionDate = DateTime.Now,
+                CurrentEmployeeId = 1,
+                DepartmentId = departmentDTO.DepartmentId
+            };
+            _context.DepartmentsStatusHistories.Add(departmentsStatusHistory);
             try
             {
                 _context.SaveChanges();
@@ -91,11 +98,29 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return Problem("Entity set 'SEPG4CCMSContext.Departments'  is null.");
             }
-            Department department = _mapper.Map<Department>(departmentDTO);
-            _context.Departments.Add(department);
-            _context.SaveChanges();
+            try
+            {
+                var department = _mapper.Map<Department>(departmentDTO);
+                _context.Departments.Add(department);
+                _context.SaveChanges();
+                DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory()
+                {
+                    Action = "Insert",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = 1,
+                    DepartmentId = department.DepartmentId
+                };
+                _context.DepartmentsStatusHistories.Add(departmentsStatusHistory);
+                _context.SaveChanges();
+                return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
 
-            return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);
+            
         }
 
         // DELETE: api/Departments/5
@@ -109,6 +134,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 Department department = _context.Departments.Include(de => de.RolesEmployees).SingleOrDefault(e => e.DepartmentId == id);
+                DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory();
                 if (department == null)
                 {
                     return NotFound();
@@ -117,26 +143,25 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (department.Status == true)
                     {
-                        foreach (var roleEmployee in department.RolesEmployees)
-                        {
-                            roleEmployee.Status = false;
-                        }
+                        departmentsStatusHistory.DepartmentId = id;
+                        departmentsStatusHistory.Action = "Deactive";
+                        departmentsStatusHistory.ActionDate = DateTime.Now;
+                        departmentsStatusHistory.CurrentEmployeeId = 1;
                         department.Status = false;
                     }
                     else
                     {
-                        foreach (var roleEmployee in department.RolesEmployees)
-                        {
-                            roleEmployee.Status = true;
-                        }
+                        departmentsStatusHistory.DepartmentId = id;
+                        departmentsStatusHistory.Action = "Active";
+                        departmentsStatusHistory.ActionDate = DateTime.Now;
+                        departmentsStatusHistory.CurrentEmployeeId = 1;
                         department.Status = true;
                     }
 
                     _context.Departments.Update(department);
-                    _context.RolesEmployees.UpdateRange(department.RolesEmployees);
                 }
 
-
+                _context.DepartmentsStatusHistories.Add(departmentsStatusHistory);
                 _context.SaveChangesAsync();
 
                 return Ok("Update status success");

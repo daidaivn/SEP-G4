@@ -1,0 +1,35 @@
+.modal-body-dependent {
+  padding: 0 65px;
+}
+.table-info-detail {
+  width: 100%;
+}
+.input-text {
+  display: flex;
+  gap: 21px;
+}
+.name-person-dependent {
+  width: 422px;
+  margin: 10px auto;
+  border-radius: 60px;
+  border: 1px solid #e6e5ea;
+  background: #fff;
+  padding: 17px 90px;
+  h3 {
+    text-align: center;
+    color: #000;
+    font-family: "Noto Sans";
+    font-size: 34px;
+    font-weight: 400;
+  }
+}
+.info-detail-dependent {
+  border-radius: 40px;
+  background: #fff;
+  width: 846px;
+  padding: 0 100px;
+}
+.modal-dependent {
+  top: 120px;
+  right: 200px;
+}

@@ -17,3 +17,35 @@
   gap: 10px;
   flex: none;
 }
+.info-add-department {
+  padding: 0 15px;
+  margin: 30px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .text-department {
+    width: 53%;
+    text-align: left;
+    color: #000;
+    font-family: "Noto Sans";
+    font-size: 22px;
+    font-weight: 600;
+  }
+  Input {
+    padding: 14px 24px;
+    border-radius: 56px;
+    border: 1px solid #e6e5ea;
+    background: #fff;
+    color: #000;
+    font-family: "Noto Sans";
+    font-size: 22px;
+    font-weight: 400;
+  }
+}
+.modal-footer-deparment {
+  margin-right: 20px !important;
+  gap: 10px;
+}
+.modal-body-department {
+  width: 566px;
+}
