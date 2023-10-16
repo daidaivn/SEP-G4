@@ -1,6 +1,6 @@
 import "../scss/NotFoundComponent.scss";
 import "../scss/reset.scss";
-import "../scss/responsive.scss";
+import "../scss/responsive/responsive.scss";
 import { Link } from "react-router-dom";
 import notFound from "../assets/images/404NotFound.jpg";
 const NotFoundComponent = () => {

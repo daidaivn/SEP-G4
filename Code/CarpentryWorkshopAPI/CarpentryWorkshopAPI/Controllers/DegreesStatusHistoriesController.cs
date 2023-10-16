@@ -6,27 +6,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
-using CarpentryWorkshopAPI.DTO;
+using AutoMapper;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
-    public class DepartmentsStatusHistoriesController : ControllerBase
+    public class DegreesStatusHistoriesController : ControllerBase
     {
         private readonly SEPG4CCMSContext _context;
 
-        public DepartmentsStatusHistoriesController(SEPG4CCMSContext context)
+        public DegreesStatusHistoriesController(SEPG4CCMSContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public IActionResult GetAllDepartmentsStatusHistories()
+        public IActionResult GetAllDegreesStatusHistories()
         {
             try
             {
-                var historylist = _context.DepartmentsStatusHistories.ToList();
+                var historylist = _context.DegreesStatusHistories.ToList();
                 if (historylist == null)
                 {
                     return NotFound();
@@ -45,9 +45,8 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 DateTime date = DateTime.Parse(actionDate);
-                DateTime endDate = date.AddDays(1).AddSeconds(-1);
-                var historylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate >= date && x.ActionDate <= endDate)
+                var historylistbydate = _context.DegreesStatusHistories
+                    .Where(x => x.ActionDate == date)
                     .ToList();
                 if (historylistbydate == null)
                 {
@@ -61,14 +60,13 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet("{did}/{actionDate}")]
-        public IActionResult GetDepartmentsStatusHistoryByDate(string actionDate, int did)
+        public IActionResult GetDegreesStatusHistoriesByDate(string actionDate, int did)
         {
             try
             {
                 DateTime date = DateTime.Parse(actionDate);
-                DateTime endDate = date.AddDays(1).AddSeconds(-1);
-                var dephistorylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate >= date && x.ActionDate <= endDate && x.DepartmentId == did)
+                var dephistorylistbydate = _context.DegreesStatusHistories
+                    .Where(x => x.ActionDate == date && x.DegreeId == did)
                     .ToList();
                 if (dephistorylistbydate == null)
                 {

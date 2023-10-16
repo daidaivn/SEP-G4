@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
-import { Switch, Form, Input } from "antd";
-import { fetchAllDepadment } from "../../sevices/DepartmentService";
+import "../scss/DependentPerson.scss";
+import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
+import { fetchAllDependent } from "../../sevices/DependentPersonService";
+import { Input } from "antd";
 import { Modal } from "antd";
 import { Select, Space } from "antd";
-function ListDepartmentComponent() {
-  const [departments, setDepartments] = useState([]);
-  const [isModalOpenDepartment, setIsModalOpenDepartment] = useState(false);
+import { Col, Row } from "antd";
+function DependentPerson() {
+  const [dependent, setDependent] = useState([]);
+  const [isModalOpenDependent, setIsModalOpenDependent] = useState(false);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
-  const showModalDepartment = () => {
-    setIsModalOpenDepartment(true);
+  const showModalDependent = () => {
+    setIsModalOpenDependent(true);
   };
-  const handleOkDepartment = () => {
-    setIsModalOpenDepartment(false);
+  const handleOkDependent = () => {
+    setIsModalOpenDependent(false);
   };
-  const handleCancelDepartment = () => {
-    setIsModalOpenDepartment(false);
+  const handleCancelDependent = () => {
+    setIsModalOpenDependent(false);
   };
-
   useEffect(() => {
     // Sử dụng fetchAllDepadment để tải dữ liệu từ API
-    fetchAllDepadment()
+    fetchAllDependent()
       .then((data) => {
-        setDepartments(data);
+        setDependent(data);
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
+        console.error("Lỗi khi tải dữ liệu ", error);
       });
   }, []);
   return (
@@ -39,8 +41,11 @@ function ListDepartmentComponent() {
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Danh sách phòng - ban</h2>
-            <span>Hiển thị thông tin chi tiết phòng - ban trong xưởng mộc</span>
+            <h2>Danh sách người phụ thuộc</h2>
+            <span>
+              Hiển thị thông tin của tất các các người phụ thuộc của người lao
+              động trong xưởng mộc
+            </span>
           </div>
           <MenuResponsive />
           <ListUserHeader />
@@ -198,7 +203,7 @@ function ListDepartmentComponent() {
               />
             </svg>
           </i>
-          <div className="list-add" onClick={showModalDepartment}>
+          <div className="list-add">
             <i className="icon-web">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -258,35 +263,41 @@ function ListDepartmentComponent() {
           </i>
         </div>
         <div className="list-text-header-res">
-          <h2>Danh sách phòng - ban</h2>
-          <span>Hiển thị thông tin chi tiết phòng - ban trong xưởng mộc</span>
+          <h2>Danh sách người phụ thuộc</h2>
+          <span>
+            Hiển thị thông tin của tất các các người phụ thuộc của người lao
+            động trong xưởng mộc
+          </span>
         </div>
         <table className="list-table">
           <thead>
             <tr>
               <td>STT</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>STT</td>
+              <td>Họ và tên</td>
+              <td>Giới tính</td>
+              <td>Mã định danh</td>
+              <td>Trạng thái</td>
             </tr>
           </thead>
           <tbody class="scrollbar" id="style-15">
-            {departments.map((department, index) => (
-              <tr key={department.departmentId}>
+            {dependent.map((dependent, index) => (
+              <tr key={dependent.dependentId} onClick={showModalDependent}>
                 <td>{index + 1}</td>
-                <td>{department.departmentName}</td>
-                <td>{department.number}</td>
+                <td>{dependent.fullName}</td>
+                <td>{dependent.genderString}</td>
+                <td>{dependent.identifierCode}</td>
                 <td>
                   <Form.Item valuePropName="checked">
-                    <Switch checked={department.status} />
+                    <Switch checked={dependent.status} />
                   </Form.Item>
                 </td>
               </tr>
             ))}
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
+            <tr onClick={showModalDependent}>
+              <td>1</td>
+              <td>Lê Văn Toàn</td>
+              <td>Nam</td>
+              <td>234567891</td>
               <td>
                 <Form.Item valuePropName="checked">
                   <Switch checked="true" />
@@ -294,59 +305,10 @@ function ListDepartmentComponent() {
               </td>
             </tr>
             <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
+              <td>1</td>
+              <td>Lê Văn Toàn</td>
+              <td>Nam</td>
+              <td>234567891</td>
               <td>
                 <Form.Item valuePropName="checked">
                   <Switch checked="true" />
@@ -356,29 +318,85 @@ function ListDepartmentComponent() {
           </tbody>
         </table>
         <Modal
-          className="modal"
-          open={isModalOpenDepartment}
+          className="modal-dependent"
+          open={isModalOpenDependent}
           on
-          Ok={handleOkDepartment}
-          onCancel={handleCancelDepartment}
+          Ok={handleOkDependent}
+          onCancel={handleCancelDependent}
           width={566}
         >
           <div className="modal-head">
             {" "}
-            <h3>Thêm phòng - ban</h3>
+            <h3>Thông tin người phục thuộc</h3>
           </div>
-          <div className="modal-body modal-body-department">
-            <div className="info-add-department">
-              <div className="text-department">Tên phòng - ban</div>
-              <Input />
+          <div className="modal-body modal-body-dependent">
+            <div className="name-person-dependent">
+              <h3>Lê Văn Toàn</h3>
+            </div>
+
+            <div className="info-detail-dependent">
+              <Row>
+                <Col span={24}>
+                  <table className="table-info-detail">
+                    <tbody>
+                      <tr>
+                        <th className="text">Người giám hộ:</th>
+                        <td className="input-text">
+                          <Input
+                            placeholder="Basic usage"
+                            value="Nguyễn Văn An"
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="text">Mối quan hệ:</th>
+                        <td className="input-text">
+                          <Input placeholder="Basic usage" value="Con trai" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="text">Mã định danh:</th>
+                        <td className="input-text">
+                          <Input placeholder="Basic usage" value="234567891" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="text">Ngày sinh:</th>
+                        <td className="input-text">
+                          <Input placeholder="Basic usage" value="20-03-2019" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="text">Loại mã định danh:</th>
+                        <td className="input-text">
+                          <Input
+                            placeholder="Basic usage"
+                            value="Chứng minh nhân dân"
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="text">Trạng thái:</th>
+                        <td className="input-text">
+                          {" "}
+                          <Form.Item valuePropName="checked">
+                            <Switch checked="true" />
+                          </Form.Item>
+                          Còn phụ thuộc
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Col>
+              </Row>
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment">
-            <button className="btn-cancel" onClick={handleCancelDepartment}>
+            <button className="btn-cancel" onClick={handleCancelDependent}>
               Hủy bỏ
             </button>
-            <button className="btn-edit btn-save" onClick={handleOkDepartment}>
-              Lưu
+            <button className="btn-edit" onClick={handleOkDependent}>
+              Chỉnh sửa
             </button>
           </div>
         </Modal>
@@ -387,4 +405,4 @@ function ListDepartmentComponent() {
   );
 }
 
-export default ListDepartmentComponent;
+export default DependentPerson;

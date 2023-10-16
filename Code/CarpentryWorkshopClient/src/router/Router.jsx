@@ -1,29 +1,29 @@
-import DashboardComponent from "../view/component/DashboardComponent";
 import NotFoundComponent from "../view/component/NotFoundComponent";
 import ListEmployeeComponent from "../view/component/ListEmployeeComponent";
 import ListDepartmentComponent from "../view/component/DepartmentComponent";
-import Test from "../view/component/Test";
+import Home from "../view/component/Home";
+import DashboardComponnet from "../view/component/DashboardComponnet";
 
 const routes = [
   {
     path: "/",
-    element: <DashboardComponent />,
+    element: <Home />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardComponnet />,
   },
   {
     path: "/list-employee",
-  element: <ListEmployeeComponent />,
+    element: <ListEmployeeComponent />,
   },
   {
     path: "/list-department",
-  element: <ListDepartmentComponent />,
+    element: <ListDepartmentComponent />,
   },
   {
     path: "*",
     element: <NotFoundComponent />,
-  },
-  {
-    path: "/test",
-    element: <Test />,
   },
 ];
 
