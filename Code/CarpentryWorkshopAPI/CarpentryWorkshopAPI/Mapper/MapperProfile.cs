@@ -20,15 +20,13 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ForMember(de=>de.number,option=>option.MapFrom(d=>d.RolesEmployees.Select(re=>re.EmployeeId).Distinct().Count()))
                .ReverseMap();         
             CreateMap<Dependent, DependentDTO>()
-                .ForMember(de => de.EmployeesName, option => option.MapFrom(d => d.Employee.FirstName +" "+ d.Employee.LastName))
-                .ForMember(de => de.GenderString, option => option.MapFrom(d => d.Gender == true? "nam" : "nữ"))
                 .ReverseMap();
             CreateMap<Dependent, DependentListDTO>()
                 .ForMember(de => de.EmployeesName, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
                 .ForMember(de => de.GenderString, option => option.MapFrom(d => d.Gender == true ? "nam" : "nữ"))
-                .ForMember(de=>de.DobString, option => option.MapFrom(d => string.Format("ngày {0:dd} tháng {0:MM} năm {0:yyyy}", d.Dob)))
-                .ForMember(de => de.StartDateString, option => option.MapFrom(d => d.StartDate != null ? string.Format("ngày {0:dd} tháng {0:MM} năm {0:yyyy}", d.StartDate) : ""))
-                .ForMember(de => de.EndDateString, option => option.MapFrom(d => d.EndDate != null ? string.Format("ngày {0:dd} tháng {0:MM} năm {0:yyyy}", d.EndDate) : ""));
+                .ForMember(de => de.DobString, option => option.MapFrom(d => d.Dob != null ? d.Dob.Value.ToString("dd'-'MM'-'yyyy") : ""))
+                .ForMember(de => de.StartDateString, option => option.MapFrom(d => d.StartDate != null ? d.StartDate.Value.ToString("dd'-'MM'-'yyyy") : ""))
+                .ForMember(de => de.EndDateString, option => option.MapFrom(d => d.EndDate != null ? d.EndDate.Value.ToString("dd'-'MM'-'yyyy") : ""));
             CreateMap<Contract, CreateContractDTO>()
                 .ReverseMap();
             CreateMap<Contract, ContractDTO>()

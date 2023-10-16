@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
+using AutoMapper;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -14,21 +15,27 @@ namespace CarpentryWorkshopAPI.Controllers
     public class UserAccountsController : ControllerBase
     {
         private readonly SEPG4CCMSContext _context;
-
-        public UserAccountsController(SEPG4CCMSContext context)
+        private IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        public UserAccountsController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/UserAccounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserAccount>>> GetUserAccounts()
+        public async Task<ActionResult> GetUserAccounts()
         {
           if (_context.UserAccounts == null)
           {
               return NotFound();
           }
-            return await _context.UserAccounts.ToListAsync();
+            var userAccount = await _context.UserAccounts
+                  .Include(u => u.Employee)
+                  .ThenInclude(u => u.RolesEmployees)
+                  .ThenInclude(u => u.Role).Select(u=>u.Employee.RolesEmployees.Select(re=>re.Role.RoleName)).ToListAsync();
+            return Ok(userAccount);
         }
 
         // GET: api/UserAccounts/5
@@ -133,5 +140,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             return (_context.UserAccounts?.Any(e => e.EmployeeId == id)).GetValueOrDefault();
         }
+
+
     }
 }

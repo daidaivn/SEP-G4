@@ -111,7 +111,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     Action = "Insert",
                     ActionDate = DateTime.Now,
                     CurrentEmployeeId = 1,
-                    DependentId = dependentDTO.DependentId
+                    DependentId = dependent.DependentId
                 };
                 _context.DependentsStatusHistories.Add(dependentsStatusHistory);
                 _context.SaveChanges();
@@ -120,15 +120,12 @@ namespace CarpentryWorkshopAPI.Controllers
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
-            }
-            
-
-            
+            }                       
         }
 
         // DELETE: api/Dependents/5
-        [HttpDelete("{id}")]
-        public IActionResult UpdateDependentStatus(int id)
+        [HttpPut("{id}")]
+        public IActionResult ChangeDependentStatus(int id)
         {
             if (_context.Dependents == null)
             {
@@ -146,7 +143,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 if(dependent.Status == true)
                 {
                     dependentsStatusHistory.DependentId = id;
-                    dependentsStatusHistory.Action = "Deactive";
+                    dependentsStatusHistory.Action = "Change status false";
                     dependentsStatusHistory.ActionDate = DateTime.Now;
                     dependentsStatusHistory.CurrentEmployeeId = 1;
                     dependent.Status = false;
@@ -154,7 +151,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 else
                 {
                     dependentsStatusHistory.DependentId = id;
-                    dependentsStatusHistory.Action = "Active";
+                    dependentsStatusHistory.Action = "Change status true";
                     dependentsStatusHistory.ActionDate = DateTime.Now;
                     dependentsStatusHistory.CurrentEmployeeId = 1;
                     dependent.Status = true;
@@ -165,7 +162,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             _context.SaveChanges();
 
-            return NoContent();
+            return Ok("success change status");
         }
 
         private bool DependentExists(int id)
@@ -173,7 +170,7 @@ namespace CarpentryWorkshopAPI.Controllers
             return (_context.Dependents?.Any(e => e.DependentId == id)).GetValueOrDefault();
         }
         //Search and filter
-        [HttpPost("SearchDependent")]
+        [HttpPost]
         public IActionResult SearchDependents(DependentsSearchDTO dependentsSearchDTO)
         {
             try
