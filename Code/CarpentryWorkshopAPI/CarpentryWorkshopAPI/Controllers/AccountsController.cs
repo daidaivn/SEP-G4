@@ -37,65 +37,67 @@ namespace CarpentryWorkshopAPI.Controllers
             var jwtSection = _configuration.GetSection("JWT");
             var secretKey = jwtSection["SecretKey"];
             var key = Encoding.UTF8.GetBytes(secretKey);
-            LoginReponse loginReponse = new LoginReponse();
-            var roleList = user.Employee.RolesEmployees.Select(re=>re.Role).ToList();
-          
-                
-                
-            var roles = user.Employee.RolesEmployees.Select(u => u.Role.RoleName).ToArray();
+
+            var employee = user.Employee;
+
+            var roles = employee.RolesEmployees.Select(re => re.Role);
+
+            var pages = roles.SelectMany(r => r.Pages)
+                            .Select(p => p.PageName)
+                            .ToArray();
+
             var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.Name, user.UserName)
-
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim("Name", employee.FirstName + " " + employee.LastName)
     };
 
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role))); // Thêm các vai trò vào danh sách claims
+            claims.AddRange(pages.Select(page => new Claim("Page", page)));
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
-                Audience = "AudienceKey",
-                Issuer = "IssuerKey",
+                Audience = jwtSection["Audience"],
+                Issuer = jwtSection["Issuer"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            
-            
-            
+            var loginResponse = new
+            {
+                Token = tokenString,
+                Name = employee.FirstName + " " + employee.LastName,
+                Pages = pages,
+                Roles = roles
+            };
 
-            return Ok(tokenString);
+            return Ok(loginResponse);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
-        //{
 
-        //    return new string[] { "value1", "value2" };
-        //}
         private async Task<UserAccount> YourAuthenticationLogicAsync(string username, string password)
         {
             var userAccount = await _context.UserAccounts
                 .Include(u => u.Employee)
-                .ThenInclude(u=>u.RolesEmployees)
-                .ThenInclude(u=>u.Role)
+                .ThenInclude(u => u.RolesEmployees)
+                .ThenInclude(u => u.Role)
                 .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password && u.Status == true);
 
             return userAccount;
         }
         // GET api/<AccountsController>/5
-        [HttpPut("hello")]
-        public IActionResult Get(int id)
-        {
+        //[HttpPut("hello")]
+        //public IActionResult Get(int id)
+        //{
 
-            var role = _context.Roles.Where(re=>re.RoleId == id).Include(r=>r.Pages).Select(p=>p.Pages.Select(pa=>pa.PageName)).ToList();
+        //    var role = _context.Roles.Where(re => re.RoleId == id).Include(r => r.RolePages).Select(p => p.RoleId.Select(pa => pa.PageName)).ToList();
 
-            return Ok(role);
-        }
+        //    return Ok(role);
+        //}
 
         // POST api/<AccountsController>
         [HttpPost]
