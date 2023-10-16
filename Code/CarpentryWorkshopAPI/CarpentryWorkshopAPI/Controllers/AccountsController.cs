@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -40,7 +41,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             var employee = user.Employee;
 
-            var roles = employee.RolesEmployees.Select(re => re.Role);
+            var roles = employee.RolesEmployees.Select(re => re.Role).AsQueryable();
 
             var pages = roles.SelectMany(r => r.Pages)
                             .Select(p => p.PageName)
@@ -52,7 +53,7 @@ namespace CarpentryWorkshopAPI.Controllers
         new Claim("Name", employee.FirstName + " " + employee.LastName)
     };
 
-            claims.AddRange(pages.Select(page => new Claim("Page", page)));
+            claims.AddRange(pages.Select(page => new Claim(ClaimTypes.Role, page)));
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -85,6 +86,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 .Include(u => u.Employee)
                 .ThenInclude(u => u.RolesEmployees)
                 .ThenInclude(u => u.Role)
+                .ThenInclude(u=>u.Pages)
                 .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password && u.Status == true);
 
             return userAccount;
