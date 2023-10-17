@@ -44,10 +44,11 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                DateTime date = DateTime.Parse(actionDate);
-                DateTime endDate = date.AddDays(1).AddSeconds(-1);
+                DateTime startDate = DateTime.ParseExact(actionDate, "dd-MM-yyyy",
+                                      System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate >= date && x.ActionDate <= endDate)
+                    .Where(x => x.ActionDate >=startDate && x.ActionDate <= endDate)
                     .ToList();
                 if (historylistbydate == null)
                 {
@@ -65,10 +66,12 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                DateTime date = DateTime.Parse(actionDate);
-                DateTime endDate = date.AddDays(1).AddSeconds(-1);
+                DateTime startDate = DateTime.ParseExact(actionDate, "dd-MM-yyyy",
+                                      System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var dephistorylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate >= date && x.ActionDate <= endDate && x.DepartmentId == did)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
+                    && x.DepartmentId == did)
                     .ToList();
                 if (dephistorylistbydate == null)
                 {

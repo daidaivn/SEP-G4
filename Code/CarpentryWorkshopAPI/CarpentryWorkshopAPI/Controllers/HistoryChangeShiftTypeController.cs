@@ -8,78 +8,78 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    public class ContractStatusHistoriesController : Controller
+    public class HistoryChangeShiftTypeController : Controller
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public ContractStatusHistoriesController(SEPG4CCMSContext context, IMapper mapper)
+        public HistoryChangeShiftTypeController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
+
         [HttpGet]
         public IActionResult GetAllHistory()
         {
             try
             {
-                var historys = _context.ContractsStatusHistories
-                    .Include(x => x.Contract)
+                var historys = _context.HistoryChangeShiftTypes
+                    .Include(x => x.ShiftType)
                     .ToList();
                 if (historys == null)
                 {
                     return NotFound();
                 }
-                var cshDTO = _mapper.Map<List<ContractStatusHistoryDTO>>(historys);
-                return Ok(cshDTO);
-            }
-            catch (Exception ex)
+                var dto = _mapper.Map<List<HistoryChangeShiftTypeDTO>>(historys);
+                return Ok(dto);
+            }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         [HttpGet]
-        public IActionResult GetContractHistoryByDate(string date)
+        public IActionResult GetHistorysByDate(string date)
         {
             try
             {
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
+                                      System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                var historysbydate = _context.ContractsStatusHistories
-                    .Include(x => x.Contract)
+                var historydate = _context.HistoryChangeShiftTypes
+                    .Include(x => x.ShiftType)
                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
-                if (historysbydate == null)
+                if (historydate == null)
                 {
                     return NotFound();
                 }
-                var historydateDTO = _mapper.Map<List<ContractStatusHistoryDTO>>(historysbydate);
-                return Ok(historydateDTO);
-            }
-            catch (Exception ex)
+                var dto = _mapper.Map<List<HistoryChangeShiftTypeDTO>>(historydate);
+                return Ok(dto);
+            }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         [HttpGet]
-        public IActionResult GetContractHistorys(string date, int cid)
+        public IActionResult GetHistorys(string date, int sid)
         {
             try
             {
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
+                                      System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                var historysbydate = _context.ContractsStatusHistories
-                    .Include(x => x.Contract)
-                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
-                    && x.ContractId == cid)
+                var historydate = _context.HistoryChangeShiftTypes
+                    .Include(x => x.ShiftType)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate 
+                    && x.ShiftTypeId == sid
+                    )
                     .ToList();
-                if (historysbydate == null)
+                if (historydate == null)
                 {
                     return NotFound();
                 }
-                var historydateDTO = _mapper.Map<List<ContractStatusHistoryDTO>>(historysbydate);
-                return Ok(historydateDTO);
+                var dto = _mapper.Map<List<HistoryChangeShiftTypeDTO>>(historydate);
+                return Ok(dto);
             }
             catch (Exception ex)
             {
