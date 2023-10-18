@@ -86,34 +86,52 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetContractByDate([FromBody] ContractChangeDTO contractChangeDTO)
+        public IActionResult GetContractByStartDate(string startDate)
         {
             try
             {
-                List<Models.Contract> ctbystart = new List<Models.Contract>();
-                if (contractChangeDTO.StartDate.HasValue) {
-                         ctbystart = _context.Contracts
-                        .Where(x => x.StartDate == contractChangeDTO.StartDate)
+
+
+                DateTime sdate = DateTime.ParseExact(startDate, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
+                var ctbystart = _context.Contracts
+                        .Where(x => x.StartDate >= sdate && x.StartDate <= endDate)
                         .Include(emp => emp.Employee)
                         .ToList();
                     if (ctbystart == null)
                     {
                         return NotFound();
                     }
-                }
-                else if (contractChangeDTO.EndDate.HasValue)
-                {
-                    ctbystart = _context.Contracts
-                       .Where(x => x.EndDate == contractChangeDTO.EndDate)
-                       .Include(emp => emp.Employee)
-                       .ToList();
-                    if (ctbystart == null)
-                    {
-                        return NotFound();
-                    }
-                }
-              
+                    
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
+                return Ok(ctDTO);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult GetContractByEndDate(string enddate)
+        {
+            try
+            {
+
+
+                DateTime sdate = DateTime.ParseExact(enddate, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
+                var ctbyend = _context.Contracts
+                        .Where(x => x.EndDate >= sdate && x.EndDate <= endDate)
+                        .Include(emp => emp.Employee)
+                        .ToList();
+                if (ctbyend == null)
+                {
+                    return NotFound();
+                }
+                var ctDTO = _mapper.Map<List<ContractDTO>>(ctbyend);
                 return Ok(ctDTO);
 
             }

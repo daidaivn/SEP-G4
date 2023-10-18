@@ -37,24 +37,24 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetHistoriesByContractType([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
+        public IActionResult GetHistories(string date, int ctid)
         {
             try
             {
-                
-                List<ContractTypeStatusHistory> cth = new List<ContractTypeStatusHistory>();
-                if (contractTypeStatusHistoryDTO.ContractTypeId != 0)
-                {
-                        cth = _context.ContractTypeStatusHistories
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
+                var cth = _context.ContractTypeStatusHistories
                         .Include(x => x.ContractType)
-                        .Where(x => x.ContractTypeId == contractTypeStatusHistoryDTO.ContractTypeId)
+                        .Where(x => x.ContractTypeId == ctid &&
+                        x.ActionDate >= startDate && x.ActionDate <= endDate)
                         .ToList();
                     if (cth == null)
                     {
                         return NotFound();
                     }
                   
-                }
+                
                 var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
                 return Ok(dto);
             }
@@ -64,16 +64,14 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetHistoriesByDate([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
+        public IActionResult GetHistoriesByDate(string date)
         {
             try
             {
-                DateTime startDate = contractTypeStatusHistoryDTO.ActionDate!.Value.Date;
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                List<ContractTypeStatusHistory> cth = new List<ContractTypeStatusHistory>();
-                if (contractTypeStatusHistoryDTO.ActionDate.HasValue)
-                {
-                    cth = _context.ContractTypeStatusHistories
+                   var cth = _context.ContractTypeStatusHistories
                     .Include(x => x.ContractType)
                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
@@ -82,7 +80,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         return NotFound();
                     }
 
-                }
+                
                 var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
                 return Ok(dto);
             }

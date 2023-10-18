@@ -8,11 +8,11 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    public class RoleStatusHistoryController : Controller
+    public class HistoryChangeTeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public RoleStatusHistoryController(SEPG4CCMSContext context, IMapper mapper)
+        public HistoryChangeTeamController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -23,62 +23,64 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var historys = _context.RolesStatusHistories
-                    .Include(x => x.Role)
+                var historys = _context.HistoryChangeTeams
+                    .Include(x => x.Team)
                     .ToList();
                 if (historys == null)
                 {
                     return NotFound();
                 }
-                var rshDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historys);
-                return Ok(rshDTO);
-            }catch(Exception ex)
+                var dto = _mapper.Map<List<HistoryChangeTeamDTO>>(historys);
+                return Ok(dto);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        public IActionResult GetRoleHistoryByDate(string date)
+        [HttpGet]
+        public IActionResult GetHistorysByDate(string date)
         {
             try
             {
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
+                                      System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                var historysbydate = _context.RolesStatusHistories
-                    .Include(x => x.Role)
+                var historydate = _context.HistoryChangeTeams
+                    .Include(x => x.Team)
                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
-                if (historysbydate == null)
+                if (historydate == null)
                 {
                     return NotFound();
                 }
-                var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
-                return Ok(historydateDTO);
-            }catch(Exception ex)
+                var dto = _mapper.Map<List<HistoryChangeTeamDTO>>(historydate);
+                return Ok(dto);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        public IActionResult GetRoleHistorys(string date, int rid)
+        [HttpGet]
+        public IActionResult GetHistorys(string date, int tid)
         {
             try
             {
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
+                                      System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                var historysbydate = _context.RolesStatusHistories
-                    .Include(x => x.Role)
-                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate 
-                    && x.RoleId == rid)
+                var historydate = _context.HistoryChangeTeams
+                    .Include(x => x.Team)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
+                    && x.TeamId == tid)
                     .ToList();
-                if (historysbydate == null)
+                if (historydate == null)
                 {
                     return NotFound();
                 }
-                var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
-                return Ok(historydateDTO);
+                var dto = _mapper.Map<List<HistoryChangeTeamDTO>>(historydate);
+                return Ok(dto);
             }
             catch (Exception ex)
             {
