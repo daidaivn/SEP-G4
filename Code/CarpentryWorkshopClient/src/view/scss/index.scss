@@ -487,7 +487,7 @@ tbody {
   padding: 24px 0;
   margin-right: 180px;
   button {
-    padding: 14px 64px;
+    padding: 14px 49px 17px 50px;
     color: #fff;
     font-family: Noto Sans;
     font-size: 21px;
@@ -500,6 +500,95 @@ tbody {
   background: #1967ff !important;
 }
 .modal-footer-deparment {
-  margin-right: 20px !important;
+  margin-right: 65px !important;
   gap: 10px;
+}
+.modal-group {
+  padding: 50px 65px;
+  display: flex;
+  padding: 50px 65px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.info-detail-group {
+  display: flex;
+  padding: 0px 30px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 40px;
+  background: #fff;
+}
+.modal-footer-group {
+  .btn-edit {
+    padding: 14px 15px 17px 17px !important;
+  }
+}
+.info-body-group {
+  display: flex;
+  padding: 30px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  align-self: stretch;
+}
+.box1-modal-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  p {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .box1-child {
+    display: flex;
+    width: 40px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .box2-child {
+    display: flex;
+    width: 191px;
+    align-items: center;
+    gap: 10px;
+  }
+  .box3-child {
+    display: flex;
+    padding: 14px 24px;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+  }
+  .box4-child {
+    display: flex;
+    width: 160px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+  }
+  .child2-group {
+    width: 220px;
+    flex-shrink: 0;
+  }
+  .child3-group {
+    flex: 1 0 0;
+  }
+  .child4-group {
+    display: flex;
+    width: 156px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    align-self: stretch;
+  }
 }

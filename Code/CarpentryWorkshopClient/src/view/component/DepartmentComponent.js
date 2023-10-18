@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
-import "../scss/fonts.scss";
-import { Switch, Form, Input, Row, Col } from "antd";
+import { Switch, Form, Input } from "antd";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
+import Filter from "./componentUI/Filter";
 import { Modal } from "antd";
-import { Select } from "antd";
+import { Select, Space } from "antd";
 function ListDepartmentComponent() {
   const [departments, setDepartments] = useState([]);
   const [isModalOpenDepartment, setIsModalOpenDepartment] = useState(false);
-  const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -24,15 +23,7 @@ function ListDepartmentComponent() {
   const handleCancelDepartment = () => {
     setIsModalOpenDepartment(false);
   };
-  const showModalDetail = () => {
-    setIsModalOpenDetail(true);
-  };
-  const handleOkDetail = () => {
-    setIsModalOpenDetail(false);
-  };
-  const handleCancelDetail = () => {
-    setIsModalOpenDetail(false);
-  };
+
   useEffect(() => {
     // Sử dụng fetchAllDepadment để tải dữ liệu từ API
     fetchAllDepadment()

@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
-import { Switch, Form } from "antd";
+import { Switch, Form, Input, Row, Col } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllRole } from "../../sevices/RoleService";
-import { Input } from "antd";
 import { Select } from "antd";
 import { Modal } from "antd";
 const GroupComponent = () => {
   const [role, setRole] = useState([]);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
+  const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -23,6 +24,15 @@ const GroupComponent = () => {
   };
   const handleCancelGroup = () => {
     setIsModalOpenGroup(false);
+  };
+  const showModalDetail = () => {
+    setIsModalOpenDetail(true);
+  };
+  const handleOkDetail = () => {
+    setIsModalOpenDetail(false);
+  };
+  const handleCancelDetail = () => {
+    setIsModalOpenDetail(false);
   };
   useEffect(() => {
     // call api sau: chưa có api
@@ -286,7 +296,7 @@ const GroupComponent = () => {
                 </td>
               </tr>
             ))}
-            <tr>
+            <tr onClick={showModalDetail}>
               <td>1</td>
               <td>Nhóm 1</td>
               <td>2</td>
@@ -296,7 +306,7 @@ const GroupComponent = () => {
                 </Form.Item>
               </td>
             </tr>
-            <tr>
+            <tr onClick={showModalDetail}>
               <td>1</td>
               <td>Nhóm 2</td>
               <td>2</td>
@@ -306,7 +316,7 @@ const GroupComponent = () => {
                 </Form.Item>
               </td>
             </tr>
-            <tr>
+            <tr onClick={showModalDetail}>
               <td>1</td>
               <td>Nhóm 3</td>
               <td>2</td>
@@ -316,7 +326,7 @@ const GroupComponent = () => {
                 </Form.Item>
               </td>
             </tr>
-            <tr>
+            <tr onClick={showModalDetail}>
               <td>1</td>
               <td>Nhóm 4</td>
               <td>2</td>
@@ -352,6 +362,47 @@ const GroupComponent = () => {
             </button>
             <button className="btn-edit btn-save" onClick={handleOkGroup}>
               Lưu
+            </button>
+          </div>
+        </Modal>
+        <Modal
+          className="modal-dependent"
+          open={isModalOpenDetail}
+          on
+          Ok={handleOkDetail}
+          onCancel={handleCancelDetail}
+          width={566}
+        >
+          <div className="modal-head">
+            {" "}
+            <h3>Nhóm 1</h3>
+          </div>
+          <div className=" modal-group">
+            <div className="info-detail-group">
+              <div className="info-body-group">
+                <div className="box1-modal-group">
+                  <div className="box1-child">
+                    <p className="child1-group">STT</p>
+                  </div>
+                  <div className="box2-child">
+                    <p className="child2-group">Chức vụ</p>
+                  </div>
+                  <div className="box3-child">
+                    <p className="child3-group">Họ và tên</p>
+                  </div>
+                  <div className="box4-child">
+                    <p className="child4-group">Xóa khỏi nhóm</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer modal-footer-deparment modal-footer-group">
+            <button className="btn-cancel" onClick={handleCancelDetail}>
+              Thoát
+            </button>
+            <button className="btn-edit" onClick={handleOkDetail}>
+              Thêm thành viên
             </button>
           </div>
         </Modal>
