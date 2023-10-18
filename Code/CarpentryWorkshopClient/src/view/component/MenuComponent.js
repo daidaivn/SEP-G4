@@ -1,6 +1,7 @@
 import "../scss/reset.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
+import "../scss/fonts.scss";
 import { Link, NavLink } from "react-router-dom";
 import Home from "./Home";
 import DashboardComponnet from "./DashboardComponnet";
@@ -111,6 +112,19 @@ const Menucomponent = () => {
                       <i className="icon-add1"></i>
 
                       <span className="text">Chức vụ </span>
+                    </NavLink>
+                  </div>
+                  <div className="item-link">
+                    <NavLink
+                      to={"/list-group"}
+                      id="item-menu"
+                      onClick={() => handleDivClick("div7")}
+                      activeClassName={activeDiv === "div7" ? "active" : ""}
+                      className={"item-child"}
+                    >
+                      <i className="icon-add1"></i>
+
+                      <span className="text">Nhóm</span>
                     </NavLink>
                   </div>
                 </div>

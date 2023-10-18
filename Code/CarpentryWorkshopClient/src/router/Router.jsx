@@ -3,6 +3,9 @@ import ListEmployeeComponent from "../view/component/ListEmployeeComponent";
 import ListDepartmentComponent from "../view/component/DepartmentComponent";
 import Home from "../view/component/Home";
 import DashboardComponnet from "../view/component/DashboardComponnet";
+import LoginComponent from "../view/component/LoginComponent";
+import ForgetComponent from "../view/component/ForgetComponent";
+import GroupComponent from "../view/component/GroupComponent";
 
 const routes = [
   {
@@ -21,6 +24,19 @@ const routes = [
     path: "/list-department",
     element: <ListDepartmentComponent />,
   },
+  {
+    path: "/list-group",
+    element: <GroupComponent />,
+  },
+  {
+    path: "/login",
+    element: <LoginComponent />,
+  },
+  {
+    path: "/forget",
+    element: <ForgetComponent />,
+  },
+
   {
     path: "*",
     element: <NotFoundComponent />,

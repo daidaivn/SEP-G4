@@ -3,6 +3,7 @@ import "../scss/index.scss";
 import "../scss/ListEmployeeComponent.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/responsive/ListEmployee.scss";
+import "../scss/fonts.scss";
 import { Input, Switch, Form } from "antd";
 import { Col, Row } from "antd";
 import user from "../assets/images/Ellipse 69.svg";
