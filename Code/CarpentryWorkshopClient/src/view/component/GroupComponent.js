@@ -8,19 +8,30 @@ import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { Input } from "antd";
 import { Select } from "antd";
-function Role() {
+import { Modal } from "antd";
+const GroupComponent = () => {
   const [role, setRole] = useState([]);
+  const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+  const showModalGroup = () => {
+    setIsModalOpenGroup(true);
+  };
+  const handleOkGroup = () => {
+    setIsModalOpenGroup(false);
+  };
+  const handleCancelGroup = () => {
+    setIsModalOpenGroup(false);
+  };
   useEffect(() => {
-    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
+    // call api sau: chưa có api
     fetchAllRole()
       .then((data) => {
         setRole(data);
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   }, []);
 
@@ -29,8 +40,10 @@ function Role() {
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Danh sách chức vụ</h2>
-            <span>Hiển thị các chức vụ có trong xưởng mộc</span>
+            <h2>Danh sách nhóm</h2>
+            <span>
+              Thông tin nhóm, tạo nhóm và phân ca trưởng trong mỗi nhóm
+            </span>
           </div>
           <MenuResponsive />
           <ListUserHeader />
@@ -188,7 +201,7 @@ function Role() {
               />
             </svg>
           </i>
-          <div className="list-add">
+          <div className="list-add" onClick={showModalGroup}>
             <i className="icon-web">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -248,15 +261,15 @@ function Role() {
           </i>
         </div>
         <div className="list-text-header-res">
-          <h2>Danh sách chức vụ</h2>
-          <span>Hiển thị các chức vụ có trong xưởng mộc</span>
+          <h2>Danh sách nhóm</h2>
+          <span>Thông tin nhóm, tạo nhóm và phân ca trưởng trong mỗi nhóm</span>
         </div>
         <table className="list-table">
           <thead>
             <tr>
               <td>STT</td>
-              <td>Chức vụ</td>
-              <td>Số thành viên chức vụ</td>
+              <td>Nhóm</td>
+              <td>Số nhân viên</td>
               <td>Trạng thái</td>
             </tr>
           </thead>
@@ -275,7 +288,7 @@ function Role() {
             ))}
             <tr>
               <td>1</td>
-              <td>Kế toán</td>
+              <td>Nhóm 1</td>
               <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
@@ -285,7 +298,7 @@ function Role() {
             </tr>
             <tr>
               <td>1</td>
-              <td>Kế toán</td>
+              <td>Nhóm 2</td>
               <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
@@ -295,7 +308,7 @@ function Role() {
             </tr>
             <tr>
               <td>1</td>
-              <td>Kế toán</td>
+              <td>Nhóm 3</td>
               <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
@@ -305,7 +318,7 @@ function Role() {
             </tr>
             <tr>
               <td>1</td>
-              <td>Kế toán</td>
+              <td>Nhóm 4</td>
               <td>2</td>
               <td>
                 <Form.Item valuePropName="checked">
@@ -315,9 +328,35 @@ function Role() {
             </tr>
           </tbody>
         </table>
+        <Modal
+          className="modal"
+          open={isModalOpenGroup}
+          on
+          Ok={handleOkGroup}
+          onCancel={handleCancelGroup}
+          width={566}
+        >
+          <div className="modal-head">
+            {" "}
+            <h3>Thêm nhóm</h3>
+          </div>
+          <div className="modal-body modal-body-department">
+            <div className="info-add-department">
+              <div className="text-department">Tên nhóm</div>
+              <Input />
+            </div>
+          </div>
+          <div className="modal-footer modal-footer-deparment">
+            <button className="btn-cancel" onClick={handleCancelGroup}>
+              Hủy bỏ
+            </button>
+            <button className="btn-edit btn-save" onClick={handleOkGroup}>
+              Lưu
+            </button>
+          </div>
+        </Modal>
       </div>
     </>
   );
-}
-
-export default Role;
+};
+export default GroupComponent;

@@ -9,6 +9,7 @@ import Menucomponent from "./view/component/MenuComponent";
 import Home from "./view/component/Home";
 import DependentPerson from "./view/component/DependentPerson";
 import Role from "./view/component/Role";
+import GroupComponent from "./view/component/GroupComponent";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             element={<ListDepartmentComponent />}
           />
           <Route path="/dependent-person" element={<DependentPerson />} />
+          <Route path="/list-group" element={<GroupComponent />} />
           <Route path="/role" element={<Role />} />
           <Route path="*" element={<NotFoundComponent />} />
         </Routes>

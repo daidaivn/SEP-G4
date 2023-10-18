@@ -114,6 +114,19 @@ const Menucomponent = () => {
                       <span className="text">Chức vụ </span>
                     </NavLink>
                   </div>
+                  <div className="item-link">
+                    <NavLink
+                      to={"/list-group"}
+                      id="item-menu"
+                      onClick={() => handleDivClick("div7")}
+                      activeClassName={activeDiv === "div7" ? "active" : ""}
+                      className={"item-child"}
+                    >
+                      <i className="icon-add1"></i>
+
+                      <span className="text">Nhóm</span>
+                    </NavLink>
+                  </div>
                 </div>
               )}
             </div>

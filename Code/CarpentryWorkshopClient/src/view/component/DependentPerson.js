@@ -6,11 +6,10 @@ import "../scss/fonts.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import Filter from "./componentUI/Filter";
 import { fetchAllDependent } from "../../sevices/DependentPersonService";
 import { Input } from "antd";
 import { Modal } from "antd";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 import { Col, Row } from "antd";
 function DependentPerson() {
   const [dependent, setDependent] = useState([]);
