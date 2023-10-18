@@ -14,11 +14,16 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             CreateMap<Employee, EmployeeSearchDTO>() 
                .ReverseMap();
+            CreateMap<Employee, TeamMemberDTO>()
+               .ForMember(de => de.Dobstring, option => option.MapFrom(d => d.Dob!.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.Gender, option => option.MapFrom(d => (bool)d.Gender ? "Nam" : "Nữ"))
+               .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
+               .ReverseMap();
             CreateMap<Role, RoleDTO>()
                .ReverseMap();
             CreateMap<Department, DepartmentDTO>()
                 .ForMember(de=>de.number,option=>option.MapFrom(d=>d.RolesEmployees.Select(re=>re.EmployeeId).Distinct().Count()))
-               .ReverseMap();         
+                .ReverseMap();         
             CreateMap<Dependent, DependentDTO>()
                 .ReverseMap();
             CreateMap<Dependent, DependentListDTO>()
@@ -45,16 +50,36 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<EmployeesStatusHistory, EmployeeHistoryDTO>()
                 .ForMember(de => de.EmployeeName, option => option.MapFrom(d => d.Employee!.FirstName + " " + d.Employee!.LastName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
             CreateMap<RolesStatusHistory, RoleStatusHistoryDTO>()
                 .ForMember(de => de.RoleName, option => option.MapFrom(d => d.Role!.RoleName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
             CreateMap<ContractsStatusHistory, ContractStatusHistoryDTO>()
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
             CreateMap<ContractTypeStatusHistory, ContractTypeHistoryDTO>()
                 .ForMember(de => de.ContractTypeName, option => option.MapFrom(d => d.ContractType!.ContractName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
-
+            CreateMap<ShiftType, CreateShiftTypeDTO>()
+               .ReverseMap();
+            CreateMap<Team, TeamListDTO>()
+               .ReverseMap();
+            CreateMap<WorkSchedule, WorkScheduleDTO>()
+               .ReverseMap();
+            CreateMap<HistoryChangeShiftType, HistoryChangeShiftTypeDTO>()
+                .ForMember(de => de.ShiftTypeName, option => option.MapFrom(d => d.ShiftType!.TypeName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ReverseMap();
+            CreateMap<HistoryChangeTeam, HistoryChangeTeamDTO>()
+                .ForMember(de => de.TeamName, option => option.MapFrom(d => d.Team!.TeamName))
+                .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ReverseMap();
+            CreateMap<WorkScheduleStatusHistory, WorkScheduleHistoryDTO>()
+               .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
+              .ReverseMap();
         }
     }
 }

@@ -42,12 +42,12 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                List<EmployeesStatusHistory> historylistbydate = new List<EmployeesStatusHistory>();
+               
                 
                     DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture);
                     DateTime endDate = startDate.AddDays(1).AddSeconds(-1); 
-                    historylistbydate = _context.EmployeesStatusHistories
+                   var historylistbydate = _context.EmployeesStatusHistories
                    .Include(x => x.Employee)
                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                    .ToList();
@@ -69,12 +69,12 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                List<EmployeesStatusHistory> emphistorylistbydate = new List<EmployeesStatusHistory>();
+               
                
                     DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture);
                     DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                    emphistorylistbydate = _context.EmployeesStatusHistories
+                   var emphistorylistbydate = _context.EmployeesStatusHistories
                         .Include(x => x.Employee)
                         .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
                         && x.EmployeeId == eid)

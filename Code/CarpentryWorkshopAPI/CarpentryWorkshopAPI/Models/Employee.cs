@@ -12,6 +12,7 @@ namespace CarpentryWorkshopAPI.Models
             EmployeeDegrees = new HashSet<EmployeeDegree>();
             EmployeesStatusHistories = new HashSet<EmployeesStatusHistory>();
             RolesEmployees = new HashSet<RolesEmployee>();
+            TimeTrackings = new HashSet<TimeTracking>();
         }
 
         public int EmployeeId { get; set; }
@@ -27,13 +28,16 @@ namespace CarpentryWorkshopAPI.Models
         public int? CountryId { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
+        public int? TeamId { get; set; }
 
         public virtual Country? Country { get; set; }
+        public virtual Team? Team { get; set; }
         public virtual UserAccount? UserAccount { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<Dependent> Dependents { get; set; }
         public virtual ICollection<EmployeeDegree> EmployeeDegrees { get; set; }
         public virtual ICollection<EmployeesStatusHistory> EmployeesStatusHistories { get; set; }
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
+        public virtual ICollection<TimeTracking> TimeTrackings { get; set; }
     }
 }
