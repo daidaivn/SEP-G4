@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -34,7 +37,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return Unauthorized("Sai rồi");
             }
-
+            HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
             var jwtSection = _configuration.GetSection("JWT");
             var secretKey = jwtSection["SecretKey"];
             var key = Encoding.UTF8.GetBytes(secretKey);
@@ -87,6 +90,13 @@ namespace CarpentryWorkshopAPI.Controllers
 
             return userAccount;
         }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Ok("Logout successful.");
+        }
+
         // GET api/<AccountsController>/5
         //[HttpPut("hello")]
         //public IActionResult Get(int id)
@@ -98,9 +108,30 @@ namespace CarpentryWorkshopAPI.Controllers
         //}
 
         // POST api/<AccountsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize(Roles = "AccountsPage")]
+        [HttpGet]
+        public IActionResult Get()
         {
+            if(_context == null)
+            {
+                return NotFound();
+            }
+            
+            var role = _context.Roles.Include(ro=>ro.Pages).Where(ro => ro.RoleId == 3).FirstOrDefault();
+            var page = _context.Pages.Where(pa => pa.PageId == 1).FirstOrDefault();
+            role.Pages.Remove(page);
+            //page.Roles.Remove(role);
+            try
+            {
+                
+                _context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            return Ok();
         }
 
         // PUT api/<AccountsController>/5

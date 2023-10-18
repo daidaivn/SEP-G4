@@ -7,84 +7,108 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class UserAccountsController : ControllerBase
     {
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
-        private readonly IConfiguration _configuration;
+        
         public UserAccountsController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-
+        //[Authorize(Roles = "UserAccountsPage")]
         // GET: api/UserAccounts
         [HttpGet]
-        public async Task<ActionResult> GetUserAccounts()
+        public IActionResult GetUserAccounts()
         {
           if (_context.UserAccounts == null)
           {
               return NotFound();
           }
-            var userAccount = await _context.UserAccounts
+            var userAccount = _context.UserAccounts
                   .Include(u => u.Employee)
                   .ThenInclude(u => u.RolesEmployees)
-                  .ThenInclude(u => u.Role).Select(u=>u.Employee.RolesEmployees.Select(re=>re.Role.RoleName)).ToListAsync();
+                  .ThenInclude(u => u.Role)
+                  .ThenInclude(u=> u.Pages)
+                  .Select(ua => new UserAccountListDTO
+                  {
+                      EmployeeId= ua.EmployeeId,
+                      UserName= ua.UserName,
+                      Password= ua.Password,
+                      PageName = ua.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).ToList(),
+                      EmployeeName = ua.Employee.FirstName + " " + ua.Employee.LastName,
+                  });
             return Ok(userAccount);
         }
 
         // GET: api/UserAccounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserAccount>> GetUserAccount(int id)
+        public IActionResult GetUserAccount(int id)
         {
           if (_context.UserAccounts == null)
           {
               return NotFound();
           }
-            var userAccount = await _context.UserAccounts.FindAsync(id);
+            var userAccount = _context.UserAccounts
+                  .Where(ua=>ua.EmployeeId == id)
+                  .Include(u => u.Employee)
+                  .ThenInclude(u => u.RolesEmployees)
+                  .ThenInclude(u => u.Role)
+                  .ThenInclude(u => u.Pages)
+                  .Select(ua => new UserAccountListDTO
+                  {
+                      EmployeeId = ua.EmployeeId,
+                      UserName = ua.UserName,
+                      Password = ua.Password,
+                      PageName = ua.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).ToList(),
+                      EmployeeName = ua.Employee.FirstName + " " + ua.Employee.LastName,
+                  }).SingleOrDefault();
 
             if (userAccount == null)
             {
                 return NotFound();
             }
+            else
+            {
+                return Ok(userAccount);
+            }
 
-            return userAccount;
+            
         }
 
         // PUT: api/UserAccounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserAccount(int id, UserAccount userAccount)
+        [HttpPut]
+        public IActionResult PutUserAccount(UserAccountDTO userAccountDTO)
         {
-            if (id != userAccount.EmployeeId)
+            UserAccount userAccount = _mapper.Map<UserAccount>(userAccountDTO);
+            if (userAccount !=null && _context !=null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(userAccount).State = EntityState.Modified;
-
+            else
+            {
+                _context.Entry(userAccount).State = EntityState.Modified;
+            }
             try
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!UserAccountExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
+                
             }
-
-            return NoContent();
+            return Ok("success");
         }
 
         // POST: api/UserAccounts

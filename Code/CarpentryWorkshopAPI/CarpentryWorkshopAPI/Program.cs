@@ -41,7 +41,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 // Add services to the container.
 builder.Services.AddControllers();
-
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -86,7 +92,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseSwagger();
-
+app.UseSession();
 app.UseSwaggerUI();
 app.UseCors(
     builder =>
