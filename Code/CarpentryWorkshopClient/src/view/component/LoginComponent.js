@@ -42,8 +42,10 @@ const LoginComponent = () => {
             </div>
           </div>
           <div className="submit">
-            <button className="btn-login">Đăng nhập</button>
-          </div>
+        <Link to="/" className="btn-login">
+          Đăng nhập
+        </Link>
+      </div>
         </div>
       </div>
     </div>
