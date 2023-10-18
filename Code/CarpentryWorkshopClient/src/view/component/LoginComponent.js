@@ -3,6 +3,7 @@ import "../scss/index.scss";
 import "../scss/fonts.scss";
 import logo from "../assets/images/logo.png";
 import { Checkbox } from "antd";
+import { Link } from "react-router-dom";
 const LoginComponent = () => {
   return (
     <div className="main-login">
@@ -19,8 +20,8 @@ const LoginComponent = () => {
         <div className="body-login">
           <div className="title-login">
             <p>
-              Vui lòng điền thông tin tài khoản đã được công ty cung cấp và mật
-              khẩu của bạn.
+              Vui lòng điền thông tin tài khoản và mật khẩu của bạn đã được công
+              ty cung cấp.
             </p>
           </div>
           <div className="input-user">
@@ -36,10 +37,12 @@ const LoginComponent = () => {
               <Checkbox></Checkbox>
               <p>Lưu tài khoản</p>
             </div>
-            <div className="forget-pass">Quên mật khẩu ?</div>
+            <div className="forget-pass">
+              <Link to={"/forget"}>Quên mật khẩu ?</Link>
+            </div>
           </div>
           <div className="submit">
-            <button className="btn-login">Đăng nhâp</button>
+            <button className="btn-login">Đăng nhập</button>
           </div>
         </div>
       </div>

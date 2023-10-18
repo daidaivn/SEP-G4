@@ -4,6 +4,7 @@ import ListDepartmentComponent from "../view/component/DepartmentComponent";
 import Home from "../view/component/Home";
 import DashboardComponnet from "../view/component/DashboardComponnet";
 import LoginComponent from "../view/component/LoginComponent";
+import ForgetComponent from "../view/component/ForgetComponent";
 
 const routes = [
   {
@@ -25,6 +26,10 @@ const routes = [
   {
     path: "/login",
     element: <LoginComponent />,
+  },
+  {
+    path: "/forget",
+    element: <ForgetComponent />,
   },
   {
     path: "*",
