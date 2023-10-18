@@ -83,6 +83,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 _context.Roles.Add(newrole);
+                _context.SaveChanges();
                 RolesStatusHistory newhistory = new RolesStatusHistory
                 {
                     RoleId= newrole.RoleId,

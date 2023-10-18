@@ -45,6 +45,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.WorkSchedules.Add(newschedule);
+                    _context.SaveChanges();
                     WorkScheduleStatusHistory history = new WorkScheduleStatusHistory
                     {
                         WorkScheduleId= newschedule.WorkScheduleId,
@@ -53,7 +55,6 @@ namespace CarpentryWorkshopAPI.Controllers
                         CurrentEmployeeId = null,
                     };
                     _context.WorkScheduleStatusHistories.Add(history);
-                    _context.WorkSchedules.Add(newschedule);
                     _context.SaveChanges();
                     return Ok("Create work schedule successful");
                 }
@@ -64,6 +65,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.WorkSchedules.Update(newschedule);
                     WorkScheduleStatusHistory history = new WorkScheduleStatusHistory
                     {
                         WorkScheduleId = newschedule.WorkScheduleId,
@@ -72,7 +74,6 @@ namespace CarpentryWorkshopAPI.Controllers
                         CurrentEmployeeId = null,
                     };
                     _context.WorkScheduleStatusHistories.Add(history);
-                    _context.WorkSchedules.Update(newschedule);
                     _context.SaveChanges();
                     return Ok("Update work schedule successful");
                 }

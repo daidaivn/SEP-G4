@@ -150,6 +150,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 _context.Contracts.Add(newct);
+                _context.SaveChanges();
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
                     ContractId = newct.ContractId,
