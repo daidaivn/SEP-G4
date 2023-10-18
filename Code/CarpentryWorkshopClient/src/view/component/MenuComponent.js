@@ -1,6 +1,7 @@
 import "../scss/reset.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
+import "../scss/fonts.scss";
 import { Link, NavLink } from "react-router-dom";
 import Home from "./Home";
 import DashboardComponnet from "./DashboardComponnet";

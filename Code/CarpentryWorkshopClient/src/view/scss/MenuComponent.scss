@@ -1,48 +1,3 @@
-/* Poppins Regular 400 */
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 400;
-  src: url("../fonts/NotoSans-Regular.ttf");
-}
-
-/* Poppins Medium 500 */
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 500;
-  src: url("../fonts/NotoSans-Medium.ttf");
-}
-
-/* Poppins Bold 600 */
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 600;
-  src: url("../fonts/NotoSans-SemiBold.ttf");
-}
-@font-face {
-  font-family: "Noto Sans";
-  font-style: italic;
-  font-weight: 800;
-  src: url("../fonts/NotoSans-ExtraBoldItalic.ttf");
-}
-/* Poppins Bold 700 */
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/NotoSans-Bold.ttf");
-}
-
-/* Poppins ExtraBold 800 */
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 800;
-  src: url("../fonts/NotoSans-ExtraBold.ttf");
-}
-
 .list-menu {
   height: 100%;
   max-width: 352px;
@@ -52,7 +7,7 @@
 
 .logo-name {
   color: #fff;
-  font-family: "Noto Sans";
+  font-family: Noto Sans;
   font-style: italic;
   font-size: 26px;
   font-weight: 600;
@@ -81,7 +36,7 @@
   margin-bottom: 12px;
   .text {
     color: #fff;
-    font-family: "Noto Sans";
+    font-family: Noto Sans;
     font-size: 20px;
     font-weight: 500;
   }
@@ -146,7 +101,7 @@ i {
   gap: 10px !important;
   span {
     color: #fff;
-    font-family: "Noto Sans";
+    font-family: Noto Sans;
     font-size: 15px !important;
     font-weight: 500 !important;
   }

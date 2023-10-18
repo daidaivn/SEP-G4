@@ -1,0 +1,150 @@
+.main-login {
+  padding: 0 30px;
+  background: #386641;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+}
+.body-main-login {
+  display: flex;
+  padding: 60px 80px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.name-logo {
+  color: #fff;
+  font-family: Noto Sans;
+  font-size: 30px;
+  font-weight: 600;
+}
+.logo-login {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.text-login {
+  color: #fff;
+  text-align: center;
+  font-family: Noto Sans;
+  font-size: 40px;
+  font-weight: 600;
+}
+.head-login {
+  display: flex;
+  padding: 10px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+}
+.body-login {
+  border-radius: 60px;
+  background: #fff;
+  display: flex;
+  padding: 0px 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.title-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  p {
+    width: 1149px;
+    color: #000;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 40px;
+    font-weight: 600;
+  }
+}
+.input-user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  .text-user {
+    width: 210px;
+    color: #090909;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 40px;
+    font-weight: 400;
+  }
+  input {
+    border-radius: 60px;
+    border: 1px solid #c0c0c0;
+    display: flex;
+    width: 818px;
+    padding: 22px 35px;
+    align-items: center;
+    gap: 10px;
+    color: #80808f;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-weight: 400;
+  }
+}
+.box-forget {
+  display: flex;
+  width: 1048px;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  .save-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    p {
+      color: #000;
+      font-family: Noto Sans;
+      font-size: 24px;
+      font-weight: 400;
+    }
+  }
+  .forget-pass {
+    color: #000;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 400;
+  }
+}
+.submit {
+  display: flex;
+  width: 1048px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10px;
+  .btn-login {
+    border: none;
+    display: flex;
+    padding: 20px 101px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 20px;
+    background: #1967ff;
+    color: #fff;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 30px;
+    font-weight: 400;
+  }
+}

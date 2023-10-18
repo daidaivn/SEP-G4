@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
+import "../scss/fonts.scss";
 import { Switch, Form, Input } from "antd";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
 import ListUserHeader from "./componentUI/ListUserHeader";

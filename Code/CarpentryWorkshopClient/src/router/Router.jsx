@@ -3,6 +3,7 @@ import ListEmployeeComponent from "../view/component/ListEmployeeComponent";
 import ListDepartmentComponent from "../view/component/DepartmentComponent";
 import Home from "../view/component/Home";
 import DashboardComponnet from "../view/component/DashboardComponnet";
+import LoginComponent from "../view/component/LoginComponent";
 
 const routes = [
   {
@@ -20,6 +21,10 @@ const routes = [
   {
     path: "/list-department",
     element: <ListDepartmentComponent />,
+  },
+  {
+    path: "/login",
+    element: <LoginComponent />,
   },
   {
     path: "*",
