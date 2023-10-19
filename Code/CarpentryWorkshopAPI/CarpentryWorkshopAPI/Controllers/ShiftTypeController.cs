@@ -47,6 +47,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.ShiftTypes.Add(type);
+                    _context.SaveChanges();
                     HistoryChangeShiftType history = new HistoryChangeShiftType
                     {
                         ShiftTypeId = type.ShiftTypeId,
@@ -55,7 +57,6 @@ namespace CarpentryWorkshopAPI.Controllers
                         CurrentEmployeeId = null,
                     };
                     _context.HistoryChangeShiftTypes.Add(history);
-                    _context.ShiftTypes.Add(type);
                     _context.SaveChanges();
                     return Ok("Create shift type successful");
                 }
@@ -66,6 +67,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.ShiftTypes.Update(type);
                     HistoryChangeShiftType history = new HistoryChangeShiftType
                     {
                         ShiftTypeId = type.ShiftTypeId,
@@ -73,8 +75,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         ActionDate = DateTime.Now,
                         CurrentEmployeeId = null,
                     };
-                    _context.HistoryChangeShiftTypes.Add(history);
-                    _context.ShiftTypes.Update(type);
+                    _context.HistoryChangeShiftTypes.Add(history);                 
                     _context.SaveChanges();
                     return Ok("Update shift type successful");
 
