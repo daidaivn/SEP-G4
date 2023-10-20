@@ -4,8 +4,12 @@ using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol.Plugins;
+using Org.BouncyCastle.Crypto.Generators;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -16,7 +20,7 @@ using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -32,7 +36,8 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost("gettoken")]
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
-            var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var user = await YourAuthenticationLogicAsync(request.UserName, passwordHash);
             if (user == null)
             {
                 return Unauthorized("Sai rồi");
@@ -45,7 +50,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var employee = user.Employee;
 
             var pages = user.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).ToArray();
-
+            var roles = user.Employee.RolesEmployees.Select(u=>u.Role.RoleName).ToArray();
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.UserName),
@@ -72,7 +77,8 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 Token = tokenString,
                 Name = employee.FirstName + " " + employee.LastName,
-                Pages = pages
+                Pages = pages,
+                Roles = roles
             };
 
             return Ok(loginResponse);
@@ -86,8 +92,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ThenInclude(u => u.RolesEmployees)
                 .ThenInclude(u => u.Role)
                 .ThenInclude(u => u.Pages)
-                .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password && u.Status == true);
+                .FirstOrDefaultAsync(u => u.UserName == username && u.Status == true);
+            if (!BCrypt.Net.BCrypt.Verify(username, userAccount.Password))
+            {
 
+                return userAccount;
+            }
             return userAccount;
         }
         [HttpPost("logout")]
@@ -96,7 +106,31 @@ namespace CarpentryWorkshopAPI.Controllers
             await HttpContext.SignOutAsync();
             return Ok("Logout successful.");
         }
-
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CreateAccount([FromBody] CreateAccount request)
+        {
+            var acc = _context.UserAccounts.Where(us => us.UserName == request.UserName).SingleOrDefault();
+            if (acc!=null) 
+            {
+                return BadRequest("acc already have");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            UserAccount ua = new UserAccount()
+            {
+                UserName = request.UserName,
+                Password = passwordHash,
+                EmployeeId = request.employeeId,
+                Status= true,
+            };
+            _context.UserAccounts.Add(ua);
+            _context.SaveChanges();
+            return Ok(passwordHash);
+        }
         // GET api/<AccountsController>/5
         //[HttpPut("hello")]
         //public IActionResult Get(int id)
