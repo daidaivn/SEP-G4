@@ -13,8 +13,8 @@ namespace CarpentryWorkshopAPI.Models
 
         public int WorkScheduleId { get; set; }
         public int? ShiftTypeId { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public bool? Status { get; set; }
 
         public virtual ShiftType? ShiftType { get; set; }
