@@ -7,13 +7,13 @@ namespace CarpentryWorkshopAPI.Models
     {
         public WorkArea()
         {
-            Teams = new HashSet<Team>();
+            Works = new HashSet<Work>();
         }
 
         public int WorkAreaId { get; set; }
         public string? WorkAreaName { get; set; }
         public bool? Status { get; set; }
 
-        public virtual ICollection<Team> Teams { get; set; }
+        public virtual ICollection<Work> Works { get; set; }
     }
 }
