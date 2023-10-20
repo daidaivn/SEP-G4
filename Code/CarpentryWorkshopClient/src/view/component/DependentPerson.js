@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/DependentPerson.scss";
+import "../scss/fonts.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import Filter from "./componentUI/Filter";
 import { fetchAllDependent } from "../../sevices/DependentPersonService";
 import { Input } from "antd";
 import { Modal } from "antd";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 import { Col, Row } from "antd";
 function DependentPerson() {
   const [dependent, setDependent] = useState([]);
@@ -331,7 +331,7 @@ function DependentPerson() {
           </div>
           <div className="modal-body modal-body-dependent">
             <div className="name-person-dependent">
-              <h3>Lê Văn Toàn</h3>
+              <h3>name</h3>
             </div>
 
             <div className="info-detail-dependent">
@@ -342,37 +342,31 @@ function DependentPerson() {
                       <tr>
                         <th className="text">Người giám hộ:</th>
                         <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="Nguyễn Văn An"
-                          />
+                          <Input placeholder="Basic usage" value="abc" />
                         </td>
                       </tr>
                       <tr>
                         <th className="text">Mối quan hệ:</th>
                         <td className="input-text">
-                          <Input placeholder="Basic usage" value="Con trai" />
+                          <Input placeholder="Basic usage" value="abc" />
                         </td>
                       </tr>
                       <tr>
                         <th className="text">Mã định danh:</th>
                         <td className="input-text">
-                          <Input placeholder="Basic usage" value="234567891" />
+                          <Input placeholder="Basic usage" value="abc" />
                         </td>
                       </tr>
                       <tr>
                         <th className="text">Ngày sinh:</th>
                         <td className="input-text">
-                          <Input placeholder="Basic usage" value="20-03-2019" />
+                          <Input placeholder="Basic usage" value="abc" />
                         </td>
                       </tr>
                       <tr>
                         <th className="text">Loại mã định danh:</th>
                         <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="Chứng minh nhân dân"
-                          />
+                          <Input placeholder="Basic usage" value="abc" />
                         </td>
                       </tr>
                       <tr>

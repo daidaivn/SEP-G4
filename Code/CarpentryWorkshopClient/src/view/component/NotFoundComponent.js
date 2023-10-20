@@ -3,6 +3,7 @@ import "../scss/reset.scss";
 import "../scss/responsive/responsive.scss";
 import { Link } from "react-router-dom";
 import notFound from "../assets/images/404NotFound.jpg";
+import "../scss/fonts.scss";
 const NotFoundComponent = () => {
   return (
     <>

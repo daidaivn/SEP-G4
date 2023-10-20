@@ -48,6 +48,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.Teams.Add(newteam);
+                    _context.SaveChanges();
                     HistoryChangeTeam history = new HistoryChangeTeam
                     {
                         TeamId = newteam.TeamId,
@@ -56,7 +58,6 @@ namespace CarpentryWorkshopAPI.Controllers
                         CurrentEmployeeId = null,
                     };
                     _context.HistoryChangeTeams.Add(history);
-                    _context.Teams.Add(newteam);
                     _context.SaveChanges();
                     return Ok("Create team succesful");
                 }
@@ -67,6 +68,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         return NotFound();
                     }
+                    _context.Teams.Update(updateteam);
                     HistoryChangeTeam history = new HistoryChangeTeam
                     {
                         TeamId = updateteam.TeamId,
@@ -75,7 +77,6 @@ namespace CarpentryWorkshopAPI.Controllers
                         CurrentEmployeeId = null,
                     };
                     _context.HistoryChangeTeams.Add(history);
-                    _context.Teams.Update(updateteam);
                     _context.SaveChanges();
                     return Ok("Update team succesful");
                 }
@@ -96,7 +97,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<EmployeeListDTO>>(teammebers);
+                var dto = _mapper.Map<List<TeamMemberDTO>>(teammebers);
                 return Ok(dto);
             }catch(Exception ex)
             {
