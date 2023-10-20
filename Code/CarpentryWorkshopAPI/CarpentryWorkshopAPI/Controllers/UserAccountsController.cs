@@ -28,7 +28,7 @@ namespace CarpentryWorkshopAPI.Controllers
         //[Authorize(Roles = "UserAccountsPage")]
         // GET: api/UserAccounts
         [HttpGet]
-        public IActionResult GetUserAccounts()
+        public IActionResult GetAllUserAccounts()
         {
           if (_context.UserAccounts == null)
           {
@@ -52,7 +52,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // GET: api/UserAccounts/5
         [HttpGet("{id}")]
-        public IActionResult GetUserAccount(int id)
+        public IActionResult GetUserAccountById(int id)
         {
           if (_context.UserAccounts == null)
           {
@@ -88,17 +88,19 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/UserAccounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult PutUserAccount(UserAccountDTO userAccountDTO)
+        public IActionResult UpdateUserAccount([FromBody]UserAccountDTO userAccountDTO)
         {
-            UserAccount userAccount = _mapper.Map<UserAccount>(userAccountDTO);
-            if (userAccount !=null && _context !=null)
+            var userAccount = _mapper.Map<UserAccount>(userAccountDTO);
+            if (_context.UserAccounts ==null)
             {
-                return BadRequest();
+                return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
             }
-            else
+            if(userAccount == null)
             {
-                _context.Entry(userAccount).State = EntityState.Modified;
+                return NotFound();
             }
+             _context.UserAccounts.Update(userAccount);
+            
             try
             {
                 _context.SaveChanges();
@@ -114,9 +116,10 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/UserAccounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserAccount>> PostUserAccount(UserAccount userAccount)
+        public async Task<ActionResult<UserAccount>> PostUserAccount([FromBody] UserAccountDTO userAccountDTO)
         {
-          if (_context.UserAccounts == null)
+            var userAccount = _mapper.Map<UserAccount>(userAccountDTO);
+            if (_context.UserAccounts == null)
           {
               return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
           }

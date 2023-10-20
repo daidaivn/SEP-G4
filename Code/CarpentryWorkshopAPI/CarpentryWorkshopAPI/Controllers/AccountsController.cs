@@ -51,9 +51,9 @@ namespace CarpentryWorkshopAPI.Controllers
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim("Name", employee.FirstName + " " + employee.LastName)
             };
-            foreach (var role in pages)
+            foreach (var page in pages)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(ClaimTypes.Role, page));
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
