@@ -1,11 +1,18 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol.Plugins;
+using Org.BouncyCastle.Crypto.Generators;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -13,7 +20,7 @@ using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -29,12 +36,13 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost("gettoken")]
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
-            var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var user = await YourAuthenticationLogicAsync(request.UserName, passwordHash);
             if (user == null)
             {
                 return Unauthorized("Sai rồi");
             }
-
+            HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
             var jwtSection = _configuration.GetSection("JWT");
             var secretKey = jwtSection["SecretKey"];
             var key = Encoding.UTF8.GetBytes(secretKey);
@@ -42,15 +50,15 @@ namespace CarpentryWorkshopAPI.Controllers
             var employee = user.Employee;
 
             var pages = user.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).ToArray();
-
+            var roles = user.Employee.RolesEmployees.Select(u=>u.Role.RoleName).ToArray();
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim("Name", employee.FirstName + " " + employee.LastName)
             };
-            foreach (var role in pages)
+            foreach (var page in pages)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(ClaimTypes.Role, page));
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -69,7 +77,8 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 Token = tokenString,
                 Name = employee.FirstName + " " + employee.LastName,
-                Pages = pages
+                Pages = pages,
+                Roles = roles
             };
 
             return Ok(loginResponse);
@@ -83,9 +92,44 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ThenInclude(u => u.RolesEmployees)
                 .ThenInclude(u => u.Role)
                 .ThenInclude(u => u.Pages)
-                .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password && u.Status == true);
+                .FirstOrDefaultAsync(u => u.UserName == username && u.Status == true);
+            if (!BCrypt.Net.BCrypt.Verify(username, userAccount.Password))
+            {
 
+                return userAccount;
+            }
             return userAccount;
+        }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Ok("Logout successful.");
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CreateAccount([FromBody] CreateAccount request)
+        {
+            var acc = _context.UserAccounts.Where(us => us.UserName == request.UserName).SingleOrDefault();
+            if (acc!=null) 
+            {
+                return BadRequest("acc already have");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            UserAccount ua = new UserAccount()
+            {
+                UserName = request.UserName,
+                Password = passwordHash,
+                EmployeeId = request.employeeId,
+                Status= true,
+            };
+            _context.UserAccounts.Add(ua);
+            _context.SaveChanges();
+            return Ok(passwordHash);
         }
         // GET api/<AccountsController>/5
         //[HttpPut("hello")]
@@ -98,9 +142,30 @@ namespace CarpentryWorkshopAPI.Controllers
         //}
 
         // POST api/<AccountsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize(Roles = "AccountsPage")]
+        [HttpGet]
+        public IActionResult Get()
         {
+            if(_context == null)
+            {
+                return NotFound();
+            }
+            
+            var role = _context.Roles.Include(ro=>ro.Pages).Where(ro => ro.RoleId == 3).FirstOrDefault();
+            var page = _context.Pages.Where(pa => pa.PageId == 1).FirstOrDefault();
+            role.Pages.Remove(page);
+            //page.Roles.Remove(role);
+            try
+            {
+                
+                _context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            return Ok();
         }
 
         // PUT api/<AccountsController>/5

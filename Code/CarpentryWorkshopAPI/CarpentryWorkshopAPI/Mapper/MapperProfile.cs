@@ -43,7 +43,7 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<ContractType, ContractTypeDTO>()
                 .ReverseMap();
-
+            CreateMap<UserAccount, UserAccountDTO>().ReverseMap();
             CreateMap<Degree, DegreeDTO>().ReverseMap();
 
             CreateMap<Dependent, EmployeeDependentDTO>()
