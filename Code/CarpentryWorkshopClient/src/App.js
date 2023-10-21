@@ -10,6 +10,7 @@ import Home from "./view/component/Home";
 import DependentPerson from "./view/component/DependentPerson";
 import Role from "./view/component/Role";
 import GroupComponent from "./view/component/GroupComponent";
+import Decentralization from "./view/component/Decentralization";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/dependent-person" element={<DependentPerson />} />
           <Route path="/list-group" element={<GroupComponent />} />
           <Route path="/role" element={<Role />} />
+          <Route path="/decentralization" element={<Decentralization />} />
           <Route path="*" element={<NotFoundComponent />} />
         </Routes>
       </div>

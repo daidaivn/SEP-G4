@@ -6,6 +6,7 @@ import DashboardComponnet from "../view/component/DashboardComponnet";
 import LoginComponent from "../view/component/LoginComponent";
 import ForgetComponent from "../view/component/ForgetComponent";
 import GroupComponent from "../view/component/GroupComponent";
+import Decentralization from "../view/component/Decentralization";
 
 const routes = [
   {
@@ -35,6 +36,10 @@ const routes = [
   {
     path: "/forget",
     element: <ForgetComponent />,
+  },
+  {
+    path: "/decentralization",
+    element: <Decentralization />,
   },
 
   {
