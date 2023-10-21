@@ -148,6 +148,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             };
                             _context.RolesEmployees.Add(newremp);
                         }
+                    UserAccount newaccount = new UserAccount()
+                    {
+
+                    };
                     EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                     {
                         EmployeeId = newemp.EmployeeId,
