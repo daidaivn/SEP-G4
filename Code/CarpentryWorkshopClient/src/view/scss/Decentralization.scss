@@ -1,0 +1,117 @@
+.table-Decent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 26px;
+  flex: 1 0 0;
+  align-self: stretch;
+
+  thead {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    tr {
+      display: flex;
+      padding: 24px 25px 24px 12px;
+      justify-content: space-between;
+      align-items: center;
+      flex: 1 0 0;
+      border-radius: 60px;
+      background: #556a59;
+      td:nth-child(1) {
+        display: flex;
+        flex-basis: 300px;
+        padding: 0px 10px;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+        color: #fff;
+        text-align: center;
+        font-family: Noto Sans;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+      }
+      td {
+        display: flex;
+        padding: 0px 10px;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: flex-start;
+        gap: 10px;
+        flex: 1 0 0;
+        flex-wrap: wrap;
+
+        p {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 10px;
+          flex: 1 0 0;
+          color: #fff;
+          text-align: center;
+          font-family: Noto Sans;
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 800;
+          line-height: normal;
+        }
+      }
+    }
+  }
+}
+.tbody-decent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+  tbody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    tr {
+      display: flex;
+      padding: 19px 25px 19px 12px;
+      align-items: center;
+      align-self: stretch;
+      border-radius: 60px;
+      border: 1px solid #c0c0c0;
+      background: #fff;
+      td:nth-child(1) {
+        display: flex;
+        flex-basis: 300px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        align-self: stretch;
+      }
+      td {
+        display: flex;
+        padding: 12px 10px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex: 1 0 0;
+        align-self: stretch;
+      }
+    }
+  }
+}
+.tbody-decent {
+  tbody {
+    max-height: 415px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
