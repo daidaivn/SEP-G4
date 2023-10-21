@@ -5,21 +5,21 @@ import App from "./App";
 import ForgetComponent from "./view/component/ForgetComponent";
 import LoginComponent from "./view/component/LoginComponent";
 import NotFoundComponent from "./view/component/NotFoundComponent";
-import { toast , ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function showLoginRequiredToast() {
-  toast.error('Bạn chưa đăng nhập. Vui lòng đăng nhập trước.');
+  toast.error("Bạn chưa đăng nhập. Vui lòng đăng nhập trước.");
 }
 
 function requireLogin() {
-  // Kiểm tra nếu không có dữ liệu đăng nhập trong session hoặc localStorage
-  if (!sessionStorage.getItem("userToken") && !localStorage.getItem("userToken")) {
+  if (
+    !sessionStorage.getItem("userToken") &&
+    !localStorage.getItem("userToken")
+  ) {
     showLoginRequiredToast();
     return <Navigate to="/login" />;
   }
-
-  // Nếu đã đăng nhập, cho phép truy cập
   return null;
 }
 
@@ -33,8 +33,8 @@ createRoot(document.getElementById("root")).render(
           path="/*"
           element={
             <div>
-              {requireLogin()}
               <App />
+              {requireLogin()}
             </div>
           }
         />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../scss/loginComponent.scss";
 import "../scss/index.scss";
@@ -15,6 +15,13 @@ const LoginComponent = () => {
   });
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Kiểm tra nếu đã đăng nhập sau khi component được render
+    if (sessionStorage.getItem("userToken") || localStorage.getItem("userToken")) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleLogin = () => {
     apiLogin.login(userData)

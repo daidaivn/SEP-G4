@@ -22,13 +22,18 @@ const Menucomponent = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // Xóa dữ liệu đăng nhập trong localStorage và sessionStorage
     localStorage.removeItem('userToken');
     localStorage.removeItem('userName');
     localStorage.removeItem('userRoles');
+    localStorage.removeItem('userPages');
     sessionStorage.removeItem('userToken');
     sessionStorage.removeItem('userName');
     sessionStorage.removeItem('userRoles');
-    navigate('/login'); 
+    sessionStorage.removeItem('userPages');
+  
+    // Chuyển hướng đến trang đăng nhập
+    navigate('/login');
   };
 
   return (
