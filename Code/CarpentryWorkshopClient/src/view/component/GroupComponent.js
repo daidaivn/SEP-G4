@@ -5,7 +5,7 @@ import "../scss/fonts.scss";
 import { Switch, Form, Input, Row, Col } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllRole } from "../../sevices/RoleService";
+import { fetchAllTeam } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
 const GroupComponent = () => {
@@ -36,7 +36,7 @@ const GroupComponent = () => {
   };
   useEffect(() => {
     // call api sau: chưa có api
-    fetchAllRole()
+    fetchAllTeam()
       .then((data) => {
         setRole(data);
       })
@@ -366,44 +366,201 @@ const GroupComponent = () => {
           </div>
         </Modal>
         <Modal
-          className="modal-dependent"
           open={isModalOpenDetail}
           on
           Ok={handleOkDetail}
           onCancel={handleCancelDetail}
           width={566}
         >
-          <div className="modal-head">
-            {" "}
-            <h3>Nhóm 1</h3>
-          </div>
-          <div className=" modal-group">
-            <div className="info-detail-group">
-              <div className="info-body-group">
-                <div className="box1-modal-group">
-                  <div className="box1-child">
-                    <p className="child1-group">STT</p>
+          <div className="modal-dependent">
+            <div className="modal-head">
+              {" "}
+              <h3>Nhóm 1</h3>
+            </div>
+            <div className=" modal-group">
+              <div className="info-detail-group">
+                <div className="info-body-group">
+                  <div className="box1-modal-group">
+                    <div className="box1-child">
+                      <p className="child1-group">STT</p>
+                    </div>
+                    <div className="box2-child">
+                      <p className="child2-group">Chức vụ</p>
+                    </div>
+                    <div className="box3-child">
+                      <p className="child3-group">Họ và tên</p>
+                    </div>
+                    <div className="box4-child">
+                      <p className="child4-group">Xóa khỏi nhóm</p>
+                    </div>
                   </div>
-                  <div className="box2-child">
-                    <p className="child2-group">Chức vụ</p>
+                  <div className="box2-modal-group"></div>
+                  <div className="box1-modal-group box3-group">
+                    <div className="box1-child">
+                      <p className="child1-group">1</p>
+                    </div>
+                    <div className="box2-child">
+                      <p className="child2-group">Ca trưởng</p>
+                    </div>
+                    <div className="box3-child">
+                      <div className="child3-group">
+                        <p>Lê Thị Lan</p>
+                      </div>
+                    </div>
+                    <div className="box4-child">
+                      <p className="child4-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M7 5V4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H22V7H19.9355L19.1222 19.1996C19.0172 20.7755 17.7083 22 16.1289 22H7.87108C6.29169 22 4.98279 20.7755 4.87773 19.1996L4.06442 7H2V5H7ZM9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V5H9V4ZM9 9V18H11V9H9ZM13 9V18H15V9H13Z"
+                            fill="#FC1E1E"
+                          />
+                        </svg>
+                      </p>
+                    </div>
                   </div>
-                  <div className="box3-child">
-                    <p className="child3-group">Họ và tên</p>
+                  <div className="box1-modal-group box3-group">
+                    <div className="box1-child">
+                      <p className="child1-group">1</p>
+                    </div>
+                    <div className="box2-child">
+                      <p className="child2-group">Ca trưởng</p>
+                    </div>
+                    <div className="box3-child">
+                      <div className="child3-group">
+                        <p>Lê Thị Lan</p>
+                      </div>
+                    </div>
+                    <div className="box4-child">
+                      <p className="child4-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M7 5V4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H22V7H19.9355L19.1222 19.1996C19.0172 20.7755 17.7083 22 16.1289 22H7.87108C6.29169 22 4.98279 20.7755 4.87773 19.1996L4.06442 7H2V5H7ZM9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V5H9V4ZM9 9V18H11V9H9ZM13 9V18H15V9H13Z"
+                            fill="#FC1E1E"
+                          />
+                        </svg>
+                      </p>
+                    </div>
                   </div>
-                  <div className="box4-child">
-                    <p className="child4-group">Xóa khỏi nhóm</p>
+                  <div className="box1-modal-group box3-group">
+                    <div className="box1-child">
+                      <p className="child1-group">2</p>
+                    </div>
+                    <div className="box2-child">
+                      <p className="child2-group">Ca trưởng</p>
+                    </div>
+                    <div className="box3-child">
+                      <div className="child3-group">
+                        <p>Lê Thị Lan</p>
+                      </div>
+                    </div>
+                    <div className="box4-child">
+                      <p className="child4-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M7 5V4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H22V7H19.9355L19.1222 19.1996C19.0172 20.7755 17.7083 22 16.1289 22H7.87108C6.29169 22 4.98279 20.7755 4.87773 19.1996L4.06442 7H2V5H7ZM9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V5H9V4ZM9 9V18H11V9H9ZM13 9V18H15V9H13Z"
+                            fill="#FC1E1E"
+                          />
+                        </svg>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="box1-modal-group box3-group">
+                    <div className="box1-child">
+                      <p className="child1-group">3</p>
+                    </div>
+                    <div className="box2-child">
+                      <p className="child2-group">Ca trưởng</p>
+                    </div>
+                    <div className="box3-child">
+                      <div className="child3-group">
+                        <p>Lê Thị Lan</p>
+                      </div>
+                    </div>
+                    <div className="box4-child">
+                      <p className="child4-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M7 5V4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H22V7H19.9355L19.1222 19.1996C19.0172 20.7755 17.7083 22 16.1289 22H7.87108C6.29169 22 4.98279 20.7755 4.87773 19.1996L4.06442 7H2V5H7ZM9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V5H9V4ZM9 9V18H11V9H9ZM13 9V18H15V9H13Z"
+                            fill="#FC1E1E"
+                          />
+                        </svg>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="box1-modal-group box3-group">
+                    <div className="box1-child">
+                      <p className="child1-group">4</p>
+                    </div>
+                    <div className="box2-child">
+                      <p className="child2-group">Ca trưởng</p>
+                    </div>
+                    <div className="box3-child">
+                      <div className="child3-group">
+                        <p>Lê Thị Lan</p>
+                      </div>
+                    </div>
+                    <div className="box4-child">
+                      <p className="child4-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M7 5V4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H22V7H19.9355L19.1222 19.1996C19.0172 20.7755 17.7083 22 16.1289 22H7.87108C6.29169 22 4.98279 20.7755 4.87773 19.1996L4.06442 7H2V5H7ZM9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V5H9V4ZM9 9V18H11V9H9ZM13 9V18H15V9H13Z"
+                            fill="#FC1E1E"
+                          />
+                        </svg>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="modal-footer modal-footer-deparment modal-footer-group">
-            <button className="btn-cancel" onClick={handleCancelDetail}>
-              Thoát
-            </button>
-            <button className="btn-edit" onClick={handleOkDetail}>
-              Thêm thành viên
-            </button>
+            <div className="modal-footer modal-footer-deparment modal-footer-group">
+              <button className="btn-cancel" onClick={handleCancelDetail}>
+                Thoát
+              </button>
+              <button className="btn-edit" onClick={handleOkDetail}>
+                Thêm thành viên
+              </button>
+            </div>
           </div>
         </Modal>
       </div>

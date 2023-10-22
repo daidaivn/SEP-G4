@@ -70,8 +70,20 @@ const Menucomponent = () => {
               <span className="text">Dashboard</span>
             </NavLink>
           </div>
+          <div className="item-link">
+            <NavLink
+              to={"/decentralization"}
+              id="item-menu"
+              onClick={() => handleDivClick("div8")}
+              activeClassName={activeDiv === "div8" ? "active" : ""}
+            >
+              <i className="icon-activity"></i>
+
+              <span className="text">Phân quyền</span>
+            </NavLink>
+          </div>
           <div className="dropdown-item">
-            <div className="item-link">
+            <div className="item-link item-link-all">
               <div id="item-menu" onClick={toggleDropdown}>
                 <i className="icon-profile"></i>
                 <span className="text">Danh sách</span>
@@ -80,7 +92,7 @@ const Menucomponent = () => {
                 ></i>
               </div>
               {isDropdownOpen && (
-                <div className="dropdown-content">
+                <div className="dropdown-content scrollbar" id="style-15">
                   <div className="item-link">
                     <NavLink
                       to={"/list-employee"}

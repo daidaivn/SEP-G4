@@ -1,6 +1,6 @@
 import React from "react";
 import "../src/view/scss/index.scss";
-import { Routes, Route, Outlet  } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import ListEmployeeComponent from "./view/component/ListEmployeeComponent";
 import ListDepartmentComponent from "./view/component/DepartmentComponent";
 import DashboardComponent from "./view/component/DashboardComponnet";
@@ -10,11 +10,12 @@ import Home from "./view/component/Home";
 import DependentPerson from "./view/component/DependentPerson";
 import Role from "./view/component/Role";
 import GroupComponent from "./view/component/GroupComponent";
+import Decentralization from "./view/component/Decentralization";
 
 function App() {
-  let userPages = JSON.parse(localStorage.getItem('userPages')) || [];
+  let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
   if (!userPages.length) {
-    userPages = JSON.parse(sessionStorage.getItem('userPages')) || [];
+    userPages = JSON.parse(sessionStorage.getItem("userPages")) || [];
   }
   return (
     <div className="screen">
@@ -29,7 +30,10 @@ function App() {
             <Route path="/list-employee" element={<ListEmployeeComponent />} />
           )}
           {userPages.includes("ListDepartment") && (
-            <Route path="/list-department" element={<ListDepartmentComponent />} />
+            <Route
+              path="/list-department"
+              element={<ListDepartmentComponent />}
+            />
           )}
           {userPages.includes("DependentPerson") && (
             <Route path="/dependent-person" element={<DependentPerson />} />
@@ -39,6 +43,9 @@ function App() {
           )}
           {userPages.includes("Role") && (
             <Route path="/role" element={<Role />} />
+          )}
+          {userPages.includes("Decentralization") && (
+            <Route path="/decentralization" element={<Decentralization />} />
           )}
           <Route
             path="*"
@@ -56,4 +63,3 @@ function App() {
 }
 
 export default App;
-

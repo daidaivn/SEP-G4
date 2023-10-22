@@ -255,7 +255,7 @@ tr {
   box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
 }
 .list-table tbody {
-  max-height: 479px !important;
+  max-height: 465px !important;
   padding: 0 5px;
 }
 #style-15::-webkit-scrollbar-track {
@@ -266,7 +266,6 @@ tr {
 
 #style-15::-webkit-scrollbar {
   width: 10px;
-  background-color: #f5f5f5;
 }
 
 #style-15::-webkit-scrollbar-thumb {
@@ -332,7 +331,14 @@ tbody {
   font-size: 15px;
   color: white;
 }
-.logo-responsive {
+.item-link-all {
+  .dropdown-content {
+    overflow: hidden;
+    max-height: 255px;
+    overflow-y: auto;
+  }
+}
+i .logo-responsive {
   color: #3a5a40;
   font-family: Noto Sans;
   font-size: 20px;
@@ -526,6 +532,7 @@ tbody {
   background: #fff;
 }
 .modal-footer-group {
+  gap: 10px !important;
   .btn-edit {
     padding: 14px 15px 17px 17px !important;
   }
@@ -584,6 +591,7 @@ tbody {
     flex: 1 0 0;
   }
   .child4-group {
+    text-align: center;
     display: flex;
     width: 156px;
     flex-direction: column;
@@ -593,6 +601,44 @@ tbody {
   }
 }
 
+.box2-modal-group {
+  background: #000;
+  width: 786px;
+  height: 1px;
+}
+.modal-dependent {
+  width: 976px;
+  right: 100px;
+}
+.box3-group {
+  p {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .box3-child {
+    padding: 0;
+  }
+  .child3-group {
+    display: flex;
+    padding: 14px 24px;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: 60px;
+    border: 1px solid #e6e5ea;
+  }
+  .box4-child {
+    .child4-group {
+      svg {
+        margin: 0 auto;
+      }
+    }
+  }
+}
 .NotfoundComponent {
   position: absolute;
   top: 0;
