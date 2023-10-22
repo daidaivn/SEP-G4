@@ -23,13 +23,24 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var teams = _context.Teams.ToList();
+                var teams = _context.Teams
+                    .Include(x => x.Works)
+                    .ThenInclude(w => w.WorkArea)
+                    .Include(x => x.EmployeeTeams)
+                    .ThenInclude(tl => tl.Employee)
+                    .Select(t => new TeamListDTO
+                    {
+                        TeamId = t.TeamId,
+                        TeamName = t.TeamName,
+                        WorkAreaName = t.Works.Select(wa => wa.WorkArea.WorkAreaName).FirstOrDefault(),
+                        TeamLeaderName = t.EmployeeTeams.Select(l => l.Employee.FirstName + " " + l.Employee.LastName).FirstOrDefault()
+                    });
                 if (teams == null)
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<TeamListDTO>>(teams);
-                return Ok(dto);
+               
+                return Ok(teams);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
