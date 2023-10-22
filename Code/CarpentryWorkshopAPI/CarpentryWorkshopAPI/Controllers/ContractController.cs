@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
@@ -19,7 +20,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-
+        [Authorize(Roles = "SystemManager")]
         [HttpGet]
         public IActionResult GetAllContract()
         {
@@ -33,8 +34,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         ContractId = c.ContractId,
                         ContractTypeName = c.ContractType.ContractName,
                         EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
-                        StartDate = c.StartDate,
-                        EndDate = c.EndDate,
+                        StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        EndDate = c.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
                         LinkDoc = c.LinkDoc,
                         Status= c.Status,
                         ContractCode= c.ContractCode,
@@ -66,8 +67,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         ContractId = c.ContractId,
                         ContractTypeName = c.ContractType.ContractName,
                         EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
-                        StartDate = c.StartDate,
-                        EndDate = c.EndDate,
+                        StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        EndDate = c.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
                         LinkDoc = c.LinkDoc,
                         Status = c.Status,
                         ContractCode = c.ContractCode,
@@ -85,44 +86,52 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult GetContractByDate([FromBody] ContractChangeDTO contractChangeDTO)
+        public IActionResult GetContractByStartDate(string startDate)
         {
             try
             {
-                List<Models.Contract> ctbystart = new List<Models.Contract>();
-                if (contractChangeDTO.StartDate.HasValue) {
-                         ctbystart = _context.Contracts
-                        .Where(x => x.StartDate == contractChangeDTO.StartDate)
+
+
+                DateTime sdate = DateTime.ParseExact(startDate, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
+                var ctbystart = _context.Contracts
+                        .Where(x => x.StartDate >= sdate && x.StartDate <= endDate)
                         .Include(emp => emp.Employee)
                         .ToList();
                     if (ctbystart == null)
                     {
                         return NotFound();
                     }
-                }
-                else if (contractChangeDTO.EndDate.HasValue)
-                {
-                    ctbystart = _context.Contracts
-                       .Where(x => x.EndDate == contractChangeDTO.EndDate)
-                       .Include(emp => emp.Employee)
-                       .ToList();
-                    if (ctbystart == null)
-                    {
-                        return NotFound();
-                    }
-                }
-                //else if(contractChangeDTO.StartDate.HasValue && contractChangeDTO.EndDate.HasValue)
-                //{
-                //    ctbystart = _context.Contracts
-                //      .Where(x => x.StartDate >= contractChangeDTO.StartDate || x.EndDate <= contractChangeDTO.EndDate)
-                //      .Include(emp => emp.Employee)
-                //      .ToList();
-                //    if (ctbystart == null)
-                //    {
-                //        return NotFound();
-                //    }
-                //}
+                    
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
+                return Ok(ctDTO);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult GetContractByEndDate(string enddate)
+        {
+            try
+            {
+
+
+                DateTime sdate = DateTime.ParseExact(enddate, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
+                var ctbyend = _context.Contracts
+                        .Where(x => x.EndDate >= sdate && x.EndDate <= endDate)
+                        .Include(emp => emp.Employee)
+                        .ToList();
+                if (ctbyend == null)
+                {
+                    return NotFound();
+                }
+                var ctDTO = _mapper.Map<List<ContractDTO>>(ctbyend);
                 return Ok(ctDTO);
 
             }
@@ -143,6 +152,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 _context.Contracts.Add(newct);
                 _context.SaveChanges();
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    ContractId = newct.ContractId,
+                    Action = "Create",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
+                _context.SaveChanges();
                 return Ok("Create contract successfull");
             }catch(Exception ex)
             {
@@ -154,12 +172,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var newct = _mapper.Map<Models.Contract>(createContractDTO);
-                if (newct == null)
+                var updatect = _mapper.Map<Models.Contract>(createContractDTO);
+                if (updatect == null)
                 {
                     return NotFound();
                 }
-                _context.Contracts.Update(newct);
+                _context.Contracts.Update(updatect);
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    ContractId= updatect.ContractId,
+                    Action = "Update",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Update contract successfull");
             }
@@ -168,7 +194,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpPut]
         public IActionResult ChangeContractStatus([FromBody] ContractChangeDTO contractChangeDTO)
         {
             try
@@ -193,6 +219,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                 }
                 _context.Contracts.Update(contract);
+                ContractsStatusHistory newhistory = new ContractsStatusHistory
+                {
+                    ContractId = contract.ContractId,
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Change contract status successful");
             }catch(Exception ex)

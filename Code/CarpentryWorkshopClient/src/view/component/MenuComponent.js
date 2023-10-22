@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import "../scss/reset.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
@@ -17,6 +18,24 @@ const Menucomponent = () => {
   const handleDivClick = (divId) => {
     setActiveDiv(divId);
   };
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Xóa dữ liệu đăng nhập trong localStorage và sessionStorage
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userRoles');
+    localStorage.removeItem('userPages');
+    sessionStorage.removeItem('userToken');
+    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('userRoles');
+    sessionStorage.removeItem('userPages');
+  
+    // Chuyển hướng đến trang đăng nhập
+    navigate('/login');
+  };
+
   return (
     <div className="list-menu">
       <div className="menu">
@@ -145,7 +164,7 @@ const Menucomponent = () => {
           </div>
         </div>
         <div className="footer-body">
-          <div className="item-menu" id="item-menu">
+          <div className="item-menu" id="item-menu" onClick={handleLogout}>
             <svg
               width="40"
               height="40"

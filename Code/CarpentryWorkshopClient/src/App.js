@@ -1,6 +1,6 @@
 import React from "react";
 import "../src/view/scss/index.scss";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import ListEmployeeComponent from "./view/component/ListEmployeeComponent";
 import ListDepartmentComponent from "./view/component/DepartmentComponent";
 import DashboardComponent from "./view/component/DashboardComponnet";
@@ -13,23 +13,49 @@ import GroupComponent from "./view/component/GroupComponent";
 import Decentralization from "./view/component/Decentralization";
 
 function App() {
+  let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
+  if (!userPages.length) {
+    userPages = JSON.parse(sessionStorage.getItem("userPages")) || [];
+  }
   return (
     <div className="screen">
       <Menucomponent />
       <div className="col-right">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<DashboardComponent />} />
-          <Route path="/list-employee" element={<ListEmployeeComponent />} />
+          {userPages.includes("Dashboard") && (
+            <Route path="/dashboard" element={<DashboardComponent />} />
+          )}
+          {userPages.includes("ListEmployee") && (
+            <Route path="/list-employee" element={<ListEmployeeComponent />} />
+          )}
+          {userPages.includes("ListDepartment") && (
+            <Route
+              path="/list-department"
+              element={<ListDepartmentComponent />}
+            />
+          )}
+          {userPages.includes("DependentPerson") && (
+            <Route path="/dependent-person" element={<DependentPerson />} />
+          )}
+          {userPages.includes("ListGroup") && (
+            <Route path="/list-group" element={<GroupComponent />} />
+          )}
+          {userPages.includes("Role") && (
+            <Route path="/role" element={<Role />} />
+          )}
+          {userPages.includes("Decentralization") && (
+            <Route path="/decentralization" element={<Decentralization />} />
+          )}
           <Route
-            path="/list-department"
-            element={<ListDepartmentComponent />}
+            path="*"
+            element={
+              <>
+                <NotFoundComponent />
+                <Outlet />
+              </>
+            }
           />
-          <Route path="/dependent-person" element={<DependentPerson />} />
-          <Route path="/list-group" element={<GroupComponent />} />
-          <Route path="/role" element={<Role />} />
-          <Route path="/decentralization" element={<Decentralization />} />
-          <Route path="*" element={<NotFoundComponent />} />
         </Routes>
       </div>
     </div>

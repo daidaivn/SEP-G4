@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -21,59 +22,67 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var histories = _context.ContractTypeStatusHistories.ToList();
+                var histories = _context.ContractTypeStatusHistories
+                    .Include(x => x.ContractType)
+                    .ToList();
                 if (histories == null)
                 {
                     return NotFound();
                 }
-                return Ok(histories);
+                var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(histories);
+                return Ok(dto);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult GetHistoriesByContractType([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
+        [HttpPost]
+        public IActionResult GetHistories(string date, int ctid)
         {
             try
             {
-                List<ContractTypeStatusHistory> cth = new List<ContractTypeStatusHistory>();
-                if (contractTypeStatusHistoryDTO.ContractTypeId != 0)
-                {
-                        cth = _context.ContractTypeStatusHistories
-                        .Where(x => x.ContractTypeId == contractTypeStatusHistoryDTO.ContractTypeId)
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
+                var cth = _context.ContractTypeStatusHistories
+                        .Include(x => x.ContractType)
+                        .Where(x => x.ContractTypeId == ctid &&
+                        x.ActionDate >= startDate && x.ActionDate <= endDate)
                         .ToList();
                     if (cth == null)
                     {
                         return NotFound();
                     }
                   
-                }
-                return Ok(cth);
+                
+                var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
+                return Ok(dto);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult GetHistoriesByDate([FromBody] ContractTypeStatusHistoryDTO contractTypeStatusHistoryDTO)
+        [HttpPost]
+        public IActionResult GetHistoriesByDate(string date)
         {
             try
             {
-                List<ContractTypeStatusHistory> cth = new List<ContractTypeStatusHistory>();
-                if (contractTypeStatusHistoryDTO.ActionDate.HasValue)
-                {
-                    cth = _context.ContractTypeStatusHistories
-                    .Where(x => x.ActionDate == contractTypeStatusHistoryDTO.ActionDate)
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
+                   var cth = _context.ContractTypeStatusHistories
+                    .Include(x => x.ContractType)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
                     if (cth == null)
                     {
                         return NotFound();
                     }
 
-                }
-                return Ok(cth);
+                
+                var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
+                return Ok(dto);
             }
             catch (Exception ex)
             {

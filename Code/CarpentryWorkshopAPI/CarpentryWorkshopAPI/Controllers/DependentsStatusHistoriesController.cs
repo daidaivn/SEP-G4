@@ -43,9 +43,11 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                DateTime date = DateTime.Parse(actionDate);
+                DateTime startDate = DateTime.ParseExact(actionDate, "dd-MM-yyyy",
+                                      System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historylistbydate = _context.DependentsStatusHistories
-                    .Where(x => x.ActionDate == date)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
                 if (historylistbydate == null)
                 {
@@ -59,13 +61,15 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet("{deid}/{actionDate}")]
-        public IActionResult GetEmployeeStatusHistoryByDate(string actionDate, int deid)
+        public IActionResult GetDependentsStatusHistoriesByDate(string actionDate, int deid)
         {
             try
             {
-                DateTime date = DateTime.Parse(actionDate);
+                DateTime startDate = DateTime.ParseExact(actionDate, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var depehistorylistbydate = _context.DependentsStatusHistories
-                    .Where(x => x.ActionDate == date && x.DependentId == deid)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate && x.DependentId == deid)
                     .ToList();
                 if (depehistorylistbydate == null)
                 {
