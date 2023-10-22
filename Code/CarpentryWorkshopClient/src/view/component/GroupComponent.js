@@ -5,7 +5,7 @@ import "../scss/fonts.scss";
 import { Switch, Form, Input, Row, Col } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllRole } from "../../sevices/RoleService";
+import { fetchAllTeam } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
 const GroupComponent = () => {
@@ -36,7 +36,7 @@ const GroupComponent = () => {
   };
   useEffect(() => {
     // call api sau: chưa có api
-    fetchAllRole()
+    fetchAllTeam()
       .then((data) => {
         setRole(data);
       })
