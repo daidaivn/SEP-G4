@@ -7,18 +7,16 @@ namespace CarpentryWorkshopAPI.Models
     {
         public WorkSchedule()
         {
-            Teams = new HashSet<Team>();
             WorkScheduleStatusHistories = new HashSet<WorkScheduleStatusHistory>();
         }
 
         public int WorkScheduleId { get; set; }
         public int? ShiftTypeId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public int? TeamId { get; set; }
         public bool? Status { get; set; }
 
         public virtual ShiftType? ShiftType { get; set; }
-        public virtual ICollection<Team> Teams { get; set; }
+        public virtual Team? Team { get; set; }
         public virtual ICollection<WorkScheduleStatusHistory> WorkScheduleStatusHistories { get; set; }
     }
 }

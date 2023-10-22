@@ -8,11 +8,11 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    public class HistoryChangeTimeTrackingController : Controller
+    public class HistoryChangeCheckInOutController : Controller
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public HistoryChangeTimeTrackingController(SEPG4CCMSContext context, IMapper mapper)
+        public HistoryChangeCheckInOutController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -23,14 +23,14 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var historys = _context.HistoryChangeTimeTrackings
-                    .Include(x => x.TimeTracking)
+                var historys = _context.HistoryChangeCheckInOuts
+                    .Include(x => x.CheckInOut)
                     .ToList();
                 if (historys == null)
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<HistoryChangeTimeTrackingDTO>>(historys);
+                var dto = _mapper.Map<List<HistoryChangeCheckInOutDTO>>(historys);
                 return Ok(dto);
             }
             catch (Exception ex)
@@ -46,15 +46,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
                                       System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                var historydate = _context.HistoryChangeTimeTrackings
-                    .Include(x => x.TimeTracking)
+                var historydate = _context.HistoryChangeCheckInOuts
+                    .Include(x => x.CheckInOut)
                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
                 if (historydate == null)
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<HistoryChangeTimeTrackingDTO>>(historydate);
+                var dto = _mapper.Map<List<HistoryChangeCheckInOutDTO>>(historydate);
                 return Ok(dto);
             }
             catch (Exception ex)
@@ -63,23 +63,23 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetHistorys(string date, int ttid)
+        public IActionResult GetHistorys(string date, int cid)
         {
             try
             {
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
                                       System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                var historydate = _context.HistoryChangeTimeTrackings
-                    .Include(x => x.TimeTracking)
+                var historydate = _context.HistoryChangeCheckInOuts
+                    .Include(x => x.CheckInOut)
                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
-                    && x.TimeTrackingId == ttid)
+                    && x.CheckInOutId == cid)
                     .ToList();
                 if (historydate == null)
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<HistoryChangeTimeTrackingDTO>>(historydate);
+                var dto = _mapper.Map<List<HistoryChangeCheckInOutDTO>>(historydate);
                 return Ok(dto);
             }
             catch (Exception ex)
