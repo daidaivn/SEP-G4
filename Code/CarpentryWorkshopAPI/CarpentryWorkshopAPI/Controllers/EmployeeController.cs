@@ -203,6 +203,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         employee.Status = createEmployeeDTO.Status;
                         employee.Cic = createEmployeeDTO.Cic;
                         employee.CountryId= createEmployeeDTO.CountryId;    
+                        employee.TeamId = createEmployeeDTO.TeamId;
                         _context.Employees.Update(employee);
                         EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                         {

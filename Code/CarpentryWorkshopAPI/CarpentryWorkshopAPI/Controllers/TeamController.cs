@@ -32,8 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
-                        WorkAreaName = t.Works.Select(wa => wa.WorkArea.WorkAreaName).FirstOrDefault(),
-                        TeamLeaderName = t.EmployeeTeams.Select(l => l.Employee.FirstName + " " + l.Employee.LastName).FirstOrDefault()
+                        NumberOfTeamMember = t.EmployeeTeams.Count(),
                     });
                 if (teams == null)
                 {
@@ -48,68 +47,100 @@ namespace CarpentryWorkshopAPI.Controllers
             
         }
         [HttpPost]
-        public IActionResult CreateAndUpdateTeam([FromBody] CreateTeamDTO createTeamDTO)
+        public IActionResult AddTeamMember([FromBody] AddTeamMemberDTO addTeamMemberDTO)
         {
             try
             {
-                if (createTeamDTO.TeamId == 0)
+                foreach (var item in addTeamMemberDTO.MemberIds)
                 {
-                    var newteam = _mapper.Map<Team>(createTeamDTO);
-                    if (newteam == null)
+                    EmployeeTeam newtm = new EmployeeTeam()
                     {
-                        return NotFound();
-                    }
-                    _context.Teams.Add(newteam);
-                    _context.SaveChanges();
-                    HistoryChangeTeam history = new HistoryChangeTeam
-                    {
-                        TeamId = newteam.TeamId,
-                        Action = "Create",
-                        ActionDate = DateTime.Now,
-                        CurrentEmployeeId = null,
+                        EmployeeId = item,
+                        TeamId = addTeamMemberDTO.TeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
                     };
-                    _context.HistoryChangeTeams.Add(history);
-                    _context.SaveChanges();
-                    return Ok("Create team succesful");
+                    _context.EmployeeTeams.Add(newtm);
+                  
                 }
-                else
-                {
-                    var updateteam = _mapper.Map<Team>(createTeamDTO);
-                    if (updateteam == null)
-                    {
-                        return NotFound();
-                    }
-                    _context.Teams.Update(updateteam);
-                    HistoryChangeTeam history = new HistoryChangeTeam
-                    {
-                        TeamId = updateteam.TeamId,
-                        Action = "Update",
-                        ActionDate = DateTime.Now,
-                        CurrentEmployeeId = null,
-                    };
-                    _context.HistoryChangeTeams.Add(history);
-                    _context.SaveChanges();
-                    return Ok("Update team succesful");
-                }
-            }catch(Exception ex)
+                _context.SaveChanges();
+                return Ok("Add new team member successful");
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        [HttpDelete("{eid}/{tid}")]
+        public IActionResult DeleteTeamMember(int eid, int tid)
+        {
+            try
+            {
+                var dtm = _context.EmployeeTeams
+                    .FirstOrDefault(x => x.EmployeeId == eid && x.TeamId == tid);
+                if (dtm == null)
+                {
+                    return NotFound();
+                }
+                _context.EmployeeTeams.Remove(dtm);
+                _context.SaveChanges();
+                return Ok("Delete teammenber successful");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult AddTeam(string name)
+        {
+            try
+            {
+                Team newteam = new Team()
+                {
+                    TeamName = name,
+                };
+                _context.Teams.Add(newteam);
+                _context.SaveChanges();
+                HistoryChangeTeam history = new HistoryChangeTeam()
+                {
+                    TeamId = newteam.TeamId,
+                    Action = "Create",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.HistoryChangeTeams.Add(history);
+                _context.SaveChanges();
+                return Ok("Create team successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+       
         [HttpGet]
         public IActionResult GetAllTeamMember(int teamid)
         {
             try
             {
                 var teammebers = _context.Employees
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(re => re.Role)
                     .Where(x => x.TeamId == teamid)
-                    .ToList();
+                    .Select(tm => new TeamMemberDTO
+                    {
+                        EmployeeId = tm.EmployeeId,
+                        FullName = tm.FirstName + " " + tm.LastName,
+                        RoleName = tm.RolesEmployees.Select(x => x.Role.RoleName).ToList()
+                    }) ;
                 if (teammebers == null)
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<TeamMemberDTO>>(teammebers);
-                return Ok(dto);
+                
+                return Ok(teammebers);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
