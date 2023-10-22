@@ -98,6 +98,10 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 return userAccount;
             }
+            else
+            {
+                userAccount = null;
+            }
             return userAccount;
         }
         [HttpPost("logout")]

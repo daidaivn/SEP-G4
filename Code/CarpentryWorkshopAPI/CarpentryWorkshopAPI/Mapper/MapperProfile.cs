@@ -87,6 +87,9 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<HistoryChangeTimeTracking, HistoryChangeTimeTrackingDTO>()
                 .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
+            CreateMap<Page, PageDTO>()
+                
+                .ReverseMap();
         }
     }
 }
