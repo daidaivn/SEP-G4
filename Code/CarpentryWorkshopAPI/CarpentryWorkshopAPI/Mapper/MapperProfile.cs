@@ -84,8 +84,10 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<HistoryChangeCheckInOut, HistoryChangeCheckInOutDTO>()
                 .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
-            CreateMap<Page, PageDTO>()
-                
+            CreateMap<Page, PageDTO>()          
+                .ReverseMap();
+            CreateMap<Employee, TeamMemberDTO>()
+                .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
                 .ReverseMap();
         }
     }

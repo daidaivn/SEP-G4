@@ -4,6 +4,5 @@
     {
         public int EmployeeId { get; set; }
         public string? FullName { get; set; }
-        public List<string>? RoleName { get; set; }
     }
 }
