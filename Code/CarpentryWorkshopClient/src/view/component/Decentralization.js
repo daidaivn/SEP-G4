@@ -1,11 +1,97 @@
+import React, { useState, useEffect, useMemo } from "react";
 import { Checkbox, Input } from "antd";
 import "../scss/Decentralization.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
-
+import { fetchAllRole } from "../../sevices/RoleService";
+import { fetchAllPages } from "../../sevices/PageService";
+import { fetchAllDecentralization, addRolePage, deleteRolePage } from "../../sevices/DecentralizationService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
+
 const Decentralization = () => {
+  const [roles, setRoles] = useState([]);
+  const [pages, setPages] = useState([]);
+  const [decentralizations, setDecentralizations] = useState([]);
+  const permissions = useMemo(() => {
+    const perms = {};
+    decentralizations.forEach((d) => {
+      perms[`${d.pageId}_${d.roleId}`] = true;
+    });
+    return perms;
+  }, [decentralizations]);
+
+  console.log("p", permissions);
+
+  // Kiểm tra permission
+  const hasPermission = (pageId, roleId) => {
+    return permissions[`${pageId}_${roleId}`] ?? false;
+  };
+
+  const handleCheckboxChange = (e, pageId, roleId) => {
+    const isChecked = e.target.checked;
+    console.log(isChecked);
+
+    if (isChecked) {
+      // Gọi API để thêm quyền truy cập
+      addRolePage(pageId, roleId)
+        .then((response) => {
+          // Xử lý thành công
+          console.log("Thêm thành công");
+          // Sau khi thêm thành công, gọi lại các hàm tải dữ liệu
+          fetchData();
+        })
+        .catch((error) => {
+          // Xử lý lỗi
+          console.error("Lỗi khi thêm quyền truy cập:", error);
+        });
+    } else {
+      // Gọi API để xóa quyền truy cập
+      deleteRolePage(pageId, roleId)
+        .then((response) => {
+          // Xử lý thành công
+          console.log("Xóa thành công");
+          // Sau khi xóa thành công, gọi lại các hàm tải dữ liệu
+          fetchData();
+        })
+        .catch((error) => {
+          // Xử lý lỗi
+          console.error("Lỗi khi xóa quyền truy cập:", error);
+        });
+    }
+  };
+
+  // Hàm tải lại dữ liệu
+  const fetchData = () => {
+    fetchAllRole()
+      .then((data) => {
+        setRoles(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
+      });
+
+    fetchAllPages()
+      .then((data) => {
+        setPages(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu RolePage", error);
+      });
+
+    fetchAllDecentralization()
+      .then((data) => {
+        setDecentralizations(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu RolePage", error);
+      });
+  };
+
+  useEffect(() => {
+    // Ban đầu, gọi hàm tải dữ liệu
+    fetchData();
+  }, []);
   return (
     <>
       <div className="col-right-container">
@@ -144,383 +230,43 @@ const Decentralization = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        <table className="table-Decent">
-          <thead>
-            <tr>
-              <td>Trang / Chức vụ </td>
-              <td>
-                <p>Admin</p>
-              </td>
-              <td>
-                <p>Nhân viên quản lý</p>
-              </td>
-              <td>
-                <p>Giám đốc</p>
-              </td>
-              <td>
-                <p>Kế toán</p>
-              </td>
-              <td>
-                <p>Quản lý nhân lực</p>
-              </td>
-              <td>
-                <p>Trưởng phòng</p>
-              </td>
-              <td>
-                <p>Phó phòng</p>
-              </td>
-              <td>
-                <p>Ca trưởng</p>
-              </td>
-              <td>
-                <p>Ca phó</p>
-              </td>
-              <td>
-                <p>Nhân viên</p>
-              </td>
-            </tr>
-          </thead>
-          <div className="tbody-decent">
-            <tbody className="scrollbar" id="style-15">
+        {decentralizations.length === 0 ? (
+          <p>Loading...</p>
+        ) : (
+          <table className="table-Decent">
+            <thead>
               <tr>
-                <td>
-                  <span>Danh sách người lao động</span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
+                <td>Trang / Chức vụ </td>
+                {roles.map((roles) => (
+                  <td>
+                    <p>{roles.roleName}</p>
+                  </td>
+                ))}
               </tr>
-              <tr>
-                <td>
-                  <span>Lên lịch làm việc</span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span>Danh sách người phụ thuộc</span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span>Danh sách phòng - ban</span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span>Danh sách chức vụ</span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span>Danh sách nhóm</span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    <Checkbox></Checkbox>
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </div>
-        </table>
+            </thead>
+            <div className="tbody-decent">
+              <tbody className="scrollbar" id="style-15">
+                {pages.map((pages) => (
+                  <tr key={pages.pageId}>
+                    <td>
+                      <span>{pages.pageName}</span>
+                    </td>
+                    {roles.map((roles) => (
+                      <td key={roles.roleID}>
+                        <span>
+                          <Checkbox
+                            checked={hasPermission(pages.pageId, roles.roleID)}
+                            onChange={(e) => handleCheckboxChange(e, pages.pageId, roles.roleID)}
+                          />
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </div>
+          </table>
+        )}
       </div>
     </>
   );
