@@ -14,7 +14,6 @@ namespace CarpentryWorkshopAPI.Models
         public string? WorkName { get; set; }
         public int? ProductPackage { get; set; }
         public int? UniCostId { get; set; }
-        public int? TeamId { get; set; }
         public DateTime? Date { get; set; }
         public int? WorkAreaId { get; set; }
 
