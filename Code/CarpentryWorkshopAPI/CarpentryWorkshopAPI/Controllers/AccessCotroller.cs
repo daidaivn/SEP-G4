@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -23,21 +24,17 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AccessDTO>>> GetRolesWithPages()
         {
-            
-            var data = await _context.Roles
-                .Include(r => r.Pages)
-                .Select(r => new AccessDTO
+            var pageRoleList = await _context.Pages
+                .Include(page => page.Roles)
+                .SelectMany(page => page.Roles, (page, role) => new AccessDTO
                 {
-                    RoleId = r.RoleId,
-                    PageId = r.Pages
-                        .Where(p => p.PageId != 0)
-                        .Select(p => p.PageId)
-                        .FirstOrDefault()
+                    PageId = page.PageId,
+                    RoleId = role.RoleId
                 })
-                .Where(rp => rp.PageId != 0)
                 .ToListAsync();
 
-            return data;
+
+            return pageRoleList;
         }
         // GET api/<AccessCotroller>/5
         [HttpPost]
