@@ -14,11 +14,6 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             CreateMap<Employee, EmployeeSearchDTO>() 
                .ReverseMap();
-            CreateMap<Employee, TeamMemberDTO>()
-               .ForMember(de => de.Dobstring, option => option.MapFrom(d => d.Dob!.Value.ToString("dd'-'MM'-'yyyy")))
-               .ForMember(de => de.Gender, option => option.MapFrom(d => (bool)d.Gender ? "Nam" : "Nữ"))
-               .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
-               .ReverseMap();
             CreateMap<Role, RoleDTO>()
                .ReverseMap();
             CreateMap<Department, DepartmentDTO>()
@@ -73,6 +68,8 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<Team, CreateTeamDTO>()
                .ReverseMap();
             CreateMap<WorkSchedule, WorkScheduleDTO>()
+               .ForMember(de => de.ShiftTypeName, option => option.MapFrom(d => d.ShiftType!.TypeName))
+               .ForMember(de => de.TeamName, option => option.MapFrom(d => d.Team!.TeamName))
                .ReverseMap();
             CreateMap<HistoryChangeShiftType, HistoryChangeShiftTypeDTO>()
                 .ForMember(de => de.ShiftTypeName, option => option.MapFrom(d => d.ShiftType!.TypeName))
@@ -84,11 +81,13 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             CreateMap<WorkScheduleStatusHistory, WorkScheduleHistoryDTO>()
               .ReverseMap();
-            CreateMap<HistoryChangeTimeTracking, HistoryChangeTimeTrackingDTO>()
+            CreateMap<HistoryChangeCheckInOut, HistoryChangeCheckInOutDTO>()
                 .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
-            CreateMap<Page, PageDTO>()
-                
+            CreateMap<Page, PageDTO>()          
+                .ReverseMap();
+            CreateMap<Employee, TeamMemberDTO>()
+                .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
                 .ReverseMap();
         }
     }

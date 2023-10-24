@@ -1,6 +1,6 @@
 ﻿namespace CarpentryWorkshopAPI.DTO
 {
-    public class HistoryChangeTimeTrackingDTO
+    public class HistoryChangeCheckInOutDTO
     {
         public int HistoryId { get; set; }
         public int? TimeTrackingId { get; set; }
