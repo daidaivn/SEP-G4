@@ -2,55 +2,36 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
-    public class AccessCotroller : ControllerBase
+    [Route("CCMSapi/[controller]/[action]")]
+    public class TeamWorkController : Controller
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public AccessCotroller(SEPG4CCMSContext context, IMapper mapper)
+        public TeamWorkController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AccessDTO>>> GetRolesWithPages()
-        {
-            var pageRoleList = await _context.Pages
-                .Include(page => page.Roles)
-                .SelectMany(page => page.Roles, (page, role) => new AccessDTO
-                {
-                    PageId = page.PageId,
-                    RoleId = role.RoleId
-                })
-                .ToListAsync();
 
-
-            return pageRoleList;
-        }
-        // GET api/<AccessCotroller>/5
         [HttpPost]
-        public async Task<ActionResult> AddRolePage(AccessDTO accessDTO)
+        public async Task<ActionResult> AddTeamWork(TeamWorkDTO  teamWorkDTO)
         {
             try
             {
-                var role = await _context.Roles.FindAsync(accessDTO.RoleId);
-                var page = await _context.Pages.FindAsync(accessDTO.PageId);
+                var team = await _context.Roles.FindAsync(teamWorkDTO.TeamId);
+                var work = await _context.Pages.FindAsync(teamWorkDTO.WorkId);
 
-                if (role == null || page == null)
+                if (team == null || work == null)
                 {
-                    return BadRequest("Invalid Role or Page ID");
+                    return BadRequest("Invalid Team or Work ID");
                 }
-                
-                role.Pages.Add(page);
+
+                team.Pages.Add(work);
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
@@ -58,9 +39,9 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-                        
+
         }
-        [HttpDelete("{roleId}/{pageId}")]
+        [HttpDelete]
         public async Task<ActionResult> DeleteRolePage(int roleId, int pageId)
         {
             try
@@ -83,7 +64,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
     }
 }

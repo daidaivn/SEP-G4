@@ -135,6 +135,12 @@ namespace CarpentryWorkshopAPI.Controllers
             _context.SaveChanges();
             return Ok(passwordHash);
         }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            await HttpContext.SignOutAsync();
+            return Ok("Logout successful.");
+        }
         // GET api/<AccountsController>/5
         //[HttpPut("hello")]
         //public IActionResult Get(int id)
