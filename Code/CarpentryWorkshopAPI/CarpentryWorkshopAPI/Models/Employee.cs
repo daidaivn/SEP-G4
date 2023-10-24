@@ -29,7 +29,6 @@ namespace CarpentryWorkshopAPI.Models
         public int? CountryId { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
-        public int? TeamId { get; set; }
 
         public virtual Country? Country { get; set; }
         public virtual UserAccount? UserAccount { get; set; }

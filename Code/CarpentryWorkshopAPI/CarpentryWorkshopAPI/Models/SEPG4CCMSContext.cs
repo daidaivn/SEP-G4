@@ -292,8 +292,6 @@ namespace CarpentryWorkshopAPI.Models
 
                 entity.Property(e => e.TaxId).HasColumnName("TaxID");
 
-                entity.Property(e => e.TeamId).HasColumnName("TeamID");
-
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.CountryId)
@@ -645,8 +643,6 @@ namespace CarpentryWorkshopAPI.Models
                 entity.ToTable("Work");
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.Property(e => e.TeamId).HasColumnName("TeamID");
 
                 entity.Property(e => e.WorkName).HasMaxLength(100);
 

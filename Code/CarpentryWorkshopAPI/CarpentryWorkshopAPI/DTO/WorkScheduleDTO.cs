@@ -3,9 +3,8 @@
     public class WorkScheduleDTO
     {
         public int WorkScheduleId { get; set; }
-        public int? ShiftTypeId { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public string? ShiftTypeName { get; set; }
+        public string? TeamName { get; set; }
         public bool? Status { get; set; }
     }
 }

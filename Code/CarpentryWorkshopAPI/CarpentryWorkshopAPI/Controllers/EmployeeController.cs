@@ -58,10 +58,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employeeDetail = _context.Employees
                     .Where(emp => emp.EmployeeId == eid)
                     .Include(emp => emp.RolesEmployees)
-                        .ThenInclude(roleemp => roleemp.Role)
-                        .ThenInclude(role => role.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .ThenInclude(role => role.RolesEmployees)
                     .Include(emp => emp.RolesEmployees)
-                        .ThenInclude(roleemp => roleemp.Department)
+                    .ThenInclude(roleemp => roleemp.Department)
                     .Select(emp => new EmployeeDetailDTO
                     {
                         EmployeeId = emp.EmployeeId,
