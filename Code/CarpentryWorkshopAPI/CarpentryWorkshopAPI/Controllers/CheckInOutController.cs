@@ -16,7 +16,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [HttpGet("{employeeId/date}")]
+        [HttpGet("{employeeId}/{date}")]
         public IActionResult GetCheckInOutForEmoployeeId(int employeeId, string date)
         {
             try
@@ -63,7 +63,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    var checkIn = Attendance.OrderBy(a=>a.TimeCheckIn).LastOrDefault ();
+                    var checkIn = Attendance.OrderBy(a=>a.TimeCheckIn).LastOrDefault();
                     if (checkIn != null) 
                     {
                         if(checkIn.TimeCheckOut == null)
