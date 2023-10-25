@@ -82,6 +82,18 @@ const Menucomponent = () => {
               <span className="text">Phân quyền</span>
             </NavLink>
           </div>
+          <div className="item-link">
+            <NavLink
+              to={"/timekeeping"}
+              id="item-menu"
+              onClick={() => handleDivClick("div9")}
+              activeClassName={activeDiv === "div9" ? "active" : ""}
+            >
+              <i className="icon-activity"></i>
+
+              <span className="text">Checkin - Checkout</span>
+            </NavLink>
+          </div>
           <div className="dropdown-item">
             <div className="item-link item-link-all">
               <div id="item-menu" onClick={toggleDropdown}>

@@ -1,108 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Checkbox, Input } from "antd";
+import { Input } from "antd";
 import "../scss/Decentralization.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
-import { fetchAllRole } from "../../sevices/RoleService";
-import { fetchAllPages } from "../../sevices/PageService";
-import {
-  fetchAllDecentralization,
-  addRolePage,
-  deleteRolePage,
-} from "../../sevices/DecentralizationService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-
-const Decentralization = () => {
-  const [roles, setRoles] = useState([]);
-  const [pages, setPages] = useState([]);
-  const [decentralizations, setDecentralizations] = useState([]);
-  const permissions = useMemo(() => {
-    const perms = {};
-    decentralizations.forEach((d) => {
-      perms[`${d.pageId}_${d.roleId}`] = true;
-    });
-    return perms;
-  }, [decentralizations]);
-
-  console.log("p", permissions);
-
-  // Kiểm tra permission
-  const hasPermission = (pageId, roleId) => {
-    return permissions[`${pageId}_${roleId}`] ?? false;
-  };
-
-  const handleCheckboxChange = (e, pageId, roleId) => {
-    const isChecked = e.target.checked;
-    console.log(isChecked);
-
-    if (isChecked) {
-      // Gọi API để thêm quyền truy cập
-      addRolePage(pageId, roleId)
-        .then((response) => {
-          // Xử lý thành công
-          console.log("Thêm thành công");
-          // Sau khi thêm thành công, gọi lại các hàm tải dữ liệu
-          fetchData();
-        })
-        .catch((error) => {
-          // Xử lý lỗi
-          console.error("Lỗi khi thêm quyền truy cập:", error);
-        });
-    } else {
-      // Gọi API để xóa quyền truy cập
-      deleteRolePage(pageId, roleId)
-        .then((response) => {
-          // Xử lý thành công
-          console.log("Xóa thành công");
-          // Sau khi xóa thành công, gọi lại các hàm tải dữ liệu
-          fetchData();
-        })
-        .catch((error) => {
-          // Xử lý lỗi
-          console.error("Lỗi khi xóa quyền truy cập:", error);
-        });
-    }
-  };
-
-  // Hàm tải lại dữ liệu
-  const fetchData = () => {
-    fetchAllRole()
-      .then((data) => {
-        setRoles(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
-      });
-
-    fetchAllPages()
-      .then((data) => {
-        setPages(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu RolePage", error);
-      });
-
-    fetchAllDecentralization()
-      .then((data) => {
-        setDecentralizations(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu RolePage", error);
-      });
-  };
-
-  useEffect(() => {
-    // Ban đầu, gọi hàm tải dữ liệu
-    fetchData();
-  }, []);
+const TimekeepingComponent = () => {
   return (
     <>
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Phân quyền</h2>
-            <span>Phân chia quyền truy cập theo chức vụ</span>
+            <h2>Checkin - checkout</h2>
+            <span>
+              Lưu thông tin bắt đầu làm việc và ngưng làm việc củ một nhóm
+            </span>
           </div>
           <MenuResponsive />
           <ListUserHeader />
@@ -234,51 +145,39 @@ const Decentralization = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        {decentralizations.length === 0 ? (
-          <p>Loading...</p>
-        ) : (
-          <table className="table-Decent">
-            <thead>
+        <table className="table-Decent">
+          <thead>
+            <tr>
+              <td>STT</td>
+              <td>
+                <p>Tên nhân viên</p>
+              </td>
+              <td>
+                <p>Mã số</p>
+              </td>
+              <td>
+                <p>Trạng thái</p>
+              </td>
+              <td>
+                <p>Hành động</p>
+              </td>
+            </tr>
+          </thead>
+          <div className="tbody-decent">
+            <tbody className="scrollbar" id="style-15">
               <tr>
-                <td>Trang / Chức vụ </td>
-                {roles.map((roles) => (
-                  <td>
-                    <p>{roles.roleName}</p>
-                  </td>
-                ))}
+                <td>
+                  <span></span>
+                </td>
+                <td>
+                  <span></span>
+                </td>
               </tr>
-            </thead>
-            <div className="tbody-decent">
-              <tbody className="scrollbar" id="style-15">
-                {pages.map((pages) => (
-                  <tr key={pages.pageId}>
-                    <td>
-                      <span>{pages.pageName}</span>
-                    </td>
-                    {roles.map((roles) => (
-                      <td key={roles.roleID}>
-                        <span>
-                          <Checkbox
-                            checked={hasPermission(pages.pageId, roles.roleID)}
-                            onChange={(e) =>
-                              handleCheckboxChange(
-                                e,
-                                pages.pageId,
-                                roles.roleID
-                              )
-                            }
-                          />
-                        </span>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </div>
-          </table>
-        )}
+            </tbody>
+          </div>
+        </table>
       </div>
     </>
   );
 };
-export default Decentralization;
+export default TimekeepingComponent;
