@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "../scss/reset.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
@@ -23,17 +23,17 @@ const Menucomponent = () => {
 
   const handleLogout = () => {
     // Xóa dữ liệu đăng nhập trong localStorage và sessionStorage
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRoles');
-    localStorage.removeItem('userPages');
-    sessionStorage.removeItem('userToken');
-    sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('userRoles');
-    sessionStorage.removeItem('userPages');
-  
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userRoles");
+    localStorage.removeItem("userPages");
+    sessionStorage.removeItem("userToken");
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("userRoles");
+    sessionStorage.removeItem("userPages");
+
     // Chuyển hướng đến trang đăng nhập
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -45,7 +45,7 @@ const Menucomponent = () => {
           </Link>
           <h1 className="logo-name">Phú Cầu</h1>
         </div>
-        <div className="body-menu">
+        <div className="body-menu scrollbar" id="style-15">
           <div className="item-link">
             <NavLink
               to={"/"}
@@ -92,7 +92,7 @@ const Menucomponent = () => {
                 ></i>
               </div>
               {isDropdownOpen && (
-                <div className="dropdown-content scrollbar" id="style-15">
+                <div className="dropdown-content">
                   <div className="item-link">
                     <NavLink
                       to={"/list-employee"}
