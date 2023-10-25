@@ -20,7 +20,24 @@ import ListUserHeader from "./componentUI/ListUserHeader";
 import { Select, Space } from "antd";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [address, setAddress] = useState("Hà Nội");
+  const [gender, setGender] = useState("Nguyễn Văn An"); // State cho họ và tên
+  const [phone, setPhone] = useState("0899999577"); // State cho số điện thoại
+  const [fax, setFax] = useState("0899999577");
+  const [idCard, setIdCard] = useState("0899999577");
+  const [role, setRole] = useState("Nhân viên");
+  const [department, setDepartment] = useState("Phòng kế toán");
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    // Thực hiện lưu thông tin chỉnh sửa vào cơ sở dữ liệu hoặc làm gì bạn cần ở đây
+    // Sau khi lưu, quay trở lại chế độ không chỉnh sửa và cập nhật nút
+    setIsEditing(false);
+  };
   useEffect(() => {
     // Gọi hàm fetchAllEmplyee để lấy dữ liệu từ API khi component được mount
     fetchAllEmplyee()
@@ -678,121 +695,290 @@ function ListEmployeeComponent() {
           </tr>
         </tbody>
       </table>
-
-      <Modal
-        className="modal"
-        open={isModalOpen}
-        on
-        Ok={handleOk}
-        onCancel={handleCancel}
-        width={1252}
-      >
-        <div className="modal-head">
-          <h3>Thông tin cá nhân</h3>
-        </div>
-        <div className="modal-body">
-          <div className="avatar">
-            <div className="img-avatar">
-              <img src={userDetail} alt="" />
+      <div>
+        {isEditing ? (
+          <Modal
+            className="modal"
+            open={isModalOpen}
+            on
+            Ok={handleOk}
+            onCancel={handleCancel}
+            width={1252}
+          >
+            <div className="modal-head">
+              <h3>Thông tin cá nhân</h3>
             </div>
-            <div className="name-avatar">
-              <h2>Nguyễn Văn An</h2>
-              <div className="activiti">
-                <Form.Item valuePropName="checked">
-                  <Switch />
-                </Form.Item>
-                <span>Đang hoạt động</span>
+            <div className="modal-body">
+              <div className="avatar">
+                <div className="img-avatar">
+                  <img src={userDetail} alt="" />
+                </div>
+                <div className="name-avatar">
+                  <h2>Nguyễn Văn An</h2>
+                  <div className="activiti">
+                    <Form.Item valuePropName="checked">
+                      <Switch />
+                    </Form.Item>
+                    <span>Đang hoạt động</span>
+                  </div>
+                </div>
+                <div className="dependent">
+                  <span>Người phụ thuộc</span>
+                </div>
               </div>
             </div>
-            <div className="dependent">
-              <span>Người phục thộc</span>
-            </div>
-          </div>
-        </div>
-        <div className="modal-info">
-          <div className="info-detail">
-            <span className="title-info">Thông tin cá nhân</span>
-            <Row gutter={16}>
-              <Col span={12}>
-                <table className="table-info-detail">
-                  <tbody>
-                    <tr>
-                      <th className="text">Họ và tên</th>
-                      <td className="input-text">
-                        <Input
-                          placeholder="Basic usage"
-                          value="Nguyễn Văn An"
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="text">Giới tính</th>
-                      <td className="input-text fix">
-                        <Radio.Group onChange={onChangeRadio} value={value}>
-                          <Radio value={1} className="gender">
-                            Nam
-                          </Radio>
-                          <Radio value={2} className="gender">
-                            Nữ
-                          </Radio>
-                        </Radio.Group>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="text">Số điện thoại</th>
-                      <td className="input-text">
-                        <Input placeholder="Basic usage" value="0123456789" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="text">CCCD</th>
-                      <td className="input-text">
-                        <Input placeholder="Basic usage" value="0123456789" />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </Col>
-              <Col span={12}>
-                <table className="table-info-detail">
-                  <tbody>
-                    <tr>
-                      <th className="text">Mã số thuế</th>
-                      <td className="input-text">
-                        <Input placeholder="Basic usage" value="123456789" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="text">Chức vụ</th>
-                      <td className="input-text">
-                        <Input placeholder="Basic usage" value="Nhân viên" />
-                      </td>
-                    </tr>
+            <div className="modal-info">
+              <div className="info-detail">
+                <span className="title-info">Thông tin cá nhân</span>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Địa chỉ</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={address}
+                              onChange={(e) => setAddress(e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Giới tính</th>
+                          <td className="input-text fix">
+                            <Radio.Group
+                              onChange={(e) => setGender(e.target.value)}
+                              value={gender}
+                            >
+                              <Radio value={1} className="gender">
+                                Nam
+                              </Radio>
+                              <Radio value={2} className="gender">
+                                Nữ
+                              </Radio>
+                            </Radio.Group>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Số điện thoại</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              onChange={(e) => setPhone(e.target.value)}
+                              value={phone}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">CCCD</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              onChange={(e) => setIdCard(e.target.value)}
+                              value={idCard}
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                  <Col span={12}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Mã số thuế</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              onChange={(e) => setFax(e.target.value)}
+                              value={fax}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Chức vụ</th>
+                          <td className="input-text">
+                            <Select
+                              className="select-input"
+                              mode="multiple"
+                              style={{
+                                width: "100%",
+                              }}
+                              defaultValue={["china"]}
+                              onChange={handleChange}
+                              optionLabelProp="label"
+                            >
+                              <Option value="china" label="China">
+                                <Space>China</Space>
+                              </Option>
+                              <Option value="usa" label="USA">
+                                <Space>USA</Space>
+                              </Option>
+                              <Option value="japan" label="Japan">
+                                <Space>Japan</Space>
+                              </Option>
+                              <Option value="korea" label="Korea">
+                                <Space>Korea</Space>
+                              </Option>
+                            </Select>
+                          </td>
+                        </tr>
 
-                    <tr>
-                      <th className="text">Phòng ban</th>
-                      <td className="input-text">
-                        <Input
-                          placeholder="Basic usage"
-                          value="Phòng kế toán"
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </Col>
-            </Row>
-          </div>
-        </div>
-        <div className="modal-footer">
-          <button className="btn-cancel" onClick={handleCancel}>
-            Hủy bỏ
-          </button>
-          <button className="btn-edit " onClick={handleOk}>
-            Chỉnh sửa
-          </button>
-        </div>
-      </Modal>
+                        <tr>
+                          <th className="text">Phòng ban</th>
+                          <td className="input-text">
+                            <Select
+                              className="select-input"
+                              mode="multiple"
+                              style={{
+                                width: "100%",
+                              }}
+                              defaultValue={["china"]}
+                              onChange={handleChange}
+                              optionLabelProp="label"
+                            >
+                              <Option value="china" label="China">
+                                <Space>China</Space>
+                              </Option>
+                              <Option value="usa" label="USA">
+                                <Space>USA</Space>
+                              </Option>
+                              <Option value="japan" label="Japan">
+                                <Space>Japan</Space>
+                              </Option>
+                              <Option value="korea" label="Korea">
+                                <Space>Korea</Space>
+                              </Option>
+                            </Select>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-cancel" onClick={handleCancel}>
+                Hủy bỏ
+              </button>
+              <button className="btn-save" onClick={handleSave}>
+                Lưu
+              </button>
+            </div>
+          </Modal>
+        ) : (
+          <Modal
+            className="modal"
+            open={isModalOpen}
+            on
+            Ok={handleOk}
+            onCancel={handleCancel}
+            width={1252}
+          >
+            <div className="modal-head">
+              <h3>Thông tin cá nhân</h3>
+            </div>
+            <div className="modal-body">
+              <div className="avatar">
+                <div className="img-avatar">
+                  <img src={userDetail} alt="" />
+                </div>
+                <div className="name-avatar">
+                  <h2>Nguyễn Văn An</h2>
+                  <div className="activiti">
+                    <Form.Item valuePropName="checked">
+                      <Switch />
+                    </Form.Item>
+                    <span>Đang hoạt động</span>
+                  </div>
+                </div>
+                <div className="dependent">
+                  <span>Người phụ thuộc</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-info">
+              <div className="info-detail">
+                <span className="title-info">Thông tin cá nhân</span>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Địa chỉ</th>
+                          <td className="input-text">
+                            <Input placeholder="Basic usage" value={address} />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Giới tính</th>
+                          <td className="input-text fix">
+                            <Radio.Group onChange={onChangeRadio} value={value}>
+                              <Radio value={1} className="gender">
+                                Nam
+                              </Radio>
+                            </Radio.Group>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Số điện thoại</th>
+                          <td className="input-text">
+                            <Input placeholder="Basic usage" value={phone} />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">CCCD</th>
+                          <td className="input-text">
+                            <Input placeholder="Basic usage" value={idCard} />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                  <Col span={12}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Mã số thuế</th>
+                          <td className="input-text">
+                            <Input placeholder="Basic usage" value={fax} />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Chức vụ</th>
+                          <td className="input-text">
+                            <Input placeholder="Basic usage" value={role} />
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th className="text">Phòng ban</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={department}
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-cancel" onClick={handleCancel}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit " onClick={handleEdit}>
+                Chỉnh sửa
+              </button>
+            </div>
+          </Modal>
+        )}
+      </div>
     </div>
   );
 }
