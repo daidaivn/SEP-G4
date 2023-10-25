@@ -11,6 +11,7 @@ import DependentPerson from "./view/component/DependentPerson";
 import Role from "./view/component/Role";
 import GroupComponent from "./view/component/GroupComponent";
 import Decentralization from "./view/component/Decentralization";
+import TimekeepingComponent from "./view/component/TimekeepingComponent";
 
 function App() {
   let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
@@ -46,6 +47,9 @@ function App() {
           )}
           {userPages.includes("Decentralization") && (
             <Route path="/decentralization" element={<Decentralization />} />
+          )}
+          {userPages.includes("Timekeeping") && (
+            <Route path="/timekeeping" element={<TimekeepingComponent />} />
           )}
           <Route
             path="*"
