@@ -31,6 +31,7 @@ function ListEmployeeComponent() {
   const [role, setRole] = useState("Nhân viên");
   const [department, setDepartment] = useState("Phòng kế toán");
 
+
   const [employeeData, setEmployeeData] = useState(null);
   const handleEdit = () => {
     setIsEditing(true);
@@ -639,78 +640,7 @@ function ListEmployeeComponent() {
                 </td>
               </tr>
             ))}
-            <tr onClick={showModal}>
-              <td>?</td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>trưởng phòng</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModal}>
-              <td>?</td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModal}>
-              <td>?</td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>trưởng phòng</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModal}>
-              <td>?</td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModal}>
-              <td>?</td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModal}>
-              <td>?</td>
-              <td>Nguyễn Văn An</td>
-              <td>Nam</td>
-              <td>0123456789</td>
-              <td>Nhân viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
+            
           </tbody>
         </table>
       )}
