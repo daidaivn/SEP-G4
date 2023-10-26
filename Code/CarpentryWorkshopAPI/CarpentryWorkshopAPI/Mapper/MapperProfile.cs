@@ -65,6 +65,8 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             CreateMap<Team, TeamListDTO>()
                .ReverseMap();
+            CreateMap<WorkSchedule, CreateWorkScheduleDTO>()
+               .ReverseMap();
             CreateMap<Team, CreateTeamDTO>()
                .ReverseMap();
             CreateMap<WorkSchedule, WorkScheduleDTO>()
@@ -80,14 +82,23 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
             CreateMap<WorkScheduleStatusHistory, WorkScheduleHistoryDTO>()
+              .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
               .ReverseMap();
             CreateMap<HistoryChangeCheckInOut, HistoryChangeCheckInOutDTO>()
-                .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
+            CreateMap<UnitCostStatusHistory, UnitCostStatusHistoryDTO>()
+               .ForMember(de => de.UniCostName, option => option.MapFrom(d => d.UniCost.UnitName))
+               .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
+              .ReverseMap();
             CreateMap<Page, PageDTO>()          
                 .ReverseMap();
             CreateMap<Employee, TeamMemberDTO>()
                 .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
+                .ReverseMap();
+            CreateMap<WorkArea, WorkAreasDTO>()
+                .ReverseMap();
+            CreateMap<UnitCost, UnitCostDTO>()
                 .ReverseMap();
         }
     }

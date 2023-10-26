@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -21,7 +22,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var schedules = _context.WorkSchedules.ToList();
+                var schedules = _context.WorkSchedules
+                    .Include(x => x.ShiftType)
+                    .Include(x => x.Team)
+                    .ToList();
                 if (schedules == null)
                 {
                     return NotFound();
@@ -34,13 +38,13 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CreateAndUpdateWorkSchedule([FromBody] WorkScheduleDTO workScheduleDTO)
+        public IActionResult CreateAndUpdateWorkSchedule([FromBody] CreateWorkScheduleDTO createWorkScheduleDTO)
         {
             try
             {
-                if (workScheduleDTO.WorkScheduleId == 0)
+                if (createWorkScheduleDTO.WorkScheduleId == 0)
                 {
-                    var newschedule = _mapper.Map<WorkSchedule>(workScheduleDTO);
+                    var newschedule = _mapper.Map<WorkSchedule>(createWorkScheduleDTO);
                     if (newschedule == null)
                     {
                         return NotFound();
@@ -60,7 +64,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    var newschedule = _mapper.Map<WorkSchedule>(workScheduleDTO);
+                    var newschedule = _mapper.Map<WorkSchedule>(createWorkScheduleDTO);
                     if (newschedule == null)
                     {
                         return NotFound();
