@@ -596,126 +596,109 @@ function ListEmployeeComponent() {
         </div>
       </div>
       {employees.length === 0 ? (
-          <p>Loading...</p>
-        ) : (
-      <table className="list-table" onClick={showModal}>
-        <thead>
-          <tr>
-            <td>Ảnh</td>
-            <td>Họ và tên</td>
-            <td>Giới tính</td>
-            <td>Số điện thoại</td>
-            <td>Chức vụ</td>
-            <td>Trạng thái</td>
-          </tr>
-        </thead>
-        <tbody class="scrollbar" id="style-15">
-          {employees.map((employees, index) => (
-            <tr key={employees.employeesId} onClick={showModal}>
-              <td>{index + 1}</td>
-              <td>{employees.fullName}</td>
-              <td>{employees.gender}</td>
-              <td>{employees.phoneNumber}</td>
-              <td>{employees.roles.join(" - ")}</td>
+        <p>Loading...</p>
+      ) : (
+        <table className="list-table" onClick={showModal}>
+          <thead>
+            <tr>
+              <td>Ảnh</td>
+              <td>Họ và tên</td>
+              <td>Giới tính</td>
+              <td>Số điện thoại</td>
+              <td>Chức vụ</td>
+              <td>Trạng thái</td>
+            </tr>
+          </thead>
+          <tbody class="scrollbar" id="style-15">
+            {employees.map((employees, index) => (
+              <tr key={employees.employeesId} onClick={showModal}>
+                <td>{index + 1}</td>
+                <td>{employees.fullName}</td>
+                <td>{employees.gender}</td>
+                <td>{employees.phoneNumber}</td>
+                <td>{employees.roles.join(" - ")}</td>
+                <td>
+                  <Form.Item valuePropName="checked">
+                    <Switch checked={employees.status} />
+                  </Form.Item>
+                </td>
+              </tr>
+            ))}
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>trưởng phòng</td>
               <td>
                 <Form.Item valuePropName="checked">
-                  <Switch checked={employees.status} />
+                  <Switch checked="true" />
                 </Form.Item>
               </td>
             </tr>
-          ))}
-          <tr onClick={showModal}>
-            <td>?</td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>trưởng phòng</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked="true" />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr onClick={showModal}>
-            <td>?</td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked="true" />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr onClick={showModal}>
-            <td>?</td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>trưởng phòng</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked="true" />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr onClick={showModal}>
-            <td>?</td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked="true" />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr onClick={showModal}>
-            <td>?</td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked="true" />
-              </Form.Item>
-            </td>
-          </tr>
-          <tr onClick={showModal}>
-            <td>?</td>
-            <td>Nguyễn Văn An</td>
-            <td>Nam</td>
-            <td>0123456789</td>
-            <td>Nhân viên</td>
-            <td>
-              <Form.Item valuePropName="checked">
-                <Switch checked="true" />
-              </Form.Item>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-<<<<<<< HEAD
-        )}
-      <Modal
-        className="modal"
-        open={isModalOpen}
-        on
-        Ok={handleOk}
-        onCancel={handleCancel}
-        width={1252}
-      >
-        <div className="modal-head">
-          <h3>Thông tin cá nhân</h3>
-        </div>
-        <div className="modal-body">
-          <div className="avatar">
-            <div className="img-avatar">
-              <img src={userDetail} alt="" />
-=======
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked="true" />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>trưởng phòng</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked="true" />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked="true" />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked="true" />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr onClick={showModal}>
+              <td>?</td>
+              <td>Nguyễn Văn An</td>
+              <td>Nam</td>
+              <td>0123456789</td>
+              <td>Nhân viên</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch checked="true" />
+                </Form.Item>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      )}
       <div>
         {isEditing ? (
           <Modal
@@ -728,7 +711,6 @@ function ListEmployeeComponent() {
           >
             <div className="modal-head">
               <h3>Thông tin cá nhân</h3>
->>>>>>> 2dde5e31e19b241a3f8130e2a3a903845285f4b5
             </div>
             <div className="modal-body">
               <div className="avatar">
