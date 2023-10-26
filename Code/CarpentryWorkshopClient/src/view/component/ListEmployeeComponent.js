@@ -578,6 +578,9 @@ function ListEmployeeComponent() {
           </div>
         </div>
       </div>
+      {employees.length === 0 ? (
+          <p>Loading...</p>
+        ) : (
       <table className="list-table" onClick={showModal}>
         <thead>
           <tr>
@@ -678,7 +681,7 @@ function ListEmployeeComponent() {
           </tr>
         </tbody>
       </table>
-
+        )}
       <Modal
         className="modal"
         open={isModalOpen}

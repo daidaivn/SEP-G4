@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -19,6 +20,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
+        [Authorize(Roles = "Role")]
         [HttpGet]
         public IActionResult GetAllRoles()
         {
