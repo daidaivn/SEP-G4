@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
-import { Switch, Form, Input, Row, Col } from "antd";
+import { Switch, Form, Input} from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllTeam } from "../../sevices/TeamService";
@@ -288,7 +288,7 @@ const GroupComponent = () => {
               <tr key={role.roleID}>
                 <td>{index + 1}</td>
                 <td>{role.roleName}</td>
-                <td>{role.employees.length}</td>
+                {/* <td>{role.employees.length}</td> */}
                 <td>
                   <Form.Item valuePropName="checked">
                     <Switch checked={role.status} />
@@ -296,46 +296,6 @@ const GroupComponent = () => {
                 </td>
               </tr>
             ))}
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Nhóm 1</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Nhóm 2</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Nhóm 3</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Nhóm 4</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
           </tbody>
         </table>
         <Modal

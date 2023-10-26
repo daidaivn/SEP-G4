@@ -12,7 +12,7 @@ import userDetail from "../assets/images/Ellipse 73.svg";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import React, { useState, useEffect } from "react";
-import { fetchAllEmplyee } from "../../sevices/EmployeeService";
+import { fetchAllEmplyee, fetchEmplyeebyid } from "../../sevices/EmployeeService";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
@@ -20,6 +20,8 @@ import ListUserHeader from "./componentUI/ListUserHeader";
 import { Select, Space } from "antd";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
+
+  const [id, setId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [address, setAddress] = useState("Hà Nội");
   const [gender, setGender] = useState("Nguyễn Văn An"); // State cho họ và tên
@@ -36,19 +38,33 @@ function ListEmployeeComponent() {
   const handleSave = () => {
     // Thực hiện lưu thông tin chỉnh sửa vào cơ sở dữ liệu hoặc làm gì bạn cần ở đây
     // Sau khi lưu, quay trở lại chế độ không chỉnh sửa và cập nhật nút
+  const [employeeData, setEmployeeData] = useState(null);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
     setIsEditing(false);
   };
   useEffect(() => {
-    // Gọi hàm fetchAllEmplyee để lấy dữ liệu từ API khi component được mount
     fetchAllEmplyee()
       .then((response) => {
-        // Lưu dữ liệu nhân viên vào state
         setEmployees(response);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  
+    if (id !== null) {
+      fetchEmplyeebyid(id)
+        .then((response) => {
+          setEmployeeData(response);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [id]);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -63,6 +79,9 @@ function ListEmployeeComponent() {
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const showModalDetail = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -611,7 +630,10 @@ function ListEmployeeComponent() {
           </thead>
           <tbody class="scrollbar" id="style-15">
             {employees.map((employees, index) => (
-              <tr key={employees.employeesId} onClick={showModal}>
+              <tr key={employees.employeesId} onClick={(showModal) => {
+                setId(employees.employeesId);
+                setIsModalOpen(true);
+              }}>
                 <td>{index + 1}</td>
                 <td>{employees.fullName}</td>
                 <td>{employees.gender}</td>
@@ -922,6 +944,9 @@ function ListEmployeeComponent() {
                             <Radio.Group onChange={onChangeRadio} value={value}>
                               <Radio value={1} className="gender">
                                 Nam
+                              </Radio>
+                              <Radio value={2} className="gender">
+                                Nữ
                               </Radio>
                             </Radio.Group>
                           </td>
