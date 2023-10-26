@@ -12,6 +12,22 @@ import { Modal } from "antd";
 import { Select } from "antd";
 import { Col, Row } from "antd";
 function DependentPerson() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [guardian, setGuardian] = useState("abc");
+  const [Relationship, setRelationship] = useState("abc");
+  const [Identifier, setIdentifier] = useState("abc");
+  const [date, setDate] = useState("abc");
+  const [identifierType, setIdentifierType] = useState("abc");
+  const [status, setStatus] = useState(true);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    // Thực hiện lưu thông tin chỉnh sửa vào cơ sở dữ liệu hoặc làm gì bạn cần ở đây
+    // Sau khi lưu, quay trở lại chế độ không chỉnh sửa và cập nhật nút
+    setIsEditing(false);
+  };
   const [dependent, setDependent] = useState([]);
   const [isModalOpenDependent, setIsModalOpenDependent] = useState(false);
   const handleChange = (value) => {
@@ -317,83 +333,214 @@ function DependentPerson() {
             </tr>
           </tbody>
         </table>
-        <Modal
-          className="modal-dependent"
-          open={isModalOpenDependent}
-          on
-          Ok={handleOkDependent}
-          onCancel={handleCancelDependent}
-          width={566}
-        >
-          <div className="modal-head">
-            {" "}
-            <h3>Thông tin người phục thuộc</h3>
-          </div>
-          <div className="modal-body modal-body-dependent">
-            <div className="name-person-dependent">
-              <h3>name</h3>
+        {isEditing ? (
+          <Modal
+            className="modal-dependent"
+            open={isModalOpenDependent}
+            on
+            Ok={handleOkDependent}
+            onCancel={handleCancelDependent}
+            width={566}
+          >
+            <div className="modal-head">
+              {" "}
+              <h3>Thông tin người phụ thuộc</h3>
             </div>
+            <div className="modal-body modal-body-dependent">
+              <div className="name-person-dependent">
+                <h3>name</h3>
+              </div>
 
-            <div className="info-detail-dependent">
-              <Row>
-                <Col span={24}>
-                  <table className="table-info-detail">
-                    <tbody>
-                      <tr>
-                        <th className="text">Người giám hộ:</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="abc" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Mối quan hệ:</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="abc" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Mã định danh:</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="abc" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Ngày sinh:</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="abc" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Loại mã định danh:</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="abc" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Trạng thái:</th>
-                        <td className="input-text">
-                          {" "}
-                          <Form.Item valuePropName="checked">
-                            <Switch checked="true" />
-                          </Form.Item>
-                          Còn phụ thuộc
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </Col>
-              </Row>
+              <div className="info-detail-dependent">
+                <Row>
+                  <Col span={24}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Người giám hộ:</th>
+                          <td className="input-text">
+                            <select
+                              name="guardian"
+                              id="guardian"
+                              className="select"
+                              onChange={(e) => setGuardian(e.target.value)}
+                            >
+                              <option value="1">Volvo</option>
+                              <option value="2">Saab</option>
+                              <option value="3">Opel</option>
+                              <option value="4">Audi</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Mối quan hệ:</th>
+                          <td className="input-text">
+                            <select
+                              name="Relationship"
+                              id="Relationship"
+                              className="select"
+                              onChange={(e) => setRelationship(e.target.value)}
+                            >
+                              <option value="1">Volvo</option>
+                              <option value="2">Saab</option>
+                              <option value="3">Opel</option>
+                              <option value="4">Audi</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Mã định danh:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={Identifier}
+                              onChange={(e) => setIdentifier(e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Ngày sinh:</th>
+                          <td className="input-text">
+                            <Input
+                              type="date"
+                              placeholder="Basic usage"
+                              value={date}
+                              onChange={(e) => setDate(e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Loại mã định danh:</th>
+                          <td className="input-text">
+                            <select
+                              name="identifierType"
+                              id="identifierType"
+                              className="select"
+                              onChange={(e) => setRelationship(e.target.value)}
+                            >
+                              <option value="1">Volvo</option>
+                              <option value="2">Saab</option>
+                              <option value="3">Opel</option>
+                              <option value="4">Audi</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Trạng thái:</th>
+                          <td className="input-text">
+                            {" "}
+                            <Form.Item valuePropName={status}>
+                              <Switch value="checked" />
+                            </Form.Item>
+                            Còn phụ thuộc
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                </Row>
+              </div>
             </div>
-          </div>
-          <div className="modal-footer modal-footer-deparment">
-            <button className="btn-cancel" onClick={handleCancelDependent}>
-              Hủy bỏ
-            </button>
-            <button className="btn-edit" onClick={handleOkDependent}>
-              Chỉnh sửa
-            </button>
-          </div>
-        </Modal>
+            <div className="modal-footer modal-footer-deparment">
+              <button className="btn-cancel" onClick={handleCancelDependent}>
+                Hủy bỏ
+              </button>
+              <button className="btn-save" onClick={handleSave}>
+                Lưu
+              </button>
+            </div>
+          </Modal>
+        ) : (
+          <Modal
+            className="modal-dependent"
+            open={isModalOpenDependent}
+            on
+            Ok={handleOkDependent}
+            onCancel={handleCancelDependent}
+            width={566}
+          >
+            <div className="modal-head">
+              {" "}
+              <h3>Thông tin người phụ thuộc</h3>
+            </div>
+            <div className="modal-body modal-body-dependent">
+              <div className="name-person-dependent">
+                <h3>name</h3>
+              </div>
+
+              <div className="info-detail-dependent">
+                <Row>
+                  <Col span={24}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Người giám hộ:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={guardian}
+                            ></Input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Mối quan hệ:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={Relationship}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Mã định danh:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={Identifier}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Ngày sinh:</th>
+                          <td className="input-text">
+                            <Input placeholder="Basic usage" value={date} />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Loại mã định danh:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={identifierType}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="text">Trạng thái:</th>
+                          <td className="input-text">
+                            {" "}
+                            <Form.Item valuePropName={status}>
+                              <Switch value={status} />
+                            </Form.Item>
+                            Còn phụ thuộc
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-deparment">
+              <button className="btn-cancel" onClick={handleCancelDependent}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit" onClick={handleEdit}>
+                Chỉnh sửa
+              </button>
+            </div>
+          </Modal>
+        )}
       </div>
     </>
   );
