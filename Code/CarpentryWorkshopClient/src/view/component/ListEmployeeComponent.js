@@ -31,13 +31,6 @@ function ListEmployeeComponent() {
   const [role, setRole] = useState("Nhân viên");
   const [department, setDepartment] = useState("Phòng kế toán");
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    // Thực hiện lưu thông tin chỉnh sửa vào cơ sở dữ liệu hoặc làm gì bạn cần ở đây
-    // Sau khi lưu, quay trở lại chế độ không chỉnh sửa và cập nhật nút
   const [employeeData, setEmployeeData] = useState(null);
   const handleEdit = () => {
     setIsEditing(true);
