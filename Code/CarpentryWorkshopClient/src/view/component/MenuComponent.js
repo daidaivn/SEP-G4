@@ -141,7 +141,7 @@ const Menucomponent = () => {
                     >
                       <i className="icon-add1"></i>
 
-                      <span className="text">Người phụ thộc </span>
+                      <span className="text">Người phụ thuộc </span>
                     </NavLink>
                   </div>
                   <div className="item-link">
