@@ -5,7 +5,11 @@ import "../scss/fonts.scss";
 import "../scss/index.scss";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllPages } from "../../sevices/PageService";
-import { fetchAllDecentralization, addRolePage, deleteRolePage } from "../../sevices/DecentralizationService";
+import {
+  fetchAllDecentralization,
+  addRolePage,
+  deleteRolePage,
+} from "../../sevices/DecentralizationService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 
@@ -256,7 +260,13 @@ const Decentralization = () => {
                         <span>
                           <Checkbox
                             checked={hasPermission(pages.pageId, roles.roleID)}
-                            onChange={(e) => handleCheckboxChange(e, pages.pageId, roles.roleID)}
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                e,
+                                pages.pageId,
+                                roles.roleID
+                              )
+                            }
                           />
                         </span>
                       </td>

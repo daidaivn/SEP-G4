@@ -1,0 +1,36 @@
+.enter {
+  display: flex;
+  width: 100px;
+  padding: 12px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  background: #1967ff;
+  p {
+    color: #fff !important;
+    font-family: Noto Sans;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+.go-out {
+  display: flex;
+  width: 100px;
+  padding: 12px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  background: #fc1e1e;
+  p {
+    color: #fff !important;
+    font-family: Noto Sans;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}

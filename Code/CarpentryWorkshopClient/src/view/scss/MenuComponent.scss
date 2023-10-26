@@ -23,6 +23,17 @@
   padding-top: 45px;
   border-top: 1px solid #fff;
   border-bottom: 1px solid #fff;
+  overflow: hidden;
+  max-height: 100%;
+  overflow-y: auto;
+}
+.body-menu::-webkit-scrollbar-thumb {
+  background-color: unset !important;
+  background-image: unset !important;
+}
+.body-menu::-webkit-scrollbar-track {
+  background-color: unset !important;
+  -webkit-box-shadow: unset !important;
 }
 .menu {
   height: 100%;
@@ -105,4 +116,6 @@ i {
     font-size: 15px !important;
     font-weight: 500 !important;
   }
+}
+.style-fix {
 }

@@ -243,21 +243,38 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult ChangeTeam(int tid, int eid)
+        public IActionResult ChangeTeam(int otid,int tid, int eid)
         {
             try
             {
+                Team team = _context.Teams.FirstOrDefault(x => x.TeamId == tid);
+                if (team == null)
+                {
+                    return NotFound();
+                }
+                Employee emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == eid);
+                if (emp == null)
+                {
+                    return NotFound();
+                }
+                EmployeeTeam oldteam = _context.EmployeeTeams.FirstOrDefault(x => x.TeamId == otid && x.EmployeeId == eid);
+                if (oldteam == null)
+                {
+                    return NotFound();
+                }
                 EmployeeTeam changeteam = new EmployeeTeam()
                 {
-                    EmployeeId= tid,
-                    TeamId= eid,
+                    EmployeeId= emp.EmployeeId,
+                    TeamId= team.TeamId,
                     StartDate= DateTime.Now,
                     EndDate= null,
                 };
+                oldteam.EndDate = DateTime.Now;
+                _context.EmployeeTeams.Update(oldteam);
                 _context.EmployeeTeams.Add(changeteam);
                 HistoryChangeTeam history = new HistoryChangeTeam()
                 {
-                    TeamId= tid,
+                    TeamId= team.TeamId,
                     Action = "Add new member",
                     ActionDate= DateTime.Now,
                     CurrentEmployeeId = null,
@@ -270,29 +287,33 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult GetTeamDetail(int teamid)
+        [HttpGet("{teamId}/members")]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetTeamMembers(int teamId)
         {
             try
             {
-                var teammembers = _context.EmployeeTeams
-                    .Where(x => x.TeamId == teamid)
-                    .Include(x => x.Employee)
+                var team = await _context.Teams
+                    .Include(t => t.EmployeeTeams)
+                    .ThenInclude(et => et.Employee)
                     .ThenInclude(et => et.RolesEmployees)
-                    .ThenInclude(rolem => rolem.Role)
-                    .ToList();                   
-                if (teammembers == null)
+                    .ThenInclude(re => re.Role)
+                    .FirstOrDefaultAsync(t => t.TeamId == teamId);
+                if (team == null)
                 {
                     return NotFound();
                 }
+                var members = team.EmployeeTeams
+                                  .Where(et => et.EndDate == null)
+                                  .Select(et => et.Employee)
+                                  .ToList();
                 string sm = "Trưởng ca";
-                var shiftmanager = teammembers.Select(x => x.Employee)
+                var shiftmanager = members
                     .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower()))).FirstOrDefault();
                 string sa = "Phó ca";
-                var shiftassistant = teammembers.Select(x => x.Employee)
+                var shiftassistant = members
                     .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower()))).FirstOrDefault();
                 string st = "Nhân viên";
-                var staff = teammembers.Select(x => x.Employee)
+                var staff = members
                     .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower()))).ToList();
                 var teammem = new
                 {
@@ -306,6 +327,5 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
     }
-}
+    }
