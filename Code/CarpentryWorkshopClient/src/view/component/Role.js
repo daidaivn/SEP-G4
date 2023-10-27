@@ -609,6 +609,107 @@ function Role() {
             </div>
           </div>
         </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenChange}
+          on
+          Ok={handleOkChange}
+          onCancel={handleCancelChange}
+          width={566}
+        >
+          <div className="modal-all-group">
+            <div className="modal-head">
+              {" "}
+              <h3>Thêm nhóm</h3>
+            </div>
+            <div className="modal-end-group">
+              <div className="body-modal-end-group">
+                <div className="modal1">
+                  <div className="modal1-child">
+                    <p>Nhân viên: </p>
+                    <p>Nguyễn Thị Lan</p>
+                  </div>
+                  <div className="modal1-child">
+                    <p>Mã số nhân viên: </p>
+                    <p>1</p>
+                  </div>
+                  <div className="modal1-child">
+                    <p>Chức vụ hiện tại:</p>
+                    <p>Kế toán</p>
+                  </div>
+                </div>
+                <div className="modal2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="51"
+                    height="50"
+                    viewBox="0 0 51 50"
+                    fill="none"
+                  >
+                    <path
+                      d="M30.5625 12.3545L43.2083 25.0003L30.5625 37.6462"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.7915 25H42.854"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div className="modal3">
+                  <div className="modal3-child">
+                    <p>Chức vụ chuyển đến:</p>
+
+                    <div className="list-filter select-modal-end">
+                      <Select
+                        className="select-input"
+                        defaultValue="lucy"
+                        style={{
+                          width: 120,
+                        }}
+                        onChange={handleChange}
+                        options={[
+                          {
+                            value: "jack",
+                            label: "Jack",
+                          },
+                          {
+                            value: "lucy",
+                            label: "Lucy",
+                          },
+                          {
+                            value: "Yiminghe",
+                            label: "yiminghe",
+                          },
+                          {
+                            value: "disabled",
+                            label: "Disabled",
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-group">
+              <button className="btn-cancel" onClick={handleCancelChange}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkChange}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );
