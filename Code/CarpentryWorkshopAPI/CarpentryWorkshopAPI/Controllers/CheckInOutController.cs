@@ -46,6 +46,10 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if(lastAttendance.TimeCheckOut == null)
                 {
+                    if (DateTime.Now.TimeOfDay > team.Select(t => t.Timeout.Value).Single())
+                    {
+                        return Ok("Vắng mặt");
+                    }
                     return Ok("Có mặt");
                 }else
                 {
