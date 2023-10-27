@@ -12,13 +12,21 @@ import userDetail from "../assets/images/Ellipse 73.svg";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import React, { useState, useEffect } from "react";
-import { fetchAllEmplyee, fetchEmplyeebyid } from "../../sevices/EmployeeService";
+import {
+  fetchAllEmplyee,
+  fetchEmplyeebyid,
+} from "../../sevices/EmployeeService";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { Select, Space } from "antd";
-import { TableEmployee, TableEmployeeRes, AddEmployeeModal, DetailEmployeeModal } from "./componentEmployee";
+import {
+  TableEmployee,
+  TableEmployeeRes,
+  AddEmployeeModal,
+  DetailEmployeeModal,
+} from "./componentEmployee";
 
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
@@ -32,7 +40,6 @@ function ListEmployeeComponent() {
   const [idCard, setIdCard] = useState("0899999577");
   const [role, setRole] = useState("Nhân viên");
   const [department, setDepartment] = useState("Phòng kế toán");
-
 
   const [employeeData, setEmployeeData] = useState(null);
   const handleEdit = () => {
@@ -480,9 +487,7 @@ function ListEmployeeComponent() {
         </span>
       </div>
 
-      <TableEmployeeRes
-        employees={employees}
-      />
+      <TableEmployeeRes employees={employees} />
 
       {employees.length === 0 ? (
         <p>Loading...</p>
@@ -511,7 +516,7 @@ function ListEmployeeComponent() {
             fax={fax}
             setFax={setFax}
             handleChange={handleChange}
-            Option ={Option}
+            Option={Option}
           />
         ) : (
           <DetailEmployeeModal
@@ -535,7 +540,7 @@ function ListEmployeeComponent() {
             value={value}
             onChangeRadio={onChangeRadio}
             handleEdit={handleEdit}
-            Option ={Option}
+            Option={Option}
           />
         )}
       </div>

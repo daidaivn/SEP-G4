@@ -16,11 +16,14 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
       </thead>
       <tbody className="scrollbar" id="style-15">
         {employees.map((employee, index) => (
-          <tr key={employee.employeesId} onClick={() => {
-            setId(employee.employeesId);
-            setIsModalOpen(true);
-          }}>
-            <td>{index + 1}</td>
+          <tr
+            key={employee.employeesId}
+            onClick={() => {
+              setId(employee.employeesId);
+              setIsModalOpen(true);
+            }}
+          >
+            <td>{employee.image}</td>
             <td>{employee.fullName}</td>
             <td>{employee.gender}</td>
             <td>{employee.phoneNumber}</td>
