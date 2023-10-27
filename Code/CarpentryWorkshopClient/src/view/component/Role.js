@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
-import { Switch, Form } from "antd";
+import { Switch, Form, Modal } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllRole } from "../../sevices/RoleService";
@@ -12,6 +12,51 @@ function Role() {
   const [role, setRole] = useState([]);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
+  };
+  const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
+  const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
+  const [isModalOpenChange, setIsModalOpenChange] = useState(false);
+  const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
+  const handleChange1 = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const showModalGroup = () => {
+    setIsModalOpenGroup(true);
+  };
+  const handleOkGroup = () => {
+    setIsModalOpenGroup(false);
+  };
+  const handleCancelGroup = () => {
+    setIsModalOpenGroup(false);
+  };
+  const showModalDetail = () => {
+    setIsModalOpenDetail(true);
+  };
+  const handleOkDetail = () => {
+    setIsModalOpenDetail(false);
+  };
+  const handleCancelDetail = () => {
+    setIsModalOpenDetail(false);
+  };
+
+  const showModalChange = () => {
+    setIsModalOpenChange(true);
+  };
+  const handleOkChange = () => {
+    setIsModalOpenChange(false);
+  };
+  const handleCancelChange = () => {
+    setIsModalOpenChange(false);
+  };
+
+  const showModalAdd = () => {
+    setIsModalOpenAdd(true);
+  };
+  const handleOkAdd = () => {
+    setIsModalOpenAdd(false);
+  };
+  const handleCancelAdd = () => {
+    setIsModalOpenAdd(false);
   };
   useEffect(() => {
     // Sử dụng fetchAllDepadment để tải dữ liệu từ API
@@ -188,7 +233,7 @@ function Role() {
               />
             </svg>
           </i>
-          <div className="list-add">
+          <div className="list-add" onClick={showModalGroup}>
             <i className="icon-web">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -315,6 +360,33 @@ function Role() {
             </tr>
           </tbody>
         </table>
+        <Modal
+          className="modal"
+          open={isModalOpenGroup}
+          on
+          Ok={handleOkGroup}
+          onCancel={handleCancelGroup}
+          width={566}
+        >
+          <div className="modal-head">
+            {" "}
+            <h3>Thêm chức vụ</h3>
+          </div>
+          <div className="modal-body modal-body-department">
+            <div className="info-add-department">
+              <div className="text-department">Tên chức vụ:</div>
+              <Input placeholder="Nhập tên chức vụ" />
+            </div>
+          </div>
+          <div className="modal-footer modal-footer-deparment">
+            <button className="btn-cancel" onClick={handleCancelGroup}>
+              Hủy bỏ
+            </button>
+            <button className="btn-edit btn-save" onClick={handleOkGroup}>
+              Lưu
+            </button>
+          </div>
+        </Modal>
       </div>
     </>
   );
