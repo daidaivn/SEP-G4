@@ -373,7 +373,7 @@ function ListDepartmentComponent() {
               <Input />
             </div>
           </div>
-          <div className="modal-footer modal-footer-deparment">
+          <div className="modal-footer modal-footer-deparment footer-deparment-fix">
             <button className="btn-cancel" onClick={handleCancelDepartment}>
               Hủy bỏ
             </button>
