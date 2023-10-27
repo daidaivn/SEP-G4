@@ -59,6 +59,35 @@ namespace CarpentryWorkshopAPI.Controllers
 
         }
 
+        [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesByTeamLeaderId(int teamLeaderId)
+        {
+            var teamId = await _context.Teams
+                .Where(t => t.TeamLeaderId == teamLeaderId)
+                .Select(t => t.TeamId)
+                .FirstOrDefaultAsync();
+
+            if (teamId == 0)
+            {
+                return NotFound("Team Leader not found");
+            }
+
+            var employees = await _context.EmployeeTeams
+                .Where(et => et.TeamId == teamId && et.EndDate == null)
+                .Select(et => et.Employee)
+                .ToListAsync();
+
+            if (employees.Count == 0)
+            {
+                return NotFound("No employees found in the team with EndDate == null");
+            }
+
+            return employees;
+        }
+
+
+
+
         [HttpGet("{employeeId}/{date}")]
         public IActionResult GetCheckInOutForEmoployeeId(int employeeId, string date)
         {
@@ -189,6 +218,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
         public void AutoCheckinIfForgotCheckout(int employeeId)
         {
             DateTime currentDate = DateTime.Now.Date;
