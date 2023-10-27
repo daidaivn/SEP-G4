@@ -10,6 +10,7 @@ namespace CarpentryWorkshopAPI.Controllers
     [ApiController]
     public class CheckInOutController : ControllerBase
     {
+
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
         public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)
@@ -17,6 +18,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
+
         [HttpGet]
         [Route("api/attendance/{employeeId}")]
         public IActionResult GetAttendanceStatus(int employeeId)
@@ -189,30 +191,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        public void AutoCheckinIfForgotCheckout(int employeeId)
-        {
-            DateTime currentDate = DateTime.Now.Date;
-            DateTime previousDate = currentDate.AddDays(-1);
-
-
-            var lastAttendance = _context.CheckInOuts
-                .Where(a => a.EmployeeId == employeeId && a.Date == previousDate)
-                .OrderByDescending(a => a.TimeCheckIn)
-                .FirstOrDefault();
-
-            if (lastAttendance != null && lastAttendance.TimeCheckOut == null)
-            {
-                // Tự động thêm "check-in" cho ngày hôm nay
-                var autoCheckin = new CheckInOut
-                {
-                    EmployeeId = employeeId,
-                    TimeCheckIn = currentDate.TimeOfDay,
-                    Date = currentDate
-                };
-
-                _context.CheckInOuts.Add(autoCheckin);
-                _context.SaveChanges();
-            }
-        }
+        
     }
 }
