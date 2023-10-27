@@ -77,6 +77,115 @@ namespace CarpentryWorkshopAPI.Controllers
 
         }
 
+        [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
+        public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderId(int teamLeaderId)
+        {
+            
+            var teamId = await _context.Teams
+                .Where(t => t.TeamLeaderId == teamLeaderId)
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Select(et => new
+                {
+                    TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
+                    Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
+                    TeamId = et.TeamId,
+                })
+                .FirstOrDefaultAsync();
+            
+            if (teamId.TeamId == 0)
+            {
+                return NotFound("Team Leader not found");
+            }
+
+            var employees = await _context.EmployeeTeams
+                .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
+                .Select(et => et.Employee)
+                .ToListAsync();
+
+            if (employees.Count == 0)
+            {
+                return NotFound("No employees found in the team with EndDate == null");
+            }
+
+            var result = new List<object>();
+            foreach (var employee in employees)
+            {
+                var currentDate = DateTime.Now.Date;
+
+                var checkInTime = await _context.CheckInOuts
+                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                    .OrderBy(c=>c.Date)
+                    .ThenBy(c => c.TimeCheckIn)
+                    .Select(c => c.TimeCheckIn)
+                    .FirstOrDefaultAsync();
+
+                var latestCheckOutTime = await _context.CheckInOuts
+                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                    .OrderBy(c => c.Date)
+                    .ThenBy(c => c.TimeCheckIn)
+                    .Select(c => c.TimeCheckOut)
+                    .LastOrDefaultAsync();
+
+                if (checkInTime == null)
+                {
+                    if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = "Vắng mặt",
+                            CheckStatus = "CheckIn"
+                        });
+                    }
+                    else
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = "Chưa có mặt",
+                            CheckStatus = "CheckIn"
+                        });
+                    }
+                }
+                    
+                else
+                {
+                    if (latestCheckOutTime == null)
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = "Có mặt",
+                            CheckStatus = "CheckOut"
+                        });
+                    }
+                    else
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = "Chưa có mặt",
+                            CheckStatus = "CheckIn"
+                        });
+                    }
+                    
+                }
+                
+            }
+
+            return result;
+        }
+
+
+
+
+
+
+
+
         [HttpGet("{employeeId}/{date}")]
         public IActionResult GetCheckInOutForEmoployeeId(int employeeId, string date)
         {
