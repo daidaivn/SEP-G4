@@ -46,6 +46,8 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<UnitCostStatusHistory> UnitCostStatusHistories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
         public virtual DbSet<UserAccountsStatusHistory> UserAccountsStatusHistories { get; set; } = null!;
+        public virtual DbSet<Wage> Wages { get; set; } = null!;
+        public virtual DbSet<WageStatusHistory> WageStatusHistories { get; set; } = null!;
         public virtual DbSet<Work> Works { get; set; } = null!;
         public virtual DbSet<WorkArea> WorkAreas { get; set; } = null!;
         public virtual DbSet<WorkSchedule> WorkSchedules { get; set; } = null!;
@@ -292,10 +294,17 @@ namespace CarpentryWorkshopAPI.Models
 
                 entity.Property(e => e.TaxId).HasColumnName("TaxID");
 
+                entity.Property(e => e.WageId).HasColumnName("WageID");
+
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.CountryId)
                     .HasConstraintName("FK__Employees__Count__71D1E811");
+
+                entity.HasOne(d => d.Wage)
+                    .WithMany(p => p.Employees)
+                    .HasForeignKey(d => d.WageId)
+                    .HasConstraintName("FK_Employees_Wages");
             });
 
             modelBuilder.Entity<EmployeeDegree>(entity =>
@@ -636,6 +645,39 @@ namespace CarpentryWorkshopAPI.Models
                     .WithMany(p => p.UserAccountsStatusHistories)
                     .HasForeignKey(d => d.EmployeeId)
                     .HasConstraintName("FK__UserAccou__Emplo__02FC7413");
+            });
+
+            modelBuilder.Entity<Wage>(entity =>
+            {
+                entity.Property(e => e.WageId).HasColumnName("WageID");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Relation).HasMaxLength(100);
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<WageStatusHistory>(entity =>
+            {
+                entity.HasKey(e => e.HistoryId);
+
+                entity.ToTable("WageStatusHistory");
+
+                entity.Property(e => e.HistoryId).HasColumnName("HistoryID");
+
+                entity.Property(e => e.Action).HasMaxLength(50);
+
+                entity.Property(e => e.ActionDate).HasMaxLength(50);
+
+                entity.Property(e => e.CurrentEmployeeId).HasColumnName("CurrentEmployeeID");
+
+                entity.Property(e => e.WageId).HasColumnName("WageID");
+
+                entity.HasOne(d => d.Wage)
+                    .WithMany(p => p.WageStatusHistories)
+                    .HasForeignKey(d => d.WageId)
+                    .HasConstraintName("FK_WageStatusHistory_Wages");
             });
 
             modelBuilder.Entity<Work>(entity =>
