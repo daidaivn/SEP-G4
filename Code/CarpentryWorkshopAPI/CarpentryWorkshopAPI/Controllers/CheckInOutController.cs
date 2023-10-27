@@ -60,7 +60,7 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesByTeamLeaderId(int teamLeaderId)
+        public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderId(int teamLeaderId)
         {
             var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId)
@@ -82,8 +82,60 @@ namespace CarpentryWorkshopAPI.Controllers
                 return NotFound("No employees found in the team with EndDate == null");
             }
 
-            return employees;
+            var result = new List<object>();
+            foreach (var employee in employees)
+            {
+                var currentDate = DateTime.Now.Date;
+
+                var checkInTime = await _context.CheckInOuts
+                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                    .OrderBy(c => c.Date)
+                    .ThenBy(c => c.TimeCheckIn)
+                    .Select(c => c.TimeCheckIn)
+                    .FirstOrDefaultAsync();
+
+                var latestCheckOutTime = await _context.CheckInOuts
+                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                    .OrderByDescending(c => c.Date)
+                    .ThenByDescending(c => c.TimeCheckOut)
+                    .Select(c => c.TimeCheckOut)
+                    .FirstOrDefaultAsync();
+
+                if (checkInTime == null)
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        CheckStatus = "CheckIn"
+                    });
+                }
+                else if (latestCheckOutTime != null)
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        CheckStatus = "CheckOut"
+                    });
+                }
+                else
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        CheckStatus = "CheckIn"
+                    });
+                }
+            }
+
+            return result;
         }
+
+
+
+
 
 
 
