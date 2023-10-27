@@ -2,18 +2,24 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
-import { Switch, Form, Input} from "antd";
+import { Switch, Form, Input } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllTeam } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
+import { Space } from "antd";
+import { Option } from "antd/es/mentions";
 const GroupComponent = () => {
   const [role, setRole] = useState([]);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
-
+  const [isModalOpenChange, setIsModalOpenChange] = useState(false);
+  const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const handleChange1 = (value) => {
     console.log(`selected ${value}`);
   };
   const showModalGroup = () => {
@@ -33,6 +39,26 @@ const GroupComponent = () => {
   };
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
+  };
+
+  const showModalChange = () => {
+    setIsModalOpenChange(true);
+  };
+  const handleOkChange = () => {
+    setIsModalOpenChange(false);
+  };
+  const handleCancelChange = () => {
+    setIsModalOpenChange(false);
+  };
+
+  const showModalAdd = () => {
+    setIsModalOpenAdd(true);
+  };
+  const handleOkAdd = () => {
+    setIsModalOpenAdd(false);
+  };
+  const handleCancelAdd = () => {
+    setIsModalOpenAdd(false);
   };
   useEffect(() => {
     // call api sau: chưa có api
@@ -285,8 +311,9 @@ const GroupComponent = () => {
           </thead>
           <tbody class="scrollbar" id="style-15">
             {role.map((role, index) => (
-              <tr key={role.roleID}>
+              <tr key={role.roleID} onClick={showModalDetail}>
                 <td>{index + 1}</td>
+                <td>{role.roleName}</td>
                 <td>{role.roleName}</td>
                 {/* <td>{role.employees.length}</td> */}
                 <td>
@@ -296,6 +323,36 @@ const GroupComponent = () => {
                 </td>
               </tr>
             ))}
+            <tr onClick={showModalDetail}>
+              <td>1</td>
+              <td>Nhóm 1</td>
+              <td>1</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch value="checked" />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr onClick={showModalDetail}>
+              <td>2</td>
+              <td>Nhóm 2</td>
+              <td>0</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch value="checked" />
+                </Form.Item>
+              </td>
+            </tr>
+            <tr onClick={showModalDetail}>
+              <td>3</td>
+              <td>Nhóm 3</td>
+              <td>3</td>
+              <td>
+                <Form.Item valuePropName="checked">
+                  <Switch value="checked" />
+                </Form.Item>
+              </td>
+            </tr>
           </tbody>
         </table>
         <Modal
@@ -327,6 +384,7 @@ const GroupComponent = () => {
         </Modal>
         <Modal
           open={isModalOpenDetail}
+          className="modal-group"
           on
           Ok={handleOkDetail}
           onCancel={handleCancelDetail}
@@ -350,6 +408,9 @@ const GroupComponent = () => {
                     <div className="box3-child">
                       <p className="child3-group">Họ và tên</p>
                     </div>
+                    <div className="box5-child">
+                      <p className="child5-group">Đổi nhóm</p>
+                    </div>
                     <div className="box4-child">
                       <p className="child4-group">Xóa khỏi nhóm</p>
                     </div>
@@ -366,6 +427,22 @@ const GroupComponent = () => {
                       <div className="child3-group">
                         <p>Lê Thị Lan</p>
                       </div>
+                    </div>
+                    <div className="box5-child" onClick={showModalChange}>
+                      <p className="child5-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="30"
+                          height="30"
+                          viewBox="0 0 30 30"
+                          fill="none"
+                        >
+                          <path
+                            d="M20.2375 2.5H9.7625C5.2125 2.5 2.5 5.2125 2.5 9.7625V20.225C2.5 24.7875 5.2125 27.5 9.7625 27.5H20.225C24.775 27.5 27.4875 24.7875 27.4875 20.2375V9.7625C27.5 5.2125 24.7875 2.5 20.2375 2.5ZM22.3125 17.625C22.2625 17.7375 22.2 17.8375 22.1125 17.925L18.3125 21.725C18.125 21.9125 17.8875 22 17.65 22C17.4125 22 17.175 21.9125 16.9875 21.725C16.625 21.3625 16.625 20.7625 16.9875 20.4L19.1875 18.2H8.5625C8.05 18.2 7.625 17.775 7.625 17.2625C7.625 16.75 8.05 16.325 8.5625 16.325H21.45C21.575 16.325 21.6875 16.35 21.8125 16.4C22.0375 16.5 22.225 16.675 22.325 16.9125C22.4 17.1375 22.4 17.4 22.3125 17.625ZM21.4375 13.6625H8.5625C8.4375 13.6625 8.325 13.6375 8.2 13.5875C7.975 13.4875 7.7875 13.3125 7.6875 13.075C7.5875 12.85 7.5875 12.5875 7.6875 12.3625C7.7375 12.25 7.8 12.15 7.8875 12.0625L11.6875 8.2625C12.05 7.9 12.65 7.9 13.0125 8.2625C13.375 8.625 13.375 9.225 13.0125 9.5875L10.825 11.7875H21.45C21.9625 11.7875 22.3875 12.2125 22.3875 12.725C22.3875 13.2375 21.9625 13.6625 21.4375 13.6625Z"
+                            fill="#3A5A40"
+                          />
+                        </svg>
+                      </p>
                     </div>
                     <div className="box4-child">
                       <p className="child4-group">
@@ -397,6 +474,22 @@ const GroupComponent = () => {
                       <div className="child3-group">
                         <p>Lê Thị Lan</p>
                       </div>
+                    </div>
+                    <div className="box5-child" onClick={showModalChange}>
+                      <p className="child5-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="30"
+                          height="30"
+                          viewBox="0 0 30 30"
+                          fill="none"
+                        >
+                          <path
+                            d="M20.2375 2.5H9.7625C5.2125 2.5 2.5 5.2125 2.5 9.7625V20.225C2.5 24.7875 5.2125 27.5 9.7625 27.5H20.225C24.775 27.5 27.4875 24.7875 27.4875 20.2375V9.7625C27.5 5.2125 24.7875 2.5 20.2375 2.5ZM22.3125 17.625C22.2625 17.7375 22.2 17.8375 22.1125 17.925L18.3125 21.725C18.125 21.9125 17.8875 22 17.65 22C17.4125 22 17.175 21.9125 16.9875 21.725C16.625 21.3625 16.625 20.7625 16.9875 20.4L19.1875 18.2H8.5625C8.05 18.2 7.625 17.775 7.625 17.2625C7.625 16.75 8.05 16.325 8.5625 16.325H21.45C21.575 16.325 21.6875 16.35 21.8125 16.4C22.0375 16.5 22.225 16.675 22.325 16.9125C22.4 17.1375 22.4 17.4 22.3125 17.625ZM21.4375 13.6625H8.5625C8.4375 13.6625 8.325 13.6375 8.2 13.5875C7.975 13.4875 7.7875 13.3125 7.6875 13.075C7.5875 12.85 7.5875 12.5875 7.6875 12.3625C7.7375 12.25 7.8 12.15 7.8875 12.0625L11.6875 8.2625C12.05 7.9 12.65 7.9 13.0125 8.2625C13.375 8.625 13.375 9.225 13.0125 9.5875L10.825 11.7875H21.45C21.9625 11.7875 22.3875 12.2125 22.3875 12.725C22.3875 13.2375 21.9625 13.6625 21.4375 13.6625Z"
+                            fill="#3A5A40"
+                          />
+                        </svg>
+                      </p>
                     </div>
                     <div className="box4-child">
                       <p className="child4-group">
@@ -429,6 +522,22 @@ const GroupComponent = () => {
                         <p>Lê Thị Lan</p>
                       </div>
                     </div>
+                    <div className="box5-child" onClick={showModalChange}>
+                      <p className="child5-group">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="30"
+                          height="30"
+                          viewBox="0 0 30 30"
+                          fill="none"
+                        >
+                          <path
+                            d="M20.2375 2.5H9.7625C5.2125 2.5 2.5 5.2125 2.5 9.7625V20.225C2.5 24.7875 5.2125 27.5 9.7625 27.5H20.225C24.775 27.5 27.4875 24.7875 27.4875 20.2375V9.7625C27.5 5.2125 24.7875 2.5 20.2375 2.5ZM22.3125 17.625C22.2625 17.7375 22.2 17.8375 22.1125 17.925L18.3125 21.725C18.125 21.9125 17.8875 22 17.65 22C17.4125 22 17.175 21.9125 16.9875 21.725C16.625 21.3625 16.625 20.7625 16.9875 20.4L19.1875 18.2H8.5625C8.05 18.2 7.625 17.775 7.625 17.2625C7.625 16.75 8.05 16.325 8.5625 16.325H21.45C21.575 16.325 21.6875 16.35 21.8125 16.4C22.0375 16.5 22.225 16.675 22.325 16.9125C22.4 17.1375 22.4 17.4 22.3125 17.625ZM21.4375 13.6625H8.5625C8.4375 13.6625 8.325 13.6375 8.2 13.5875C7.975 13.4875 7.7875 13.3125 7.6875 13.075C7.5875 12.85 7.5875 12.5875 7.6875 12.3625C7.7375 12.25 7.8 12.15 7.8875 12.0625L11.6875 8.2625C12.05 7.9 12.65 7.9 13.0125 8.2625C13.375 8.625 13.375 9.225 13.0125 9.5875L10.825 11.7875H21.45C21.9625 11.7875 22.3875 12.2125 22.3875 12.725C22.3875 13.2375 21.9625 13.6625 21.4375 13.6625Z"
+                            fill="#3A5A40"
+                          />
+                        </svg>
+                      </p>
+                    </div>
                     <div className="box4-child">
                       <p className="child4-group">
                         <svg
@@ -460,36 +569,21 @@ const GroupComponent = () => {
                         <p>Lê Thị Lan</p>
                       </div>
                     </div>
-                    <div className="box4-child">
-                      <p className="child4-group">
+                    <div className="box5-child" onClick={showModalChange}>
+                      <p className="child5-group">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
+                          width="30"
+                          height="30"
+                          viewBox="0 0 30 30"
                           fill="none"
                         >
                           <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M7 5V4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H22V7H19.9355L19.1222 19.1996C19.0172 20.7755 17.7083 22 16.1289 22H7.87108C6.29169 22 4.98279 20.7755 4.87773 19.1996L4.06442 7H2V5H7ZM9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V5H9V4ZM9 9V18H11V9H9ZM13 9V18H15V9H13Z"
-                            fill="#FC1E1E"
+                            d="M20.2375 2.5H9.7625C5.2125 2.5 2.5 5.2125 2.5 9.7625V20.225C2.5 24.7875 5.2125 27.5 9.7625 27.5H20.225C24.775 27.5 27.4875 24.7875 27.4875 20.2375V9.7625C27.5 5.2125 24.7875 2.5 20.2375 2.5ZM22.3125 17.625C22.2625 17.7375 22.2 17.8375 22.1125 17.925L18.3125 21.725C18.125 21.9125 17.8875 22 17.65 22C17.4125 22 17.175 21.9125 16.9875 21.725C16.625 21.3625 16.625 20.7625 16.9875 20.4L19.1875 18.2H8.5625C8.05 18.2 7.625 17.775 7.625 17.2625C7.625 16.75 8.05 16.325 8.5625 16.325H21.45C21.575 16.325 21.6875 16.35 21.8125 16.4C22.0375 16.5 22.225 16.675 22.325 16.9125C22.4 17.1375 22.4 17.4 22.3125 17.625ZM21.4375 13.6625H8.5625C8.4375 13.6625 8.325 13.6375 8.2 13.5875C7.975 13.4875 7.7875 13.3125 7.6875 13.075C7.5875 12.85 7.5875 12.5875 7.6875 12.3625C7.7375 12.25 7.8 12.15 7.8875 12.0625L11.6875 8.2625C12.05 7.9 12.65 7.9 13.0125 8.2625C13.375 8.625 13.375 9.225 13.0125 9.5875L10.825 11.7875H21.45C21.9625 11.7875 22.3875 12.2125 22.3875 12.725C22.3875 13.2375 21.9625 13.6625 21.4375 13.6625Z"
+                            fill="#3A5A40"
                           />
                         </svg>
                       </p>
-                    </div>
-                  </div>
-                  <div className="box1-modal-group box3-group">
-                    <div className="box1-child">
-                      <p className="child1-group">4</p>
-                    </div>
-                    <div className="box2-child">
-                      <p className="child2-group">Ca trưởng</p>
-                    </div>
-                    <div className="box3-child">
-                      <div className="child3-group">
-                        <p>Lê Thị Lan</p>
-                      </div>
                     </div>
                     <div className="box4-child">
                       <p className="child4-group">
@@ -517,8 +611,224 @@ const GroupComponent = () => {
               <button className="btn-cancel" onClick={handleCancelDetail}>
                 Thoát
               </button>
-              <button className="btn-edit" onClick={handleOkDetail}>
+              <button className="btn-edit" onClick={showModalAdd}>
                 Thêm thành viên
+              </button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenAdd}
+          on
+          Ok={handleOkAdd}
+          onCancel={handleCancelAdd}
+          width={566}
+        >
+          <div className="modal-add-group">
+            <div className="modal-head">
+              {" "}
+              <h3>Nhóm 1</h3>
+            </div>
+            <div className="body-modal-change">
+              <div className="modal1-change">
+                <p>Trưởng ca:</p>
+                <div className="list-filter select-change-group">
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="modal1-change">
+                <p>Phó ca:</p>
+                <div className="list-filter select-change-group">
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="modal1-change">
+                <p>Nhân viên:</p>
+                <div className="select-all-change">
+                  <Select
+                    className="select-input"
+                    mode="multiple"
+                    style={{
+                      width: "100%",
+                    }}
+                    defaultValue={["china"]}
+                    onChange={handleChange1}
+                    optionLabelProp="label"
+                  >
+                    <Option value="china" label="China">
+                      <Space>China</Space>
+                    </Option>
+                    <Option value="usa" label="USA">
+                      <Space>USA</Space>
+                    </Option>
+                    <Option value="japan" label="Japan">
+                      <Space>Japan</Space>
+                    </Option>
+                    <Option value="korea" label="Korea">
+                      <Space>Korea</Space>
+                    </Option>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-deparment">
+              <button className="btn-cancel" onClick={handleCancelAdd}>
+                Thoát
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkAdd}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenChange}
+          on
+          Ok={handleOkChange}
+          onCancel={handleCancelChange}
+          width={566}
+        >
+          <div className="modal-all-group">
+            <div className="modal-head">
+              {" "}
+              <h3>Thêm nhóm</h3>
+            </div>
+            <div className="modal-end-group">
+              <div className="body-modal-end-group">
+                <div className="modal1">
+                  <div className="modal1-child">
+                    <p>Nhân viên: </p>
+                    <p>Nguyễn Thị Lan</p>
+                  </div>
+                  <div className="modal1-child">
+                    <p>Mã số nhân viên: </p>
+                    <p>1</p>
+                  </div>
+                  <div className="modal1-child">
+                    <p>Nhóm hiện tại:</p>
+                    <p>Nhóm 1</p>
+                  </div>
+                </div>
+                <div className="modal2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="51"
+                    height="50"
+                    viewBox="0 0 51 50"
+                    fill="none"
+                  >
+                    <path
+                      d="M30.5625 12.3545L43.2083 25.0003L30.5625 37.6462"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.7915 25H42.854"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div className="modal3">
+                  <div className="modal3-child">
+                    <p>Nhóm chuyển đến:</p>
+
+                    <div className="list-filter select-modal-end">
+                      <Select
+                        className="select-input"
+                        defaultValue="lucy"
+                        style={{
+                          width: 120,
+                        }}
+                        onChange={handleChange}
+                        options={[
+                          {
+                            value: "jack",
+                            label: "Jack",
+                          },
+                          {
+                            value: "lucy",
+                            label: "Lucy",
+                          },
+                          {
+                            value: "Yiminghe",
+                            label: "yiminghe",
+                          },
+                          {
+                            value: "disabled",
+                            label: "Disabled",
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-group">
+              <button className="btn-cancel" onClick={handleCancelChange}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkChange}>
+                Lưu
               </button>
             </div>
           </div>
