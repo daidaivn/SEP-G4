@@ -61,8 +61,9 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ForMember(de => de.ContractTypeName, option => option.MapFrom(d => d.ContractType!.ContractName))
                 .ForMember(de => de.ActionDate, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
                 .ReverseMap();
-            CreateMap<ShiftType, CreateShiftTypeDTO>()
-               .ReverseMap();
+            CreateMap<CreateShiftTypeDTO, ShiftType>()
+               .ForMember(de => de.StartTime, option => option.MapFrom(d => DateTime.Parse(d.StartTimestring.ToString()).ToString("HH':'mm':'ss")))
+               .ForMember(de => de.EndTime, option => option.MapFrom(d => DateTime.Parse(d.EndTimestring.ToString()).ToString("HH':'mm':'ss")));
             CreateMap<Team, TeamListDTO>()
                .ReverseMap();
             CreateMap<WorkSchedule, CreateWorkScheduleDTO>()

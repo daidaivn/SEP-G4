@@ -22,13 +22,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var types = _context.ShiftTypes.ToList();
+                var types = _context.ShiftTypes
+                    .Select(t => new CreateShiftTypeDTO
+                    {
+                        ShiftTypeId= t.ShiftTypeId,
+                        TypeName= t.TypeName,
+                        Status= t.Status,
+                        StartTimestring = DateTime.Parse(t.StartTime.ToString()).ToString("HH':'mm':'ss"),
+                        EndTimestring= DateTime.Parse(t.EndTime.ToString()).ToString("HH':'mm':'ss")
+                    });
                 if (types == null)
                 {
                     return NotFound();
                 }
-                var dto = _mapper.Map<List<CreateShiftTypeDTO>>(types);
-                return Ok(dto);
+                return Ok(types);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
