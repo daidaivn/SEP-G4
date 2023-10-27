@@ -8,12 +8,18 @@ import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllTeam } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
+import { Space } from "antd";
+import { Option } from "antd/es/mentions";
 const GroupComponent = () => {
   const [role, setRole] = useState([]);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
+  const [isModalOpenChange, setIsModalOpenChange] = useState(false);
 
   const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const handleChange1 = (value) => {
     console.log(`selected ${value}`);
   };
   const showModalGroup = () => {
@@ -33,6 +39,16 @@ const GroupComponent = () => {
   };
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
+  };
+
+  const showModalChange = () => {
+    setIsModalOpenChange(true);
+  };
+  const handleOkChange = () => {
+    setIsModalOpenChange(false);
+  };
+  const handleCancelChange = () => {
+    setIsModalOpenChange(false);
   };
   useEffect(() => {
     // call api sau: chưa có api
@@ -554,10 +570,123 @@ const GroupComponent = () => {
               <button className="btn-cancel" onClick={handleCancelDetail}>
                 Thoát
               </button>
-              <button className="btn-edit" onClick={handleOkDetail}>
+              <button className="btn-edit" onClick={showModalChange}>
                 Thêm thành viên
               </button>
             </div>
+          </div>
+        </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenChange}
+          on
+          Ok={handleOkChange}
+          onCancel={handleCancelChange}
+          width={566}
+        >
+          <div className="modal-head">
+            {" "}
+            <h3>Nhóm 1</h3>
+          </div>
+          <div className="body-modal-change">
+            <div className="modal1-change">
+              <p>Trưởng ca:</p>
+              <div className="list-filter select-change-group">
+                <Select
+                  className="select-input"
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                    {
+                      value: "disabled",
+                      label: "Disabled",
+                    },
+                  ]}
+                />
+              </div>
+            </div>
+            <div className="modal1-change">
+              <p>Phó ca:</p>
+              <div className="list-filter select-change-group">
+                <Select
+                  className="select-input"
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                    {
+                      value: "disabled",
+                      label: "Disabled",
+                    },
+                  ]}
+                />
+              </div>
+            </div>
+            <div className="modal1-change">
+              <p>Nhân viên:</p>
+              <div className="select-all-change">
+                <Select
+                  className="select-input"
+                  mode="multiple"
+                  style={{
+                    width: "100%",
+                  }}
+                  defaultValue={["china"]}
+                  onChange={handleChange1}
+                  optionLabelProp="label"
+                >
+                  <Option value="china" label="China">
+                    <Space>China</Space>
+                  </Option>
+                  <Option value="usa" label="USA">
+                    <Space>USA</Space>
+                  </Option>
+                  <Option value="japan" label="Japan">
+                    <Space>Japan</Space>
+                  </Option>
+                  <Option value="korea" label="Korea">
+                    <Space>Korea</Space>
+                  </Option>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer modal-footer-deparment">
+            <button className="btn-cancel" onClick={handleCancelChange}>
+              Hủy bỏ
+            </button>
+            <button className="btn-edit btn-save" onClick={handleOkChange}>
+              Lưu
+            </button>
           </div>
         </Modal>
       </div>

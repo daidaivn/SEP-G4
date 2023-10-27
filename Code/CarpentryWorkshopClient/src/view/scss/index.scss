@@ -331,10 +331,7 @@ tbody {
   font-size: 15px;
   color: white;
 }
-.item-link-all {
-  .dropdown-content {
-  }
-}
+
 i .logo-responsive {
   color: #3a5a40;
   font-family: Noto Sans;
@@ -686,4 +683,72 @@ i .logo-responsive {
   font-family: Noto Sans;
   font-size: 22px;
   font-weight: 400;
+}
+.body-modal-change {
+  display: flex;
+  padding: 50px 65px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+}
+.modal1-change {
+  display: flex;
+  padding: 30px 50px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 40px;
+  background: #fff;
+  p {
+    width: 120px;
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .select-change-group {
+    display: flex;
+    padding: 14px 24px;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: 60px;
+    border: 1px solid #e6e5ea;
+    background-color: #fff;
+    .ant-select {
+      width: 100% !important;
+    }
+  }
+  .ant-select-selector {
+    background-color: #fff !important;
+  }
+  .ant-select-selection-item {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    flex: 1 0 0;
+  }
+  .select-all-change {
+    display: flex;
+    padding: 14px 24px;
+    align-items: center;
+    gap: 2px;
+    flex: 1 0 0;
+    border-radius: 60px;
+    border: 1px solid #e6e5ea;
+    .ant-select-selector {
+      border: none !important;
+      padding: unset !important;
+    }
+    .ant-select-selection-item {
+      height: unset !important;
+    }
+  }
 }
