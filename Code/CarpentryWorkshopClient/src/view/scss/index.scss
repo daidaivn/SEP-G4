@@ -580,6 +580,13 @@ i .logo-responsive {
     gap: 10px;
     align-self: stretch;
   }
+  .box5-child {
+    display: flex;
+    width: 160px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+  }
   .child2-group {
     width: 220px;
     flex-shrink: 0;
@@ -588,6 +595,15 @@ i .logo-responsive {
     flex: 1 0 0;
   }
   .child4-group {
+    text-align: center;
+    display: flex;
+    width: 156px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+  .child5-group {
     text-align: center;
     display: flex;
     width: 156px;
@@ -633,6 +649,21 @@ i .logo-responsive {
       svg {
         margin: 0 auto;
       }
+    }
+  }
+  .box5-child {
+    display: flex;
+    width: 160px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    .child5-group {
+      display: flex;
+      width: 30px;
+      height: 30px;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
     }
   }
 }
