@@ -78,7 +78,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 Token = tokenString,
                 Name = employee.FirstName + " " + employee.LastName,
                 Pages = pages,
-                Roles = roles
+                Roles = roles,
+                EmployeeID = employee.EmployeeId,
             };
 
             return Ok(loginResponse);

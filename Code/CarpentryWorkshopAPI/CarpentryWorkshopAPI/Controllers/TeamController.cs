@@ -52,8 +52,19 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                foreach (var item in addTeamMemberDTO.MemberIds)
+                
+                foreach (var item in addTeamMemberDTO.MemberIds.Distinct())
                 {
+                    var existingEmployeeTeam = _context.EmployeeTeams
+                        .Where(et => et.EmployeeId == item && et.TeamId == addTeamMemberDTO.TeamId && et.EndDate == null)
+                        .FirstOrDefault();
+
+                    if (existingEmployeeTeam != null)
+                    {
+                        existingEmployeeTeam.EndDate = DateTime.Now;
+                        _context.EmployeeTeams.Update(existingEmployeeTeam);
+                    }
+
                     EmployeeTeam newtm = new EmployeeTeam()
                     {
                         EmployeeId = item,
