@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
-import { Switch, Form, Modal } from "antd";
+import { Switch, Form, Modal, Space } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { Input } from "antd";
 import { Select } from "antd";
+import { Option } from "antd/es/mentions";
 function Role() {
   const [role, setRole] = useState([]);
   const handleChange = (value) => {
@@ -705,6 +706,41 @@ function Role() {
                 Hủy bỏ
               </button>
               <button className="btn-edit btn-save" onClick={handleOkChange}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenAdd}
+          on
+          Ok={handleOkAdd}
+          onCancel={handleCancelAdd}
+          width={566}
+        >
+          <div className="modal-add-group">
+            <div className="modal-head">
+              {" "}
+              <h3>Nhóm 1</h3>
+            </div>
+            <div className="modal-body modal-body-department">
+              <div className="info-add-department">
+                <div className="text-department">Tên chức vụ:</div>
+                <Input />
+              </div>
+              <div className="info-add-department info-add-department-fix">
+                <div className="text-department">Trạng thái:</div>
+                <Form.Item valuePropName="checked">
+                  <Switch checked="true" />
+                </Form.Item>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-deparment">
+              <button className="btn-cancel" onClick={handleCancelAdd}>
+                Thoát
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkAdd}>
                 Lưu
               </button>
             </div>
