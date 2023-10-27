@@ -10,7 +10,6 @@ namespace CarpentryWorkshopAPI.Controllers
     [ApiController]
     public class CheckInOutController : ControllerBase
     {
-
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
         public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)
@@ -18,8 +17,9 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-
-        public string GetAttendanceStatus(int employeeId)
+        [HttpGet]
+        [Route("api/attendance/{employeeId}")]
+        public IActionResult GetAttendanceStatus(int employeeId)
         {
             DateTime currentDate = DateTime.Now.Date;
 
@@ -37,10 +37,10 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (DateTime.Now.TimeOfDay > team.Select(t => t.TimeIn.Value).Single())
                 {
-                    return "Vắng mặt";
+                    return Ok("Vắng mặt");
                 }
                 // Trường hợp người dùng chưa check-in
-                return "Chưa có mặt";
+                return Ok("Chưa có mặt");
             }
             else
             {
@@ -48,19 +48,19 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (DateTime.Now.TimeOfDay > team.Select(t => t.Timeout.Value).Single())
                     {
-                        return "Vắng mặt";
+                        return Ok("Vắng mặt");
                     }
-                    return "Có mặt";
+                    return Ok("Có mặt");
                 }else
                 {
-                    return "Nhân viên đã check out";
+                    return Ok("Nhân viên đã check out");
                 }
             }
 
         }
 
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
-        public async Task<ActionResult<IEnumerable<CheckInOutListDTO>>> GetEmployeesByTeamLeaderId(int teamLeaderId)
+        public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderId(int teamLeaderId)
         {
             var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId)
@@ -74,22 +74,68 @@ namespace CarpentryWorkshopAPI.Controllers
 
             var employees = await _context.EmployeeTeams
                 .Where(et => et.TeamId == teamId && et.EndDate == null)
-                .Include(t => t.TeamId)
-                .Select(em => new CheckInOutListDTO
-                {
-                    EmployeeName = em.Employee.FirstName +" "+ em.Employee.LastName,
-                    EmployeeId = em.Employee.EmployeeId,
-                    EmployeeStatus = GetAttendanceStatus(em.EmployeeId)
-                })
+                .Select(et => et.Employee)
                 .ToListAsync();
 
-            if (employees.Count() == 0)
+            if (employees.Count == 0)
             {
                 return NotFound("No employees found in the team with EndDate == null");
             }
 
-            return employees;
+            var result = new List<object>();
+            foreach (var employee in employees)
+            {
+                var currentDate = DateTime.Now.Date;
+
+                var checkInTime = await _context.CheckInOuts
+                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                    .OrderBy(c => c.Date)
+                    .ThenBy(c => c.TimeCheckIn)
+                    .Select(c => c.TimeCheckIn)
+                    .FirstOrDefaultAsync();
+
+                var latestCheckOutTime = await _context.CheckInOuts
+                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                    .OrderByDescending(c => c.Date)
+                    .ThenByDescending(c => c.TimeCheckOut)
+                    .Select(c => c.TimeCheckOut)
+                    .FirstOrDefaultAsync();
+
+                if (checkInTime == null)
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        CheckStatus = "CheckIn"
+                    });
+                }
+                else if (latestCheckOutTime != null)
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        CheckStatus = "CheckOut"
+                    });
+                }
+                else
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        CheckStatus = "CheckIn"
+                    });
+                }
+            }
+
+            return result;
         }
+
+
+
+
 
 
 
