@@ -65,11 +65,12 @@ namespace CarpentryWorkshopAPI.Controllers
             
             var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et=>et.Works).Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
+                    WorkId = et.Works.Select(w=>w.WorkId)
                 })
                 .FirstOrDefaultAsync();
             
@@ -106,7 +107,16 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ThenBy(c => c.TimeCheckIn)
                     .Select(c => c.TimeCheckOut)
                     .LastOrDefaultAsync();
-
+                if(teamId.WorkId.Count() < 0)
+                {
+                    result.Add(new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Name = employee.FirstName + " " + employee.LastName,
+                        Status = "không có việc",
+                        CheckStatus = "CheckIn"
+                    });
+                }
                 if (checkInTime == null)
                 {
                     if (DateTime.Now.TimeOfDay > teamId.TimeIn)
