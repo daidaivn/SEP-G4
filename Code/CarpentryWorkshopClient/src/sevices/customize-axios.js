@@ -8,9 +8,13 @@ const instance = axios.create({
   baseURL: "https://localhost:7003",
 });
 
-if (userToken) {
-  instance.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
-}
+instance.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem('userToken') || localStorage.getItem('userToken');
+  if (token) {
+    config.headers['Authorization'] = 'Bearer ' + token;
+  }
+  return config;
+});
 
 instance.interceptors.response.use(
   function (response) {
