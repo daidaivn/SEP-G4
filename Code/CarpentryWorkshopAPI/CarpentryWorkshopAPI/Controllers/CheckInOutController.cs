@@ -18,6 +18,24 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        public IActionResult GetAllCheckInOut()
+        {
+            try
+            {
+                var allchecks = _context.CheckInOuts
+                    .Include(x => x.Employee)
+                    .ToList();
+                if (allchecks == null)
+                {
+                    return NotFound();
+                }
+                return Ok(allchecks);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
         [Route("api/attendance/{employeeId}")]
         public IActionResult GetAttendanceStatus(int employeeId)
         {
