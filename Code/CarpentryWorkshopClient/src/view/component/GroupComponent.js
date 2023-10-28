@@ -306,7 +306,7 @@ const GroupComponent = () => {
               <td>STT</td>
               <td>Nhóm</td>
               <td>Số nhân viên</td>
-              <td>Trạng thái</td>
+              <td>Trưởng nhóm</td>
             </tr>
           </thead>
           <tbody class="scrollbar" id="style-15">
@@ -316,42 +316,26 @@ const GroupComponent = () => {
                 <td>{role.roleName}</td>
                 <td>{role.roleName}</td>
                 {/* <td>{role.employees.length}</td> */}
-                <td>
-                  <Form.Item valuePropName="checked">
-                    <Switch checked={role.status} />
-                  </Form.Item>
-                </td>
+                <td>{role.roleName}</td>
               </tr>
             ))}
             <tr onClick={showModalDetail}>
               <td>1</td>
               <td>Nhóm 1</td>
               <td>1</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch value="checked" />
-                </Form.Item>
-              </td>
+              <td>Nguyễn Văn C</td>
             </tr>
             <tr onClick={showModalDetail}>
               <td>2</td>
               <td>Nhóm 2</td>
               <td>0</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch value="checked" />
-                </Form.Item>
-              </td>
+              <td>Nguyễn Văn C</td>
             </tr>
             <tr onClick={showModalDetail}>
               <td>3</td>
               <td>Nhóm 3</td>
               <td>3</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch value="checked" />
-                </Form.Item>
-              </td>
+              <td>Nguyễn Văn C</td>
             </tr>
           </tbody>
         </table>
@@ -390,7 +374,7 @@ const GroupComponent = () => {
           onCancel={handleCancelDetail}
           width={566}
         >
-          <div className="modal-dependent">
+          <div className="modal-dependent modal-detail-group">
             <div className="modal-head">
               {" "}
               <h3>Nhóm 1</h3>
