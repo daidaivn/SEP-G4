@@ -441,7 +441,7 @@ function DependentPerson() {
                 </Row>
               </div>
             </div>
-            <div className="modal-footer modal-footer-deparment">
+            <div className="modal-footer modal-footer-dependent ">
               <button className="btn-cancel" onClick={handleCancelDependent}>
                 Hủy bỏ
               </button>
@@ -531,7 +531,7 @@ function DependentPerson() {
                 </Row>
               </div>
             </div>
-            <div className="modal-footer modal-footer-deparment">
+            <div className="modal-footer modal-footer-dependent">
               <button className="btn-cancel" onClick={handleCancelDependent}>
                 Hủy bỏ
               </button>
