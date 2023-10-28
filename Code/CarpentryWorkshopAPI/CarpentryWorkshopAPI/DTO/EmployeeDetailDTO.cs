@@ -15,6 +15,8 @@
         public string? Country { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
+        public double? WageNumber { get; set; }
+        public double? SalaryCoefficient { get; set; }
         public List<RoleDepartment> RoleDepartments { get; set; }
         public class RoleDepartment
         {
