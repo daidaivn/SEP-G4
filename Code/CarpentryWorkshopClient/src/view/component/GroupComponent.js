@@ -5,17 +5,18 @@ import "../scss/fonts.scss";
 import { Switch, Form, Input } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllTeam } from "../../sevices/TeamService";
+import { fetchAllTeam, createTeam } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
 import { Space } from "antd";
 import { Option } from "antd/es/mentions";
 const GroupComponent = () => {
-  const [role, setRole] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
   const [isModalOpenChange, setIsModalOpenChange] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
+  const [newTeamName, setNewTeamName] = useState("");
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -60,15 +61,38 @@ const GroupComponent = () => {
   const handleCancelAdd = () => {
     setIsModalOpenAdd(false);
   };
-  useEffect(() => {
-    // call api sau: chưa có api
+
+  const fetchData = () => {
     fetchAllTeam()
       .then((data) => {
-        setRole(data);
+        setRoles(data);
+        console.log(data)
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
+  }
+
+  const handleAddGroup = () => {
+    if (newTeamName.trim() === "") {
+      console.log("Vui lòng nhập tên nhóm.");
+      return;
+    }
+    console.log(newTeamName);
+    createTeam(newTeamName)
+      .then((data) => {
+        console.log("Tạo thành công nhóm:", data);
+        setNewTeamName("");
+        handleCancelGroup();
+      })
+      .catch((error) => {
+        console.error("Lỗi thêm nhóm:", error);
+      });
+  }
+
+  useEffect(() => {
+    // Ban đầu, gọi hàm tải dữ liệu
+    fetchData();
   }, []);
 
   return (
@@ -310,12 +334,11 @@ const GroupComponent = () => {
             </tr>
           </thead>
           <tbody class="scrollbar" id="style-15">
-            {role.map((role, index) => (
+            {roles.map((role, index) => (
               <tr key={role.roleID} onClick={showModalDetail}>
                 <td>{index + 1}</td>
-                <td>{role.roleName}</td>
-                <td>{role.roleName}</td>
-                {/* <td>{role.employees.length}</td> */}
+                <td>{role.teamName}</td>
+                <td>{role.numberOfTeamMember}</td>
                 <td>{role.roleName}</td>
               </tr>
             ))}
@@ -342,26 +365,24 @@ const GroupComponent = () => {
         <Modal
           className="modal"
           open={isModalOpenGroup}
-          on
-          Ok={handleOkGroup}
+          onOk={handleAddGroup}
           onCancel={handleCancelGroup}
           width={566}
         >
           <div className="modal-head">
-            {" "}
             <h3>Thêm nhóm</h3>
           </div>
           <div className="modal-body modal-body-department">
             <div className="info-add-department">
               <div className="text-department">Tên nhóm</div>
-              <Input />
+              <Input value={newTeamName} onChange={(e) => setNewTeamName(e.target.value)} />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment">
             <button className="btn-cancel" onClick={handleCancelGroup}>
               Hủy bỏ
             </button>
-            <button className="btn-edit btn-save" onClick={handleOkGroup}>
+            <button className="btn-edit btn-save" onClick={handleAddGroup}>
               Lưu
             </button>
           </div>
