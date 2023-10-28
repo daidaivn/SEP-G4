@@ -20,7 +20,7 @@ namespace CarpentryWorkshopAPI.DTO
         public int? TeamId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public List<RD> rDs { get; set; }
+        public RD rDs { get; set; }
 
         public class RD
         {

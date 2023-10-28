@@ -153,7 +153,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             FullName = $"{emp.FirstName} {emp.LastName}",
                             Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                             PhoneNumber = emp.PhoneNumber,
-                            Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                            Roles = emp.RolesEmployees
+                            .OrderByDescending(re => re.Role.RoleLevel)
+                            .Select(re => re.Role.RoleName)
+                            .FirstOrDefault(),
                             Status = emp.Status,
                         });
                 return Ok(sm);          
@@ -184,7 +187,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             FullName = $"{emp.FirstName} {emp.LastName}",
                             Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                             PhoneNumber = emp.PhoneNumber,
-                            Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                            Roles = emp.RolesEmployees
+                            .OrderByDescending(re => re.Role.RoleLevel)
+                            .Select(re => re.Role.RoleName)
+                            .FirstOrDefault(),
                             Status = emp.Status,
                         });
                 return Ok(sm);
@@ -216,7 +222,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             FullName = $"{emp.FirstName} {emp.LastName}",
                             Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                             PhoneNumber = emp.PhoneNumber,
-                            Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                            Roles = emp.RolesEmployees
+                            .OrderByDescending(re => re.Role.RoleLevel)
+                            .Select(re => re.Role.RoleName)
+                            .FirstOrDefault(),
                             Status = emp.Status,
                         });
                 return Ok(sm);
@@ -316,6 +325,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 var members = team.EmployeeTeams
                                   .Where(et => et.EndDate == null)
                                   .Select(et => et.Employee)
+                                  .Join(
+                                            _context.Countries,
+                                            employee => employee.CountryId,
+                                            country => country.CountryId,
+                                            (employee, country) =>
+                                            {
+                                                employee.Country = country;
+                                                return employee;
+                                            }
+                                        )
                                   .ToList();
                 string sm = "Trưởng ca";
                 var shiftmanager = members
