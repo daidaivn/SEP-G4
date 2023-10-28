@@ -39,7 +39,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         FullName = $"{emp.FirstName} {emp.LastName}",
                         Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                         PhoneNumber = emp.PhoneNumber,
-                        Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                        Roles = emp.RolesEmployees
+                        .OrderByDescending(re => re.Role.RoleLevel)
+                        .Select(re => re.Role.RoleName)
+                        .FirstOrDefault(),
                         Status = emp.Status,
                     });
                 return Ok(employeelist);
@@ -50,8 +53,61 @@ namespace CarpentryWorkshopAPI.Controllers
             }
            
         }
-        [HttpGet("{eid}")]
+        [HttpGet]
         public IActionResult GetEmployeeDetail(int eid)
+        {
+            try
+            {
+                var employeeDetailBasic = _context.Employees
+                   .Where(emp => emp.EmployeeId == eid)
+                   .Include(emp => emp.RolesEmployees)
+                   .ThenInclude(roleemp => roleemp.Role)
+                   .ThenInclude(role => role.RolesEmployees)
+                   .Include(emp => emp.RolesEmployees)
+                   .ThenInclude(roleemp => roleemp.Department)
+                   .Select(emp => new EmployeeDetailBasicDTO
+                   {
+                       EmployeeId = emp.EmployeeId,
+                       Image = emp.Image,
+                       FullName = emp.FirstName + " " +emp.LastName,
+                       Dobstring = emp.Dob.Value.ToString("dd'-'MM'-'yyyy"),
+                       Address = emp.Address,
+                       Cic = emp.Cic,
+                       Country = emp.Country.CountryName,
+                       Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+                       PhoneNumber = emp.PhoneNumber,
+                       TaxId = emp.TaxId,
+                       Email = emp.Email,
+                       Status = emp.Status,
+                       MainRole = emp.RolesEmployees
+                       .OrderByDescending(re => re.Role.RoleLevel)
+                       .Select(re => re.Role.RoleName)
+                       .FirstOrDefault(),
+                       SubRoles = (List<string>)emp.RolesEmployees
+                           .Select(roleemp => roleemp.Role.RoleName)
+                           .Where(roleName => roleName != emp.RolesEmployees
+                               .OrderByDescending(re => re.Role.RoleLevel)
+                               .Select(re => re.Role.RoleName)
+                               .FirstOrDefault())
+                           .ToList(),
+                       Departments = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Department.DepartmentName)
+                   })
+                   .FirstOrDefault();
+                if (employeeDetailBasic == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(employeeDetailBasic);
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("{eid}")]
+        public IActionResult EditEmployeeDetail(int eid)
         {
             try
             {
@@ -77,8 +133,13 @@ namespace CarpentryWorkshopAPI.Controllers
                         TaxId = emp.TaxId,
                         Email= emp.Email,
                         Status = emp.Status,
-                        Roles = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Role.RoleName),
-                        Departments = (List<string>)emp.RolesEmployees.Select(roleemp => roleemp.Department.DepartmentName)
+                        RoleDepartments =emp.RolesEmployees
+                            .Select(roleemp => new EmployeeDetailDTO.RoleDepartment
+                            {
+                                RoleID = roleemp.Role.RoleId,
+                                DepartmentID = roleemp.Department.DepartmentId
+                            })
+                            .ToList()
                     })
                     .FirstOrDefault();
 
@@ -135,19 +196,17 @@ namespace CarpentryWorkshopAPI.Controllers
                          var newemp = _mapper.Map<Employee>(createEmployeeDTO);
                         _context.Employees.Add(newemp);
                         _context.SaveChanges();
-                        foreach (var rd in createEmployeeDTO.rDs)
-                        {
-
+                       
                             RolesEmployee newremp = new RolesEmployee
                             {
-                                RoleId = rd.RoleID,
+                                RoleId = createEmployeeDTO.rDs.RoleID,
                                 EmployeeId = newemp.EmployeeId,
                                 StartDate = createEmployeeDTO.StartDate ,
-                                DepartmentId = rd.DepartmentID,
+                                DepartmentId = createEmployeeDTO.rDs.DepartmentID,
                                 Status = true,
                             };
                             _context.RolesEmployees.Add(newremp);
-                        }
+                        
                     UserAccount newaccount = new UserAccount()
                     {
 
@@ -165,13 +224,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    foreach (var rd in createEmployeeDTO.rDs)
-                {
+                  
 
                     var roleemployees = _context.RolesEmployees
                     .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
-                    && x.RoleId == rd.RoleID
-                    && x.DepartmentId == rd.DepartmentID);
+                    && x.RoleId == createEmployeeDTO.rDs.RoleID
+                    && x.DepartmentId == createEmployeeDTO.rDs.DepartmentID);
 
                            if (roleemployees != null)
                             {
@@ -183,10 +241,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                               RolesEmployee newremp = new RolesEmployee
                               {
-                                RoleId = rd.RoleID,
+                                RoleId = createEmployeeDTO.rDs.RoleID,
                                 EmployeeId = employee.EmployeeId,
                                 StartDate = createEmployeeDTO.StartDate,
-                                DepartmentId = rd.DepartmentID,
+                                DepartmentId = createEmployeeDTO.rDs.DepartmentID,
                                 Status = true,
                               };
                             _context.RolesEmployees.Add(newremp);
@@ -217,7 +275,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return Ok("Update employee and roleemployee successfull");
 
-                }
+                
             }
             catch (Exception ex)
             {
@@ -308,7 +366,9 @@ namespace CarpentryWorkshopAPI.Controllers
                     FullName = $"{employee.FirstName} {employee.LastName}",
                     Gender = (bool)employee.Gender ? "Male" : "Female",
                     PhoneNumber = employee.PhoneNumber,
-                    Roles = employee.RolesEmployees.Select(roleemp => roleemp.Role.RoleName).ToList(),
+                    Roles = employee.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel)
+                        .Select(re => re.Role.RoleName)
+                        .FirstOrDefault(),
                     Status = employee.Status
                 }).ToList();
 
