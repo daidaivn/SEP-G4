@@ -15,6 +15,8 @@
         public bool? Status { get; set; }
         public string? Cic { get; set; }
         public string? MainRole { get; set; }
+        public double? WageNumber { get; set; }
+        public double? SalaryCoefficient { get; set; }
         public List<string> SubRoles { get; set; }
         public List<string> Departments { get; set; }
     }

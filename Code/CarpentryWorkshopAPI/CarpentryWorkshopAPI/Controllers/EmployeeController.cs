@@ -60,6 +60,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var employeeDetailBasic = _context.Employees
                    .Where(emp => emp.EmployeeId == eid)
+                   .Include(x => x.Wage)
                    .Include(emp => emp.RolesEmployees)
                    .ThenInclude(roleemp => roleemp.Role)
                    .ThenInclude(role => role.RolesEmployees)
@@ -79,6 +80,8 @@ namespace CarpentryWorkshopAPI.Controllers
                        TaxId = emp.TaxId,
                        Email = emp.Email,
                        Status = emp.Status,
+                       WageNumber = emp.Wage.WageNumber,
+                       SalaryCoefficient= emp.SalaryCoefficient,
                        MainRole = emp.RolesEmployees
                        .OrderByDescending(re => re.Role.RoleLevel)
                        .Select(re => re.Role.RoleName)
@@ -113,6 +116,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var employeeDetail = _context.Employees
                     .Where(emp => emp.EmployeeId == eid)
+                    .Include(x => x.Wage)
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
                     .ThenInclude(role => role.RolesEmployees)
@@ -133,6 +137,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         TaxId = emp.TaxId,
                         Email= emp.Email,
                         Status = emp.Status,
+                        WageNumber = emp.Wage.WageNumber,
+                        SalaryCoefficient = emp.SalaryCoefficient,
                         RoleDepartments =emp.RolesEmployees
                             .Select(roleemp => new EmployeeDetailDTO.RoleDepartment
                             {
@@ -260,7 +266,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         employee.TaxId= createEmployeeDTO.TaxId;
                         employee.Status = createEmployeeDTO.Status;
                         employee.Cic = createEmployeeDTO.Cic;
-                        employee.CountryId= createEmployeeDTO.CountryId;    
+                        employee.CountryId= createEmployeeDTO.CountryId;   
+                        employee.WageId= createEmployeeDTO.WageId;
+                        employee.SalaryCoefficient = createEmployeeDTO.SalaryCoefficient;
+                        employee.Status = createEmployeeDTO.Status;
                         _context.Employees.Update(employee);
                         EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                         {
