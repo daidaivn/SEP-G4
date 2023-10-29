@@ -330,4 +330,30 @@
   display: flex;
   align-items: flex-start;
   align-self: stretch;
+  justify-content: space-between;
+  align-items: center;
+  .modal-footer1 {
+    display: flex;
+    padding: 14px 43px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 20px;
+    background: #fc1e1e;
+    color: #fff;
+    font-family: Noto Sans;
+    font-size: 21px;
+    font-weight: 400;
+  }
+}
+.div-detail {
+  Input {
+    color: #000 !important;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-weight: 400;
+  }
+}
+.text-option {
+  font-weight: 400 !important;
 }
