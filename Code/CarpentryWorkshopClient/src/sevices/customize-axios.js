@@ -5,7 +5,7 @@ const localToken = localStorage.getItem('userToken');
 const userToken = sessionToken || localToken;
 
 const instance = axios.create({
-  baseURL: "https://localhost:7003",
+  baseURL: "https://testapic.azurewebsites.net",
 });
 
 instance.interceptors.request.use((config) => {
