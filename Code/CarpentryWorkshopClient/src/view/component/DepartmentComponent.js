@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import { Switch, Form, Input } from "antd";
-import { fetchAllDepadment } from "../../sevices/DepartmentService";
+import { fetchAllDepadment, searchAndFilterDepartment } from "../../sevices/DepartmentService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
@@ -11,8 +11,16 @@ import { Select, Space } from "antd";
 function ListDepartmentComponent() {
   const [departments, setDepartments] = useState([]);
   const [isModalOpenDepartment, setIsModalOpenDepartment] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [filterOption, setFilterOption] = useState(true);
+
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setFilterOption(value)
+    handleSearchFilter(searchInput, value);
+  };
+  const handleSearchInput = (inputValue) => {
+    setSearchInput(inputValue);
+    handleSearchFilter(inputValue, filterOption);
   };
   const showModalDepartment = () => {
     setIsModalOpenDepartment(true);
@@ -22,6 +30,15 @@ function ListDepartmentComponent() {
   };
   const handleCancelDepartment = () => {
     setIsModalOpenDepartment(false);
+  };
+  const handleSearchFilter = (inputValue, filterValue) => {
+    searchAndFilterDepartment(inputValue, filterValue) // Sử dụng hàm API để tìm kiếm và bộ lọc
+      .then((data) => {
+        setDepartments(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
+      });
   };
 
   useEffect(() => {
@@ -107,7 +124,10 @@ function ListDepartmentComponent() {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm"></Input>
+            <Input
+              placeholder="Tìm kiếm"
+              onChange={(e) => handleSearchInput(e.target.value)}
+            />
           </div>
           <div className="list-filter">
             <i className="list-filter-icon1">
@@ -144,27 +164,19 @@ function ListDepartmentComponent() {
             </i>
             <Select
               className="select-input"
-              defaultValue="lucy"
+              defaultValue={filterOption}
               style={{
                 width: 120,
               }}
               onChange={handleChange}
               options={[
                 {
-                  value: "jack",
-                  label: "Jack",
+                  value: true,
+                  label: "Trạng thái: bật",
                 },
                 {
-                  value: "lucy",
-                  label: "Lucy",
-                },
-                {
-                  value: "Yiminghe",
-                  label: "yiminghe",
-                },
-                {
-                  value: "disabled",
-                  label: "Disabled",
+                  value: false,
+                  label: "Trạng thái: tắt",
                 },
               ]}
             />
@@ -283,76 +295,6 @@ function ListDepartmentComponent() {
                 </td>
               </tr>
             ))}
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>?</td>
-              <td>Tên phòng ban</td>
-              <td>Số thành viên</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
           </tbody>
         </table>
         <Modal

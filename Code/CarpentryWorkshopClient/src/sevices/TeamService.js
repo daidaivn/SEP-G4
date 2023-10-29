@@ -10,4 +10,14 @@ const createTeam = (teamName) => {
 const detailTeamByID = (teamID) => {
   return axios.get(`/CCMSapi/Team/GetTeamMembers/${teamID}/members`);
 };
-export { fetchAllTeam, createTeam, detailTeamByID };
+const fetchAllShiftManagers = () => {
+  return axios.get("/CCMSapi/Team/GetShiftManagers");
+};
+const fetchAllShiftAssistants = () => {
+  return axios.get("/CCMSapi/Team/GetAllTeams");
+};
+const fetchAllStaffs = () => {
+  return axios.get("/CCMSapi/Team/GetStaffs");
+};
+
+export { fetchAllTeam, createTeam, detailTeamByID,fetchAllShiftManagers,fetchAllShiftAssistants,fetchAllStaffs };

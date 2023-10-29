@@ -5,7 +5,7 @@ import "../scss/fonts.scss";
 import { Switch, Form, Input } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllTeam, createTeam, detailTeamByID } from "../../sevices/TeamService";
+import { fetchAllTeam, createTeam, detailTeamByID,fetchAllShiftManagers,fetchAllShiftAssistants,fetchAllStaffs  } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
 import { Space } from "antd";
@@ -19,6 +19,7 @@ const GroupComponent = () => {
   const [newTeamName, setNewTeamName] = useState("");
   const [detailTeamID, setDetailTeamID] = useState([]);
   const [teamID, setTeamID] = useState();
+  const [shiftManagers, setShiftManagers] = useState([]);
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -69,7 +70,6 @@ const GroupComponent = () => {
     fetchAllTeam()
       .then((data) => {
         setRoles(data);
-        console.log(data)
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
@@ -78,12 +78,10 @@ const GroupComponent = () => {
 
   const handleAddGroup = () => {
     if (newTeamName.trim() === "") {
-      console.log("Vui lòng nhập tên nhóm.");
       return;
     }
     createTeam(newTeamName)
       .then((data) => {
-        console.log("Tạo thành công nhóm:", data);
         setNewTeamName("");
         handleCancelGroup();
         fetchData();
@@ -99,13 +97,38 @@ const GroupComponent = () => {
         setDetailTeamID(data);
         setTeamID(teamId);
         showModalDetail();
-        console.log("Chi tiết nhóm nhóm:", data);
+        
       })
       .catch((error) => {
         console.error("Lỗi thêm nhóm:", error);
       });
   }
-  console.log("a", detailTeamID);
+
+  const handleGetAllMember = () => {
+    fetchAllShiftManagers()
+    .then((data) => {
+      setShiftManagers(data);
+      showModalAdd();
+  console.log(teamID);
+    })
+    .catch((error) => {
+      console.error("Lỗi khi tải dữ liệu nhóm:", error);
+    });
+  }
+
+  const optionsShiftManagers = shiftManagers.map((manager) => {
+  if (manager.employeeID) {
+    return {
+      value: manager.employeeID.toString(),
+      label: manager.fullName,
+    };
+  } else {
+    return {
+      value: 'default', // Giá trị mặc định
+      label: 'Không có ca trưởng trong dữ liệu',
+    };
+  }
+});
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
@@ -442,7 +465,6 @@ const GroupComponent = () => {
                     </div>
                   </div>
                   <div className="box2-modal-group"></div>
-                  
                       {detailTeamID.shiftManager ? (
                         <div className="box1-modal-group box3-group">
                           <div className="box1-child">
@@ -602,8 +624,8 @@ const GroupComponent = () => {
               <button className="btn-cancel" onClick={handleCancelDetail}>
                 Thoát
               </button>
-              <button className="btn-edit" onClick={showModalAdd}>
-                Thêm thành viên
+              <button className="btn-edit" onClick={handleGetAllMember}>
+                Thêm nhân viên
               </button>
             </div>
           </div>
@@ -619,7 +641,7 @@ const GroupComponent = () => {
           <div className="modal-add-group">
             <div className="modal-head">
               {" "}
-              <h3>Nhóm 1</h3>
+              <h3>Thêm nhân viên nhóm {teamID}</h3>
             </div>
             <div className="body-modal-change">
               <div className="modal1-change">
@@ -627,29 +649,15 @@ const GroupComponent = () => {
                 <div className="list-filter select-change-group">
                   <Select
                     className="select-input"
-                    defaultValue="lucy"
+                    defaultValue={
+                      optionsShiftManagers.find((option) => option.value === (detailTeamID.shiftManager ? detailTeamID.shiftManager.employeeID : 'default')) ||
+                      optionsShiftManagers.find((option) => option.value === 'default')
+                    }
                     style={{
                       width: 120,
                     }}
                     onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
+                    options={optionsShiftManagers}
                   />
                 </div>
               </div>
@@ -734,7 +742,7 @@ const GroupComponent = () => {
           <div className="modal-all-group">
             <div className="modal-head">
               {" "}
-              <h3>Thêm nhóm</h3>
+              <h3>Chuyển nhóm</h3>
             </div>
             <div className="modal-end-group">
               <div className="body-modal-end-group">
