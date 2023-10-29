@@ -190,7 +190,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -227,7 +227,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -264,7 +264,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -301,7 +301,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -338,7 +338,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -375,7 +375,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -412,7 +412,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -449,7 +449,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="go-out">
-                  <p>Ra</p>
+                  <p>Ngưng</p>
                 </span>
               </td>
             </tr>
