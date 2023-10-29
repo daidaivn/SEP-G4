@@ -20,7 +20,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "Role")]
+        //[Authorize(Roles = "Role")]
         [HttpGet]
         public IActionResult GetAllRoles()
         {
@@ -35,7 +35,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleName = roled.RoleName,
                         Status = roled.Status,
                         Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
-                        NumberOfEmployee = roled.RolesEmployees.Select(x => x.Employee).Count(),
+                        NumberOfEmployee = roled.RolesEmployees.Count(roleemp => roleemp.EndDate == null)
                     });
                 if (rolelist == null)
                 {

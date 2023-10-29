@@ -34,7 +34,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
-                        NumberOfTeamMember = t.EmployeeTeams.Count(),
+                        NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Count(),
                         TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
                         (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
 

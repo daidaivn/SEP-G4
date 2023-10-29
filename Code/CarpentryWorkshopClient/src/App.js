@@ -48,7 +48,7 @@ function App() {
           {userPages.includes("Decentralization") && (
             <Route path="/decentralization" element={<Decentralization />} />
           )}
-          {userPages.includes("Timekeeping") && (
+          {userPages.includes("TimeKeeping") && (
             <Route path="/timekeeping" element={<TimekeepingComponent />} />
           )}
           <Route
