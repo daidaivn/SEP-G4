@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -178,10 +179,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 var query = _context.Roles
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
+                    .ToList()
                     .AsQueryable();
                 if (!string.IsNullOrEmpty(roleSearchDTO.InputText))
                 {
-                    query = query.Where(x => x.RoleName.ToLower().Contains(roleSearchDTO.InputText.ToLower()));
+                    string name = roleSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
+                    query = query.Where(x => x.RoleName.ToLower().Normalize(NormalizationForm.FormD).Contains(name));
                 }
                 if (roleSearchDTO.Status.HasValue)
                 {

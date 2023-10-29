@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -22,7 +23,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "Home")]
+        //[Authorize(Roles = "Home")]
         [HttpGet]
         public IActionResult GetAllEmployee()
         {
@@ -343,14 +344,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 var query = _context.Employees
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
+                    .ToList()
                     .AsQueryable();
-
+                
                 if (!string.IsNullOrEmpty(employeeSearchDTO.InputText))
                 {
+                    string input = employeeSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
                     query = query.Where(x =>
-                        x.FirstName.ToLower().Contains(employeeSearchDTO.InputText.ToLower()) ||
-                        x.LastName.ToLower().Contains(employeeSearchDTO.InputText.ToLower()) ||
-                        x.PhoneNumber.ToLower().Contains(employeeSearchDTO.InputText.ToLower())
+                        x.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.PhoneNumber.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
                     );
                 }
 
@@ -373,7 +376,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     );
                 }
 
-                var employeesDTO = query.ToList().Select(employee => new EmployeeListDTO
+                var employeesDTO = query.Select(employee => new EmployeeListDTO
                 {
                     EmployeeID = employee.EmployeeId,
                     Image = employee.Image,
@@ -384,7 +387,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .Select(re => re.Role.RoleName)
                         .FirstOrDefault(),
                     Status = employee.Status
-                }).ToList();
+                });
 
                 return Ok(employeesDTO);
             }

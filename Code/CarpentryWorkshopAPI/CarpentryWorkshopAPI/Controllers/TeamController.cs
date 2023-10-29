@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Cryptography.Xml;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -88,7 +89,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpDelete("{eid}/{tid}")]
-        public IActionResult DeleteTeamMember(int eid, int tid)
+        public IActionResult DeleteTeamMember(int employeeid, int teamid)
         {
             try
             {
@@ -97,7 +98,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employeerole = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(x => x.EmployeeId == eid).FirstOrDefault();
+                    .Where(x => x.EmployeeId == employeeid).FirstOrDefault();
                 if (employeerole != null && employeerole.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
                 {
                     return Ok("Your employee has been provided can not delete");
@@ -107,7 +108,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return Ok("Your employee has been provided can not delete");
                 }
                 var dtm = _context.EmployeeTeams
-                    .FirstOrDefault(x => x.EmployeeId == eid && x.TeamId == tid);
+                    .FirstOrDefault(x => x.EmployeeId == employeeid && x.TeamId == teamid);
                 if (dtm == null)
                 {
                     return NotFound();
@@ -310,12 +311,12 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetAvailableTeam(int tid)
+        public IActionResult GetAvailableTeam(int teamid)
         {
             try
             {
                 var availbableteam = _context.Teams
-                    .Where(x => x.TeamId != tid)
+                    .Where(x => x.TeamId != teamid)
                     .Include(x => x.Works)
                     .ThenInclude(w => w.WorkArea)
                     .Include(x => x.EmployeeTeams)
@@ -337,21 +338,21 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult ChangeTeam(int otid,int tid, int eid)
+        public IActionResult ChangeTeamStaff(int oldteamid,int teamid, int employeeid)
         {
             try
             {
-                Team team = _context.Teams.FirstOrDefault(x => x.TeamId == tid);
+                Team team = _context.Teams.FirstOrDefault(x => x.TeamId == teamid);
                 if (team == null)
                 {
                     return NotFound();
                 }
-                Employee emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == eid);
+                Employee emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
                 if (emp == null)
                 {
                     return NotFound();
                 }
-                EmployeeTeam oldteam = _context.EmployeeTeams.FirstOrDefault(x => x.TeamId == otid && x.EmployeeId == eid);
+                EmployeeTeam oldteam = _context.EmployeeTeams.FirstOrDefault(x => x.TeamId == oldteamid && x.EmployeeId == employeeid);
                 if (oldteam == null)
                 {
                     return NotFound();
@@ -438,59 +439,42 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut]
-        public IActionResult ChangeLeaderTwoTeam(int oldTeam , int newTeam)
+        [HttpPost]
+        public IActionResult SearchTeam(string input)
         {
             try
             {
-                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newTeam).ToList();
-                var oldTeam1 = team[0].TeamLeaderId;
-                var newTeam1 = team[1].TeamLeaderId;
-                if (team.Count == 2)
+                var query = _context.Teams
+                    .Include(x => x.EmployeeTeams)
+                    .ThenInclude(et => et.Employee)
+                    .ToList()
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(input))
                 {
-                    team[0].TeamLeaderId = newTeam1;
-                    team[1].TeamLeaderId = oldTeam1;
-                    _context.UpdateRange(team);
-                    _context.SaveChanges();
+                    string work = input.ToLower().Normalize(NormalizationForm.FormD);
+                    query = query.Where(x =>
+                        x.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.EmployeeTeams.Any(et =>
+                            et.Employee.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                            et.Employee.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
+                        )
+                    );
                 }
-                else
+                var dto = query.Select(t => new TeamListDTO
                 {
-                    return BadRequest("err");
-                }
-                return Ok("success");
+                    TeamId = t.TeamId,
+                    TeamName = t.TeamName,
+                    NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Count(),
+                    TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
+                        (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
+
+                });
+                return Ok(dto);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
-        }
-        [HttpPut]
-        public IActionResult ChangeSubLeaderTwoTeam(int oldTeam, int newTeam)
-        {
-            try
-            {
-                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newTeam).ToList();
-                var OldTeam = team[0].TeamSubLeaderId;
-                var NewTeam = team[1].TeamSubLeaderId;
-                if (team.Count == 2)
-                {
-                    team[0].TeamSubLeaderId = NewTeam;
-                    team[1].TeamSubLeaderId = OldTeam;
-                    _context.UpdateRange(team);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    return BadRequest("err");
-                }
-                return Ok("success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
         }
     }
     }
