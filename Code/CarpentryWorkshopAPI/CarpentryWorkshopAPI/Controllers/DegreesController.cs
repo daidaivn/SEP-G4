@@ -24,7 +24,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
         }
 
-        
+
         [HttpGet]
         public IActionResult GetAllDegrees()
         {
@@ -32,7 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
             return Ok(_mapper.Map<List<DegreeDTO>>(degreeList));
         }
 
-        
+
         [HttpGet("{id}")]
         public IActionResult GetDegree(int id)
         {
@@ -42,9 +42,10 @@ namespace CarpentryWorkshopAPI.Controllers
 
         // PUT: api/Degrees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateDegree([FromBody] DegreeDTO degreeDTO)
         {
+
             Degree degree = _mapper.Map<Degree>(degreeDTO);
             _context.Entry(degree).State = EntityState.Modified;
             DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory()
@@ -52,7 +53,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 Action = "Update",
                 ActionDate= DateTime.Now,
                 CurrentEmployeeId = 1,
-                DegreeId= degreeDTO.DegreeId,
+                DegreeId= degree.DegreeId,
             };
             _context.DegreesStatusHistories.Add(degreesStatusHistory);
             try
@@ -70,13 +71,17 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Degrees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult CreateDegree([FromBody] DegreeDTO degreeDTO)
+        public IActionResult CreateDegree(string degreeName)
         {
           if (_context.Degrees == null)
           {
               return Problem("Entity set 'SEPG4CCMSContext.Degrees'  is null.");
           }
-            Degree degree = _mapper.Map<Degree>(degreeDTO);
+            Degree degree = new Degree()
+            {
+                DegreeName = degreeName,
+                Status = true
+            };
             _context.Degrees.Add(degree);
             _context.SaveChanges();
             DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory()
@@ -128,7 +133,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             return NoContent();
         }
-        [HttpPost]
+        [HttpPost("search")]
         public IActionResult SearchDegrees([FromBody] DegreeDTO degreeDTO)
         {
             if (_context.Degrees == null)
@@ -141,11 +146,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 string text = degreeDTO.DegreeName.ToLower().Normalize(NormalizationForm.FormD);
                 degree = degree.Where(de => de.DegreeName.ToLower().Normalize(NormalizationForm.FormD).Contains(text));
             }
-            if(degreeDTO.Status.HasValue == true)
+            if(degreeDTO.Status.HasValue)
             {
                 degree = degree.Where(de => de.Status == degreeDTO.Status);
             }
-            return Ok(_mapper.Map<List<DegreeDTO>>(degree));
+            var degreeListDTO = _mapper.Map<List<DegreeDTO>>(degree);
+            return Ok(degreeListDTO);
         } 
     }
 }

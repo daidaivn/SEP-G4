@@ -439,25 +439,55 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPut]
-        public IActionResult ChangeLeaderTwoTeam(int oldTeam , int newTeam)
+        public IActionResult ChangeLeaderTwoTeam(int oldTeamId , int newTeamId)
         {
             try
             {
-                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newTeam).ToList();
-                var oldTeam1 = team[0].TeamLeaderId;
-                var newTeam1 = team[1].TeamLeaderId;
-                if (team.Count == 2)
+                var teamOld = _context.Teams.Where(te => te.TeamId == oldTeamId).FirstOrDefault();
+                var teamNew = _context.Teams.Where(te => te.TeamId == newTeamId).FirstOrDefault();
+                if(teamNew ==null || teamOld == null)
                 {
-                    team[0].TeamLeaderId = newTeam1;
-                    team[1].TeamLeaderId = oldTeam1;
-                    _context.UpdateRange(team);
+                    return NotFound();
+                }
+                var oldTeam = teamOld.TeamLeaderId;
+                var newTeam = teamNew.TeamLeaderId;
+                if(oldTeam != null || newTeam != null)
+                {
+                    teamOld.TeamLeaderId = newTeam;
+                    teamNew.TeamLeaderId = oldTeam;
+                    _context.Update(teamNew);
+                    _context.Update(teamOld);
+                    var employTeamOld = _context.EmployeeTeams.Where(te => te.EmployeeId == oldTeam && te.EndDate == null);
+                    employTeamOld.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    var employTeamNew = _context.EmployeeTeams.Where(te => te.EmployeeId == newTeam && te.EndDate == null);
+                    employTeamNew.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    _context.EmployeeTeams.UpdateRange(employTeamOld);
+                    _context.EmployeeTeams.UpdateRange(employTeamNew);
+                    EmployeeTeam changeTeamOld = new EmployeeTeam()
+                    {
+                        EmployeeId = oldTeam.Value,
+                        TeamId = newTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    EmployeeTeam changeTeamNew = new EmployeeTeam()
+                    {
+                        EmployeeId = newTeam.Value,
+                        TeamId = oldTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    _context.EmployeeTeams.Add(changeTeamOld);
+                    _context.EmployeeTeams.Add(changeTeamNew);
                     _context.SaveChanges();
+
+                    return Ok("success");
                 }
                 else
                 {
                     return BadRequest("err");
                 }
-                return Ok("success");
+                
             }
             catch(Exception ex)
             {
@@ -466,25 +496,55 @@ namespace CarpentryWorkshopAPI.Controllers
             
         }
         [HttpPut]
-        public IActionResult ChangeSubLeaderTwoTeam(int oldTeam, int newTeam)
+        public IActionResult ChangeSubLeaderTwoTeam(int oldTeamId, int newTeamId)
         {
             try
             {
-                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newTeam).ToList();
-                var OldTeam = team[0].TeamSubLeaderId;
-                var NewTeam = team[1].TeamSubLeaderId;
-                if (team.Count == 2)
+                var teamOld = _context.Teams.Where(te => te.TeamId == oldTeamId).FirstOrDefault();
+                var teamNew = _context.Teams.Where(te => te.TeamId == newTeamId).FirstOrDefault();
+                if (teamNew == null || teamOld == null)
                 {
-                    team[0].TeamSubLeaderId = NewTeam;
-                    team[1].TeamSubLeaderId = OldTeam;
-                    _context.UpdateRange(team);
+                    return NotFound();
+                }
+                var oldTeam = teamOld.TeamSubLeaderId;
+                var newTeam = teamNew.TeamSubLeaderId;
+                if (oldTeam != null || newTeam != null)
+                {
+                    teamOld.TeamSubLeaderId = newTeam;
+                    teamNew.TeamSubLeaderId = oldTeam;
+                    _context.Update(teamNew);
+                    _context.Update(teamOld);
+                    var employTeamOld = _context.EmployeeTeams.Where(te => te.EmployeeId == oldTeam && te.EndDate == null);
+                    employTeamOld.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    var employTeamNew = _context.EmployeeTeams.Where(te => te.EmployeeId == newTeam && te.EndDate == null);
+                    employTeamNew.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    _context.EmployeeTeams.UpdateRange(employTeamOld);
+                    _context.EmployeeTeams.UpdateRange(employTeamNew);
+                    EmployeeTeam changeTeamOld = new EmployeeTeam()
+                    {
+                        EmployeeId = oldTeam.Value,
+                        TeamId = newTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    EmployeeTeam changeTeamNew = new EmployeeTeam()
+                    {
+                        EmployeeId = newTeam.Value,
+                        TeamId = oldTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    _context.EmployeeTeams.Add(changeTeamOld);
+                    _context.EmployeeTeams.Add(changeTeamNew);
                     _context.SaveChanges();
+
+                    return Ok("success");
                 }
                 else
                 {
                     return BadRequest("err");
                 }
-                return Ok("success");
+                
             }
             catch (Exception ex)
             {
