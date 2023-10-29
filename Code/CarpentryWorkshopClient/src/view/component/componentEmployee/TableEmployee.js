@@ -27,7 +27,7 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
             <td>{employee.fullName}</td>
             <td>{employee.gender}</td>
             <td>{employee.phoneNumber}</td>
-            <td>{employee.roles.join(" - ")}</td>
+            <td>{employee.roles}</td>
             <td>
               <Form.Item valuePropName="checked">
                 <Switch checked={employee.status} />

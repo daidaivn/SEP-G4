@@ -9,7 +9,7 @@ namespace CarpentryWorkshopAPI.DTO
         public string? FullName { get; set; }
         public string? Gender { get; set; }
         public string? PhoneNumber { get; set; }
-        public List<string> Roles { get; set; }
+        public string? Roles { get; set; }
         public bool? Status { get; set; }
     }
 

@@ -100,6 +100,7 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<Employee, TeamMemberDTO>()
                 .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
+                .ForMember(de => de.CountryName, option => option.MapFrom(d => d.Country.CountryName))
                 .ReverseMap();
             CreateMap<WorkArea, WorkAreasDTO>()
                 .ReverseMap();

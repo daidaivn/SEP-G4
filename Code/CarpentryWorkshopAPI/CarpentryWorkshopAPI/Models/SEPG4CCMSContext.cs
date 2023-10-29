@@ -42,6 +42,7 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<RolesStatusHistory> RolesStatusHistories { get; set; } = null!;
         public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
+        public virtual DbSet<TypeDependent> TypeDependents { get; set; } = null!;
         public virtual DbSet<UnitCost> UnitCosts { get; set; } = null!;
         public virtual DbSet<UnitCostStatusHistory> UnitCostStatusHistories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
@@ -100,7 +101,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.Contracts)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__Contracts__Emplo__68487DD7");
+                    .HasConstraintName("FK__Contracts__Emplo__6E01572D");
             });
 
             modelBuilder.Entity<ContractType>(entity =>
@@ -115,7 +116,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<ContractTypeStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__Contract__4D7B4ADD5F3F14A0");
+                    .HasName("PK__Contract__4D7B4ADDDF311BDA");
 
                 entity.ToTable("ContractTypeStatusHistory");
 
@@ -130,13 +131,13 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.ContractType)
                     .WithMany(p => p.ContractTypeStatusHistories)
                     .HasForeignKey(d => d.ContractTypeId)
-                    .HasConstraintName("FK__ContractT__Contr__6B24EA82");
+                    .HasConstraintName("FK__ContractT__Contr__70DDC3D8");
             });
 
             modelBuilder.Entity<ContractsStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__Contract__4D7B4ADD366EB05B");
+                    .HasName("PK__Contract__4D7B4ADDB8C4E887");
 
                 entity.ToTable("ContractsStatusHistory");
 
@@ -151,7 +152,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Contract)
                     .WithMany(p => p.ContractsStatusHistories)
                     .HasForeignKey(d => d.ContractId)
-                    .HasConstraintName("FK__Contracts__Contr__6A30C649");
+                    .HasConstraintName("FK__Contracts__Contr__6FE99F9F");
             });
 
             modelBuilder.Entity<Country>(entity =>
@@ -173,7 +174,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<DegreesStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__DegreesS__4D7B4ADDCE88EFFB");
+                    .HasName("PK__DegreesS__4D7B4ADD580B4D62");
 
                 entity.ToTable("DegreesStatusHistory");
 
@@ -188,7 +189,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Degree)
                     .WithMany(p => p.DegreesStatusHistories)
                     .HasForeignKey(d => d.DegreeId)
-                    .HasConstraintName("FK__DegreesSt__Degre__6C190EBB");
+                    .HasConstraintName("FK__DegreesSt__Degre__71D1E811");
             });
 
             modelBuilder.Entity<Department>(entity =>
@@ -201,7 +202,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<DepartmentsStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__Departme__4D7B4ADDF6C9DDEF");
+                    .HasName("PK__Departme__4D7B4ADD3A1D1E88");
 
                 entity.ToTable("DepartmentsStatusHistory");
 
@@ -216,7 +217,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.DepartmentsStatusHistories)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__Departmen__Depar__6D0D32F4");
+                    .HasConstraintName("FK__Departmen__Depar__72C60C4A");
             });
 
             modelBuilder.Entity<Dependent>(entity =>
@@ -241,16 +242,23 @@ namespace CarpentryWorkshopAPI.Models
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
+                entity.Property(e => e.TypeDependentId).HasColumnName("TypeDependentID");
+
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.Dependents)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__Dependent__Emplo__6E01572D");
+                    .HasConstraintName("FK__Dependent__Emplo__73BA3083");
+
+                entity.HasOne(d => d.TypeDependent)
+                    .WithMany(p => p.Dependents)
+                    .HasForeignKey(d => d.TypeDependentId)
+                    .HasConstraintName("FK_Dependents_TypeDependents");
             });
 
             modelBuilder.Entity<DependentsStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__Dependen__4D7B4ADD8B8B6A24");
+                    .HasName("PK__Dependen__4D7B4ADDC5DAB3B3");
 
                 entity.ToTable("DependentsStatusHistory");
 
@@ -265,7 +273,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Dependent)
                     .WithMany(p => p.DependentsStatusHistories)
                     .HasForeignKey(d => d.DependentId)
-                    .HasConstraintName("FK__Dependent__Depen__6EF57B66");
+                    .HasConstraintName("FK__Dependent__Depen__75A278F5");
             });
 
             modelBuilder.Entity<Employee>(entity =>
@@ -299,7 +307,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.CountryId)
-                    .HasConstraintName("FK__Employees__Count__71D1E811");
+                    .HasConstraintName("FK__Employees__Count__787EE5A0");
 
                 entity.HasOne(d => d.Wage)
                     .WithMany(p => p.Employees)
@@ -310,7 +318,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<EmployeeDegree>(entity =>
             {
                 entity.HasKey(e => new { e.DegreeId, e.EmployeeId })
-                    .HasName("PK__Employee__4A399631BB4CE99A");
+                    .HasName("PK__Employee__4A399631DA60955B");
 
                 entity.Property(e => e.DegreeId).HasColumnName("DegreeID");
 
@@ -326,13 +334,13 @@ namespace CarpentryWorkshopAPI.Models
                     .WithMany(p => p.EmployeeDegrees)
                     .HasForeignKey(d => d.DegreeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EmployeeD__Degre__6FE99F9F");
+                    .HasConstraintName("FK__EmployeeD__Degre__76969D2E");
 
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.EmployeeDegrees)
                     .HasForeignKey(d => d.EmployeeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EmployeeD__Emplo__70DDC3D8");
+                    .HasConstraintName("FK__EmployeeD__Emplo__778AC167");
             });
 
             modelBuilder.Entity<EmployeeTeam>(entity =>
@@ -361,7 +369,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<EmployeesStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__Employee__4D7B4ADDF62829ED");
+                    .HasName("PK__Employee__4D7B4ADDDEB14FC6");
 
                 entity.ToTable("EmployeesStatusHistory");
 
@@ -376,7 +384,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.EmployeesStatusHistories)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__Employees__Emplo__72C60C4A");
+                    .HasConstraintName("FK__Employees__Emplo__7A672E12");
             });
 
             modelBuilder.Entity<HistoryChangeCheckInOut>(entity =>
@@ -496,7 +504,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<RolesEmployee>(entity =>
             {
                 entity.HasKey(e => e.RoleEmployeeId)
-                    .HasName("PK__RolesEmp__FB1ED0C2C4BDE7EB");
+                    .HasName("PK__RolesEmp__FB1ED0C25603BF44");
 
                 entity.Property(e => e.RoleEmployeeId).HasColumnName("RoleEmployeeID");
 
@@ -513,12 +521,12 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.RolesEmployees)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__RolesEmpl__Depar__7B5B524B");
+                    .HasConstraintName("FK__RolesEmpl__Depar__02FC7413");
 
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.RolesEmployees)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__RolesEmpl__Emplo__7C4F7684");
+                    .HasConstraintName("FK__RolesEmpl__Emplo__03F0984C");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolesEmployees)
@@ -529,7 +537,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<RolesStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__RolesSta__4D7B4ADD298932BA");
+                    .HasName("PK__RolesSta__4D7B4ADDBEAB62AB");
 
                 entity.ToTable("RolesStatusHistory");
 
@@ -578,6 +586,13 @@ namespace CarpentryWorkshopAPI.Models
                         });
             });
 
+            modelBuilder.Entity<TypeDependent>(entity =>
+            {
+                entity.Property(e => e.TypeDependentId).HasColumnName("TypeDependentID");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<UnitCost>(entity =>
             {
                 entity.HasKey(e => e.UniCostId);
@@ -613,7 +628,7 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<UserAccount>(entity =>
             {
                 entity.HasKey(e => e.EmployeeId)
-                    .HasName("PK__UserAcco__7AD04FF14ECA44E7");
+                    .HasName("PK__UserAcco__7AD04FF10721A0DC");
 
                 entity.Property(e => e.EmployeeId)
                     .ValueGeneratedNever()
@@ -623,13 +638,13 @@ namespace CarpentryWorkshopAPI.Models
                     .WithOne(p => p.UserAccount)
                     .HasForeignKey<UserAccount>(d => d.EmployeeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserAccou__Emplo__02084FDA");
+                    .HasConstraintName("FK__UserAccou__Emplo__09A971A2");
             });
 
             modelBuilder.Entity<UserAccountsStatusHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__UserAcco__4D7B4ADDD96F7030");
+                    .HasName("PK__UserAcco__4D7B4ADD89852D31");
 
                 entity.ToTable("UserAccountsStatusHistory");
 
@@ -644,7 +659,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.UserAccountsStatusHistories)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__UserAccou__Emplo__02FC7413");
+                    .HasConstraintName("FK__UserAccou__Emplo__0A9D95DB");
             });
 
             modelBuilder.Entity<Wage>(entity =>
