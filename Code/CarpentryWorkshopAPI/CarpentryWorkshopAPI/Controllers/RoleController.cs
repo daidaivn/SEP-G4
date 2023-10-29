@@ -178,7 +178,6 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var query = _context.Roles
                     .Include(x => x.RolesEmployees)
-                    .ThenInclude(roleemp => roleemp.Role)
                     .ToList()
                     .AsQueryable();
                 if (!string.IsNullOrEmpty(roleSearchDTO.InputText))
@@ -196,10 +195,13 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleID = r.RoleId,
                         RoleName = r.RoleName,
                         Status = r.Status,
-                        Employees = r.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                        Employees = r.RolesEmployees
+                            .Where(x => x.Employee != null)
+                            .Select(x => x.Employee.FirstName + " " + x.Employee.LastName)
+                            .ToList(),
                         NumberOfEmployee = r.RolesEmployees.Select(x => x.Employee).Count(),
                     }
-                    ).ToList();
+                    );
                
                 return Ok(roles);
             }catch(Exception ex)

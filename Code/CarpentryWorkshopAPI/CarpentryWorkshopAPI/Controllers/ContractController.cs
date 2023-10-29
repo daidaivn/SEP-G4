@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -258,6 +259,27 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        //[HttpPost]
+        //public IActionResult SearchContract([FromBody] SearchContractDTO searchContractDTO)
+        //{
+        //    try
+        //    {
+        //        var query = _context.Contracts
+        //            .Include(emp => emp.Employee)
+        //            .Include(ctt => ctt.ContractType)
+        //            .ToList()
+        //            .AsQueryable();
+
+        //        if (!string.IsNullOrEmpty(searchContractDTO.InputText))
+        //        {
+        //            string work = searchContractDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
+        //            query = query.Where(x =>
+        //                x.ContractType.ToLower().Normalize(NormalizationForm.FormD).Contains(input) 
+                       
+        //            );
+        //        }
+        //    }
         }
     }
 }
