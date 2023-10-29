@@ -17,6 +17,7 @@ namespace CarpentryWorkshopAPI.Models
         public string? TeamName { get; set; }
         public int? TeamLeaderId { get; set; }
         public string? Note { get; set; }
+        public int? TeamSubLeaderId { get; set; }
 
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
         public virtual ICollection<HistoryChangeTeam> HistoryChangeTeams { get; set; }

@@ -456,6 +456,8 @@ namespace CarpentryWorkshopAPI.Models
 
                 entity.Property(e => e.PageName).HasMaxLength(50);
 
+                entity.Property(e => e.PageNameVn).HasColumnName("PageNameVN");
+
                 entity.HasMany(d => d.Roles)
                     .WithMany(p => p.Pages)
                     .UsingEntity<Dictionary<string, object>>(
@@ -569,6 +571,8 @@ namespace CarpentryWorkshopAPI.Models
                 entity.Property(e => e.TeamId).HasColumnName("TeamID");
 
                 entity.Property(e => e.TeamName).HasMaxLength(100);
+
+                entity.Property(e => e.TeamSubLeaderId).HasColumnName("TeamSubLeaderID");
 
                 entity.HasMany(d => d.Works)
                     .WithMany(p => p.Teams)
