@@ -1,9 +1,18 @@
 // EmployeeModal.js
 
 import React from "react";
-import { Modal, Input, Radio, Select, Space, Form, Switch,Row, Col, } from "antd";
+import {
+  Modal,
+  Input,
+  Radio,
+  Select,
+  Space,
+  Form,
+  Switch,
+  Row,
+  Col,
+} from "antd";
 import userDetail from "../../assets/images/Ellipse 73.svg";
-
 
 function AddEmployeeModal({
   isModalOpen,
@@ -21,8 +30,7 @@ function AddEmployeeModal({
   setFax,
   handleChange,
   Option,
-})
-{
+}) {
   return (
     <Modal
       className="modal"
@@ -70,22 +78,7 @@ function AddEmployeeModal({
                       />
                     </td>
                   </tr>
-                  <tr>
-                    <th className="text">Giới tính</th>
-                    <td className="input-text fix">
-                      <Radio.Group
-                        onChange={(e) => setGender(e.target.value)}
-                        value={gender}
-                      >
-                        <Radio value={1} className="gender">
-                          Nam
-                        </Radio>
-                        <Radio value={2} className="gender">
-                          Nữ
-                        </Radio>
-                      </Radio.Group>
-                    </td>
-                  </tr>
+
                   <tr>
                     <th className="text">Số điện thoại</th>
                     <td className="input-text">
@@ -185,6 +178,7 @@ function AddEmployeeModal({
           </Row>
         </div>
       </div>
+
       <div className="modal-footer">
         <button className="btn-cancel" onClick={handleCancel}>
           Hủy bỏ
@@ -195,8 +189,6 @@ function AddEmployeeModal({
       </div>
     </Modal>
   );
-};
+}
 
 export default AddEmployeeModal;
-
-

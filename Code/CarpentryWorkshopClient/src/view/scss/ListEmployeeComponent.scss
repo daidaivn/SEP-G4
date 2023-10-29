@@ -13,6 +13,7 @@
 
 :where(.css-dev-only-do-not-override-1vr7spz).ant-modal .ant-modal-content {
   position: absolute;
+  right: -250px;
   top: -79px;
   padding: 0;
   border-radius: 60px;
@@ -174,4 +175,159 @@
   font-family: Noto Sans;
   font-size: 22px;
   font-weight: 400;
+}
+.modal-add-employee-all {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  background: #f9faf5;
+}
+.modal-employee-box1 {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.modal-child-body1 {
+  display: flex;
+  width: 340px;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  background: #3a5a40;
+}
+.modal-child-body2 {
+  display: flex;
+  padding: 30px 50px;
+  align-items: center;
+  align-content: center;
+  gap: 40px 50px;
+  flex: 1 0 0;
+  align-self: stretch;
+  flex-wrap: wrap;
+  .div-modal-child2 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    p {
+      width: 155px;
+      color: #000;
+      font-family: Noto Sans;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    Input {
+      display: flex;
+      width: 350px;
+      padding: 10px 30px;
+      align-items: flex-start;
+      gap: 10px;
+      color: #e9e9e9;
+      font-family: Noto Sans;
+      font-size: 24px;
+      font-weight: 400;
+    }
+    .radio-employee {
+      display: flex;
+      width: 350px;
+      align-items: center;
+      gap: 10px;
+    }
+    .ant-select {
+      width: 350px !important;
+    }
+  }
+}
+.img-body1 {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.modal-add-employee {
+  display: flex;
+  width: 1543px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.modal-head-employee {
+  display: flex;
+  padding: 36px 115px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-bottom: 1px solid #fff;
+  background: #3a5a40;
+  h3 {
+    color: #fff;
+    font-family: Noto Sans;
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+.modal-employee-box2 {
+  display: flex;
+  padding: 20px 60px 0px 60px;
+  align-items: flex-start;
+  align-self: stretch;
+  .modal-box2-child {
+    display: flex;
+    padding: 20px 50px;
+    align-items: flex-start;
+    flex: 1 0 0;
+    align-self: stretch;
+    border-radius: 40px;
+    background: #fff;
+    .box2-child-cn {
+      display: flex;
+      padding: 10px;
+      flex-direction: column;
+      gap: 40px;
+      flex: 1 0 0;
+      align-self: stretch;
+      .box-child-employee1 {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        p {
+          color: #000;
+          font-family: Noto Sans;
+          font-size: 24px;
+          font-weight: 600;
+          width: 246px;
+        }
+        Input {
+          width: 350px;
+          color: #e9e9e9;
+          font-family: Noto Sans;
+          font-size: 22px;
+          font-weight: 400;
+        }
+        .ant-select {
+          width: 350px !important;
+        }
+        .salary {
+          background: #e9e9e9;
+          color: #000;
+          font-family: Noto Sans;
+          font-size: 24px;
+          font-weight: 400;
+        }
+        .action {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+      }
+    }
+  }
+}
+.modal-footer-add {
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
 }
