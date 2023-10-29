@@ -121,6 +121,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 degreesStatusHistory.CurrentEmployeeId = 1;
                 degree.Status = true;
             }
+            _context.DegreesStatusHistories.Add(degreesStatusHistory);
             _context.Degrees.Update(degree);
             _context.SaveChanges();
 

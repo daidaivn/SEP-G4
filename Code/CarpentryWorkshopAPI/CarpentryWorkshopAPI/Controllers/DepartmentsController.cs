@@ -216,15 +216,13 @@ namespace CarpentryWorkshopAPI.Controllers
             var listDepartment = _context.Departments.Include(de=>de.RolesEmployees).ThenInclude(de=>de.Employee).AsQueryable();
             if(departmentDTO.DepartmentName != null || departmentDTO.DepartmentName.Trim() != "")
             {
-                listDepartment = listDepartment.Where(ld=>ld.DepartmentName.Trim().ToLower().Contains(departmentDTO.DepartmentName.Trim().ToLower()));
+                listDepartment = listDepartment.Where(ld=>ld.DepartmentName.ToLower().Contains(departmentDTO.DepartmentName.ToLower()));
             }
-            if(departmentDTO.Status == true)
+            if (departmentDTO.Status.HasValue)
             {
-                listDepartment = listDepartment.Where(ld => ld.Status == true);
-            }else if (departmentDTO.Status == false)
-            {
-                listDepartment = listDepartment.Where(ld => ld.Status == false);
-            }
+                listDepartment = listDepartment.Where(ld => ld.Status == departmentDTO.Status);
+            }   
+
             var departmentDTOs = _mapper.Map<List<DepartmentListDTO>>(listDepartment.ToList());
 
             return Ok(departmentDTOs);

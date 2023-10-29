@@ -27,15 +27,15 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public IActionResult GetAllDependentPeople()
         {
-          if (_context.Dependents == null)
-          {
-              return NotFound();
-          }
-          var deEndDate = _context.Dependents.Where(de=>(de.EndDate == null? DateTime.MaxValue : de.EndDate) < DateTime.Now && de.Status == true).ToList();
-          deEndDate.Select(de=>de.Status = false);
-          _context.UpdateRange(deEndDate);
-          _context.SaveChanges();
-          List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
+            if (_context.Dependents == null)
+            {
+                return NotFound();
+            }
+            var deEndDate = _context.Dependents.Where(de => (de.EndDate == null ? DateTime.MaxValue : de.EndDate) < DateTime.Now && de.Status == true).ToList();
+            deEndDate.Select(de => de.Status = false);
+            _context.UpdateRange(deEndDate);
+            _context.SaveChanges();
+            List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
           List<DependentListDTO> dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependents);
           return Ok(dependentDTOs);
         }
@@ -64,7 +64,14 @@ namespace CarpentryWorkshopAPI.Controllers
         public IActionResult UpdateDependent([FromBody]DependentDTO dependentDTO)
         {
             Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
+            dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
+                                        System.Globalization.CultureInfo.InvariantCulture) : null;
+            dependent.EndDate = !string.IsNullOrEmpty(dependentDTO.EndDateString) ? DateTime.ParseExact(dependentDTO.EndDateString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture) : null;
+            dependent.Dob = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture) : null;
             _context.Entry(dependent).State = EntityState.Modified;
+            _context.SaveChanges();
             DependentsStatusHistory dependentsStatusHistory= new DependentsStatusHistory() 
             {
                 Action = "Update",
@@ -104,6 +111,12 @@ namespace CarpentryWorkshopAPI.Controllers
             try 
             {
                 var dependent = _mapper.Map<Dependent>(dependentDTO);
+                dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
+                                        System.Globalization.CultureInfo.InvariantCulture) : null;
+                dependent.EndDate = !string.IsNullOrEmpty(dependentDTO.EndDateString) ? DateTime.ParseExact(dependentDTO.EndDateString, "dd-MM-yyyy",
+                                           System.Globalization.CultureInfo.InvariantCulture) : null;
+                dependent.Dob = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
+                                           System.Globalization.CultureInfo.InvariantCulture) : null;
                 _context.Dependents.Add(dependent);               
                 _context.SaveChanges();
                 DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory()
@@ -115,7 +128,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.DependentsStatusHistories.Add(dependentsStatusHistory);
                 _context.SaveChanges();
-                return CreatedAtAction("GetDependent", new { id = dependent.DependentId }, dependent);
+                return Ok("add success");
             }
             catch(Exception ex)
             {
