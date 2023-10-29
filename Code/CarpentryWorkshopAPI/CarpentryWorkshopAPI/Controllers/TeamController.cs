@@ -439,6 +439,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost]
         public IActionResult SearchTeam(string input)
         {
@@ -475,6 +476,119 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+                    );
+
+        [HttpPut]
+        public IActionResult ChangeLeaderTwoTeam(int oldTeamId , int newTeamId)
+        {
+            try
+            {
+                var teamOld = _context.Teams.Where(te => te.TeamId == oldTeamId).FirstOrDefault();
+                var teamNew = _context.Teams.Where(te => te.TeamId == newTeamId).FirstOrDefault();
+                if(teamNew ==null || teamOld == null)
+                {
+                    return NotFound();
+                }
+                var oldTeam = teamOld.TeamLeaderId;
+                var newTeam = teamNew.TeamLeaderId;
+                if(oldTeam != null || newTeam != null)
+                {
+                    teamOld.TeamLeaderId = newTeam;
+                    teamNew.TeamLeaderId = oldTeam;
+                    _context.Update(teamNew);
+                    _context.Update(teamOld);
+                    var employTeamOld = _context.EmployeeTeams.Where(te => te.EmployeeId == oldTeam && te.EndDate == null);
+                    employTeamOld.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    var employTeamNew = _context.EmployeeTeams.Where(te => te.EmployeeId == newTeam && te.EndDate == null);
+                    employTeamNew.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    _context.EmployeeTeams.UpdateRange(employTeamOld);
+                    _context.EmployeeTeams.UpdateRange(employTeamNew);
+                    EmployeeTeam changeTeamOld = new EmployeeTeam()
+                    {
+                        EmployeeId = oldTeam.Value,
+                        TeamId = newTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    EmployeeTeam changeTeamNew = new EmployeeTeam()
+                    {
+                        EmployeeId = newTeam.Value,
+                        TeamId = oldTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    _context.EmployeeTeams.Add(changeTeamOld);
+                    _context.EmployeeTeams.Add(changeTeamNew);
+                    _context.SaveChanges();
+
+                    return Ok("success");
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            
+        }
+        [HttpPut]
+        public IActionResult ChangeSubLeaderTwoTeam(int oldTeamId, int newTeamId)
+        {
+            try
+            {
+                var teamOld = _context.Teams.Where(te => te.TeamId == oldTeamId).FirstOrDefault();
+                var teamNew = _context.Teams.Where(te => te.TeamId == newTeamId).FirstOrDefault();
+                if (teamNew == null || teamOld == null)
+                {
+                    return NotFound();
+                }
+                var oldTeam = teamOld.TeamSubLeaderId;
+                var newTeam = teamNew.TeamSubLeaderId;
+                if (oldTeam != null || newTeam != null)
+                {
+                    teamOld.TeamSubLeaderId = newTeam;
+                    teamNew.TeamSubLeaderId = oldTeam;
+                    _context.Update(teamNew);
+                    _context.Update(teamOld);
+                    var employTeamOld = _context.EmployeeTeams.Where(te => te.EmployeeId == oldTeam && te.EndDate == null);
+                    employTeamOld.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    var employTeamNew = _context.EmployeeTeams.Where(te => te.EmployeeId == newTeam && te.EndDate == null);
+                    employTeamNew.ToList().ForEach(em => em.EndDate = DateTime.Now);
+                    _context.EmployeeTeams.UpdateRange(employTeamOld);
+                    _context.EmployeeTeams.UpdateRange(employTeamNew);
+                    EmployeeTeam changeTeamOld = new EmployeeTeam()
+                    {
+                        EmployeeId = oldTeam.Value,
+                        TeamId = newTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    EmployeeTeam changeTeamNew = new EmployeeTeam()
+                    {
+                        EmployeeId = newTeam.Value,
+                        TeamId = oldTeamId,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                    };
+                    _context.EmployeeTeams.Add(changeTeamOld);
+                    _context.EmployeeTeams.Add(changeTeamNew);
+                    _context.SaveChanges();
+
+                    return Ok("success");
+                }
+                else
+                {
+                    return BadRequest("err");
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
         }
     }
     }
