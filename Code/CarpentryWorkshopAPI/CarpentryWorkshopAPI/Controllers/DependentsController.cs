@@ -27,15 +27,15 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public IActionResult GetAllDependentPeople()
         {
-          if (_context.Dependents == null)
-          {
-              return NotFound();
-          }
-          var deEndDate = _context.Dependents.Where(de=>(de.EndDate == null? DateTime.MaxValue : de.EndDate) < DateTime.Now && de.Status == true).ToList();
-          deEndDate.Select(de=>de.Status = false);
-          _context.UpdateRange(deEndDate);
-          _context.SaveChanges();
-          List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
+            if (_context.Dependents == null)
+            {
+                return NotFound();
+            }
+            var deEndDate = _context.Dependents.Where(de => (de.EndDate == null ? DateTime.MaxValue : de.EndDate) < DateTime.Now && de.Status == true).ToList();
+            deEndDate.Select(de => de.Status = false);
+            _context.UpdateRange(deEndDate);
+            _context.SaveChanges();
+            List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
           List<DependentListDTO> dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependents);
           return Ok(dependentDTOs);
         }

@@ -309,28 +309,6 @@ function DependentPerson() {
                 </td>
               </tr>
             ))}
-            <tr onClick={showModalDependent}>
-              <td>1</td>
-              <td>Lê Văn Toàn</td>
-              <td>Nam</td>
-              <td>234567891</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Lê Văn Toàn</td>
-              <td>Nam</td>
-              <td>234567891</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
           </tbody>
         </table>
         {isEditing ? (
