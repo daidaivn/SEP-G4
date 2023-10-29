@@ -383,7 +383,7 @@ function Role() {
             <button className="btn-cancel" onClick={handleCancelGroup}>
               Hủy bỏ
             </button>
-            <button className="btn-edit btn-save" onClick={handleOkGroup}>
+            <button className="btn-edit btn-save " onClick={handleOkGroup}>
               Lưu
             </button>
           </div>

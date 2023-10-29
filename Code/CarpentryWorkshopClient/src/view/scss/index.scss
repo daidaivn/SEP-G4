@@ -527,9 +527,9 @@ i .logo-responsive {
   padding-right: 65px;
   padding-bottom: 50px !important;
   gap: 10px !important;
-  .btn-edit {
-    padding: 14px 15px 17px 17px !important;
-  }
+  // .btn-edit {
+  //   padding: 14px 15px 17px 17px !important;
+  // }
 }
 .info-body-group {
   display: flex;
@@ -901,8 +901,8 @@ i .logo-responsive {
   padding: 20px 65px 65px 65px !important;
   gap: 10px !important;
 }
-.modal-footer {
-  button {
+.modal-footer-group {
+  .btn-edit {
     width: 199px;
   }
 }
@@ -911,4 +911,8 @@ i .logo-responsive {
   .text-department {
     width: unset !important;
   }
+}
+.btn-fix-group {
+  width: unset !important;
+  padding: 14px 19px 17px 21px !important;
 }
