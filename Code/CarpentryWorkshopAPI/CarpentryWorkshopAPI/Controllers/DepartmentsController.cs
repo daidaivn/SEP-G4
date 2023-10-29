@@ -193,7 +193,10 @@ namespace CarpentryWorkshopAPI.Controllers
                                        FullName = $"{emp.FirstName} {emp.LastName}",
                                        Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                                        PhoneNumber = emp.PhoneNumber,
-                                       Roles = emp.RolesEmployees.Select(re => re.Role.RoleName).ToList(),
+                                       Roles = emp.RolesEmployees
+                                       .OrderByDescending(re => re.Role.RoleLevel)
+                                        .Select(re => re.Role.RoleName)
+                                        .FirstOrDefault(),
                                        Status = emp.Status,
                                    };
                 return Ok(employeeList);
@@ -219,6 +222,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 listDepartment = listDepartment.Where(ld => ld.Status == departmentDTO.Status);
             }   
+
             var departmentDTOs = _mapper.Map<List<DepartmentListDTO>>(listDepartment.ToList());
 
             return Ok(departmentDTOs);

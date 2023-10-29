@@ -100,12 +100,24 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             CreateMap<Employee, TeamMemberDTO>()
                 .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
+                .ForMember(de => de.CountryName, option => option.MapFrom(d => d.Country.CountryName))
                 .ReverseMap();
             CreateMap<WorkArea, WorkAreasDTO>()
                 .ReverseMap();
             CreateMap<UnitCost, UnitCostDTO>()
                 .ReverseMap();
-            
+            CreateMap<Wage, WageDTO>()
+               .ForMember(de => de.StartDatestring, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.EndDatestring, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ReverseMap();
+            CreateMap<CreateWageDTO, Wage>()
+                .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)))
+                .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)));
+            CreateMap<WageStatusHistory, WageStatusHistoryDTO>()
+              .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
+             .ReverseMap();
         }
     }
 }

@@ -18,6 +18,8 @@ namespace CarpentryWorkshopAPI.DTO
         public bool? Status { get; set; }
         public string? Cic { get; set; }
         public int? TeamId { get; set; }
+        public int? WageId { get; set; }
+        public double? SalaryCoefficient { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public List<RD> rDs { get; set; }
