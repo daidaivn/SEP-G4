@@ -27,7 +27,7 @@ import {
   AddEmployeeModal,
   DetailEmployeeModal,
 } from "./componentEmployee";
-
+import avt from "../assets/images/Frame 1649.svg";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
 
@@ -307,148 +307,166 @@ function ListEmployeeComponent() {
           onCancel={handleCancelAdd}
           width={1252}
         >
-          <div className="modal-head">
-            <h3>Thông tin cá nhân</h3>
-          </div>
-          <div className="modal-body">
-            <div className="avatar">
-              <div className="img-avatar">
-                <img src={userDetail} alt="" />
+          <div className="modal-add-employee">
+            <div className="modal-head-employee">
+              <h3>Thông tin cá nhân</h3>
+            </div>
+            <div className="modal-add-employee-all">
+              <div className="modal-employee-box1">
+                <div className="modal-child-body1">
+                  <div className="img-body1">
+                    <img src={avt} alt="" />
+                  </div>
+                </div>
+                <div className="modal-child-body2">
+                  <div className="div-modal-child2">
+                    <p>Họ:</p>
+                    <Input placeholder="Nhập họ kèm tên đệm" />
+                  </div>
+                  <div className="div-modal-child2">
+                    <p>Tên:</p>
+                    <Input placeholder="Nhập tên" />
+                  </div>
+
+                  <div className="div-modal-child2">
+                    <p>Giới tính: </p>
+                    <div className="radio-employee">
+                      <Radio.Group
+                        onChange={(e) => setGender(e.target.value)}
+                        value={gender}
+                      >
+                        <Radio value={1} className="gender">
+                          Nam
+                        </Radio>
+                        <Radio value={2} className="gender">
+                          Nữ
+                        </Radio>
+                      </Radio.Group>
+                    </div>
+                  </div>
+                  <div className="div-modal-child2">
+                    <p>Quốc tịch:</p>
+                    <Select
+                      className="select-input"
+                      mode="multiple"
+                      style={{
+                        width: "100%",
+                      }}
+                      defaultValue={["china"]}
+                      onChange={handleChange}
+                      optionLabelProp="label"
+                    >
+                      <Option value="china" label="China">
+                        <Space>China</Space>
+                      </Option>
+                      <Option value="usa" label="USA">
+                        <Space>USA</Space>
+                      </Option>
+                      <Option value="japan" label="Japan">
+                        <Space>Japan</Space>
+                      </Option>
+                      <Option value="korea" label="Korea">
+                        <Space>Korea</Space>
+                      </Option>
+                    </Select>
+                  </div>
+                  <div className="div-modal-child2">
+                    <p>Địa chỉ: </p>
+                    <Input placeholder="Nhập địa chỉ" />
+                  </div>
+                  <div className="div-modal-child2">
+                    <p>Mã định danh: </p>
+                    <Input placeholder="Nhập mã định danh" />
+                  </div>
+                </div>
               </div>
-              <div className="name-avatar">
-                <h2>Nguyễn Văn An</h2>
-                <div className="activiti">
-                  <Form.Item valuePropName="checked">
-                    <Switch />
-                  </Form.Item>
-                  <span>Đang hoạt động</span>
+              <div className="modal-employee-box2">
+                <div className="modal-box2-child">
+                  <div className="box2-child-cn">
+                    <div className="box-child-employee1">
+                      <p>Mã số thuế:</p>
+                      <Input placeholder="Nhập mã số thuế" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Lương cơ bản:</p>
+                      <Input value="4000000" className="salary" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Trạng thái hợp đồng:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="box2-child-cn">
+                    <div className="box-child-employee1">
+                      <p>Số điện thoại:</p>
+                      <Input placeholder="Nhập số điện thoại" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Chức vụ</p>
+                      <Select
+                        className="select-input"
+                        mode="multiple"
+                        style={{
+                          width: "100%",
+                        }}
+                        defaultValue={["china"]}
+                        onChange={handleChange}
+                        optionLabelProp="label"
+                      >
+                        <Option value="china" label="China">
+                          <Space>China</Space>
+                        </Option>
+                        <Option value="usa" label="USA">
+                          <Space>USA</Space>
+                        </Option>
+                        <Option value="japan" label="Japan">
+                          <Space>Japan</Space>
+                        </Option>
+                        <Option value="korea" label="Korea">
+                          <Space>Korea</Space>
+                        </Option>
+                      </Select>
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>phòng ban</p>
+                      <Select
+                        className="select-input"
+                        mode="multiple"
+                        style={{
+                          width: "100%",
+                        }}
+                        defaultValue={["china"]}
+                        onChange={handleChange}
+                        optionLabelProp="label"
+                      >
+                        <Option value="china" label="China">
+                          <Space>China</Space>
+                        </Option>
+                        <Option value="usa" label="USA">
+                          <Space>USA</Space>
+                        </Option>
+                        <Option value="japan" label="Japan">
+                          <Space>Japan</Space>
+                        </Option>
+                        <Option value="korea" label="Korea">
+                          <Space>Korea</Space>
+                        </Option>
+                      </Select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="modal-info">
-            <div className="info-detail">
-              <span className="title-info">Thông tin cá nhân</span>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <table className="table-info-detail">
-                    <tbody>
-                      <tr>
-                        <th className="text">Họ và tên</th>
-                        <td className="input-text">
-                          <Input
-                            placeholder="Basic usage"
-                            value="Nguyễn Văn An"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Giới tính</th>
-                        <td className="input-text fix">
-                          <Radio.Group onChange={onChangeRadio} value={value}>
-                            <Radio value={1} className="gender">
-                              Nam
-                            </Radio>
-                            <Radio value={2} className="gender">
-                              Nữ
-                            </Radio>
-                          </Radio.Group>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Số điện thoại</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="0123456789" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">CCCD</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="0123456789" />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </Col>
-                <Col span={12}>
-                  <table className="table-info-detail">
-                    <tbody>
-                      <tr>
-                        <th className="text">Mã số thuế</th>
-                        <td className="input-text">
-                          <Input placeholder="Basic usage" value="123456789" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="text">Chức vụ</th>
-                        <td className="input-text">
-                          <Select
-                            className="select-input"
-                            mode="multiple"
-                            style={{
-                              width: "100%",
-                            }}
-                            defaultValue={["china"]}
-                            onChange={handleChange}
-                            optionLabelProp="label"
-                          >
-                            <Option value="china" label="China">
-                              <Space>China</Space>
-                            </Option>
-                            <Option value="usa" label="USA">
-                              <Space>USA</Space>
-                            </Option>
-                            <Option value="japan" label="Japan">
-                              <Space>Japan</Space>
-                            </Option>
-                            <Option value="korea" label="Korea">
-                              <Space>Korea</Space>
-                            </Option>
-                          </Select>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <th className="text">Phòng ban</th>
-                        <td className="input-text">
-                          <Select
-                            className="select-input"
-                            mode="multiple"
-                            style={{
-                              width: "100%",
-                            }}
-                            defaultValue={["china"]}
-                            onChange={handleChange}
-                            optionLabelProp="label"
-                          >
-                            <Option value="china" label="China">
-                              <Space>China</Space>
-                            </Option>
-                            <Option value="usa" label="USA">
-                              <Space>USA</Space>
-                            </Option>
-                            <Option value="japan" label="Japan">
-                              <Space>Japan</Space>
-                            </Option>
-                            <Option value="korea" label="Korea">
-                              <Space>Korea</Space>
-                            </Option>
-                          </Select>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </Col>
-              </Row>
+            <div className="modal-footer modal-footer-add">
+              <button className="btn-cancel" onClick={handleCancelAdd}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkAdd}>
+                Lưu
+              </button>
             </div>
-          </div>
-          <div className="modal-footer">
-            <button className="btn-cancel" onClick={handleCancelAdd}>
-              Hủy bỏ
-            </button>
-            <button className="btn-edit btn-save" onClick={handleOkAdd}>
-              Lưu
-            </button>
           </div>
         </Modal>
         <i className="icon-responsive icon-filter icon-add">
@@ -544,6 +562,301 @@ function ListEmployeeComponent() {
           />
         )}
       </div>
+      {isEditing ? (
+        <Modal
+          className="modal"
+          visible={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={1252}
+        >
+          <div className="modal-add-employee">
+            <div className="modal-head-employee">
+              <h3>Thông tin cá nhân</h3>
+            </div>
+            <div className="modal-add-employee-all">
+              <div className="modal-employee-box1">
+                <div className="modal-child-body1">
+                  <div className="img-body1">
+                    <img src={avt} alt="" />
+                  </div>
+                </div>
+                <div className="modal-child-body2">
+                  <div className="div-modal-child2 div-detail">
+                    <p>Họ:</p>
+                    <Input value="Nguyễn Văn" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Tên:</p>
+                    <Input value="An" />
+                  </div>
+
+                  <div className="div-modal-child2">
+                    <p>Giới tính: </p>
+                    <div className="radio-employee">
+                      <Radio.Group
+                        onChange={(e) => setGender(e.target.value)}
+                        value={gender}
+                      >
+                        <Radio value={1} className="gender">
+                          Nam
+                        </Radio>
+                        <Radio value={2} className="gender">
+                          Nữ
+                        </Radio>
+                      </Radio.Group>
+                    </div>
+                  </div>
+                  <div className="div-modal-child2">
+                    <p>Quốc tịch:</p>
+                    <Select
+                      className="select-input"
+                      mode="multiple"
+                      style={{
+                        width: "100%",
+                      }}
+                      defaultValue={["china"]}
+                      onChange={handleChange}
+                      optionLabelProp="label"
+                    >
+                      <Option value="china" label="China">
+                        <Space>China</Space>
+                      </Option>
+                      <Option value="usa" label="USA">
+                        <Space>USA</Space>
+                      </Option>
+                      <Option value="japan" label="Japan">
+                        <Space>Japan</Space>
+                      </Option>
+                      <Option value="korea" label="Korea">
+                        <Space>Korea</Space>
+                      </Option>
+                    </Select>
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Địa chỉ: </p>
+                    <Input value="Hà Nội" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Mã định danh: </p>
+                    <Input value="000125558995" />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-employee-box2">
+                <div className="modal-box2-child">
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Mã số thuế:</p>
+                      <Input value="0987654321" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Lương cơ bản:</p>
+                      <Input value="4000000" className="salary" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Trạng thái hợp đồng:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="box2-child-cn">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Số điện thoại:</p>
+                      <Input value="0192568746" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Chức vụ</p>
+                      <Select
+                        className="select-input"
+                        mode="multiple"
+                        style={{
+                          width: "100%",
+                        }}
+                        defaultValue={["china"]}
+                        onChange={handleChange}
+                        optionLabelProp="label"
+                      >
+                        <Option value="china" label="China">
+                          <Space>China</Space>
+                        </Option>
+                        <Option value="usa" label="USA">
+                          <Space>USA</Space>
+                        </Option>
+                        <Option value="japan" label="Japan">
+                          <Space>Japan</Space>
+                        </Option>
+                        <Option value="korea" label="Korea">
+                          <Space>Korea</Space>
+                        </Option>
+                      </Select>
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>phòng ban</p>
+                      <Select
+                        className="select-input"
+                        mode="multiple"
+                        style={{
+                          width: "100%",
+                        }}
+                        defaultValue={["china"]}
+                        onChange={handleChange}
+                        optionLabelProp="label"
+                      >
+                        <Option value="china" label="China">
+                          <Space>China</Space>
+                        </Option>
+                        <Option value="usa" label="USA">
+                          <Space>USA</Space>
+                        </Option>
+                        <Option value="japan" label="Japan">
+                          <Space>Japan</Space>
+                        </Option>
+                        <Option value="korea" label="Korea">
+                          <Space>Korea</Space>
+                        </Option>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-add modal-footer-edit">
+              <button className="btn-cancel" onClick={handleCancelAdd}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleSave}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
+      ) : (
+        <Modal
+          className="modal"
+          visible={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={1252}
+        >
+          <div className="modal-add-employee">
+            <div className="modal-head-employee">
+              <h3>Thông tin cá nhân</h3>
+            </div>
+            <div className="modal-add-employee-all">
+              <div className="modal-employee-box1">
+                <div className="modal-child-body1">
+                  <div className="img-body1">
+                    <img src={avt} alt="" />
+                  </div>
+                </div>
+                <div className="modal-child-body2">
+                  <div className="div-modal-child2 div-detail">
+                    <p>Họ và tên:</p>
+                    <Input value="Nguyễn Văn An" />
+                  </div>
+
+                  <div className="div-modal-child2 div-detail">
+                    <p>Giới tính: </p>
+                    <div className="radio-employee">
+                      <Input value="Nam" />
+                    </div>
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Quốc tịch:</p>
+                    <Select
+                      className="select-input"
+                      mode="multiple"
+                      style={{
+                        width: "100%",
+                      }}
+                      defaultValue={["china"]}
+                      onChange={handleChange}
+                      optionLabelProp="label"
+                    >
+                      <Option value="china" label="China">
+                        <Space>China</Space>
+                      </Option>
+                      <Option value="usa" label="USA">
+                        <Space>USA</Space>
+                      </Option>
+                      <Option value="japan" label="Japan">
+                        <Space>Japan</Space>
+                      </Option>
+                      <Option value="korea" label="Korea">
+                        <Space>Korea</Space>
+                      </Option>
+                    </Select>
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Địa chỉ: </p>
+                    <Input value="Hà Nội" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Mã định danh: </p>
+                    <Input value="000125558995" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Số điện thoại: </p>
+                    <Input value="0192568746" />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-employee-box2 ">
+                <div className="modal-box2-child">
+                  <div className="box2-child-cn">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Mã số thuế:</p>
+                      <Input value="0987654321" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Lương cơ bản:</p>
+                      <Input value="4000000" className="salary" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Trạng thái hợp đồng:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                      <p className="text-option">Còn thời hạn</p>
+                    </div>
+                  </div>
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Số điện thoại:</p>
+                      <Input value="0987654321" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Chức vụ:</p>
+                      <Input value="Trưởng phòng" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Kiêm nghiệm chức vụ:</p>
+                      <Input value="Trưởng phòng" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Phòng ban:</p>
+                      <Input value="Phòng kế toán" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-add">
+              <div className="modal-footer1">Người phụ thuộc</div>
+              <div className="modal-footer modal-footer2">
+                <button className="btn-cancel" onClick={handleCancelAdd}>
+                  Hủy bỏ
+                </button>
+                <button className="btn-edit" onClick={handleEdit}>
+                  Chỉnh sửa
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ const TimekeepingComponent = () => {
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Checkin - checkout</h2>
+            <h2>Điểm danh thời gian làm việc của nhân viên theo nhóm</h2>
             <span>
               Lưu thông tin bắt đầu làm việc và ngưng làm việc của một nhóm
             </span>
@@ -190,7 +190,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -227,7 +227,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -264,7 +264,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -301,7 +301,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -338,7 +338,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -375,7 +375,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -412,7 +412,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="enter">
-                  <p>Vào</p>
+                  <p>Bắt đầu</p>
                 </span>
               </td>
             </tr>
@@ -449,7 +449,7 @@ const TimekeepingComponent = () => {
               </td>
               <td>
                 <span className="go-out">
-                  <p>Ra</p>
+                  <p>Ngưng</p>
                 </span>
               </td>
             </tr>
