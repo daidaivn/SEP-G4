@@ -9,6 +9,7 @@ using CarpentryWorkshopAPI.Models;
 using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using System.Text;
+using System.Globalization;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -79,14 +80,10 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                if (!DepartmentExists(departmentDTO.DepartmentId))
-                {
-                    return NotFound();
-                }
-                else
-                {
+                
+                
                     return BadRequest(ex.Message);
-                }
+                
             }
 
             return Ok("Update success");
@@ -95,7 +92,7 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult CreateDepartment([FromBody] string name)
+        public IActionResult CreateDepartment(string departmentName)
         {
             if (_context.Departments == null)
             {
@@ -106,7 +103,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 DepartmentDTO departmentDTO = new DepartmentDTO() 
                 {
                     DepartmentId = 0,
-                    DepartmentName= name,
+                    DepartmentName= departmentName,
                     Status = true
                 };
                 var department = _mapper.Map<Department>(departmentDTO);
@@ -213,26 +210,41 @@ namespace CarpentryWorkshopAPI.Controllers
             if (departmentDTO == null || _context.Departments == null)
             {
                 return BadRequest();
-            };
-            var listDepartment = _context.Departments.Include(de=>de.RolesEmployees).ThenInclude(de=>de.Employee).AsQueryable();
-            if(departmentDTO.DepartmentName != null || departmentDTO.DepartmentName.Trim() != "")
-            {
-                string normalizedText = departmentDTO.DepartmentName.ToLower().Normalize(NormalizationForm.FormD);
-                listDepartment = listDepartment.Where(ld=>  ld.DepartmentName.ToLower().Normalize(NormalizationForm.FormD).Contains(normalizedText));
             }
+
+            var listDepartment = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).ToList().AsQueryable();
+
+            if (!string.IsNullOrEmpty(departmentDTO.DepartmentName))
+            {
+                string searchTerm = departmentDTO.DepartmentName.ToLower().Normalize(NormalizationForm.FormD);
+                listDepartment = listDepartment.Where(ld => ld.DepartmentName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm));
+            }
+
             if (departmentDTO.Status.HasValue)
             {
                 listDepartment = listDepartment.Where(ld => ld.Status == departmentDTO.Status);
-            }   
+            }
 
-            var departmentDTOs = _mapper.Map<List<DepartmentListDTO>>(listDepartment.ToList());
+            var departmentDTOs = _mapper.Map<List<DepartmentListDTO>>(listDepartment);
 
             return Ok(departmentDTOs);
-        } 
-        [HttpPost]
-        private bool DepartmentExists(int id)
-        {
-            return (_context.Departments?.Any(e => e.DepartmentId == id)).GetValueOrDefault();
         }
+        //[HttpPost]
+        //private string RemoveDiacritics(string text)
+        //{
+        //    string normalizedText = text.Normalize(NormalizationForm.FormD);
+        //    StringBuilder result = new StringBuilder();
+
+        //    foreach (char c in normalizedText)
+        //    {
+        //        if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+        //        {
+        //            result.Append(c);
+        //        }
+        //    }
+
+        //    return result.ToString();
+        //}
+
     }
 }

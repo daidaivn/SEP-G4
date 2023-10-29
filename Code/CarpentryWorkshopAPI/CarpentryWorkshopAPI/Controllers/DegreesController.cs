@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
 using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -134,20 +135,17 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound();
             }
-            var degree = _context.Degrees.AsQueryable();
+            var degree = _context.Degrees.ToList().AsQueryable();
             if (!string.IsNullOrEmpty(degreeDTO.DegreeName))
             {
-                degree = degree.Where(de => de.DegreeName.Contains(degreeDTO.DegreeName));
+                string text = degreeDTO.DegreeName.ToLower().Normalize(NormalizationForm.FormD);
+                degree = degree.Where(de => de.DegreeName.ToLower().Normalize(NormalizationForm.FormD).Contains(text));
             }
-            if(degreeDTO.Status == true)
+            if(degreeDTO.Status.HasValue == true)
             {
-                degree = degree.Where(de => de.Status == true);
+                degree = degree.Where(de => de.Status == degreeDTO.Status);
             }
-            if (degreeDTO.Status == false)
-            {
-                degree = degree.Where(de => de.Status == false);
-            }
-            return Ok(_mapper.Map<DegreeDTO>(degree.ToList()));
+            return Ok(_mapper.Map<List<DegreeDTO>>(degree));
         } 
     }
 }
