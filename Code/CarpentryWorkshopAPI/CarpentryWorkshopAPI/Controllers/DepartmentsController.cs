@@ -224,6 +224,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 listDepartment = listDepartment.Where(ld => ld.Status == departmentDTO.Status);
             }   
+
             var departmentDTOs = _mapper.Map<List<DepartmentListDTO>>(listDepartment.ToList());
 
             return Ok(departmentDTOs);

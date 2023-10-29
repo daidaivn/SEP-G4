@@ -196,91 +196,96 @@ namespace CarpentryWorkshopAPI.Controllers
                        && x.PhoneNumber == createEmployeeDTO.PhoneNumber 
                        && x.Email == createEmployeeDTO.Email
                        && x.Cic == createEmployeeDTO.Cic);
-                
+
                 if (employee == null)
                 {
-                         var newemp = _mapper.Map<Employee>(createEmployeeDTO);
+                   
+                        var newemp = _mapper.Map<Employee>(createEmployeeDTO);
                         _context.Employees.Add(newemp);
                         _context.SaveChanges();
-                       
-                            RolesEmployee newremp = new RolesEmployee
-                            {
-                                RoleId = createEmployeeDTO.rDs.RoleID,
-                                EmployeeId = newemp.EmployeeId,
-                                StartDate = createEmployeeDTO.StartDate ,
-                                DepartmentId = createEmployeeDTO.rDs.DepartmentID,
-                                Status = true,
-                            };
-                            _context.RolesEmployees.Add(newremp);
-                        
-                    UserAccount newaccount = new UserAccount()
+                    foreach (var rd in createEmployeeDTO.rDs)
                     {
+                        RolesEmployee newremp = new RolesEmployee
+                        {
+                            RoleId = rd.RoleID,
+                            EmployeeId = newemp.EmployeeId,
+                            StartDate = createEmployeeDTO.StartDate,
+                            DepartmentId = rd.DepartmentID,
+                            Status = true,
+                        };
+                        _context.RolesEmployees.Add(newremp);
+                    }
 
-                    };
-                    EmployeesStatusHistory newhistory = new EmployeesStatusHistory
-                    {
-                        EmployeeId = newemp.EmployeeId,
-                        Action = "Create",
-                        ActionDate = DateTime.Now,
-                        CurrentEmployeeId = null,
-                    };
-                    _context.EmployeesStatusHistories.Add(newhistory);
-                    _context.SaveChanges();
-                    return Ok("Create employee successful");
-                }
-                else
-                {
-                  
+                        UserAccount newaccount = new UserAccount()
+                        {
 
-                    var roleemployees = _context.RolesEmployees
-                    .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
-                    && x.RoleId == createEmployeeDTO.rDs.RoleID
-                    && x.DepartmentId == createEmployeeDTO.rDs.DepartmentID);
-
-                           if (roleemployees != null)
-                            {
-                                roleemployees.Status = createEmployeeDTO.Status;
-                                roleemployees.EndDate = DateTime.Now;
-                            _context.RolesEmployees.Update(roleemployees);
-                            }
-                            else
-                            {
-                              RolesEmployee newremp = new RolesEmployee
-                              {
-                                RoleId = createEmployeeDTO.rDs.RoleID,
-                                EmployeeId = employee.EmployeeId,
-                                StartDate = createEmployeeDTO.StartDate,
-                                DepartmentId = createEmployeeDTO.rDs.DepartmentID,
-                                Status = true,
-                              };
-                            _context.RolesEmployees.Add(newremp);
-                            }
-                        employee.Image = createEmployeeDTO.Image;
-                        employee.FirstName = createEmployeeDTO.FirstName;
-                        employee.LastName = createEmployeeDTO.LastName;
-                        employee.Email = createEmployeeDTO.Email;
-                        employee.Address = createEmployeeDTO.Address;
-                        employee.Dob = createEmployeeDTO.Dob;
-                        employee.Gender = createEmployeeDTO.Gender;
-                        employee.PhoneNumber= createEmployeeDTO.PhoneNumber;
-                        employee.TaxId= createEmployeeDTO.TaxId;
-                        employee.Status = createEmployeeDTO.Status;
-                        employee.Cic = createEmployeeDTO.Cic;
-                        employee.CountryId= createEmployeeDTO.CountryId;   
-                        employee.WageId= createEmployeeDTO.WageId;
-                        employee.SalaryCoefficient = createEmployeeDTO.SalaryCoefficient;
-                        employee.Status = createEmployeeDTO.Status;
-                        _context.Employees.Update(employee);
+                        };
                         EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                         {
-                            EmployeeId = employee.EmployeeId,
-                            Action = "Update",
+                            EmployeeId = newemp.EmployeeId,
+                            Action = "Create",
                             ActionDate = DateTime.Now,
                             CurrentEmployeeId = null,
                         };
                         _context.EmployeesStatusHistories.Add(newhistory);
+                        _context.SaveChanges();
+                        return Ok("Create employee successful");
+                    
+                }
+                else
+                {
+                    foreach (var rd in createEmployeeDTO.rDs)
+                    {
+                        var roleemployees = _context.RolesEmployees
+                    .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
+                    && x.RoleId == rd.RoleID
+                    && x.DepartmentId == rd.DepartmentID);
 
+                        if (roleemployees != null)
+                        {
+                            roleemployees.Status = createEmployeeDTO.Status;
+                            roleemployees.EndDate = DateTime.Now;
+                            _context.RolesEmployees.Update(roleemployees);
+                        }
+                        else
+                        {
+                            RolesEmployee newremp = new RolesEmployee
+                            {
+                                RoleId = rd.RoleID,
+                                EmployeeId = employee.EmployeeId,
+                                StartDate = createEmployeeDTO.StartDate,
+                                DepartmentId = rd.DepartmentID,
+                                Status = true,
+                            };
+                            _context.RolesEmployees.Add(newremp);
+                        }
                     }
+                    employee.Image = createEmployeeDTO.Image;
+                    employee.FirstName = createEmployeeDTO.FirstName;
+                    employee.LastName = createEmployeeDTO.LastName;
+                    employee.Email = createEmployeeDTO.Email;
+                    employee.Address = createEmployeeDTO.Address;
+                    employee.Dob = createEmployeeDTO.Dob;
+                    employee.Gender = createEmployeeDTO.Gender;
+                    employee.PhoneNumber = createEmployeeDTO.PhoneNumber;
+                    employee.TaxId = createEmployeeDTO.TaxId;
+                    employee.Status = createEmployeeDTO.Status;
+                    employee.Cic = createEmployeeDTO.Cic;
+                    employee.CountryId = createEmployeeDTO.CountryId;
+                    employee.WageId = createEmployeeDTO.WageId;
+                    employee.SalaryCoefficient = createEmployeeDTO.SalaryCoefficient;
+                    employee.Status = createEmployeeDTO.Status;
+                    _context.Employees.Update(employee);
+                    EmployeesStatusHistory newhistory = new EmployeesStatusHistory
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        Action = "Update",
+                        ActionDate = DateTime.Now,
+                        CurrentEmployeeId = null,
+                    };
+                    _context.EmployeesStatusHistories.Add(newhistory);
+
+                }
                     _context.SaveChanges();
                     return Ok("Update employee and roleemployee successfull");
 
