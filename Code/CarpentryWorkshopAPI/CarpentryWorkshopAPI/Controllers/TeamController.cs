@@ -35,7 +35,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
-                        NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Count(),
+                        NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Distinct().Count(),
                         TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
                         (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
 
@@ -477,22 +477,22 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-                    );
+
 
         [HttpPut]
-        public IActionResult ChangeLeaderTwoTeam(int oldTeamId , int newTeamId)
+        public IActionResult ChangeLeaderTwoTeam(int oldTeamId, int newTeamId)
         {
             try
             {
                 var teamOld = _context.Teams.Where(te => te.TeamId == oldTeamId).FirstOrDefault();
                 var teamNew = _context.Teams.Where(te => te.TeamId == newTeamId).FirstOrDefault();
-                if(teamNew ==null || teamOld == null)
+                if (teamNew == null || teamOld == null)
                 {
                     return NotFound();
                 }
                 var oldTeam = teamOld.TeamLeaderId;
                 var newTeam = teamNew.TeamLeaderId;
-                if(oldTeam != null || newTeam != null)
+                if (oldTeam != null || newTeam != null)
                 {
                     teamOld.TeamLeaderId = newTeam;
                     teamNew.TeamLeaderId = oldTeam;
@@ -523,14 +523,18 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
 
                     return Ok("success");
+                }
+                else
+                {
+                    return BadRequest("err");
+                }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-            
         }
         [HttpPut]
         public IActionResult ChangeSubLeaderTwoTeam(int oldTeamId, int newTeamId)

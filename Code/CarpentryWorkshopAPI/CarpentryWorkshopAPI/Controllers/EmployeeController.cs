@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Globalization;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -367,12 +368,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     query = query.Where(x => x.Status == employeeSearchDTO.Status.Value);
                 }
 
-                if (employeeSearchDTO.RoleID != null && employeeSearchDTO.RoleID.Count > 0)
+                if (employeeSearchDTO.RoleID != 0)
                 {
                     query = query.Where(entity =>
-                        entity.RolesEmployees.Any(roleemp =>
-                            employeeSearchDTO.RoleID.Contains(roleemp.Role.RoleId)
-                        )
+                        entity.RolesEmployees.Any(roleemp => roleemp.Role.RoleId == employeeSearchDTO.RoleID)
                     );
                 }
 
