@@ -117,6 +117,9 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<WageStatusHistory, WageStatusHistoryDTO>()
               .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
              .ReverseMap();
+            CreateMap<Employee, LeadDetailDTO>()
+               .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
+               .ReverseMap();
         }
     }
 }
