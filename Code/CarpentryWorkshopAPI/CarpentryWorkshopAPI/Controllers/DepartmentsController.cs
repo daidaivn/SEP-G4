@@ -34,8 +34,8 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound();
             }
-            var list = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).AsQueryable();
-            List<DepartmentListDTO> listDTO = _mapper.Map<List<DepartmentListDTO>>(list.ToList());
+            var list = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).ToList();
+            List<DepartmentListDTO> listDTO = _mapper.Map<List<DepartmentListDTO>>(list);
 
             return Ok(listDTO);
         }

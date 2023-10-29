@@ -44,7 +44,6 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var role = await _context.Roles.FindAsync(accessDTO.RoleId);
                 var page = await _context.Pages.FindAsync(accessDTO.PageId);
-
                 if (role == null || page == null)
                 {
                     return BadRequest("Invalid Role or Page ID");

@@ -439,16 +439,16 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPut]
-        public IActionResult ChangeLeaderTwoTeam(int oldTeam , int newteam)
+        public IActionResult ChangeLeaderTwoTeam(int oldTeam , int newTeam)
         {
             try
             {
-                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newteam).ToList();
+                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newTeam).ToList();
                 var oldTeam1 = team[0].TeamLeaderId;
-                var newTem1 = team[1].TeamLeaderId;
+                var newTeam1 = team[1].TeamLeaderId;
                 if (team.Count == 2)
                 {
-                    team[0].TeamLeaderId = newTem1;
+                    team[0].TeamLeaderId = newTeam1;
                     team[1].TeamLeaderId = oldTeam1;
                     _context.UpdateRange(team);
                     _context.SaveChanges();
@@ -464,6 +464,33 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
             
+        }
+        [HttpPut]
+        public IActionResult ChangeSubLeaderTwoTeam(int oldTeam, int newTeam)
+        {
+            try
+            {
+                var team = _context.Teams.Where(te => te.TeamId == oldTeam || te.TeamId == newTeam).ToList();
+                var OldTeam = team[0].TeamSubLeaderId;
+                var NewTeam = team[1].TeamSubLeaderId;
+                if (team.Count == 2)
+                {
+                    team[0].TeamSubLeaderId = NewTeam;
+                    team[1].TeamSubLeaderId = OldTeam;
+                    _context.UpdateRange(team);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    return BadRequest("err");
+                }
+                return Ok("success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
     }
