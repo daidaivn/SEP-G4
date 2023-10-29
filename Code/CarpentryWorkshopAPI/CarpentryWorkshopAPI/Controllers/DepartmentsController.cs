@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
 using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -216,7 +217,8 @@ namespace CarpentryWorkshopAPI.Controllers
             var listDepartment = _context.Departments.Include(de=>de.RolesEmployees).ThenInclude(de=>de.Employee).AsQueryable();
             if(departmentDTO.DepartmentName != null || departmentDTO.DepartmentName.Trim() != "")
             {
-                listDepartment = listDepartment.Where(ld=>ld.DepartmentName.ToLower().Contains(departmentDTO.DepartmentName.ToLower()));
+                string normalizedText = departmentDTO.DepartmentName.ToLower().Normalize(NormalizationForm.FormD);
+                listDepartment = listDepartment.Where(ld=>  ld.DepartmentName.ToLower().Normalize(NormalizationForm.FormD).Contains(normalizedText));
             }
             if (departmentDTO.Status.HasValue)
             {
