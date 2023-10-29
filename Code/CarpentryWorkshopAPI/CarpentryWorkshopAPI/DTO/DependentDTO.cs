@@ -8,9 +8,9 @@
         public string? IdentifierCode { get; set; }
         public bool? Gender { get; set; }
         public string? Relationship { get; set; }
-        public DateTime? Dob { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public string? DobString { get; set; }
+        public string? StartDateString { get; set; }
+        public string? EndDateString { get; set; }
         public string? IdentifierName { get; set; }
         public bool? Status { get; set; }
         public string? NoteReason { get; set; }
