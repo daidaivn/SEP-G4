@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'CarpentryWorkshopAPI'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B40F4D97720C492296C9BEF758EAFDB6 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C5811415F7544CA889457EB318DC3953 }}
           package: .
