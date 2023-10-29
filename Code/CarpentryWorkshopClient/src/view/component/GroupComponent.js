@@ -438,6 +438,58 @@ const GroupComponent = () => {
                 onChange={(e) => setNewTeamName(e.target.value)}
               />
             </div>
+            <div className="info-add-department">
+              <div className="text-department">Ca trưởng</div>
+              <Select
+                className="select-input"
+                mode="multiple"
+                style={{
+                  width: "100%",
+                }}
+                defaultValue={["china"]}
+                onChange={handleChange}
+                optionLabelProp="label"
+              >
+                <Option value="china" label="China">
+                  <Space>China</Space>
+                </Option>
+                <Option value="usa" label="USA">
+                  <Space>USA</Space>
+                </Option>
+                <Option value="japan" label="Japan">
+                  <Space>Japan</Space>
+                </Option>
+                <Option value="korea" label="Korea">
+                  <Space>Korea</Space>
+                </Option>
+              </Select>
+            </div>
+            <div className="info-add-department">
+              <div className="text-department">Ca phó</div>
+              <Select
+                className="select-input"
+                mode="multiple"
+                style={{
+                  width: "100%",
+                }}
+                defaultValue={["china"]}
+                onChange={handleChange}
+                optionLabelProp="label"
+              >
+                <Option value="china" label="China">
+                  <Space>China</Space>
+                </Option>
+                <Option value="usa" label="USA">
+                  <Space>USA</Space>
+                </Option>
+                <Option value="japan" label="Japan">
+                  <Space>Japan</Space>
+                </Option>
+                <Option value="korea" label="Korea">
+                  <Space>Korea</Space>
+                </Option>
+              </Select>
+            </div>
           </div>
           <div className="modal-footer modal-footer-deparment">
             <button className="btn-cancel" onClick={handleCancelGroup}>
