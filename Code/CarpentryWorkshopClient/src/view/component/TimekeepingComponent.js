@@ -151,7 +151,7 @@ const TimekeepingComponent = () => {
             <tr>
               <td>STT</td>
               <td>Tên nhân viên</td>
-              <td>Mã số</td>
+              <td>Mã nhân viên</td>
               <td>Trạng thái</td>
               <td>Hành động</td>
             </tr>

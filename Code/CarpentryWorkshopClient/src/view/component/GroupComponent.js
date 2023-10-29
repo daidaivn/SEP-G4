@@ -380,7 +380,7 @@ const GroupComponent = () => {
                 <td>{index + 1}</td>
                 <td>{role.teamName}</td>
                 <td>{role.numberOfTeamMember}</td>
-                <td>{role.roleName}</td>
+                <td>{role.teamLeaderName}</td>
               </tr>
             ))}
             <tr onClick={showModalDetail}>
