@@ -14,6 +14,7 @@ namespace CarpentryWorkshopAPI.Models
         public int PageId { get; set; }
         public string? PageName { get; set; }
         public bool? Status { get; set; }
+        public string? PageNameVn { get; set; }
 
         public virtual ICollection<PageStatusHistory> PageStatusHistories { get; set; }
 

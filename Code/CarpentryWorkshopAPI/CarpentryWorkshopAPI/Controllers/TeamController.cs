@@ -3,6 +3,7 @@ using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Security.Cryptography.Xml;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -34,7 +35,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
                         NumberOfTeamMember = t.EmployeeTeams.Count(),
-                    });
+                        TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
+                        (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
+
+                    }) ;
                 if (teams == null)
                 {
                     return NotFound();
@@ -88,6 +92,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                string sm = "Trưởng ca";
+                string sa = "Phó ca";
+                var employeerole = _context.Employees
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(re => re.Role)
+                    .Where(x => x.EmployeeId == eid).FirstOrDefault();
+                if (employeerole != null && employeerole.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
+                {
+                    return Ok("Your employee has been provided can not delete");
+                }
+                if (employeerole != null && employeerole.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
+                {
+                    return Ok("Your employee has been provided can not delete");
+                }
                 var dtm = _context.EmployeeTeams
                     .FirstOrDefault(x => x.EmployeeId == eid && x.TeamId == tid);
                 if (dtm == null)
@@ -125,6 +143,62 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.HistoryChangeTeams.Add(history);
                 _context.SaveChanges();
                 return Ok("Create team successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetLeaderForTeam()
+        {
+            try
+            {
+                string lead = "Trưởng ca";
+                var leaderlist = _context.Employees
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(re => re.Role)
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())))
+                    .ToList();
+                var exleader = _context.EmployeeTeams
+                    .Where(x => x.EndDate == null)
+                    .Include(x => x.Employee)
+                    .ThenInclude(e => e.RolesEmployees)
+                    .ThenInclude(re => re.Role)
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())))
+                    .Select(et => et.Employee)
+                    .ToList();
+                var newlead = leaderlist.Except(exleader).ToList();
+                var dto = _mapper.Map<List<LeadDetailDTO>>(newlead);
+                return Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetSubLeaderForTeam()
+        {
+            try
+            {
+                string sublead = "Phó ca";
+                var subleaderlist = _context.Employees
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(re => re.Role)
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower())))
+                    .ToList();
+                var subexleader = _context.EmployeeTeams
+                    .Where(x => x.EndDate == null)
+                    .Include(x => x.Employee)
+                    .ThenInclude(e => e.RolesEmployees)
+                    .ThenInclude(re => re.Role)
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower())))
+                    .Select(et => et.Employee)
+                    .ToList();
+                var newsublead = subleaderlist.Except(subexleader).ToList();
+                var dto = _mapper.Map<List<LeadDetailDTO>>(newsublead);
+                return Ok(dto);
             }
             catch (Exception ex)
             {
@@ -338,13 +412,20 @@ namespace CarpentryWorkshopAPI.Controllers
                                   .ToList();
                 string sm = "Trưởng ca";
                 var shiftmanager = members
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower()))).FirstOrDefault();
+                 .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
+                 .OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
+                 .FirstOrDefault();
                 string sa = "Phó ca";
                 var shiftassistant = members
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower()))).FirstOrDefault();
+                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
+                .OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
+                .FirstOrDefault();
                 string st = "Nhân viên";
                 var staff = members
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower()))).ToList();
+                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower())))
+                .GroupBy(emp => emp.EmployeeId)
+                .Select(group => group.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate)).First())
+                .ToList();
                 var teammem = new
                 {
                     ShiftManager = _mapper.Map<TeamMemberDTO>(shiftmanager),
