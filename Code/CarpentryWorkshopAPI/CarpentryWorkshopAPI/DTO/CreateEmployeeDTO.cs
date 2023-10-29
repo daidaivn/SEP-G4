@@ -22,7 +22,7 @@ namespace CarpentryWorkshopAPI.DTO
         public double? SalaryCoefficient { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public RD rDs { get; set; }
+        public List<RD> rDs { get; set; }
 
         public class RD
         {
