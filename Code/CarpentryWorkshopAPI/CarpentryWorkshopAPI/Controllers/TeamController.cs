@@ -440,16 +440,16 @@ namespace CarpentryWorkshopAPI.Controllers
                                             }
                                         )
                                   .ToList();
-                string sm = "Trưởng ca";
-                var shiftmanager = members
-                 .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
-                 .OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
-                 .FirstOrDefault();
-                string sa = "Phó ca";
-                var shiftassistant = members
-                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
-                .OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
-                .FirstOrDefault();
+
+                var shiftmanager = _context.Employees.FirstOrDefault(x => x.EmployeeId == team.TeamLeaderId);
+                //.Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
+                //.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
+                //.FirstOrDefault();
+                //string sa = "Phó ca";
+                var shiftassistant = _context.Employees.FirstOrDefault(x => x.EmployeeId == team.TeamSubLeaderId);
+                //.Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
+                //.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
+                //.FirstOrDefault();
                 string st = "Nhân viên";
                 var staff = members
                 .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower())))
