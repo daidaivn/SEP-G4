@@ -29,10 +29,9 @@ const changeSubLeaderId = (teamOld, teamNew) => {
   const newTeam = teamNew ; 
   return axios.put(`/CCMSapi/Team/ChangeSubLeaderTwoTeam?oldTeam=${oldTeam}&newTeam=${newTeam}`);
 };
-const changeStafId = (teamOld, teamNew, employeeTeamId) => {
-  const oldTeam = teamOld ; 
+const changeStafId = (teamNew, employeeTeamId) => {
   const newTeam = teamNew ; 
   const employee = employeeTeamId;
-  return axios.post(`/CCMSapi/Team/ChangeTeam?otid=${oldTeam}&tid=${newTeam}&eid=${employee}`);
+  return axios.post(`/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`);
 };
 export { fetchAllTeam, createTeam, detailTeamByID,fetchAllShiftManagers,fetchAllShiftAssistants,fetchAllStaffs, changeLeaderId , changeSubLeaderId, changeStafId};

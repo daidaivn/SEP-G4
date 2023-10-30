@@ -80,15 +80,15 @@ const GroupComponent = () => {
     setIsModalOpenChange(false);
   };
   const handleChangeSucssecfully= () =>{
-    if (roleMember === 1) { // Đảm bảo bạn sử dụng '===' thay vì '='
-      handleChangeLeader(teamID,selectedTeam); // Truyền giá trị đã chọn
+    if (roleMember === 1) {
+      handleChangeLeader(teamID,selectedTeam);
       setSelectedTeam('')
     }
     if(roleMember === 2){
       handleChangeSubLeader(teamID,selectedTeam);
     }
     if(roleMember === 3){
-      handleChangeStaff(teamID,selectedTeam,roleMember);
+      handleChangeStaff(selectedTeam,roleMember);
     }
     handleOkChange()
   }
@@ -188,10 +188,8 @@ const GroupComponent = () => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
-  const handleChangeStaff = (teamOld, teamNew, employeeId) => {
-    console.log(teamOld)
-    console.log(teamNew)
-    changeStafId(teamOld, teamNew, employeeId)
+  const handleChangeStaff = (teamNew, employeeId) => {
+    changeStafId(teamNew, employeeId)
       .then((data) => {
         console.log("Thành công", data);
         handleOkChange();
@@ -470,24 +468,6 @@ const GroupComponent = () => {
                 <td>{role.teamLeaderName}</td>
               </tr>
             ))}
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Nhóm 1</td>
-              <td>1</td>
-              <td>Nguyễn Văn C</td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>2</td>
-              <td>Nhóm 2</td>
-              <td>0</td>
-              <td>Nguyễn Văn C</td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>3</td>
-              <td>Nhóm 3</td>
-              <td>3</td>
-              <td>Nguyễn Văn C</td>
-            </tr>
           </tbody>
         </table>
         <Modal
