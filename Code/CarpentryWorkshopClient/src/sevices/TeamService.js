@@ -19,5 +19,20 @@ const fetchAllShiftAssistants = () => {
 const fetchAllStaffs = () => {
   return axios.get("/CCMSapi/Team/GetStaffs");
 };
-
-export { fetchAllTeam, createTeam, detailTeamByID,fetchAllShiftManagers,fetchAllShiftAssistants,fetchAllStaffs };
+const changeLeaderId = (teamOld, teamNew) => {
+  const oldTeam = teamOld ; 
+  const newTeam = teamNew ; 
+  return axios.put(`/CCMSapi/Team/ChangeLeaderTwoTeam?oldTeam=${oldTeam}&newTeam=${newTeam}`);
+};
+const changeSubLeaderId = (teamOld, teamNew) => {
+  const oldTeam = teamOld ; 
+  const newTeam = teamNew ; 
+  return axios.put(`/CCMSapi/Team/ChangeSubLeaderTwoTeam?oldTeam=${oldTeam}&newTeam=${newTeam}`);
+};
+const changeStafId = (teamOld, teamNew, employeeTeamId) => {
+  const oldTeam = teamOld ; 
+  const newTeam = teamNew ; 
+  const employee = employeeTeamId;
+  return axios.post(`/CCMSapi/Team/ChangeTeam?otid=${oldTeam}&tid=${newTeam}&eid=${employee}`);
+};
+export { fetchAllTeam, createTeam, detailTeamByID,fetchAllShiftManagers,fetchAllShiftAssistants,fetchAllStaffs, changeLeaderId , changeSubLeaderId, changeStafId};

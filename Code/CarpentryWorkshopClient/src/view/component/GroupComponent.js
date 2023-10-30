@@ -12,6 +12,9 @@ import {
   fetchAllShiftManagers,
   fetchAllShiftAssistants,
   fetchAllStaffs,
+  changeLeaderId,
+  changeSubLeaderId,
+  changeStafId,
 } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
@@ -28,16 +31,22 @@ const GroupComponent = () => {
   const [detailTeamID, setDetailTeamID] = useState([]);
   const [teamID, setTeamID] = useState();
   const [shiftManagers, setShiftManagers] = useState([]);
+  const [idChange, setIdChange] = useState();
+  const [nameChange, setNameChange] = useState();
+  const [roleMember, setRoleMember] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
 
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setSelectedTeam(value);
   };
+  
   const handleChange1 = (value) => {
     console.log(`selected ${value}`);
   };
   const showModalGroup = () => {
     setIsModalOpenGroup(true);
   };
+  
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
@@ -54,12 +63,35 @@ const GroupComponent = () => {
     setIsModalOpenDetail(false);
   };
 
-  const showModalChange = () => {
+  const showModalChange = (id, name, role) => {
+    setIdChange(id);
+    setNameChange(name);
+    setRoleMember(role);
     setIsModalOpenChange(true);
   };
+
+  // console.log(idChange);
+  // console.log(nameChange);
+  // console.log(detailTeamID);
+  // console.log("roleMember",roleMember);
+
+
   const handleOkChange = () => {
     setIsModalOpenChange(false);
   };
+  const handleChangeSucssecfully= () =>{
+    if (roleMember === 1) { // Đảm bảo bạn sử dụng '===' thay vì '='
+      handleChangeLeader(teamID,selectedTeam); // Truyền giá trị đã chọn
+      setSelectedTeam('')
+    }
+    if(roleMember === 2){
+      handleChangeSubLeader(teamID,selectedTeam);
+    }
+    if(roleMember === 3){
+      handleChangeStaff(teamID,selectedTeam,roleMember);
+    }
+    handleOkChange()
+  }
   const handleCancelChange = () => {
     setIsModalOpenChange(false);
   };
@@ -131,6 +163,44 @@ const GroupComponent = () => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
+  
+  const handleChangeLeader = (teamOld, teamNew) => {
+    console.log(teamOld)
+    console.log(teamNew)
+    changeLeaderId(teamOld, teamNew)
+      .then((data) => {
+        console.log("Thành công", data);
+        handleOkChange();
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
+  };
+  const handleChangeSubLeader = (teamOld, teamNew) => {
+    console.log(teamOld)
+    console.log(teamNew)
+    changeSubLeaderId(teamOld, teamNew)
+      .then((data) => {
+        console.log("Thành công", data);
+        handleOkChange();
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
+  };
+  const handleChangeStaff = (teamOld, teamNew, employeeId) => {
+    console.log(teamOld)
+    console.log(teamNew)
+    changeStafId(teamOld, teamNew, employeeId)
+      .then((data) => {
+        console.log("Thành công", data);
+        handleOkChange();
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
+  };
+
 
   const optionsShiftManagers = shiftManagers.map((manager) => {
     if (manager.employeeID) {
@@ -438,57 +508,57 @@ const GroupComponent = () => {
                 onChange={(e) => setNewTeamName(e.target.value)}
               />
             </div>
-            <div className="info-add-department">
+            <div className="info-add-department ">
               <div className="text-department">Ca trưởng</div>
               <Select
                 className="select-input"
-                mode="multiple"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={["china"]}
+                defaultValue="lucy"
                 onChange={handleChange}
-                optionLabelProp="label"
-              >
-                <Option value="china" label="China">
-                  <Space>China</Space>
-                </Option>
-                <Option value="usa" label="USA">
-                  <Space>USA</Space>
-                </Option>
-                <Option value="japan" label="Japan">
-                  <Space>Japan</Space>
-                </Option>
-                <Option value="korea" label="Korea">
-                  <Space>Korea</Space>
-                </Option>
-              </Select>
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "Yiminghe",
+                    label: "yiminghe",
+                  },
+                  {
+                    value: "disabled",
+                    label: "Disabled",
+                  },
+                ]}
+              />
             </div>
             <div className="info-add-department">
               <div className="text-department">Ca phó</div>
               <Select
                 className="select-input"
-                mode="multiple"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={["china"]}
+                defaultValue="lucy"
                 onChange={handleChange}
-                optionLabelProp="label"
-              >
-                <Option value="china" label="China">
-                  <Space>China</Space>
-                </Option>
-                <Option value="usa" label="USA">
-                  <Space>USA</Space>
-                </Option>
-                <Option value="japan" label="Japan">
-                  <Space>Japan</Space>
-                </Option>
-                <Option value="korea" label="Korea">
-                  <Space>Korea</Space>
-                </Option>
-              </Select>
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "Yiminghe",
+                    label: "yiminghe",
+                  },
+                  {
+                    value: "disabled",
+                    label: "Disabled",
+                  },
+                ]}
+              />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment">
@@ -518,8 +588,8 @@ const GroupComponent = () => {
               <div className="info-detail-group">
                 <div className="info-body-group">
                   {detailTeamID.shiftManager ||
-                  detailTeamID.shiftAssistant ||
-                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                    detailTeamID.shiftAssistant ||
+                    (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
                     <>
                       <div className="box1-modal-group">
                         <div className="box1-child">
@@ -556,7 +626,11 @@ const GroupComponent = () => {
                               </p>
                             </div>
                           </div>
-                          <div className="box5-child" onClick={showModalChange}>
+                          <div className="box5-child" onClick={() => {
+                            if (detailTeamID.shiftManager) {
+                              showModalChange(detailTeamID.shiftManager.employeeId, detailTeamID.shiftManager.fullName, 1);
+                            }
+                          }}>
                             <p className="child5-group">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -605,7 +679,11 @@ const GroupComponent = () => {
                               <p>{detailTeamID.shiftAssistant.fullName}</p>
                             </div>
                           </div>
-                          <div className="box5-child" onClick={showModalChange}>
+                          <div className="box5-child" onClick={() => {
+                            if (detailTeamID.shiftAssistant) {
+                              showModalChange(detailTeamID.shiftAssistant.employeeId, detailTeamID.shiftAssistant.fullName, 2);
+                            }
+                          }}>
                             <p className="child5-group">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -658,7 +736,11 @@ const GroupComponent = () => {
                             </div>
                             <div
                               className="box5-child"
-                              onClick={showModalChange}
+                              onClick={() => {
+                                if (staffMember) {
+                                  showModalChange(staffMember.employeeId, staffMember.fullName, 3);
+                                }
+                              }}
                             >
                               <p className="child5-group">
                                 <svg
@@ -848,15 +930,15 @@ const GroupComponent = () => {
                 <div className="modal1">
                   <div className="modal1-child">
                     <p>Nhân viên: </p>
-                    <p>Nguyễn Thị Lan</p>
+                    <p>{nameChange}</p>
                   </div>
                   <div className="modal1-child">
                     <p>Mã số nhân viên: </p>
-                    <p>1</p>
+                    <p>{idChange}</p>
                   </div>
                   <div className="modal1-child">
                     <p>Nhóm hiện tại:</p>
-                    <p>Nhóm 1</p>
+                    <p>Nhóm {teamID}</p>
                   </div>
                 </div>
                 <div className="modal2">
@@ -893,21 +975,22 @@ const GroupComponent = () => {
                       <Select
                         className="select-input"
                         defaultValue="lucy"
+                         value={selectedTeam}
                         style={{
                           width: 120,
                         }}
                         onChange={handleChange}
                         options={[
                           {
-                            value: "jack",
+                            value: "1",
                             label: "Jack",
                           },
                           {
-                            value: "lucy",
+                            value: "2",
                             label: "Lucy",
                           },
                           {
-                            value: "Yiminghe",
+                            value: "3",
                             label: "yiminghe",
                           },
                           {
@@ -922,10 +1005,13 @@ const GroupComponent = () => {
               </div>
             </div>
             <div className="modal-footer modal-footer-group">
-              <button className="btn-cancel" onClick={handleCancelChange}>
+              <button className="btn-cancel" onClick={handleCancelChange}
+              >
                 Hủy bỏ
               </button>
-              <button className="btn-edit btn-save" onClick={handleOkChange}>
+              <button className="btn-edit btn-save"
+                onClick={handleChangeSucssecfully}
+              >
                 Lưu
               </button>
             </div>

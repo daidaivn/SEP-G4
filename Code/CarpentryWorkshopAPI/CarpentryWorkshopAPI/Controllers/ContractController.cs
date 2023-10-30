@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -253,6 +254,47 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
                 return Ok(ctDTO);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult SearchContract([FromBody] SearchContractDTO searchContractDTO)
+        {
+            try
+            {
+                var query = _context.Contracts
+                    .Include(emp => emp.Employee)
+                    .Include(ctt => ctt.ContractType)
+                    .ToList()
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchContractDTO.InputText))
+                {
+                    string input = searchContractDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
+                    query = query.Where(x => x.ContractType != null &&
+                        x.ContractType.ContractName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
+                    );
+                }
+                if (searchContractDTO.Status.HasValue)
+                {
+                    query = query.Where(x => x.Status == searchContractDTO.Status.Value);
+                }
+                var result = query.Select(c => new ContractDTO
+                {
+                    ContractId = c.ContractId,
+                    ContractTypeName = c.ContractType.ContractName,
+                    EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
+                    StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
+                    EndDate = c.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
+                    LinkDoc = c.LinkDoc,
+                    Status = c.Status,
+                    ContractCode = c.ContractCode,
+                    Image = c.Image,
+                });
+                return Ok(result);
             }
             catch(Exception ex)
             {

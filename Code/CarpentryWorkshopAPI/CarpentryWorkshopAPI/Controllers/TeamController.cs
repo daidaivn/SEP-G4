@@ -35,7 +35,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
-                        NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Count(),
+                        NumberOfTeamMember = t.EmployeeTeams
+                            .Where(x => x.EndDate == null)
+                            .GroupBy(x => new { x.EmployeeId, x.TeamId })
+                            .Count(),
                         TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
                         (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
 
@@ -124,16 +127,34 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddTeam(string name)
+        public IActionResult AddTeam(string name, int teamleaderid, int teamsubleaderid)
         {
             try
             {
                 Team newteam = new Team()
                 {
                     TeamName = name,
+                    TeamLeaderId = teamleaderid,
+                    TeamSubLeaderId = teamsubleaderid,
                 };
                 _context.Teams.Add(newteam);
                 _context.SaveChanges();
+                EmployeeTeam lead = new EmployeeTeam()
+                {
+                    EmployeeId = teamleaderid,
+                    TeamId = newteam.TeamId,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                };
+                _context.EmployeeTeams.Add(lead);
+                EmployeeTeam sublead = new EmployeeTeam()
+                {
+                    EmployeeId = teamsubleaderid,
+                    TeamId = newteam.TeamId,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                };
+                _context.EmployeeTeams.Add(sublead);
                 HistoryChangeTeam history = new HistoryChangeTeam()
                 {
                     TeamId = newteam.TeamId,
@@ -338,7 +359,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult ChangeTeamStaff(int oldteamid,int teamid, int employeeid)
+        public IActionResult ChangeTeamStaff(int teamid, int employeeid)
         {
             try
             {
@@ -352,10 +373,18 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                EmployeeTeam oldteam = _context.EmployeeTeams.FirstOrDefault(x => x.TeamId == oldteamid && x.EmployeeId == employeeid);
+                List<EmployeeTeam> oldteam = _context.EmployeeTeams.Where(x => x.EmployeeId == employeeid).ToList();
                 if (oldteam == null)
                 {
                     return NotFound();
+                }
+                foreach (var item in oldteam)
+                {
+                    if (item.EndDate == null) 
+                    {
+                        item.EndDate = DateTime.Now;
+                        _context.EmployeeTeams.Update(item);
+                    } 
                 }
                 EmployeeTeam changeteam = new EmployeeTeam()
                 {
@@ -364,8 +393,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     StartDate= DateTime.Now,
                     EndDate= null,
                 };
-                oldteam.EndDate = DateTime.Now;
-                _context.EmployeeTeams.Update(oldteam);
+                
+               
                 _context.EmployeeTeams.Add(changeteam);
                 HistoryChangeTeam history = new HistoryChangeTeam()
                 {
@@ -439,20 +468,63 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+<<<<<<< HEAD
+=======
+
+        [HttpPost]
+        public IActionResult SearchTeam(string input)
+        {
+            try
+            {
+                var query = _context.Teams
+                    .Include(x => x.EmployeeTeams)
+                    .ThenInclude(et => et.Employee)
+                    .ToList()
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(input))
+                {
+                    string work = input.ToLower().Normalize(NormalizationForm.FormD);
+                    query = query.Where(x =>
+                        x.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.EmployeeTeams.Any(et =>
+                            et.Employee.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                            et.Employee.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
+                        )
+                    );
+                }
+                var dto = query.Select(t => new TeamListDTO
+                {
+                    TeamId = t.TeamId,
+                    TeamName = t.TeamName,
+                    NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Count(),
+                    TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
+                        (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
+
+                });
+                return Ok(dto);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+>>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
         [HttpPut]
-        public IActionResult ChangeLeaderTwoTeam(int oldTeamId , int newTeamId)
+        public IActionResult ChangeLeaderTwoTeam(int oldTeamId, int newTeamId)
         {
             try
             {
                 var teamOld = _context.Teams.Where(te => te.TeamId == oldTeamId).FirstOrDefault();
                 var teamNew = _context.Teams.Where(te => te.TeamId == newTeamId).FirstOrDefault();
-                if(teamNew ==null || teamOld == null)
+                if (teamNew == null || teamOld == null)
                 {
                     return NotFound();
                 }
                 var oldTeam = teamOld.TeamLeaderId;
                 var newTeam = teamNew.TeamLeaderId;
-                if(oldTeam != null || newTeam != null)
+                if (oldTeam != null || newTeam != null)
                 {
                     teamOld.TeamLeaderId = newTeam;
                     teamNew.TeamLeaderId = oldTeam;
@@ -488,13 +560,21 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("err");
                 }
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
         }
         [HttpPut]
         public IActionResult ChangeSubLeaderTwoTeam(int oldTeamId, int newTeamId)
@@ -551,6 +631,11 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
         }
     }
     }
