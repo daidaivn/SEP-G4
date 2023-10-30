@@ -6,7 +6,17 @@ import { Switch, Form, Input } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import {
-  fetchAllTeam, createTeam, detailTeamByID, fetchAllShiftManagers, fetchAllSubLeader, fetchAllLeader, fetchAllStaffs, changeLeaderId, changeSubLeaderId, changeStafId
+  fetchAllTeam,
+  createTeam,
+  detailTeamByID,
+  fetchAllShiftManagers,
+  fetchAllSubLeader,
+  fetchAllLeader,
+  fetchAllStaffs,
+  changeLeaderId,
+  changeSubLeaderId,
+  changeStafId,
+  fetTeamContinue
 } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
@@ -25,19 +35,23 @@ const GroupComponent = () => {
   const [shiftManagers, setShiftManagers] = useState([]);
   const [idChange, setIdChange] = useState();
   const [nameChange, setNameChange] = useState();
-  const [roleMember, setRoleMember] = useState('');
+  const [roleMember, setRoleMember] = useState("");
   const [selectedChangeid, setSelectedChangeid] = useState("Vui lòng chọn");
   const [selectedChangeid1, setSelectedChangeid1] = useState("Vui lòng chọn");
+  const [changeSelectEdit, setChangeSelectEdit] = useState("Vui lòng chọn");
   const [allLeader, setAllLeader] = useState([]);
   const [allSubLeader, setAllSubLeader] = useState([]);
+  const [teamsContinue, setTeamsContinue] = useState([]);
 
+  const handleChangeSelectEdit = (value) => {
+    setChangeSelectEdit(value);
+  };
 
   const handleChange = (value) => {
     setSelectedChangeid(value);
   };
 
   const handleChangeSelect = (value) => {
-    console.log(value);
     setSelectedChangeid1(value);
   };
   const handleCancelGroup = () => {
@@ -45,13 +59,11 @@ const GroupComponent = () => {
     setSelectedChangeid("Vui lòng chọn"); // Đặt lại cả hai giá trị
     setIsModalOpenGroup(false);
   };
-console.log(selectedChangeid1);
 
   const showModalGroup = () => {
     fetchAllLeader()
       .then((data) => {
         setAllLeader(data);
-        console.log(data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu Leader:", error);
@@ -59,8 +71,6 @@ console.log(selectedChangeid1);
     fetchAllSubLeader()
       .then((data) => {
         setAllSubLeader(data);
-        console.log(data);
-        
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
@@ -71,7 +81,7 @@ console.log(selectedChangeid1);
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
-  
+
   const showModalDetail = () => {
     setIsModalOpenDetail(true);
   };
@@ -87,32 +97,35 @@ console.log(selectedChangeid1);
     setNameChange(name);
     setRoleMember(role);
     setIsModalOpenChange(true);
+    fetTeamContinue(teamID)
+      .then((data) => {
+        setTeamsContinue(data);
+        console.log('data',data);
+        
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
   };
-
-  // console.log(idChange);
-  // console.log(nameChange);
-  // console.log(detailTeamID);
-  // console.log("roleMember",roleMember);
-
 
   const handleOkChange = () => {
     setIsModalOpenChange(false);
   };
   const handleChangeSucssecfully = () => {
     if (roleMember === 1) {
-      handleChangeLeader(teamID, selectedChangeid);
-      setSelectedChangeid('')
+      handleChangeLeader(teamID, changeSelectEdit);
+      setSelectedChangeid("");
     }
     if (roleMember === 2) {
-      handleChangeSubLeader(teamID, selectedChangeid);
-      setSelectedChangeid('')
+      handleChangeSubLeader(teamID, changeSelectEdit);
+      setSelectedChangeid("");
     }
     if (roleMember === 3) {
-      handleChangeStaff(selectedChangeid, roleMember);
-      setSelectedChangeid('')
+      handleChangeStaff(changeSelectEdit, roleMember);
+      setSelectedChangeid("");
     }
-    handleOkChange()
-  }
+    handleOkChange();
+  };
   const handleCancelChange = () => {
     setIsModalOpenChange(false);
   };
@@ -133,8 +146,8 @@ console.log(selectedChangeid1);
     setIsModalOpenAdd(false);
   };
   const handleCancelAdd = () => {
-    setSelectedChangeid1('Vui lòng chọn');
-    setSelectedChangeid('Vui lòng chọn');
+    setSelectedChangeid1("Vui lòng chọn");
+    setSelectedChangeid("Vui lòng chọn");
     setIsModalOpenAdd(false);
   };
 
@@ -152,7 +165,7 @@ console.log(selectedChangeid1);
     if (newTeamName.trim() === "") {
       return;
     }
-    createTeam(newTeamName, selectedChangeid, selectedChangeid1 )
+    createTeam(newTeamName, selectedChangeid, selectedChangeid1)
       .then((data) => {
         setNewTeamName("");
         handleCancelGroup();
@@ -188,8 +201,8 @@ console.log(selectedChangeid1);
   };
 
   const handleChangeLeader = (teamOld, teamNew) => {
-    console.log(teamOld)
-    console.log(teamNew)
+    console.log(teamOld);
+    console.log(teamNew);
     changeLeaderId(teamOld, teamNew)
       .then((data) => {
         console.log("Thành công", data);
@@ -200,8 +213,8 @@ console.log(selectedChangeid1);
       });
   };
   const handleChangeSubLeader = (teamOld, teamNew) => {
-    console.log(teamOld)
-    console.log(teamNew)
+    console.log(teamOld);
+    console.log(teamNew);
     changeSubLeaderId(teamOld, teamNew)
       .then((data) => {
         console.log("Thành công", data);
@@ -221,7 +234,6 @@ console.log(selectedChangeid1);
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
-
 
   const optionsShiftManagers = shiftManagers.map((manager) => {
     if (manager.employeeID) {
@@ -518,9 +530,9 @@ console.log(selectedChangeid1);
                 type="text"
                 defaultValue={selectedChangeid}
                 onChange={handleChange}
-                options={allLeader.map(leader => ({
-                  value: leader.employeeId, 
-                  label: leader.fullName, 
+                options={allLeader.map((leader) => ({
+                  value: leader.employeeId,
+                  label: leader.fullName,
                 }))}
               />
             </div>
@@ -531,9 +543,9 @@ console.log(selectedChangeid1);
                 type="text"
                 defaultValue={selectedChangeid1}
                 onChange={handleChangeSelect}
-                options={allSubLeader.map(SubLeader => ({
-                  value: SubLeader.employeeId, 
-                  label: SubLeader.fullName, 
+                options={allSubLeader.map((SubLeader) => ({
+                  value: SubLeader.employeeId,
+                  label: SubLeader.fullName,
                 }))}
               />
             </div>
@@ -565,8 +577,8 @@ console.log(selectedChangeid1);
               <div className="info-detail-group">
                 <div className="info-body-group">
                   {detailTeamID.shiftManager ||
-                    detailTeamID.shiftAssistant ||
-                    (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                  detailTeamID.shiftAssistant ||
+                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
                     <>
                       <div className="box1-modal-group">
                         <div className="box1-child">
@@ -603,11 +615,18 @@ console.log(selectedChangeid1);
                               </p>
                             </div>
                           </div>
-                          <div className="box5-child" onClick={() => {
-                            if (detailTeamID.shiftManager) {
-                              showModalChange(detailTeamID.shiftManager.employeeId, detailTeamID.shiftManager.fullName, 1);
-                            }
-                          }}>
+                          <div
+                            className="box5-child"
+                            onClick={() => {
+                              if (detailTeamID.shiftManager) {
+                                showModalChange(
+                                  detailTeamID.shiftManager.employeeId,
+                                  detailTeamID.shiftManager.fullName,
+                                  1
+                                );
+                              }
+                            }}
+                          >
                             <p className="child5-group">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -656,11 +675,18 @@ console.log(selectedChangeid1);
                               <p>{detailTeamID.shiftAssistant.fullName}</p>
                             </div>
                           </div>
-                          <div className="box5-child" onClick={() => {
-                            if (detailTeamID.shiftAssistant) {
-                              showModalChange(detailTeamID.shiftAssistant.employeeId, detailTeamID.shiftAssistant.fullName, 2);
-                            }
-                          }}>
+                          <div
+                            className="box5-child"
+                            onClick={() => {
+                              if (detailTeamID.shiftAssistant) {
+                                showModalChange(
+                                  detailTeamID.shiftAssistant.employeeId,
+                                  detailTeamID.shiftAssistant.fullName,
+                                  2
+                                );
+                              }
+                            }}
+                          >
                             <p className="child5-group">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -715,7 +741,11 @@ console.log(selectedChangeid1);
                               className="box5-child"
                               onClick={() => {
                                 if (staffMember) {
-                                  showModalChange(staffMember.employeeId, staffMember.fullName, 3);
+                                  showModalChange(
+                                    staffMember.employeeId,
+                                    staffMember.fullName,
+                                    3
+                                  );
                                 }
                               }}
                             >
@@ -819,37 +849,7 @@ console.log(selectedChangeid1);
                   />
                 </div>
               </div>
-              <div className="modal1-change">
-                <p>Phó ca:</p>
-                <div className="list-filter select-change-group">
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: 120,
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
+
               <div className="modal1-change">
                 <p>Nhân viên:</p>
                 <div className="select-all-change">
@@ -952,29 +952,15 @@ console.log(selectedChangeid1);
                       <Select
                         className="select-input"
                         defaultValue="lucy"
-                        value={selectedChangeid}
+                        value={changeSelectEdit}
                         style={{
                           width: 120,
                         }}
-                        onChange={handleChange}
-                        options={[
-                          {
-                            value: "1",
-                            label: "Jack",
-                          },
-                          {
-                            value: "2",
-                            label: "Lucy",
-                          },
-                          {
-                            value: "3",
-                            label: "yiminghe",
-                          },
-                          {
-                            value: "disabled",
-                            label: "Disabled",
-                          },
-                        ]}
+                        onChange={handleChangeSelectEdit}
+                        options={teamsContinue.map(team => ({
+                          value: team.teamId,
+                          label: team.teamName,
+                        }))}
                       />
                     </div>
                   </div>
@@ -982,11 +968,11 @@ console.log(selectedChangeid1);
               </div>
             </div>
             <div className="modal-footer modal-footer-group">
-              <button className="btn-cancel" onClick={handleCancelChange}
-              >
+              <button className="btn-cancel" onClick={handleCancelChange}>
                 Hủy bỏ
               </button>
-              <button className="btn-edit btn-save"
+              <button
+                className="btn-edit btn-save"
                 onClick={handleChangeSucssecfully}
               >
                 Lưu

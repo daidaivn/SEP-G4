@@ -3,11 +3,13 @@ import axios from "./customize-axios";
 const fetchAllTeam = () => {
   return axios.get("/CCMSapi/Team/GetAllTeams");
 };
-const createTeam = (teamName,teamleaderId,teamsubleaderId ) => {
+const createTeam = (teamName, teamleaderId, teamsubleaderId) => {
   const name = teamName;
   const teamleaderid = teamleaderId;
   const teamsubleaderid = teamsubleaderId;
-  return axios.post(`/CCMSapi/Team/AddTeam?name=${name}&teamleaderid=${teamleaderid}&teamsubleaderid=${teamsubleaderid}`);
+  return axios.post(
+    `/CCMSapi/Team/AddTeam?name=${name}&teamleaderid=${teamleaderid}&teamsubleaderid=${teamsubleaderid}`
+  );
 };
 const detailTeamByID = (teamID) => {
   return axios.get(`/CCMSapi/Team/GetTeamMembers/${teamID}/members`);
@@ -27,16 +29,40 @@ const fetchAllStaffs = () => {
 const changeLeaderId = (teamOld, teamNew) => {
   const oldTeam = teamOld;
   const newTeam = teamNew;
-  return axios.put(`/CCMSapi/Team/ChangeLeaderTwoTeam?oldTeam=${oldTeam}&newTeam=${newTeam}`);
+  return axios.put(
+    `/CCMSapi/Team/ChangeLeaderTwoTeam?oldTeamId=${oldTeam}&newTeamId=${newTeam}`
+  );
 };
 const changeSubLeaderId = (teamOld, teamNew) => {
   const oldTeam = teamOld;
   const newTeam = teamNew;
-  return axios.put(`/CCMSapi/Team/ChangeSubLeaderTwoTeam?oldTeam=${oldTeam}&newTeam=${newTeam}`);
+  return axios.put(
+    `/CCMSapi/Team/ChangeSubLeaderTwoTeam?oldTeamId=${oldTeam}&newTeamId=${newTeam}`
+  );
 };
 const changeStafId = (teamNew, employeeTeamId) => {
   const newTeam = teamNew;
   const employee = employeeTeamId;
-  return axios.post(`/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`);
+  return axios.post(
+    `/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`
+  );
 };
-export { fetchAllTeam, createTeam, detailTeamByID, fetchAllShiftManagers, fetchAllSubLeader, fetchAllLeader, fetchAllStaffs, changeLeaderId, changeSubLeaderId, changeStafId };
+const fetTeamContinue = (teamId) => {
+  const teamid = teamId;
+  console.log('teamid',teamid);
+  
+  return axios.get(`/CCMSapi/Team/GetAvailableTeam?teamid=${teamid}`);
+};
+export {
+  fetchAllTeam,
+  createTeam,
+  detailTeamByID,
+  fetchAllShiftManagers,
+  fetchAllSubLeader,
+  fetchAllLeader,
+  fetchAllStaffs,
+  changeLeaderId,
+  changeSubLeaderId,
+  changeStafId,
+  fetTeamContinue,
+};
