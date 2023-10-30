@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
@@ -43,6 +44,7 @@ const GroupComponent = () => {
   const [allSubLeader, setAllSubLeader] = useState([]);
   const [teamsContinue, setTeamsContinue] = useState([]);
 
+  const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
   };
@@ -56,7 +58,7 @@ const GroupComponent = () => {
   };
   const handleCancelGroup = () => {
     setSelectedChangeid1("Vui lòng chọn");
-    setSelectedChangeid("Vui lòng chọn"); // Đặt lại cả hai giá trị
+    setSelectedChangeid("Vui lòng chọn");
     setIsModalOpenGroup(false);
   };
 
@@ -97,34 +99,29 @@ const GroupComponent = () => {
     setNameChange(name);
     setRoleMember(role);
     setIsModalOpenChange(true);
-    fetTeamContinue(teamID)
-      .then((data) => {
-        setTeamsContinue(data);
-        console.log('data',data);
-        
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
-      });
+    fetDataTeamContinue();
   };
-
   const handleOkChange = () => {
     setIsModalOpenChange(false);
   };
   const handleChangeSucssecfully = () => {
     if (roleMember === 1) {
-      handleChangeLeader(teamID, changeSelectEdit);
+      handleChangeLeader();
       setSelectedChangeid("");
     }
     if (roleMember === 2) {
-      handleChangeSubLeader(teamID, changeSelectEdit);
+      handleChangeSubLeader();
       setSelectedChangeid("");
     }
     if (roleMember === 3) {
-      handleChangeStaff(changeSelectEdit, roleMember);
+      handleChangeStaff();
       setSelectedChangeid("");
     }
-    handleOkChange();
+    setTimeout(() => {
+      handleOkChange();
+      fetchData();
+    }, 3500);
+
   };
   const handleCancelChange = () => {
     setIsModalOpenChange(false);
@@ -150,6 +147,9 @@ const GroupComponent = () => {
     setSelectedChangeid("Vui lòng chọn");
     setIsModalOpenAdd(false);
   };
+  const handleAddGroup = () => {
+    fetchDataCreateTeam();
+  };
 
   const fetchData = () => {
     fetchAllTeam()
@@ -160,8 +160,17 @@ const GroupComponent = () => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
-
-  const handleAddGroup = () => {
+  const fetDataTeamContinue = () => {
+    fetTeamContinue(teamID)
+      .then((data) => {
+        setTeamsContinue(data);
+        console.log('data', data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
+  }
+  const fetchDataCreateTeam = () => {
     if (newTeamName.trim() === "") {
       return;
     }
@@ -174,7 +183,7 @@ const GroupComponent = () => {
       .catch((error) => {
         console.error("Lỗi thêm nhóm:", error);
       });
-  };
+  }
 
   const handleDetailGroup = (teamId) => {
     detailTeamByID(teamId)
@@ -199,39 +208,46 @@ const GroupComponent = () => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
+  const handletoast=()=>{
+    toast.promise(
+      resolveAfter3Sec,
+      {
+        pending: 'Đang xử lý',
+      }
+  )
+  }
 
-  const handleChangeLeader = (teamOld, teamNew) => {
-    console.log(teamOld);
-    console.log(teamNew);
-    changeLeaderId(teamOld, teamNew)
+  const handleChangeLeader = () => {
+    handletoast()
+    changeLeaderId(teamID, changeSelectEdit)
       .then((data) => {
-        console.log("Thành công", data);
-        handleOkChange();
+        handleDetailGroup(teamID);
+        toast.success('Chuyển nhóm thành công');
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+        toast.error('Lỗi chuyển nhóm');
       });
   };
-  const handleChangeSubLeader = (teamOld, teamNew) => {
-    console.log(teamOld);
-    console.log(teamNew);
-    changeSubLeaderId(teamOld, teamNew)
+  const handleChangeSubLeader = () => {
+    handletoast()
+    changeSubLeaderId(teamID, changeSelectEdit)
       .then((data) => {
-        console.log("Thành công", data);
-        handleOkChange();
+        handleDetailGroup(teamID);
+        toast.success('Chuyển nhóm thành công');
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+        toast.error('Lỗi chuyển nhóm');
       });
   };
-  const handleChangeStaff = (teamNew, employeeId) => {
-    changeStafId(teamNew, employeeId)
+  const handleChangeStaff = () => {
+    handletoast()
+    changeStafId(changeSelectEdit, roleMember)
       .then((data) => {
-        console.log("Thành công", data);
-        handleOkChange();
+        handleDetailGroup(teamID);
+        toast.success('Chuyển nhóm thành công');
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+        toast.error('Lỗi chuyển nhóm');
       });
   };
 
@@ -577,8 +593,8 @@ const GroupComponent = () => {
               <div className="info-detail-group">
                 <div className="info-body-group">
                   {detailTeamID.shiftManager ||
-                  detailTeamID.shiftAssistant ||
-                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                    detailTeamID.shiftAssistant ||
+                    (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
                     <>
                       <div className="box1-modal-group">
                         <div className="box1-child">
@@ -824,32 +840,6 @@ const GroupComponent = () => {
               <h3>Thêm nhân viên nhóm {teamID}</h3>
             </div>
             <div className="body-modal-change">
-              <div className="modal1-change">
-                <p>Trưởng ca:</p>
-                <div className="list-filter select-change-group">
-                  <Select
-                    className="select-input"
-                    defaultValue={
-                      optionsShiftManagers.find(
-                        (option) =>
-                          option.value ===
-                          (detailTeamID.shiftManager
-                            ? detailTeamID.shiftManager.employeeID
-                            : "default")
-                      ) ||
-                      optionsShiftManagers.find(
-                        (option) => option.value === "default"
-                      )
-                    }
-                    style={{
-                      width: 120,
-                    }}
-                    onChange={handleChange}
-                    options={optionsShiftManagers}
-                  />
-                </div>
-              </div>
-
               <div className="modal1-change">
                 <p>Nhân viên:</p>
                 <div className="select-all-change">
