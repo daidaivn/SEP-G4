@@ -127,16 +127,34 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddTeam(string name)
+        public IActionResult AddTeam(string name, int teamleaderid, int teamsubleaderid)
         {
             try
             {
                 Team newteam = new Team()
                 {
                     TeamName = name,
+                    TeamLeaderId = teamleaderid,
+                    TeamSubLeaderId = teamsubleaderid,
                 };
                 _context.Teams.Add(newteam);
                 _context.SaveChanges();
+                EmployeeTeam lead = new EmployeeTeam()
+                {
+                    EmployeeId = teamleaderid,
+                    TeamId = newteam.TeamId,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                };
+                _context.EmployeeTeams.Add(lead);
+                EmployeeTeam sublead = new EmployeeTeam()
+                {
+                    EmployeeId = teamsubleaderid,
+                    TeamId = newteam.TeamId,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                };
+                _context.EmployeeTeams.Add(sublead);
                 HistoryChangeTeam history = new HistoryChangeTeam()
                 {
                     TeamId = newteam.TeamId,
