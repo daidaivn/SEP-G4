@@ -6,15 +6,7 @@ import { Switch, Form, Input } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import {
-  fetchAllTeam,
-  createTeam,
-  detailTeamByID,
-  fetchAllShiftManagers,
-  fetchAllShiftAssistants,
-  fetchAllStaffs,
-  changeLeaderId,
-  changeSubLeaderId,
-  changeStafId,
+  fetchAllTeam, createTeam, detailTeamByID, fetchAllShiftManagers, fetchAllSubLeader, fetchAllLeader, fetchAllStaffs, changeLeaderId, changeSubLeaderId, changeStafId
 } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
@@ -34,25 +26,52 @@ const GroupComponent = () => {
   const [idChange, setIdChange] = useState();
   const [nameChange, setNameChange] = useState();
   const [roleMember, setRoleMember] = useState('');
-  const [selectedTeam, setSelectedTeam] = useState('');
+  const [selectedChangeid, setSelectedChangeid] = useState("Vui lòng chọn");
+  const [selectedChangeid1, setSelectedChangeid1] = useState("Vui lòng chọn");
+  const [allLeader, setAllLeader] = useState([]);
+  const [allSubLeader, setAllSubLeader] = useState([]);
+
 
   const handleChange = (value) => {
-    setSelectedTeam(value);
+    setSelectedChangeid(value);
   };
-  
-  const handleChange1 = (value) => {
-    console.log(`selected ${value}`);
+
+  const handleChangeSelect = (value) => {
+    console.log(value);
+    setSelectedChangeid1(value);
   };
+  const handleCancelGroup = () => {
+    setSelectedChangeid1("Vui lòng chọn");
+    setSelectedChangeid("Vui lòng chọn"); // Đặt lại cả hai giá trị
+    setIsModalOpenGroup(false);
+  };
+console.log(selectedChangeid1);
+
   const showModalGroup = () => {
+    fetchAllLeader()
+      .then((data) => {
+        setAllLeader(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu Leader:", error);
+      });
+    fetchAllSubLeader()
+      .then((data) => {
+        setAllSubLeader(data);
+        console.log(data);
+        
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
     setIsModalOpenGroup(true);
   };
-  
+
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
-  const handleCancelGroup = () => {
-    setIsModalOpenGroup(false);
-  };
+  
   const showModalDetail = () => {
     setIsModalOpenDetail(true);
   };
@@ -79,16 +98,18 @@ const GroupComponent = () => {
   const handleOkChange = () => {
     setIsModalOpenChange(false);
   };
-  const handleChangeSucssecfully= () =>{
+  const handleChangeSucssecfully = () => {
     if (roleMember === 1) {
-      handleChangeLeader(teamID,selectedTeam);
-      setSelectedTeam('')
+      handleChangeLeader(teamID, selectedChangeid);
+      setSelectedChangeid('')
     }
-    if(roleMember === 2){
-      handleChangeSubLeader(teamID,selectedTeam);
+    if (roleMember === 2) {
+      handleChangeSubLeader(teamID, selectedChangeid);
+      setSelectedChangeid('')
     }
-    if(roleMember === 3){
-      handleChangeStaff(selectedTeam,roleMember);
+    if (roleMember === 3) {
+      handleChangeStaff(selectedChangeid, roleMember);
+      setSelectedChangeid('')
     }
     handleOkChange()
   }
@@ -112,6 +133,8 @@ const GroupComponent = () => {
     setIsModalOpenAdd(false);
   };
   const handleCancelAdd = () => {
+    setSelectedChangeid1('Vui lòng chọn');
+    setSelectedChangeid('Vui lòng chọn');
     setIsModalOpenAdd(false);
   };
 
@@ -129,7 +152,7 @@ const GroupComponent = () => {
     if (newTeamName.trim() === "") {
       return;
     }
-    createTeam(newTeamName)
+    createTeam(newTeamName, selectedChangeid, selectedChangeid1 )
       .then((data) => {
         setNewTeamName("");
         handleCancelGroup();
@@ -163,7 +186,7 @@ const GroupComponent = () => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
-  
+
   const handleChangeLeader = (teamOld, teamNew) => {
     console.log(teamOld)
     console.log(teamNew)
@@ -492,52 +515,26 @@ const GroupComponent = () => {
               <div className="text-department">Ca trưởng</div>
               <Select
                 className="select-input"
-                defaultValue="lucy"
+                type="text"
+                defaultValue={selectedChangeid}
                 onChange={handleChange}
-                options={[
-                  {
-                    value: "jack",
-                    label: "Jack",
-                  },
-                  {
-                    value: "lucy",
-                    label: "Lucy",
-                  },
-                  {
-                    value: "Yiminghe",
-                    label: "yiminghe",
-                  },
-                  {
-                    value: "disabled",
-                    label: "Disabled",
-                  },
-                ]}
+                options={allLeader.map(leader => ({
+                  value: leader.employeeId, 
+                  label: leader.fullName, 
+                }))}
               />
             </div>
             <div className="info-add-department">
               <div className="text-department">Ca phó</div>
               <Select
                 className="select-input"
-                defaultValue="lucy"
-                onChange={handleChange}
-                options={[
-                  {
-                    value: "jack",
-                    label: "Jack",
-                  },
-                  {
-                    value: "lucy",
-                    label: "Lucy",
-                  },
-                  {
-                    value: "Yiminghe",
-                    label: "yiminghe",
-                  },
-                  {
-                    value: "disabled",
-                    label: "Disabled",
-                  },
-                ]}
+                type="text"
+                defaultValue={selectedChangeid1}
+                onChange={handleChangeSelect}
+                options={allSubLeader.map(SubLeader => ({
+                  value: SubLeader.employeeId, 
+                  label: SubLeader.fullName, 
+                }))}
               />
             </div>
           </div>
@@ -863,7 +860,7 @@ const GroupComponent = () => {
                       width: "100%",
                     }}
                     defaultValue={["china"]}
-                    onChange={handleChange1}
+                    onChange={handleChangeSelect}
                     optionLabelProp="label"
                   >
                     <Option value="china" label="China">
@@ -955,7 +952,7 @@ const GroupComponent = () => {
                       <Select
                         className="select-input"
                         defaultValue="lucy"
-                         value={selectedTeam}
+                        value={selectedChangeid}
                         style={{
                           width: 120,
                         }}
