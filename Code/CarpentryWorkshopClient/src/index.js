@@ -24,18 +24,17 @@ function AppContainer() {
 
 function ProtectedRoute({ children }) {
   const location = useLocation();
+  const hasUserToken =
+    sessionStorage.getItem("userToken") || localStorage.getItem("userToken");
 
-  // Kiểm tra xem người dùng đã đăng nhập chưa
-  if (
-    !sessionStorage.getItem("userToken") &&
-    !localStorage.getItem("userToken")
-  ) {
-    // Nếu chưa đăng nhập, chuyển hướng tới trang đăng nhập
+  if (!hasUserToken) {
+    // Hiển thị toast và giữ người dùng ở trang hiện tại
+    toast('Bạn cần đăng nhập để truy cập trang này', { type: 'error' });
     return <Navigate to="/login" state={{ from: location.pathname }} />;
   }
-
   return children;
 }
+
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
