@@ -468,8 +468,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-<<<<<<< HEAD
-=======
 
         [HttpPost]
         public IActionResult SearchTeam(string input)
@@ -510,7 +508,6 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
 
->>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
         [HttpPut]
         public IActionResult ChangeLeaderTwoTeam(int oldTeamId, int newTeamId)
         {
@@ -560,21 +557,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("err");
                 }
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
         }
         [HttpPut]
         public IActionResult ChangeSubLeaderTwoTeam(int oldTeamId, int newTeamId)
@@ -631,11 +618,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> c0d629aaa0b40b86d76803cf444fc22c02c7a1a2
         }
     }
     }
