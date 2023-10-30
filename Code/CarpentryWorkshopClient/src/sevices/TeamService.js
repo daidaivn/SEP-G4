@@ -49,9 +49,27 @@ const changeStafId = (teamNew, employeeTeamId) => {
 };
 const fetTeamContinue = (teamId) => {
   const teamid = teamId;
-  console.log('teamid',teamid);
-  
+  console.log('teamid', teamid);
   return axios.get(`/CCMSapi/Team/GetAvailableTeam?teamid=${teamid}`);
+};
+const createTeamMember = (teamId, memberIDS) => {
+  const teamid = teamId;
+  const memberIds = memberIDS;
+
+  console.log('teamid', teamid);
+  console.log('memberIds', memberIds);
+
+
+  const requestData = {
+    teamId: teamid,
+    memberIds: memberIds
+  };
+
+  return axios.post('/CCMSapi/Team/AddTeamMember', requestData, {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  });
 };
 export {
   fetchAllTeam,
@@ -65,4 +83,5 @@ export {
   changeSubLeaderId,
   changeStafId,
   fetTeamContinue,
+  createTeamMember
 };

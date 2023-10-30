@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import "../scss/loginComponent.scss";
 import "../scss/index.scss";
@@ -24,29 +25,40 @@ const LoginComponent = () => {
   }, [navigate]);
 
   const handleLogin = () => {
-    apiLogin.login(userData)
-      .then(response => {
-        console.log('Phản hồi thành công:', response);
-        if (rememberMe) {
-          localStorage.setItem('userToken', response.token);
-          localStorage.setItem('userName', response.name);
-          localStorage.setItem('userRoles', JSON.stringify(response.roles));
-          localStorage.setItem('userPages', JSON.stringify(response.pages)); 
-          localStorage.setItem('userEmployeeID', response.employeeID);
-        } else {
-          sessionStorage.setItem('userToken', response.token);
-          sessionStorage.setItem('userName', response.name);
-          sessionStorage.setItem('userRoles', JSON.stringify(response.roles));
-          sessionStorage.setItem('userPages', JSON.stringify(response.pages)); 
-          sessionStorage.setItem('userEmployeeID', response.employeeID);
-        }
-        navigate('/');
-      })
-      .catch(error => {
-        console.error('Lỗi:', error);
-      });
-
+    // Hiển thị toast.pending khi bắt đầu đăng nhập
+    toast.promise(
+      new Promise((resolve) => {
+        apiLogin.login(userData)
+          .then(response => {
+            console.log('Phản hồi thành công:', response);
+            if (rememberMe) {
+              localStorage.setItem('userToken', response.token);
+              localStorage.setItem('userName', response.name);
+              localStorage.setItem('userRoles', JSON.stringify(response.roles));
+              localStorage.setItem('userPages', JSON.stringify(response.pages)); 
+              localStorage.setItem('userEmployeeID', response.employeeID);
+            } else {
+              sessionStorage.setItem('userToken', response.token);
+              sessionStorage.setItem('userName', response.name);
+              sessionStorage.setItem('userRoles', JSON.stringify(response.roles));
+              sessionStorage.setItem('userPages', JSON.stringify(response.pages)); 
+              sessionStorage.setItem('userEmployeeID', response.employeeID);
+            }
+            navigate('/');
+            resolve(response);
+          })
+          .catch(error => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý đăng nhập',
+        success: 'Đăng nhập thành công',
+        error: 'Lỗi đăng nhập',
+      }
+    );
   };
+  
 
   return (
     <div className="main-login">
