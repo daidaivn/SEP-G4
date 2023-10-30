@@ -91,7 +91,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("{eid}/{tid}")]
+        [HttpDelete]
         public IActionResult DeleteTeamMember(int employeeid, int teamid)
         {
             try
@@ -310,7 +310,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                var sm = elist.Where(employee => employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(rolename.ToLower())))
+                var sm = elist.Where(employee =>
+                            employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(rolename.ToLower())) &&
+                            !_context.EmployeeTeams.Any(et => et.EmployeeId == employee.EmployeeId && et.EndDate == null)
+                        )
                         .Select(emp => new EmployeeListDTO
                         {
                             EmployeeID = emp.EmployeeId,
