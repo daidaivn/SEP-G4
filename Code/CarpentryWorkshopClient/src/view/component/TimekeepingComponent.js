@@ -1,11 +1,33 @@
 import { Input } from "antd";
+import React, { useState, useEffect, useMemo } from "react";
 import "../scss/TimekeepingComponent.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import "../scss/DepartmentComponent.scss";
+import { fetchAllCheckInOut } from "../../sevices/TimekeepingService";
 const TimekeepingComponent = () => {
+  const [checksInOut, setChecksInOut] = useState([]);
+
+  const fetchData = () => {
+    fetchAllCheckInOut()
+      .then((data) => {
+        setChecksInOut(data);
+        console.log('data',data);
+        
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
+      });
+  };
+  const userEmployeeID = localStorage.getItem('userEmployeeID') || sessionStorage.getItem('userEmployeeID');
+  console.log('userEmployeeIDName:', userEmployeeID);
+
+  useEffect(() => {
+    // Ban đầu, gọi hàm tải dữ liệu
+    fetchData();
+  }, []);
   return (
     <>
       <div className="col-right-container">
