@@ -35,7 +35,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
-                        NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Distinct().Count(),
+                        NumberOfTeamMember = t.EmployeeTeams
+                            .Where(x => x.EndDate == null)
+                            .GroupBy(x => new { x.EmployeeId, x.TeamId })
+                            .Count(),
                         TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
                         (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
 
@@ -338,7 +341,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult ChangeTeamStaff(int oldteamid,int teamid, int employeeid)
+        public IActionResult ChangeTeamStaff(int teamid, int employeeid)
         {
             try
             {
@@ -352,10 +355,18 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                EmployeeTeam oldteam = _context.EmployeeTeams.FirstOrDefault(x => x.TeamId == oldteamid && x.EmployeeId == employeeid);
+                List<EmployeeTeam> oldteam = _context.EmployeeTeams.Where(x => x.EmployeeId == employeeid).ToList();
                 if (oldteam == null)
                 {
                     return NotFound();
+                }
+                foreach (var item in oldteam)
+                {
+                    if (item.EndDate == null) 
+                    {
+                        item.EndDate = DateTime.Now;
+                        _context.EmployeeTeams.Update(item);
+                    } 
                 }
                 EmployeeTeam changeteam = new EmployeeTeam()
                 {
@@ -364,8 +375,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     StartDate= DateTime.Now,
                     EndDate= null,
                 };
-                oldteam.EndDate = DateTime.Now;
-                _context.EmployeeTeams.Update(oldteam);
+                
+               
                 _context.EmployeeTeams.Add(changeteam);
                 HistoryChangeTeam history = new HistoryChangeTeam()
                 {
