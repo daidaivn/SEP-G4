@@ -438,57 +438,57 @@ const GroupComponent = () => {
                 onChange={(e) => setNewTeamName(e.target.value)}
               />
             </div>
-            <div className="info-add-department">
+            <div className="info-add-department ">
               <div className="text-department">Ca trưởng</div>
               <Select
                 className="select-input"
-                mode="multiple"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={["china"]}
+                defaultValue="lucy"
                 onChange={handleChange}
-                optionLabelProp="label"
-              >
-                <Option value="china" label="China">
-                  <Space>China</Space>
-                </Option>
-                <Option value="usa" label="USA">
-                  <Space>USA</Space>
-                </Option>
-                <Option value="japan" label="Japan">
-                  <Space>Japan</Space>
-                </Option>
-                <Option value="korea" label="Korea">
-                  <Space>Korea</Space>
-                </Option>
-              </Select>
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "Yiminghe",
+                    label: "yiminghe",
+                  },
+                  {
+                    value: "disabled",
+                    label: "Disabled",
+                  },
+                ]}
+              />
             </div>
             <div className="info-add-department">
               <div className="text-department">Ca phó</div>
               <Select
                 className="select-input"
-                mode="multiple"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={["china"]}
+                defaultValue="lucy"
                 onChange={handleChange}
-                optionLabelProp="label"
-              >
-                <Option value="china" label="China">
-                  <Space>China</Space>
-                </Option>
-                <Option value="usa" label="USA">
-                  <Space>USA</Space>
-                </Option>
-                <Option value="japan" label="Japan">
-                  <Space>Japan</Space>
-                </Option>
-                <Option value="korea" label="Korea">
-                  <Space>Korea</Space>
-                </Option>
-              </Select>
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "Yiminghe",
+                    label: "yiminghe",
+                  },
+                  {
+                    value: "disabled",
+                    label: "Disabled",
+                  },
+                ]}
+              />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment">

@@ -24,12 +24,28 @@
   align-items: center;
   gap: 10px;
   .text-department {
-    width: 53%;
+    width: 155px;
     text-align: left;
     color: #000;
     font-family: Noto Sans;
     font-size: 22px;
     font-weight: 600;
+  }
+  .select-input {
+    width: 100%;
+    height: 58px;
+    padding: 14px 24px;
+    background-color: #fff;
+    border-radius: 56px;
+  }
+  .ant-select-selector {
+    background-color: #fff !important;
+  }
+  .ant-select-selection-item {
+    color: #80808f;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-weight: 400;
   }
   Input {
     padding: 14px 24px;
@@ -48,4 +64,6 @@
 }
 .footer-deparment-fix {
   padding-right: 20px !important;
+}
+.select-input {
 }
