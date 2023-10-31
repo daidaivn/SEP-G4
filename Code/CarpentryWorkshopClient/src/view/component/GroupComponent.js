@@ -18,7 +18,8 @@ import {
   changeSubLeaderId,
   changeStafId,
   fetTeamContinue,
-  createTeamMember
+  createTeamMember,
+  searchData
 } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
@@ -45,6 +46,8 @@ const GroupComponent = () => {
   const [allSubLeader, setAllSubLeader] = useState([]);
   const [teamsContinue, setTeamsContinue] = useState([]);
   const [getStaffsNoTeam, setGetStaffsNoTeam] = useState([]);
+  const [inputSearch, setInputSearch] = useState([]);
+  
 
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
@@ -153,6 +156,25 @@ const GroupComponent = () => {
     fetchAllTeam()
       .then((data) => {
         setRoles(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu nhóm:", error);
+      });
+  };
+  const searchForData = (Inputvalue) => {
+    setInputSearch(Inputvalue);
+    if (!Inputvalue ) {
+      fetchData();
+    } else {
+    HandleInputsearch(Inputvalue);
+    }
+  };
+  
+  const HandleInputsearch = (Inputvalue) => {
+    searchData(Inputvalue)
+      .then((data) => {
+        setRoles(data);
+        console.log('data',data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
@@ -328,6 +350,7 @@ const GroupComponent = () => {
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
+    HandleInputsearch();
   }, []);
 
   return (
@@ -405,7 +428,10 @@ const GroupComponent = () => {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm"></Input>
+            <Input 
+            placeholder="Tìm kiếm"
+            onChange={(e) => searchForData(e.target.value)}
+            ></Input>
           </div>
           <i className="icon-responsive icon-filter">
             <svg

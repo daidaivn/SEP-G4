@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using UnidecodeSharpFork;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -477,38 +478,73 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var query = _context.Teams
-                    .Include(x => x.EmployeeTeams)
-                    .ThenInclude(et => et.Employee)
-                    .ToList()
-                    .AsQueryable();
-                if (!string.IsNullOrEmpty(input))
+                if (string.IsNullOrWhiteSpace(input))
                 {
-                    string work = input.ToLower().Normalize(NormalizationForm.FormD);
-                    query = query.Where(x =>
-                        x.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
-                        x.EmployeeTeams.Any(et =>
-                            et.Employee.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
-                            et.Employee.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
-                        )
-                    );
+                    return BadRequest("Search input is empty");
                 }
-                var dto = query.Select(t => new TeamListDTO
-                {
-                    TeamId = t.TeamId,
-                    TeamName = t.TeamName,
-                    NumberOfTeamMember = t.EmployeeTeams.Where(x => x.EndDate == null).Count(),
-                    TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
-                        (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
 
-                });
-                return Ok(dto);
+                var converter = new VietnameseToBConverter();
+                string normalizedSearchInput = converter.Convert(input).ToLower();
+
+                // Chia input thành từng từ riêng lẻ
+                var searchWords = normalizedSearchInput.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var teams = _context.Teams
+                    .Include(x => x.EmployeeTeams)
+                        .ThenInclude(et => et.Employee)
+                    .ToList();
+
+                var results = teams
+                    .Where(team =>
+                    {
+                        var teamLeader = _context.Employees.FirstOrDefault(x => x.EmployeeId == team.TeamLeaderId);
+                        string normalizedTeamName = converter.Convert(team.TeamName).ToLower();
+                        string normalizedTeamLeaderName = teamLeader != null
+                            ? $"{converter.Convert(teamLeader.FirstName)} {converter.Convert(teamLeader.LastName)}".ToLower()
+                            : string.Empty;
+
+                        // Chia tên đội và tên người lãnh đạo thành từng từ riêng lẻ
+                        var teamNameWords = normalizedTeamName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        var leaderNameWords = normalizedTeamLeaderName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        // Kiểm tra xem tất cả các từ từ input có xuất hiện trong tên đội/người lãnh đạo không
+                        bool nameMatches = searchWords.All(word => teamNameWords.Any(tw => tw.Contains(word)));
+                        bool leaderMatches = searchWords.All(word => leaderNameWords.Any(lw => lw.Contains(word)));
+
+                        return nameMatches || leaderMatches ||
+                               team.EmployeeTeams.Any(et =>
+                                   et.Employee != null &&
+                                   searchWords.All(word =>
+                                       $"{converter.Convert(et.Employee.FirstName)} {converter.Convert(et.Employee.LastName)}".ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Any(ew => ew.Contains(word))
+                                   )
+                               );
+                    })
+                    .Select(team =>
+                    {
+                        var teamLeader = _context.Employees.FirstOrDefault(x => x.EmployeeId == team.TeamLeaderId);
+                        return new TeamDTO
+                        {
+                            TeamId = team.TeamId,
+                            TeamName = team.TeamName,
+                            TeamLeaderName = teamLeader != null
+                                ? $"{teamLeader.FirstName} {teamLeader.LastName}"
+                                : string.Empty,
+                            NumberOfTeamMembers = team.EmployeeTeams.Count(et => et.EndDate == null)
+                        };
+                    })
+                    .ToList();
+
+                return Ok(results);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
+
+
+
 
 
         [HttpPut]

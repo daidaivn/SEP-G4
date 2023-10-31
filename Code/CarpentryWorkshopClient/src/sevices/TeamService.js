@@ -55,21 +55,20 @@ const fetTeamContinue = (teamId) => {
 const createTeamMember = (teamId, memberIDS) => {
   const teamid = teamId;
   const memberIds = memberIDS;
-
-  console.log('teamid', teamid);
-  console.log('memberIds', memberIds);
-
-
   const requestData = {
     teamId: teamid,
     memberIds: memberIds
   };
-
   return axios.post('/CCMSapi/Team/AddTeamMember', requestData, {
     headers: {
       'Content-Type': 'application/json',
     }
   });
+};
+const searchData = (Input) => {
+  const input = Input;
+  console.log(`/CCMSapi/Team/SearchTeam?input=${input}`);
+  return axios.post(`/CCMSapi/Team/SearchTeam?input=${input}`);
 };
 export {
   fetchAllTeam,
@@ -83,5 +82,6 @@ export {
   changeSubLeaderId,
   changeStafId,
   fetTeamContinue,
-  createTeamMember
+  createTeamMember,
+  searchData
 };
