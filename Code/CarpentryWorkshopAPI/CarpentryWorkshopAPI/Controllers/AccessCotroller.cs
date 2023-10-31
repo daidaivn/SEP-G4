@@ -11,7 +11,7 @@ using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Authorize(Roles = "Decentralization")]
+    
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class AccessCotroller : ControllerBase
@@ -54,7 +54,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 
                 role.Pages.Add(page);
                 await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok("sucess");
             }
             catch (Exception ex)
             {
