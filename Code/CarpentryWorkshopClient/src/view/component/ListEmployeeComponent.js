@@ -666,61 +666,59 @@ function ListEmployeeComponent() {
                     </div>
                   </div>
                   <div className="box2-child-cn">
-                    <div className="box-child-employee1 div-detail">
-                      <p>Số điện thoại:</p>
-                      <Input value="0192568746" />
-                    </div>
-                    <div className="box-child-employee1">
+                    <div className="div1-child-employee">
                       <p>Chức vụ</p>
-                      <Select
-                        className="select-input"
-                        mode="multiple"
-                        style={{
-                          width: "100%",
-                        }}
-                        defaultValue={["china"]}
-                        onChange={handleChange}
-                        optionLabelProp="label"
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="27"
+                        height="25"
+                        viewBox="0 0 27 25"
+                        fill="none"
                       >
-                        <Option value="china" label="China">
-                          <Space>China</Space>
-                        </Option>
-                        <Option value="usa" label="USA">
-                          <Space>USA</Space>
-                        </Option>
-                        <Option value="japan" label="Japan">
-                          <Space>Japan</Space>
-                        </Option>
-                        <Option value="korea" label="Korea">
-                          <Space>Korea</Space>
-                        </Option>
-                      </Select>
+                        <g clip-path="url(#clip0_787_1150)">
+                          <path
+                            d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
+                            fill="#3A5A40"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_787_1150">
+                            <rect
+                              width="26"
+                              height="25"
+                              fill="white"
+                              transform="translate(0.25)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <p>Phòng / Ban</p>
                     </div>
-                    <div className="box-child-employee1">
-                      <p>phòng ban</p>
-                      <Select
-                        className="select-input"
-                        mode="multiple"
-                        style={{
-                          width: "100%",
-                        }}
-                        defaultValue={["china"]}
-                        onChange={handleChange}
-                        optionLabelProp="label"
-                      >
-                        <Option value="china" label="China">
-                          <Space>China</Space>
-                        </Option>
-                        <Option value="usa" label="USA">
-                          <Space>USA</Space>
-                        </Option>
-                        <Option value="japan" label="Japan">
-                          <Space>Japan</Space>
-                        </Option>
-                        <Option value="korea" label="Korea">
-                          <Space>Korea</Space>
-                        </Option>
-                      </Select>
+                    <div className="div2-child-employee">
+                      <div className="div2-child">
+                        <div className="div2-child-cn">
+                          <p>Trường phòng</p>
+                        </div>
+                        <div className="div2-child-cn">
+                          <p>Hành chính</p>
+                        </div>
+                      </div>
+                      <div className="div2-child">
+                        <div className="div2-child-cn">
+                          <p>Phó phòng</p>
+                        </div>
+                        <div className="div2-child-cn">
+                          <p>Kế toán</p>
+                        </div>
+                      </div>
+                      <div className="div2-child">
+                        <div className="div2-child-cn">
+                          <p>Nhân viên</p>
+                        </div>
+                        <div className="div2-child-cn">
+                          <p>Tài vụ</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
