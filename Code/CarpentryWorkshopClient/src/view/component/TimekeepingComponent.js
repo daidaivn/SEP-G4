@@ -8,10 +8,43 @@ import "../scss/index.scss";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import "../scss/DepartmentComponent.scss";
-import { fetchAllCheckInOut } from "../../sevices/TimekeepingService";
+import { fetchAllCheckInOut, addAllCheckInOut } from "../../sevices/TimekeepingService";
 const TimekeepingComponent = () => {
   const [checksInOut, setChecksInOut] = useState([]);
   const userEmployeeID = localStorage.getItem('userEmployeeID') || sessionStorage.getItem('userEmployeeID');
+
+  const handleCheckInOut = (employeeID, action) => {
+    console.log('employeeID', employeeID);
+    const actionText = action === 'start' ? 'Bắt đầu' : 'Ngưng';
+    const successText = action === 'start' ? 'Bắt đầu tính thời gian làm việc' : 'Ngưng tính thời gian làm việc';
+
+    toast.promise(
+      new Promise((resolve) => {
+        addAllCheckInOut(employeeID)
+          .then((data) => {
+            resolve(data);
+            fetchData();
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: successText,
+        error: `Lỗi ${actionText} làm việc`,
+      }
+    );
+  }
+
+  // Sử dụng hàm handleCheckInOut để bắt đầu hoặc kết thúc
+  const handleCheckStart = (employeeID) => {
+    handleCheckInOut(employeeID, 'start');
+  }
+
+  const handleCheckEnd = (employeeID) => {
+    handleCheckInOut(employeeID, 'end');
+  }
 
   const fetchData = () => {
     toast.promise(
@@ -20,6 +53,7 @@ const TimekeepingComponent = () => {
           .then((data) => {
             setChecksInOut(data);
             resolve(data);
+
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -27,7 +61,7 @@ const TimekeepingComponent = () => {
       }),
       {
         pending: 'Đang xử lý',
-        error: 'Lỗi dữ lỗi',
+        error: 'Lỗi dữ liệu',
       }
     );
   };
@@ -176,7 +210,7 @@ const TimekeepingComponent = () => {
         <div className="list-text-header-res">
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
-        </div>
+        </div>#C5C5C5
         <table className="list-table">
           <thead>
             <tr>
@@ -231,24 +265,24 @@ const TimekeepingComponent = () => {
                         viewBox="0 0 11 11"
                         fill="none"
                       >
-                        <g clip-path="url(#clip0_469_914)">
+                        <g clip-path="url(#clip0_469_1044)">
                           <path
-                            d="M5.75 10.5C7.07608 10.5 8.34785 9.97322 9.28553 9.03553C10.2232 8.09785 10.75 6.82608 10.75 5.5C10.75 4.17392 10.2232 2.90215 9.28553 1.96447C8.34785 1.02678 7.07608 0.5 5.75 0.5C4.42392 0.5 3.15215 1.02678 2.21447 1.96447C1.27678 2.90215 0.75 4.17392 0.75 5.5C0.75 6.82608 1.27678 8.09785 2.21447 9.03553C3.15215 9.97322 4.42392 10.5 5.75 10.5Z"
-                            fill="#C5C5C5"
+                            d="M5.25 10.5C6.57608 10.5 7.84785 9.97322 8.78553 9.03553C9.72322 8.09785 10.25 6.82608 10.25 5.5C10.25 4.17392 9.72322 2.90215 8.78553 1.96447C7.84785 1.02678 6.57608 0.5 5.25 0.5C3.92392 0.5 2.65215 1.02678 1.71447 1.96447C0.776784 2.90215 0.25 4.17392 0.25 5.5C0.25 6.82608 0.776784 8.09785 1.71447 9.03553C2.65215 9.97322 3.92392 10.5 5.25 10.5Z"
+                            fill="#34C759"
                           />
                         </g>
                         <defs>
-                          <clipPath id="clip0_469_914">
+                          <clipPath id="clip0_469_1044">
                             <rect
                               width="10"
                               height="10"
                               fill="white"
-                              transform="translate(0.75 0.5)"
+                              transform="translate(0.25 0.5)"
                             />
                           </clipPath>
                         </defs>
                       </svg>
-                      <p>Đã có mặt</p>
+                      <p>Có mặt</p>
                     </>
                   ) : (
                     <>
@@ -261,7 +295,7 @@ const TimekeepingComponent = () => {
                       >
                         <g clip-path="url(#clip0_469_973)">
                           <path
-                            d="M5.25 10.5C6.57608 10.5 7.84785 9.97322 8.78553 9.03553C9.72322 8.09785 10.25 6.82608 10.25 5.5C10.25 4.17392 10.2232 2.90215 9.28553 1.96447C8.34785 1.02678 7.07608 0.5 5.25 0.5C3.92392 0.5 2.65215 1.02678 1.71447 1.96447C0.776784 2.90215 0.25 4.17392 0.25 5.5C0.25 6.82608 0.776784 8.09785 1.71447 9.03553C2.65215 9.97322 3.92392 10.5 5.25 10.5Z"
+                            d="M5.25 10.5C6.57608 10.5 7.84785 9.97322 8.78553 9.03553C9.72322 8.09785 10.25 6.82608 10.25 5.5C10.25 4.17392 9.72322 2.90215 8.78553 1.96447C7.84785 1.02678 6.57608 0.5 5.25 0.5C3.92392 0.5 2.65215 1.02678 1.71447 1.96447C0.776784 2.90215 0.25 4.17392 0.25 5.5C0.25 6.82608 0.776784 8.09785 1.71447 9.03553C2.65215 9.97322 3.92392 10.5 5.25 10.5Z"
                             fill="#FC1E1E"
                           />
                         </g>
@@ -283,11 +317,11 @@ const TimekeepingComponent = () => {
 
                 <td>
                   {employee.checkStatus === "CheckIn" ? (
-                    <span className="enter">
+                    <span className="enter" onClick={() => handleCheckStart(employee.employeeId)}>
                       <p>Bắt đầu</p>
                     </span>
                   ) : (
-                    <span className="go-out">
+                    <span className="go-out" onClick={() => handleCheckEnd(employee.employeeId)}>
                       <p>Ngưng</p>
                     </span>
                   )}

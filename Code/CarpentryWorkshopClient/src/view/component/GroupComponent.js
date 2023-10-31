@@ -352,7 +352,6 @@ const GroupComponent = () => {
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
-    HandleInputsearch();
   }, []);
 
   return (
@@ -431,7 +430,7 @@ const GroupComponent = () => {
               </svg>
             </i>
             <Input
-              placeholder="Tìm kiếm"
+              placeholder="Tìm kiếm nhóm và trưởng nhóm"
               onChange={(e) => searchForData(e.target.value)}
             ></Input>
           </div>
