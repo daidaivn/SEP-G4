@@ -101,9 +101,14 @@ const GroupComponent = () => {
     setIdChange(id);
     setNameChange(name);
     setRoleMember(role);
+    console.log('id',id);
+    
     setIsModalOpenChange(true);
     fetDataTeamContinue();
   };
+
+  console.log('idChange',idChange);
+  
   const handleOkChange = () => {
     setIsModalOpenChange(false);
     fetchData();
@@ -313,7 +318,7 @@ const GroupComponent = () => {
   const handleChangeStaff = () => {
     toast.promise(
       new Promise((resolve) => {
-        changeStafId(changeSelectEdit, roleMember)
+        changeStafId(changeSelectEdit, idChange)
           .then((data) => {
             handleDetailGroup(teamID);
             resolve(data);
