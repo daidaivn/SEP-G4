@@ -299,12 +299,58 @@
       gap: 40px;
       flex: 1 0 0;
       align-self: stretch;
+      .div1-child-employee {
+        display: flex;
+        width: 525px;
+        align-items: center;
+        gap: 20px;
+        p {
+          color: #000;
+          text-align: center;
+          font-family: Noto Sans;
+          font-size: 24px;
+          font-weight: 600;
+          flex: 1 0 0;
+        }
+      }
+      .div2-child-employee {
+        display: flex;
+        width: 525px;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        flex: 1 0 0;
+        .div2-child {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 20px;
+          align-self: stretch;
+          .div2-child-cn {
+            display: flex;
+            width: 252.5px;
+            padding: 10px 30px;
+            align-items: flex-start;
+            gap: 10px;
+            border-radius: 60px;
+            border: 1px solid #e6e5ea;
+            background: #fff;
+            p {
+              color: #000;
+              font-family: Noto Sans;
+              font-size: 24px;
+              font-weight: 400;
+            }
+          }
+        }
+      }
       .box-child-employee1 {
         display: flex;
         align-items: center;
         align-content: center;
         gap: 20px;
         flex-wrap: wrap;
+
         p {
           color: #000;
           font-family: Noto Sans;
