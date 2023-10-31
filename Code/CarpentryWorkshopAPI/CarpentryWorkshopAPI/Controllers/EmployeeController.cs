@@ -24,7 +24,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        //[Authorize(Roles = "Home")]
+        [Authorize(Roles = "Home")]
         [HttpGet]
         public IActionResult GetAllEmployee()
         {
