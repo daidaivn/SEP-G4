@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
+    [Authorize(Roles = "TimeKeeping")]
     public class CheckInOutController : ControllerBase
     {
+        
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
         public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)

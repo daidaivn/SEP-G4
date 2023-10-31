@@ -7,6 +7,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
+
     public class PagesController : ControllerBase
     {
         private readonly SEPG4CCMSContext _context;

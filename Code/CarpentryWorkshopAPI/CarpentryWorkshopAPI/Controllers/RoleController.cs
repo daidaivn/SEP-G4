@@ -10,6 +10,7 @@ using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    [Authorize(Roles = "Role")]
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class RoleController : Controller
