@@ -104,6 +104,17 @@ function ListEmployeeComponent() {
   const handleCancelAdd = () => {
     setIsModalOpenAdd(false);
   };
+
+  const [isModalOpenAddRole, setIsModalOpenAddRole] = useState(false);
+  const showModalAddRole = () => {
+    setIsModalOpenAddRole(true);
+  };
+  const handleOkAddRole = () => {
+    setIsModalOpenAddRole(false);
+  };
+  const handleCancelAddRole = () => {
+    setIsModalOpenAddRole(false);
+  };
   return (
     <div className="col-right-container">
       <div className="list-container-header">
@@ -405,6 +416,7 @@ function ListEmployeeComponent() {
                     <div className="div1-child-employee">
                       <p>Chức vụ</p>
                       <svg
+                        onClick={showModalAddRole}
                         xmlns="http://www.w3.org/2000/svg"
                         width="27"
                         height="25"
@@ -861,6 +873,202 @@ function ListEmployeeComponent() {
           </div>
         </Modal>
       )}
+
+      <Modal
+        className="modal"
+        open={isModalOpenAddRole}
+        on
+        Ok={handleOkAddRole}
+        onCancel={handleCancelAddRole}
+      >
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head">
+            {" "}
+            <h3>Chọn chức vụ / phòng ban</h3>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                <tr>
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                </tr>
+                <tr>
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                </tr>
+                <tr>
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                  <Select
+                    className="select-input"
+                    defaultValue="lucy"
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                      {
+                        value: "disabled",
+                        label: "Disabled",
+                      },
+                    ]}
+                  />
+                </tr>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+          <div className="modal-footer modal-footer-add-employee add">
+            <button className="btn-cancel" onClick={handleCancelAddRole}>
+              Hủy bỏ
+            </button>
+            <button className="btn-edit btn-save" onClick={handleOkAddRole}>
+              Lưu
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
