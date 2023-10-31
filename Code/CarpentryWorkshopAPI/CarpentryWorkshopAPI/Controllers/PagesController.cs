@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -19,7 +21,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
 
         }
-
+        [Authorize(Roles = "Decentralization")]
         [HttpGet]
         public IActionResult GetAllPage()
         {
@@ -34,6 +36,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
         }
+        [Authorize(Roles = "Decentralization")]
         [HttpGet("{id}")]
         public IActionResult GetPageById(int id)
         {
@@ -48,6 +51,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
         }
+        [Authorize(Roles = "Decentralization")]
         [HttpGet("{text}")]
         public IActionResult GetPageByText(string text)
         {
@@ -69,6 +73,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
         }
+        [Authorize(Roles = "Decentralization")]
         [HttpPut]
         public IActionResult ChangeStatusPage(int id)
         {

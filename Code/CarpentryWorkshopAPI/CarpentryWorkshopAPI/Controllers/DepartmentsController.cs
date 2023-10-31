@@ -15,7 +15,7 @@ using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Authorize(Roles = "ListDepartment")]
+    
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
@@ -28,8 +28,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-
-        // GET: api/Departments
+        [Authorize(Roles = "ListEmployee,ListDepartment")]
         [HttpGet]
         public IActionResult GetAllDepartments()
         {
@@ -42,7 +41,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             return Ok(listDTO);
         }
-
+        [Authorize(Roles = "ListDepartment")]
         // GET: api/Departments/5
         [HttpGet("{id}")]
         public IActionResult GetDepartmentById(int id)
@@ -59,7 +58,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             return Ok(departmentDTO);
         }
-
+        [Authorize(Roles = "ListDepartment")]
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
@@ -91,7 +90,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             return Ok("Update success");
         }
-
+        [Authorize(Roles = "ListDepartment")]
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -131,7 +130,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             
         }
-
+        [Authorize(Roles = "ListDepartment")]
         // DELETE: api/Departments/5
         [HttpDelete("{id}")]
         public IActionResult UpdateDepartmentStatus(int id)
@@ -180,6 +179,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "ListDepartment")]
         [HttpGet("DepartmentDetail/{id}")]
         public IActionResult GetEmployeeInDepartment(int id)
         {
@@ -207,6 +207,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "ListDepartment")]
         [HttpPost("search")]
         public ActionResult<DepartmentListDTO> SearchAndFilterDepartment(DepartmentDTO departmentDTO)
         {
