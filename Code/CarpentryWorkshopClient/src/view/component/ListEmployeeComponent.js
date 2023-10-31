@@ -824,20 +824,44 @@ function ListEmployeeComponent() {
                   </div>
                   <div className="box2-child-cn ">
                     <div className="box-child-employee1 div-detail">
-                      <p>Số điện thoại:</p>
-                      <Input value="0987654321" />
-                    </div>
-                    <div className="box-child-employee1 div-detail">
                       <p>Chức vụ:</p>
-                      <Input value="Trưởng phòng" />
+                      <div className="value">
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Trưởng phòng</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Kiêm nghiệm chức vụ:</p>
-                      <Input value="Trưởng phòng" />
+                      <div className="value">
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Nhân viên</p>
+                          </div>
+                        </div>
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Nhân viên</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Phòng ban:</p>
-                      <Input value="Phòng kế toán" />
+                      <div className="value">
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Phòng kế toán</p>
+                          </div>
+                        </div>
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Phòng kế toán</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
