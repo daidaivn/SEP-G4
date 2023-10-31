@@ -342,6 +342,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(employeeSearchDTO.InputText))
+                {
+                    return BadRequest("Search input is empty");
+                }
                 var query = _context.Employees
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
@@ -368,7 +372,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     query = query.Where(x => x.Status == employeeSearchDTO.Status.Value);
                 }
 
-                if (employeeSearchDTO.RoleID != 0)
+                if (employeeSearchDTO.RoleID.HasValue && employeeSearchDTO.RoleID.Value != 0)
                 {
                     query = query.Where(entity =>
                         entity.RolesEmployees.Any(roleemp => roleemp.Role.RoleId == employeeSearchDTO.RoleID)
