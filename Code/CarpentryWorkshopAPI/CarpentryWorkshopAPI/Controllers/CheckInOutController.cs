@@ -192,13 +192,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+                        if (DateTime.Now.TimeOfDay < teamId.TimeIn)
                         {
                             result.Add(new
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = 6,
+                                Status = 6, //tan ca
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -208,7 +208,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = 5,
+                                Status = 5, //tạm vắng
                                 CheckStatus = "CheckIn"
                             });
                         }

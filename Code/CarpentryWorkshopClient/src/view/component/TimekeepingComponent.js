@@ -294,7 +294,41 @@ const TimekeepingComponent = () => {
                           </clipPath>
                         </defs>
                       </svg>
+                      <p>Chưa có công việc</p>
+                    </>
+                  ) : employee.status === 5 ? (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <g clip-path="url(#clip0_469_973)">
+                          <path
+                            d="M5.25 10.5C6.57608 10.5 7.84785 9.97322 8.78553 9.03553C9.72322 8.09785 10.25 6.82608 10.25 5.5C10.25 4.17392 10.2232 2.90215 9.28553 1.96447C8.34785 1.02678 7.07608 0.5 5.25 0.5C3.92392 0.5 2.65215 1.02678 1.71447 1.96447C0.776784 2.90215 0.25 4.17392 0.25 5.5C0.25 6.82608 0.776784 8.09785 1.71447 9.03553C2.65215 9.97322 3.92392 10.5 5.25 10.5Z"
+                            fill="#FC1E1E"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_469_973">
+                            <rect width="10" height="10" fill="white" transform="translate(0.25 0.5)" />
+                          </clipPath>
+                        </defs>
+                      </svg>
                       <p>Tạm ngưng</p>
+                    </>
+                  ) : employee.status === 6 ? (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <g clip-path="url(#clip0_469_973)">
+                          <path
+                            d="M5.25 10.5C6.57608 10.5 7.84785 9.97322 8.78553 9.03553C9.72322 8.09785 10.25 6.82608 10.25 5.5C10.25 4.17392 10.2232 2.90215 9.28553 1.96447C8.34785 1.02678 7.07608 0.5 5.25 0.5C3.92392 0.5 2.65215 1.02678 1.71447 1.96447C0.776784 2.90215 0.25 4.17392 0.25 5.5C0.25 6.82608 0.776784 8.09785 1.71447 9.03553C2.65215 9.97322 3.92392 10.5 5.25 10.5Z"
+                            fill="#FC1E1E"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_469_973">
+                            <rect width="10" height="10" fill="white" transform="translate(0.25 0.5)" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <p>Tan ca</p>
                     </>
                   ) : (
                     <>
@@ -311,7 +345,7 @@ const TimekeepingComponent = () => {
                           </clipPath>
                         </defs>
                       </svg>
-                      <p>Tan ca</p>
+                      <p>Chưa biết</p>
                     </>
                   )}
                 </td>
