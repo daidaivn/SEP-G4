@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
@@ -19,7 +19,7 @@ import {
   changeStafId,
   fetTeamContinue,
   createTeamMember,
-  searchData
+  searchData,
 } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
@@ -47,7 +47,6 @@ const GroupComponent = () => {
   const [teamsContinue, setTeamsContinue] = useState([]);
   const [getStaffsNoTeam, setGetStaffsNoTeam] = useState([]);
   const [inputSearch, setInputSearch] = useState([]);
-  
 
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
@@ -163,18 +162,18 @@ const GroupComponent = () => {
   };
   const searchForData = (Inputvalue) => {
     setInputSearch(Inputvalue);
-    if (!Inputvalue ) {
+    if (!Inputvalue) {
       fetchData();
     } else {
-    HandleInputsearch(Inputvalue);
+      HandleInputsearch(Inputvalue);
     }
   };
-  
+
   const HandleInputsearch = (Inputvalue) => {
     searchData(Inputvalue)
       .then((data) => {
         setRoles(data);
-        console.log('data',data);
+        console.log("data", data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
@@ -184,12 +183,12 @@ const GroupComponent = () => {
     fetTeamContinue(teamID)
       .then((data) => {
         setTeamsContinue(data);
-        console.log('data', data);
+        console.log("data", data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
-  }
+  };
   const fetchDataCreateTeam = () => {
     if (newTeamName.trim() === "") {
       return;
@@ -201,20 +200,20 @@ const GroupComponent = () => {
             setNewTeamName("");
             handleCancelGroup();
             fetchData();
-            handleDetailGroup(teamID)
-            resolve(data)
+            handleDetailGroup(teamID);
+            resolve(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
-        }),
-        {
-          pending: 'Đang xử lý',
-          success: 'Thêm nhóm thành công',
-          error: 'Lỗi thêm nhóm',
-        }
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Thêm nhóm thành công",
+        error: "Lỗi thêm nhóm",
+      }
     );
-  }
+  };
   const AddCreateTeam = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -224,19 +223,19 @@ const GroupComponent = () => {
             handleCancelGroup();
             handleDetailGroup(teamID);
             fetchData();
-            resolve(data)
+            resolve(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
-  }
+  };
 
   const handleDetailGroup = (teamId) => {
     toast.promise(
@@ -254,7 +253,7 @@ const GroupComponent = () => {
           });
       }),
       {
-        pending: 'Đang xử lý',
+        pending: "Đang xử lý",
       }
     );
   };
@@ -264,14 +263,12 @@ const GroupComponent = () => {
       .then((data) => {
         setGetStaffsNoTeam(data);
         showModalAdd();
-        console.log('data', data);
-
+        console.log("data", data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
-
 
   const handleChangeLeader = () => {
     toast.promise(
@@ -280,16 +277,16 @@ const GroupComponent = () => {
           .then((data) => {
             handleDetailGroup(teamID);
             resolve(data);
-            handleOkChange()
+            handleOkChange();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Chuyển nhóm thành công',
-        error: 'Lỗi chuyển nhóm',
+        pending: "Đang xử lý",
+        success: "Chuyển nhóm thành công",
+        error: "Lỗi chuyển nhóm",
       }
     );
   };
@@ -300,16 +297,16 @@ const GroupComponent = () => {
           .then((data) => {
             handleDetailGroup(teamID);
             resolve(data);
-            handleOkChange()
+            handleOkChange();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Chuyển nhóm thành công',
-        error: 'Lỗi chuyển nhóm',
+        pending: "Đang xử lý",
+        success: "Chuyển nhóm thành công",
+        error: "Lỗi chuyển nhóm",
       }
     );
   };
@@ -320,16 +317,16 @@ const GroupComponent = () => {
           .then((data) => {
             handleDetailGroup(teamID);
             resolve(data);
-            handleOkChange()
+            handleOkChange();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Chuyển nhóm thành công',
-        error: 'Lỗi chuyển nhóm',
+        pending: "Đang xử lý",
+        success: "Chuyển nhóm thành công",
+        error: "Lỗi chuyển nhóm",
       }
     );
   };
@@ -428,9 +425,9 @@ const GroupComponent = () => {
                 </g>
               </svg>
             </i>
-            <Input 
-            placeholder="Tìm kiếm"
-            onChange={(e) => searchForData(e.target.value)}
+            <Input
+              placeholder="Tìm kiếm"
+              onChange={(e) => searchForData(e.target.value)}
             ></Input>
           </div>
           <i className="icon-responsive icon-filter">
@@ -620,8 +617,8 @@ const GroupComponent = () => {
               <div className="info-detail-group">
                 <div className="info-body-group">
                   {detailTeamID.shiftManager ||
-                    detailTeamID.shiftAssistant ||
-                    (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                  detailTeamID.shiftAssistant ||
+                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
                     <>
                       <div className="box1-modal-group">
                         <div className="box1-child">
@@ -874,14 +871,18 @@ const GroupComponent = () => {
                     className="select-input"
                     mode="multiple"
                     style={{
-                      width: "100%",
+                      width: "375px",
                     }}
-                    defaultValue={selectedChangeid1}
+                    // defaultValue={selectedChangeid1}
                     onChange={handleChangeSelect}
                     optionLabelProp="label"
                   >
                     {getStaffsNoTeam.map((staff) => (
-                      <Option key={staff.employeeID} value={staff.employeeID} label={staff.fullName}>
+                      <Option
+                        key={staff.employeeID}
+                        value={staff.employeeID}
+                        label={staff.fullName}
+                      >
                         <Space>{staff.fullName}</Space>
                       </Option>
                     ))}
@@ -967,7 +968,7 @@ const GroupComponent = () => {
                           width: 120,
                         }}
                         onChange={handleChangeSelectEdit}
-                        options={teamsContinue.map(team => ({
+                        options={teamsContinue.map((team) => ({
                           value: team.teamId,
                           label: team.teamName,
                         }))}
