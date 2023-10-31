@@ -131,7 +131,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         EmployeeId = employee.EmployeeId,
                         Name = employee.FirstName + " " + employee.LastName,
-                        Status = "không có việc",
+                        Status = 4,
                         CheckStatus = "CheckIn"
                     });
                 }
@@ -143,7 +143,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Vắng mặt",
+                            Status = 3,
                             CheckStatus = "CheckIn"
                         });
                     }
@@ -153,7 +153,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Chưa có mặt",
+                            Status = 1,
                             CheckStatus = "CheckIn"
                         });
                     }
@@ -167,7 +167,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Có mặt",
+                            Status = 2,
                             CheckStatus = "CheckOut"
                         });
                     }
@@ -177,7 +177,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Chưa có mặt",
+                            Status = 1,
                             CheckStatus = "CheckIn"
                         });
                     }

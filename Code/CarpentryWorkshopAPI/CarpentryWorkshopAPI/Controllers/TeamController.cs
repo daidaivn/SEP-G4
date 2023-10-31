@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Cryptography.Xml;
 using System.Text;
-using UnidecodeSharpFork;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
