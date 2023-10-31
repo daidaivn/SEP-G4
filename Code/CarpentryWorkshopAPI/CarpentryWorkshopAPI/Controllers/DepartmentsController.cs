@@ -10,9 +10,12 @@ using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using System.Text;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    [Authorize(Roles = "ListDepartment")]
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DepartmentsController : ControllerBase

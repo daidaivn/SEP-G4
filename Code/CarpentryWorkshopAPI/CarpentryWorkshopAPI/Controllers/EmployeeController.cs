@@ -13,6 +13,7 @@ using System.Globalization;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    [Authorize(Roles = "ListEmployee")]
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
@@ -24,7 +25,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "Home")]
+        
         [HttpGet]
         public IActionResult GetAllEmployee()
         {

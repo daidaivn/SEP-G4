@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
 using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    [Authorize(Roles = "DependentPerson")]
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsController : ControllerBase

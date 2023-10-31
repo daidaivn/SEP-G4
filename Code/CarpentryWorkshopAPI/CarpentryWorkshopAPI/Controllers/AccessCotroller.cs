@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    [Authorize(Roles = "Decentralization")]
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class AccessCotroller : ControllerBase

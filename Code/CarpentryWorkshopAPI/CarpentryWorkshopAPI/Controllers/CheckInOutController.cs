@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
+    [Authorize(Roles = "TimeKeeping")]
     public class CheckInOutController : ControllerBase
     {
+        
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
         public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)
@@ -125,7 +129,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ThenBy(c => c.TimeCheckIn)
                     .Select(c => c.TimeCheckOut)
                     .LastOrDefaultAsync();
-                if(teamId.WorkId.Count() < 0)
+                if(teamId.WorkId.Count() <= 0)
                 {
                     result.Add(new
                     {
@@ -135,7 +139,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         CheckStatus = "CheckIn"
                     });
                 }
-                if (checkInTime == null)
+                else if (checkInTime == null)
                 {
                     if (DateTime.Now.TimeOfDay > teamId.TimeIn)
                     {
@@ -237,17 +241,17 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenBy(c => c.TimeCheckIn)
                         .Select(c => c.TimeCheckOut)
                         .LastOrDefaultAsync();
-                    if (teamId.WorkId.Count() < 0)
+                    if (teamId.WorkId.Count() <= 0)
                     {
                         result.Add(new
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "không có việc",
+                            Status = 4,
                             CheckStatus = "CheckIn"
                         });
                     }
-                    if (checkInTime == null)
+                    else if (checkInTime == null)
                     {
                         if (DateTime.Now.TimeOfDay > teamId.TimeIn)
                         {
@@ -255,7 +259,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Vắng mặt",
+                                Status = 3,
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -265,7 +269,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Chưa có mặt",
+                                Status = 1,
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -279,7 +283,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Có mặt",
+                                Status = 2,
                                 CheckStatus = "CheckOut"
                             });
                         }
@@ -289,7 +293,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Chưa có mặt",
+                                Status = 1,
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -335,7 +339,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 DateTime dateTime = DateTime.Now.Date;
                 var Attendance = _context.CheckInOuts.Where(a => a.Date.Value.Date == dateTime.Date && a.EmployeeId == employeeId).AsQueryable();
-                if (Attendance == null)
+                if (Attendance.Count() <= 0)
                 {
                     var checkInOut = new CheckInOut()
                     {
