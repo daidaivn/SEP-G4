@@ -180,7 +180,17 @@ namespace CarpentryWorkshopAPI.Controllers
                 }                    
                 else
                 {
-                    if (latestCheckOutTime == null)
+                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = 6,//tan ca
+                            CheckStatus = "CheckIn"
+                        });
+                    }
+                    else if (latestCheckOutTime == null)
                     {
                         result.Add(new
                         {
@@ -192,26 +202,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 6,
-                                CheckStatus = "CheckIn"
-                            });
-                        }
-                        else
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 5,
-                                CheckStatus = "CheckIn"
-                            });
-                        }
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = 5,//tam vang
+                            CheckStatus = "CheckIn"
+                        });
                     }
                     
                 }
@@ -322,40 +319,35 @@ namespace CarpentryWorkshopAPI.Controllers
 
                     else
                     {
-                        if (latestCheckOutTime == null)
+                        if (DateTime.Now.TimeOfDay > teamId.Timeout)
                         {
                             result.Add(new
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = 2,
+                                Status = 6,//tan ca
+                                CheckStatus = "CheckIn"
+                            });
+                        }
+                        else if (latestCheckOutTime == null)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 2,//Checkout
                                 CheckStatus = "CheckOut"
                             });
                         }
                         else
                         {
-                           if(DateTime.Now.TimeOfDay > teamId.Timeout)
+                            result.Add(new
                             {
-                                result.Add(new
-                                {
-                                    EmployeeId = employee.EmployeeId,
-                                    Name = employee.FirstName + " " + employee.LastName,
-                                    Status = 6,
-                                    CheckStatus = "CheckIn"
-                                });
-                            }
-                            else
-                            {
-                                result.Add(new
-                                {
-                                    EmployeeId = employee.EmployeeId,
-                                    Name = employee.FirstName + " " + employee.LastName,
-                                    Status = 5,
-                                    CheckStatus = "CheckIn"
-                                });
-                            }
-                            
-                            
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 5,//tam vang
+                                CheckStatus = "CheckIn"
+                            });
                         }
 
                     }
