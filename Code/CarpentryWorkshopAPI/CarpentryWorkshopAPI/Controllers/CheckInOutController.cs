@@ -100,12 +100,11 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound("Team Leader not found");
             }
-
+            
             var employees = await _context.EmployeeTeams
                 .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
                 .Select(et => et.Employee)
                 .ToListAsync();
-
             if (employees.Count == 0)
             {
                 return NotFound("No employees found in the team with EndDate == null");
@@ -115,7 +114,7 @@ namespace CarpentryWorkshopAPI.Controllers
             foreach (var employee in employees)
             {
                 var currentDate = DateTime.Now.Date;
-
+                
                 var checkInTime = await _context.CheckInOuts
                     .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
                     .OrderBy(c=>c.Date)
@@ -129,6 +128,23 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ThenBy(c => c.TimeCheckIn)
                     .Select(c => c.TimeCheckOut)
                     .LastOrDefaultAsync();
+                if(DateTime.Now.TimeOfDay > teamId.Timeout)
+                {
+                    if(latestCheckOutTime == null)
+                    {
+                        var AutoCheck = await _context.CheckInOuts
+                            .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                            .OrderBy(c => c.Date)
+                            .ThenBy(c => c.TimeCheckIn)
+                            .LastOrDefaultAsync();
+                        if(AutoCheck != null)
+                        {
+                            AutoCheck.TimeCheckOut = teamId.Timeout;
+                            _context.Update(AutoCheck);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
                 if(teamId.WorkId.Count() <= 0)
                 {
                     result.Add(new
@@ -241,6 +257,23 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenBy(c => c.TimeCheckIn)
                         .Select(c => c.TimeCheckOut)
                         .LastOrDefaultAsync();
+                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
+                    {
+                        if (latestCheckOutTime == null)
+                        {
+                            var AutoCheck = await _context.CheckInOuts
+                                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                                .OrderBy(c => c.Date)
+                                .ThenBy(c => c.TimeCheckIn)
+                                .LastOrDefaultAsync();
+                            if (AutoCheck != null)
+                            {
+                                AutoCheck.TimeCheckOut = teamId.Timeout;
+                                _context.Update(AutoCheck);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
                     if (teamId.WorkId.Count() <= 0)
                     {
                         result.Add(new
@@ -289,13 +322,28 @@ namespace CarpentryWorkshopAPI.Controllers
                         }
                         else
                         {
-                            result.Add(new
+                           if(DateTime.Now.TimeOfDay > teamId.Timeout)
                             {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 1,
-                                CheckStatus = "CheckIn"
-                            });
+                                result.Add(new
+                                {
+                                    EmployeeId = employee.EmployeeId,
+                                    Name = employee.FirstName + " " + employee.LastName,
+                                    Status = 6,
+                                    CheckStatus = "CheckIn"
+                                });
+                            }
+                            else
+                            {
+                                result.Add(new
+                                {
+                                    EmployeeId = employee.EmployeeId,
+                                    Name = employee.FirstName + " " + employee.LastName,
+                                    Status = 5,
+                                    CheckStatus = "CheckIn"
+                                });
+                            }
+                            
+                            
                         }
 
                     }
