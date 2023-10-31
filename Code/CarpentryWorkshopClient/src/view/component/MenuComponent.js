@@ -27,12 +27,14 @@ const Menucomponent = () => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userRoles");
     localStorage.removeItem("userPages");
+    localStorage.removeItem("userEmployeeID");
+
     sessionStorage.removeItem("userToken");
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("userRoles");
     sessionStorage.removeItem("userPages");
+    sessionStorage.removeItem("userEmployeeID");
 
-    // Chuyển hướng đến trang đăng nhập
     navigate("/login");
   };
 
@@ -199,7 +201,6 @@ const Menucomponent = () => {
                 </g>
               </g>
             </svg>
-
             <span className="text">Đăng xuất</span>
           </div>
         </div>
