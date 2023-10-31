@@ -177,8 +177,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             CheckStatus = "CheckIn"
                         });
                     }
-                }
-                    
+                }                    
                 else
                 {
                     if (latestCheckOutTime == null)
@@ -193,13 +192,26 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        result.Add(new
+                        if (DateTime.Now.TimeOfDay > teamId.TimeIn)
                         {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 1,//Checkin
-                            CheckStatus = "CheckIn"
-                        });
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 6,
+                                CheckStatus = "CheckIn"
+                            });
+                        }
+                        else
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 5,
+                                CheckStatus = "CheckIn"
+                            });
+                        }
                     }
                     
                 }
