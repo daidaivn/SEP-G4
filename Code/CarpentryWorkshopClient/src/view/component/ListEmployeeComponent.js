@@ -575,305 +575,6 @@ function ListEmployeeComponent() {
           />
         )}
       </div>
-      {isEditing ? (
-        <Modal
-          className="modal"
-          visible={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          width={1252}
-        >
-          <div className="modal-add-employee">
-            <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
-            </div>
-            <div className="modal-add-employee-all">
-              <div className="modal-employee-box1">
-                <div className="modal-child-body1">
-                  <div className="img-body1">
-                    <img src={avt} alt="" />
-                  </div>
-                </div>
-                <div className="modal-child-body2">
-                  <div className="div-modal-child2 div-detail">
-                    <p>Họ:</p>
-                    <Input value="Nguyễn Văn" />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Tên:</p>
-                    <Input value="An" />
-                  </div>
-
-                  <div className="div-modal-child2">
-                    <p>Giới tính: </p>
-                    <div className="radio-employee">
-                      <Radio.Group
-                        onChange={(e) => setGender(e.target.value)}
-                        value={gender}
-                      >
-                        <Radio value={1} className="gender">
-                          Nam
-                        </Radio>
-                        <Radio value={2} className="gender">
-                          Nữ
-                        </Radio>
-                      </Radio.Group>
-                    </div>
-                  </div>
-                  <div className="div-modal-child2">
-                    <p>Quốc tịch:</p>
-                    <Select
-                      className="select-input"
-                      defaultValue="lucy"
-                      style={{
-                        width: "100%",
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Địa chỉ: </p>
-                    <Input value="Hà Nội" />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Mã định danh: </p>
-                    <Input value="000125558995" />
-                  </div>
-                </div>
-              </div>
-              <div className="modal-employee-box2">
-                <div className="modal-box2-child">
-                  <div className="box2-child-cn ">
-                    <div className="box-child-employee1 div-detail">
-                      <p>Mã số thuế:</p>
-                      <Input value="0987654321" />
-                    </div>
-                    <div className="box-child-employee1">
-                      <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
-                    </div>
-                    <div className="box-child-employee1">
-                      <p>Trạng thái hợp đồng:</p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                  <div className="box2-child-cn">
-                    <div className="div1-child-employee">
-                      <p>Chức vụ</p>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="27"
-                        height="25"
-                        viewBox="0 0 27 25"
-                        fill="none"
-                      >
-                        <g clip-path="url(#clip0_787_1150)">
-                          <path
-                            d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
-                            fill="#3A5A40"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_787_1150">
-                            <rect
-                              width="26"
-                              height="25"
-                              fill="white"
-                              transform="translate(0.25)"
-                            />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p>Phòng / Ban</p>
-                    </div>
-                    <div className="div2-child-employee">
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Trường phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Hành chính</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Phó phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Kế toán</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Nhân viên</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Tài vụ</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer modal-footer-add modal-footer-edit">
-              <button className="btn-cancel" onClick={handleCancelAdd}>
-                Hủy bỏ
-              </button>
-              <button className="btn-edit btn-save" onClick={handleSave}>
-                Lưu
-              </button>
-            </div>
-          </div>
-        </Modal>
-      ) : (
-        <Modal
-          className="modal"
-          visible={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          width={1252}
-        >
-          <div className="modal-add-employee">
-            <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
-            </div>
-            <div className="modal-add-employee-all">
-              <div className="modal-employee-box1">
-                <div className="modal-child-body1">
-                  <div className="img-body1">
-                    <img src={avt} alt="" />
-                  </div>
-                </div>
-                <div className="modal-child-body2">
-                  <div className="div-modal-child2 div-detail">
-                    <p>Họ và tên:</p>
-                    <Input value="Nguyễn Văn An" />
-                  </div>
-
-                  <div className="div-modal-child2 div-detail">
-                    <p>Giới tính: </p>
-                    <div className="radio-employee">
-                      <Input value="Nam" />
-                    </div>
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Quốc tịch:</p>
-                    <Input value="Việt Nam" />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Địa chỉ: </p>
-                    <Input value="Hà Nội" />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Mã định danh: </p>
-                    <Input value="000125558995" />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
-                    <p>Số điện thoại: </p>
-                    <Input value="0192568746" />
-                  </div>
-                </div>
-              </div>
-              <div className="modal-employee-box2 ">
-                <div className="modal-box2-child">
-                  <div className="box2-child-cn">
-                    <div className="box-child-employee1 div-detail">
-                      <p>Mã số thuế:</p>
-                      <Input value="0987654321" />
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Trạng thái hợp đồng:</p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
-                      </Form.Item>
-                      <p className="text-option">Còn thời hạn</p>
-                    </div>
-                  </div>
-                  <div className="box2-child-cn ">
-                    <div className="box-child-employee1 div-detail">
-                      <p>Chức vụ:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Trưởng phòng</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Kiêm nghiệm chức vụ:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Nhân viên</p>
-                          </div>
-                        </div>
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Nhân viên</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Phòng ban:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Phòng kế toán</p>
-                          </div>
-                        </div>
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Phòng kế toán</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer modal-footer-add">
-              <div className="modal-footer1">Người phụ thuộc</div>
-              <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancelAdd}>
-                  Hủy bỏ
-                </button>
-                <button className="btn-edit" onClick={handleEdit}>
-                  Chỉnh sửa
-                </button>
-              </div>
-            </div>
-          </div>
-        </Modal>
-      )}
-
       <Modal
         className="modal"
         open={isModalOpenAddRole}
@@ -1069,6 +770,305 @@ function ListEmployeeComponent() {
           </div>
         </div>
       </Modal>
+      {isEditing ? (
+        <Modal
+          className="modal"
+          visible={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={1252}
+        >
+          <div className="modal-add-employee">
+            <div className="modal-head-employee">
+              <h3>Thông tin cá nhân</h3>
+            </div>
+            <div className="modal-add-employee-all">
+              <div className="modal-employee-box1">
+                <div className="modal-child-body1">
+                  <div className="img-body1">
+                    <img src={avt} alt="" />
+                  </div>
+                </div>
+                <div className="modal-child-body2">
+                  <div className="div-modal-child2 div-detail">
+                    <p>Họ:</p>
+                    <Input value="Nguyễn Văn" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Tên:</p>
+                    <Input value="An" />
+                  </div>
+
+                  <div className="div-modal-child2">
+                    <p>Giới tính: </p>
+                    <div className="radio-employee">
+                      <Radio.Group
+                        onChange={(e) => setGender(e.target.value)}
+                        value={gender}
+                      >
+                        <Radio value={1} className="gender">
+                          Nam
+                        </Radio>
+                        <Radio value={2} className="gender">
+                          Nữ
+                        </Radio>
+                      </Radio.Group>
+                    </div>
+                  </div>
+                  <div className="div-modal-child2">
+                    <p>Quốc tịch:</p>
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Địa chỉ: </p>
+                    <Input value="Hà Nội" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Mã định danh: </p>
+                    <Input value="000125558995" />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-employee-box2">
+                <div className="modal-box2-child">
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Mã số thuế:</p>
+                      <Input value="0987654321" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Lương cơ bản:</p>
+                      <Input value="4000000" className="salary" />
+                    </div>
+                    <div className="box-child-employee1">
+                      <p>Trạng thái hợp đồng:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="box2-child-cn">
+                    <div className="div1-child-employee">
+                      <p>Chức vụ</p>
+                      <svg
+                        onClick={showModalAddRole}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="27"
+                        height="25"
+                        viewBox="0 0 27 25"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_787_1150)">
+                          <path
+                            d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
+                            fill="#3A5A40"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_787_1150">
+                            <rect
+                              width="26"
+                              height="25"
+                              fill="white"
+                              transform="translate(0.25)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <p>Phòng / Ban</p>
+                    </div>
+                    <div className="div2-child-employee">
+                      <div className="div2-child">
+                        <div className="div2-child-cn">
+                          <p>Trường phòng</p>
+                        </div>
+                        <div className="div2-child-cn">
+                          <p>Hành chính</p>
+                        </div>
+                      </div>
+                      <div className="div2-child">
+                        <div className="div2-child-cn">
+                          <p>Phó phòng</p>
+                        </div>
+                        <div className="div2-child-cn">
+                          <p>Kế toán</p>
+                        </div>
+                      </div>
+                      <div className="div2-child">
+                        <div className="div2-child-cn">
+                          <p>Nhân viên</p>
+                        </div>
+                        <div className="div2-child-cn">
+                          <p>Tài vụ</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-add modal-footer-edit">
+              <button className="btn-cancel" onClick={handleCancelAdd}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleSave}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
+      ) : (
+        <Modal
+          className="modal"
+          visible={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={1252}
+        >
+          <div className="modal-add-employee">
+            <div className="modal-head-employee">
+              <h3>Thông tin cá nhân</h3>
+            </div>
+            <div className="modal-add-employee-all">
+              <div className="modal-employee-box1">
+                <div className="modal-child-body1">
+                  <div className="img-body1">
+                    <img src={avt} alt="" />
+                  </div>
+                </div>
+                <div className="modal-child-body2">
+                  <div className="div-modal-child2 div-detail">
+                    <p>Họ và tên:</p>
+                    <Input value="Nguyễn Văn An" />
+                  </div>
+
+                  <div className="div-modal-child2 div-detail">
+                    <p>Giới tính: </p>
+                    <div className="radio-employee">
+                      <Input value="Nam" />
+                    </div>
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Quốc tịch:</p>
+                    <Input value="Việt Nam" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Địa chỉ: </p>
+                    <Input value="Hà Nội" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Mã định danh: </p>
+                    <Input value="000125558995" />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Số điện thoại: </p>
+                    <Input value="0192568746" />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-employee-box2 ">
+                <div className="modal-box2-child">
+                  <div className="box2-child-cn">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Mã số thuế:</p>
+                      <Input value="0987654321" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Lương cơ bản:</p>
+                      <Input value="4000000" className="salary" />
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Trạng thái hợp đồng:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                      <p className="text-option">Còn thời hạn</p>
+                    </div>
+                  </div>
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail">
+                      <p>Chức vụ:</p>
+                      <div className="value">
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Trưởng phòng</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Kiêm nghiệm chức vụ:</p>
+                      <div className="value">
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Nhân viên</p>
+                          </div>
+                        </div>
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Nhân viên</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Phòng ban:</p>
+                      <div className="value">
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Phòng kế toán</p>
+                          </div>
+                        </div>
+                        <div className="value2">
+                          <div className="value3">
+                            <p>Phòng kế toán</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-add">
+              <div className="modal-footer1">Người phụ thuộc</div>
+              <div className="modal-footer modal-footer2">
+                <button className="btn-cancel" onClick={handleCancelAdd}>
+                  Hủy bỏ
+                </button>
+                <button className="btn-edit" onClick={handleEdit}>
+                  Chỉnh sửa
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
