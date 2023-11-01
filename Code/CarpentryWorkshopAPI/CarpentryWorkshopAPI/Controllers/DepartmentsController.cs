@@ -132,7 +132,7 @@ namespace CarpentryWorkshopAPI.Controllers
         }
         [Authorize(Roles = "ListDepartment")]
         // DELETE: api/Departments/5
-        [HttpDelete("{id}")]
+        [HttpPut("{id}")]
         public IActionResult UpdateDepartmentStatus(int id)
         {
             try
@@ -179,6 +179,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [Authorize(Roles = "ListDepartment")]
         [HttpGet("DepartmentDetail/{id}")]
         public IActionResult GetEmployeeInDepartment(int id)
