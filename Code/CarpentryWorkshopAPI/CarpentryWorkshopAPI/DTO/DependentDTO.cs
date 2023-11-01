@@ -14,5 +14,6 @@
         public string? IdentifierName { get; set; }
         public bool? Status { get; set; }
         public string? NoteReason { get; set; }
+        public int? TypeDependentId { get; set; }
     }
 }

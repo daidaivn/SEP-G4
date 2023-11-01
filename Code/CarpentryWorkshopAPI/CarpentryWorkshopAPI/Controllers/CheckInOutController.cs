@@ -111,6 +111,11 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
             var result = new List<object>();
+            result.Add(new
+            {
+                TimeIn = teamId.TimeIn,
+                Timeout = teamId.Timeout,
+            });
             foreach (var employee in employees)
             {
                 var currentDate = DateTime.Now.Date;
@@ -187,7 +192,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
                             Status = 6,//tan ca
-                            CheckStatus = "CheckIn"
+                            CheckStatus = "EndCheck"
                         });
                     }
                     else if (latestCheckOutTime == null)
@@ -326,7 +331,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
                                 Status = 6,//tan ca
-                                CheckStatus = "CheckIn"
+                                CheckStatus = "EndCheck"
                             });
                         }
                         else if (latestCheckOutTime == null)
