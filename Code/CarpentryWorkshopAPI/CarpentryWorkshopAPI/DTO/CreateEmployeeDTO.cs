@@ -14,12 +14,9 @@ namespace CarpentryWorkshopAPI.DTO
         public string? PhoneNumber { get; set; }
         public int? TaxId { get; set; }
         public string? Email { get; set; }
-        public int? CountryId { get; set; } 
+        public int? CountryId { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
-        public int? TeamId { get; set; }
-        public int? WageId { get; set; }
-        public double? SalaryCoefficient { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public List<RD> rDs { get; set; }
