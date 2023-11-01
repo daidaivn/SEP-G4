@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Globalization;
+using System.Diagnostics.Contracts;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -62,7 +63,6 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var employeeDetailBasic = _context.Employees
                    .Where(emp => emp.EmployeeId == eid)
-                   .Include(x => x.Wage)
                    .Include(emp => emp.RolesEmployees)
                    .ThenInclude(roleemp => roleemp.Role)
                    .ThenInclude(role => role.RolesEmployees)
@@ -82,8 +82,6 @@ namespace CarpentryWorkshopAPI.Controllers
                        TaxId = emp.TaxId,
                        Email = emp.Email,
                        Status = emp.Status,
-                       WageNumber = emp.Wage.WageNumber,
-                       SalaryCoefficient= emp.SalaryCoefficient,
                        MainRole = emp.RolesEmployees
                        .OrderByDescending(re => re.Role.RoleLevel)
                        .Select(re => re.Role.RoleName)
@@ -118,7 +116,6 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var employeeDetail = _context.Employees
                     .Where(emp => emp.EmployeeId == eid)
-                    .Include(x => x.Wage)
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
                     .ThenInclude(role => role.RolesEmployees)
@@ -139,8 +136,6 @@ namespace CarpentryWorkshopAPI.Controllers
                         TaxId = emp.TaxId,
                         Email= emp.Email,
                         Status = emp.Status,
-                        WageNumber = emp.Wage.WageNumber,
-                        SalaryCoefficient = emp.SalaryCoefficient,
                         RoleDepartments =emp.RolesEmployees
                             .Select(roleemp => new EmployeeDetailDTO.RoleDepartment
                             {
@@ -274,8 +269,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     employee.Status = createEmployeeDTO.Status;
                     employee.Cic = createEmployeeDTO.Cic;
                     employee.CountryId = createEmployeeDTO.CountryId;
-                    employee.WageId = createEmployeeDTO.WageId;
-                    employee.SalaryCoefficient = createEmployeeDTO.SalaryCoefficient;
                     employee.Status = createEmployeeDTO.Status;
                     _context.Employees.Update(employee);
                     EmployeesStatusHistory newhistory = new EmployeesStatusHistory
@@ -305,6 +298,9 @@ namespace CarpentryWorkshopAPI.Controllers
             var employees = _context.Employees
                 .Include(x => x.Country)
                 .Where(x => x.EmployeeId == eid).FirstOrDefault();
+            var contracts = _context.Contracts
+                .Where(x => x.EmployeeId == eid)
+                .ToList();
             if (employees == null)
             {
                 return NotFound();
@@ -314,10 +310,34 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (employees.Status == true)
                 {
                     employees.Status = false;
+                    foreach (var item in contracts)
+                    {
+                        item.Status = false;
+                        ContractsStatusHistory history = new ContractsStatusHistory()
+                        {
+                            ContractId = item.ContractId,
+                            Action = "Change Status",
+                            ActionDate = DateTime.Now,
+                            CurrentEmployeeId = null,
+                        };
+                        _context.ContractsStatusHistories.Add(history);
+                    }
                 }
                 else
                 {
                     employees.Status = true;
+                    foreach (var item in contracts)
+                    {
+                        item.Status = true;
+                        ContractsStatusHistory history = new ContractsStatusHistory()
+                        {
+                            ContractId = item.ContractId,
+                            Action = "Change Status",
+                            ActionDate = DateTime.Now,
+                            CurrentEmployeeId = null,
+                        };
+                        _context.ContractsStatusHistories.Add(history);
+                    }
                 }
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {

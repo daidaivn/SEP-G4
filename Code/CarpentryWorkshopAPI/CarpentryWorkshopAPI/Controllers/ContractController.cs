@@ -21,13 +21,14 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "SystemManager")]
+        //[Authorize(Roles = "SystemManager")]
         [HttpGet]
         public IActionResult GetAllContract()
         {
             try
             {
                 var contracts = _context.Contracts
+                    .Where(x => x.Status == true)
                     .Include(emp => emp.Employee)
                     .Include(ctt => ctt.ContractType)
                     .Select(c => new ContractDTO
@@ -60,7 +61,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var employeecontract = _context.Contracts
-                    .Where(x => x.EmployeeId == eid)
+                    .Where(x => x.EmployeeId == eid && x.Status == true)
                     .Include(ctt => ctt.ContractType)
                     .Include(emp => emp.Employee)
                     .Select(c => new ContractDTO
@@ -97,7 +98,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
                 var ctbystart = _context.Contracts
-                        .Where(x => x.StartDate >= sdate && x.StartDate <= endDate)
+                        .Where(x => x.StartDate >= sdate && x.StartDate <= endDate && x.Status == true)
                         .Include(emp => emp.Employee)
                         .ToList();
                     if (ctbystart == null)
@@ -125,7 +126,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
                 var ctbyend = _context.Contracts
-                        .Where(x => x.EndDate >= sdate && x.EndDate <= endDate)
+                        .Where(x => x.EndDate >= sdate && x.EndDate <= endDate && x.Status == true )
                         .Include(emp => emp.Employee)
                         .ToList();
                 if (ctbyend == null)
@@ -265,6 +266,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(searchContractDTO.InputText))
+                {
+                    return BadRequest("Search input is empty");
+                }
                 var query = _context.Contracts
                     .Include(emp => emp.Employee)
                     .Include(ctt => ctt.ContractType)
