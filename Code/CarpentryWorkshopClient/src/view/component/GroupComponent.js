@@ -114,6 +114,7 @@ const GroupComponent = () => {
     fetchData();
   };
   const handleChangeSucssecfully = () => {
+    setChangeSelectEdit("");
     if (roleMember === 1) {
       handleChangeLeader();
       setSelectedChangeid("");
@@ -128,6 +129,7 @@ const GroupComponent = () => {
     }
   };
   const handleCancelChange = () => {
+    setChangeSelectEdit("");
     setIsModalOpenChange(false);
   };
 
