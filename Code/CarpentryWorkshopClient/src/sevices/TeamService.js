@@ -43,6 +43,8 @@ const changeSubLeaderId = (teamOld, teamNew) => {
 const changeStafId = (teamNew, employeeTeamId) => {
   const newTeam = teamNew;
   const employee = employeeTeamId;
+  console.log( `/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`);
+  
   return axios.post(
     `/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`
   );

@@ -96,7 +96,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 .FirstOrDefaultAsync(u => u.UserName == username && u.Status == true);
             if (!BCrypt.Net.BCrypt.Verify(username, userAccount.Password))
             {
-
                 return userAccount;
             }
             else

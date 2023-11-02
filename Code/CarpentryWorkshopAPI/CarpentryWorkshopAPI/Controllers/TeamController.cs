@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -11,6 +12,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
+    [Authorize(Roles = "ListGroup")]
     public class TeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
@@ -471,6 +473,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
         [HttpPost]
         public IActionResult SearchTeam(string input)

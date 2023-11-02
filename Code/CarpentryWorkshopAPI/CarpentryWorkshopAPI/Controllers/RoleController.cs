@@ -10,6 +10,7 @@ using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class RoleController : Controller
@@ -21,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        //[Authorize(Roles = "Role")]
+        [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
         [HttpGet]
         public IActionResult GetAllRoles()
         {
@@ -77,6 +78,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPost]
         public ActionResult<Role> CreateRoles([FromBody] RoleDTO roleDTO)
         { 
@@ -104,6 +106,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPut]
         public IActionResult UpdateRole([FromBody] RoleDTO roleDTO)
         {
@@ -131,6 +134,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPut]
         public IActionResult ChangeStatusRole(int rid) 
         {
@@ -173,6 +177,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPost]
         public IActionResult SearchRole([FromBody] RoleSearchDTO roleSearchDTO)
         {

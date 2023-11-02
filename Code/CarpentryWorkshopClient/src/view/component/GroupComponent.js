@@ -101,14 +101,20 @@ const GroupComponent = () => {
     setIdChange(id);
     setNameChange(name);
     setRoleMember(role);
+    console.log('id',id);
+    
     setIsModalOpenChange(true);
     fetDataTeamContinue();
   };
+
+  console.log('idChange',idChange);
+  
   const handleOkChange = () => {
     setIsModalOpenChange(false);
     fetchData();
   };
   const handleChangeSucssecfully = () => {
+    setChangeSelectEdit("");
     if (roleMember === 1) {
       handleChangeLeader();
       setSelectedChangeid("");
@@ -123,6 +129,7 @@ const GroupComponent = () => {
     }
   };
   const handleCancelChange = () => {
+    setChangeSelectEdit("");
     setIsModalOpenChange(false);
   };
 
@@ -313,7 +320,7 @@ const GroupComponent = () => {
   const handleChangeStaff = () => {
     toast.promise(
       new Promise((resolve) => {
-        changeStafId(changeSelectEdit, roleMember)
+        changeStafId(changeSelectEdit, idChange)
           .then((data) => {
             handleDetailGroup(teamID);
             resolve(data);
@@ -347,7 +354,6 @@ const GroupComponent = () => {
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
-    HandleInputsearch();
   }, []);
 
   return (
@@ -426,7 +432,7 @@ const GroupComponent = () => {
               </svg>
             </i>
             <Input
-              placeholder="Tìm kiếm"
+              placeholder="Tìm kiếm nhóm và trưởng nhóm"
               onChange={(e) => searchForData(e.target.value)}
             ></Input>
           </div>
