@@ -137,6 +137,17 @@ function ListEmployeeComponent() {
   const handleCancelAddContract = () => {
     setIsModalOpenAddContract(false);
   };
+
+  const [isModalOpenAddContract1, setIsModalOpenAddContract1] = useState(false);
+  const showModalAddContract1 = () => {
+    setIsModalOpenAddContract1(true);
+  };
+  const handleOkAddContract1 = () => {
+    setIsModalOpenAddContract1(false);
+  };
+  const handleCancelAddContract1 = () => {
+    setIsModalOpenAddContract(false);
+  };
   return (
     <div className="col-right-container">
       <div className="list-container-header">
@@ -430,7 +441,12 @@ function ListEmployeeComponent() {
                     </div>
                     <div className="box-child-employee1">
                       <p>Hợp đồng:</p>
-                      <span onClick={showModalAddContract}>Thêm hợp đồng</span>
+                      <span
+                        className="add-contract"
+                        onClick={showModalAddContract}
+                      >
+                        Thêm hợp đồng
+                      </span>
                     </div>
                   </div>
                   <div className="box2-child-cn">
@@ -493,7 +509,7 @@ function ListEmployeeComponent() {
                 </div>
               </div>
             </div>
-            <div className="modal-footer modal-footer-add">
+            <div className="modal-footer modal-footer-add modal-add-fix">
               <button className="btn-cancel" onClick={handleCancelAdd}>
                 Hủy bỏ
               </button>
@@ -901,6 +917,116 @@ function ListEmployeeComponent() {
           />
         )}
       </div>
+      <Modal
+        className="modal"
+        open={isModalOpenAddContract1}
+        on
+        Ok={handleOkAddContract1}
+        onCancel={handleCancelAddContract1}
+      >
+        <div className="modal-add-roleyee-employee modal-contract">
+          <div className="modal-head">
+            {" "}
+            <h3>Thêm / sửa hợp đồng</h3>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead className="thead-first"></thead>
+              <div className="body-table body-table-contract">
+                <tr>
+                  <Input
+                    className="select-input"
+                    placeholder="Mã hợp đồng"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  />
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Đường dẫn hợp đồng"
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                    <div className="input-date-cn">
+                      <p>Trạng thái: </p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </tr>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+          <div className="modal-footer modal-footer-add-employee add">
+            <button className="btn-cancel" onClick={handleCancelAddContract1}>
+              Hủy bỏ
+            </button>
+            <button
+              className="btn-edit btn-save"
+              onClick={handleOkAddContract1}
+            >
+              Lưu
+            </button>
+          </div>
+        </div>
+      </Modal>
       <Modal
         className="modal"
         open={isModalOpenAddRole1}
@@ -1333,7 +1459,17 @@ function ListEmployeeComponent() {
                       <Form.Item valuePropName="checked" className="action">
                         <Switch checked="true" />
                       </Form.Item>
-                      <p className="text-option">Còn thời hạn</p>
+                      <p>Hợp đồng:</p>
+                      <div className="edit-ct1">
+                        <div className="edit-ct2">
+                          <span
+                            className="edit-contract"
+                            onClick={showModalAddContract1}
+                          >
+                            Sửa
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="box2-child-cn ">

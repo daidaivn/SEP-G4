@@ -358,7 +358,7 @@
           font-weight: 600;
           width: 157px;
         }
-        span {
+        .add-contract {
           display: flex;
           padding: 10px 20px;
           align-items: center;
@@ -420,6 +420,28 @@
   }
 }
 .div-detail {
+  .edit-ct1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    .edit-ct2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      background: #ff8f19;
+      .edit-contract {
+        color: #fff;
+        text-align: center;
+        font-family: Noto Sans;
+        font-size: 21px;
+        font-weight: 400;
+      }
+    }
+  }
+
   Input {
     color: #000 !important;
     font-family: Noto Sans;
@@ -596,4 +618,7 @@
 }
 .modal-contract {
   width: 1032px !important;
+}
+.modal-add-fix {
+  justify-content: flex-end;
 }
