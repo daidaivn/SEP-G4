@@ -105,6 +105,17 @@ function ListEmployeeComponent() {
     setIsModalOpenAdd(false);
   };
 
+  const [isModalOpenAddRole1, setIsModalOpenAddRole1] = useState(false);
+  const showModalAddRole1 = () => {
+    setIsModalOpenAddRole1(true);
+  };
+  const handleOkAddRole1 = () => {
+    setIsModalOpenAddRole1(false);
+  };
+  const handleCancelAddRole1 = () => {
+    setIsModalOpenAddRole1(false);
+  };
+
   const [isModalOpenAddRole, setIsModalOpenAddRole] = useState(false);
   const showModalAddRole = () => {
     setIsModalOpenAddRole(true);
@@ -310,6 +321,7 @@ function ListEmployeeComponent() {
             </svg>
           </i>
         </div>
+
         <Modal
           className="modal"
           open={isModalOpenAdd}
@@ -482,6 +494,201 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenAddRole}
+          on
+          Ok={handleOkAddRole}
+          onCancel={handleCancelAddRole}
+        >
+          <div className="modal-add-roleyee-employee">
+            <div className="modal-head">
+              {" "}
+              <h3>Chọn chức vụ / phòng ban</h3>
+            </div>
+            <div className="body-add-role-employee">
+              <table>
+                <thead>
+                  <td>Chức vụ</td>
+                  <td>Phòng ban</td>
+                </thead>
+                <div className="body-table">
+                  <tr>
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+                  <tr>
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+                  <tr>
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+                </div>
+                <thead className="thead-last"></thead>
+              </table>
+            </div>
+            <div className="modal-footer modal-footer-add-employee add">
+              <button className="btn-cancel" onClick={handleCancelAddRole}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkAddRole}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
         <i className="icon-responsive icon-filter icon-add">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -577,10 +784,10 @@ function ListEmployeeComponent() {
       </div>
       <Modal
         className="modal"
-        open={isModalOpenAddRole}
+        open={isModalOpenAddRole1}
         on
-        Ok={handleOkAddRole}
-        onCancel={handleCancelAddRole}
+        Ok={handleOkAddRole1}
+        onCancel={handleCancelAddRole1}
       >
         <div className="modal-add-roleyee-employee">
           <div className="modal-head">
@@ -761,10 +968,10 @@ function ListEmployeeComponent() {
             </table>
           </div>
           <div className="modal-footer modal-footer-add-employee add">
-            <button className="btn-cancel" onClick={handleCancelAddRole}>
+            <button className="btn-cancel" onClick={handleCancelAddRole1}>
               Hủy bỏ
             </button>
-            <button className="btn-edit btn-save" onClick={handleOkAddRole}>
+            <button className="btn-edit btn-save" onClick={handleOkAddRole1}>
               Lưu
             </button>
           </div>
@@ -876,7 +1083,7 @@ function ListEmployeeComponent() {
                     <div className="div1-child-employee">
                       <p>Chức vụ</p>
                       <svg
-                        onClick={showModalAddRole}
+                        onClick={showModalAddRole1}
                         xmlns="http://www.w3.org/2000/svg"
                         width="27"
                         height="25"
