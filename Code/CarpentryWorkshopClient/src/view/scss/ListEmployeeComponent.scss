@@ -358,6 +358,20 @@
           font-weight: 600;
           width: 157px;
         }
+        .add-contract {
+          display: flex;
+          padding: 10px 20px;
+          align-items: center;
+          gap: 10px;
+          align-self: stretch;
+          border-radius: 20px;
+          background: #3a5a40;
+          color: #fff;
+          text-align: center;
+          font-family: Noto Sans;
+          font-size: 21px;
+          font-weight: 400;
+        }
         Input {
           width: 350px;
           color: #80808f;
@@ -406,6 +420,28 @@
   }
 }
 .div-detail {
+  .edit-ct1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    .edit-ct2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      background: #ff8f19;
+      .edit-contract {
+        color: #fff;
+        text-align: center;
+        font-family: Noto Sans;
+        font-size: 21px;
+        font-weight: 400;
+      }
+    }
+  }
+
   Input {
     color: #000 !important;
     font-family: Noto Sans;
@@ -482,6 +518,9 @@
         gap: 10px;
         align-self: stretch;
         background: #3a5a40;
+        border-top-right-radius: 40px;
+        border-top-left-radius: 40px;
+
         td {
           color: #fff;
           text-align: center;
@@ -490,6 +529,15 @@
           font-weight: 400;
           flex: 1 0 0;
         }
+      }
+      .thead-first {
+        height: 49px;
+      }
+      .thead-last {
+        border-top-right-radius: unset;
+        border-top-left-radius: unset;
+        border-bottom-left-radius: 40px !important;
+        border-bottom-right-radius: 40px !important;
       }
       .body-table {
         display: flex;
@@ -531,6 +579,35 @@
         align-self: stretch;
         background: #3a5a40;
       }
+      .body-table-contract {
+        tr {
+          .input-date {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1 0 0;
+            .input-date-cn {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 10px;
+              p {
+                width: 110px;
+                color: #000;
+                font-family: Noto Sans;
+                font-size: 21px;
+                font-weight: 400;
+              }
+            }
+          }
+          Input {
+            color: #80808f;
+            font-family: Noto Sans;
+            font-size: 21px;
+            font-weight: 400;
+          }
+        }
+      }
     }
   }
   .modal-footer-add-employee {
@@ -538,4 +615,10 @@
     padding-top: 0px;
     display: flex;
   }
+}
+.modal-contract {
+  width: 1032px !important;
+}
+.modal-add-fix {
+  justify-content: flex-end;
 }
