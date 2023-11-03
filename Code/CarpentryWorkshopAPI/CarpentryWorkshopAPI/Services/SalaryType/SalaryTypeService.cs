@@ -25,13 +25,14 @@ namespace CarpentryWorkshopAPI.Services.SalaryType
             return dto;      
         }
 
-        //public void AddType(SalaryTypeDTO salaryType)
-        //{
-        //    var dto = _mapper.Map<SalaryType>(salaryType);
-        //    _context.SalaryTypes.Add(dto);
-        //    _context.SaveChanges();
-           
-        //}
+        public dynamic AddType(SalaryTypeDTO salaryType)
+        {
+            var dto = _mapper.Map<Models.SalaryType>(salaryType);
+            _context.SalaryTypes.Add(dto);
+            _context.SaveChanges();
+            return dto;
+        }
+
         public dynamic SearchSalaryTypes(string input)
         {
             var query = _context.SalaryTypes.ToList().AsQueryable();

@@ -319,46 +319,6 @@ function Role() {
                 </td>
               </tr>
             ))}
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Kế toán</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Kế toán</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Kế toán</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
-            <tr onClick={showModalDetail}>
-              <td>1</td>
-              <td>Kế toán</td>
-              <td>2</td>
-              <td>
-                <Form.Item valuePropName="checked">
-                  <Switch checked="true" />
-                </Form.Item>
-              </td>
-            </tr>
           </tbody>
         </table>
         <Modal
