@@ -111,11 +111,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
             var result = new List<object>();
-            result.Add(new
-            {
-                TimeIn = teamId.TimeIn,
-                Timeout = teamId.Timeout,
-            });
+            var time = new List<object>();
             foreach (var employee in employees)
             {
                 var currentDate = DateTime.Now.Date;
@@ -131,11 +127,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
                     .OrderBy(c => c.Date)
                     .ThenBy(c => c.TimeCheckIn)
-                    .Select(c => c.TimeCheckOut)
                     .LastOrDefaultAsync();
                 if(DateTime.Now.TimeOfDay > teamId.Timeout)
                 {
-                    if(latestCheckOutTime == null)
+                    if(latestCheckOutTime.TimeCheckOut == null)
                     {
                         var AutoCheck = await _context.CheckInOuts
                             .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
@@ -157,7 +152,9 @@ namespace CarpentryWorkshopAPI.Controllers
                         EmployeeId = employee.EmployeeId,
                         Name = employee.FirstName + " " + employee.LastName,
                         Status = 4, //Chưa có công việc
-                        CheckStatus = "CheckIn"
+                        CheckStatus = "CheckIn",
+                        TimeIn = "",
+                        Timeout = "",
                     });
                 }
                 else if (checkInTime == null)
@@ -169,7 +166,9 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
                             Status = 3, //Vắng mặt
-                            CheckStatus = "CheckIn"
+                            CheckStatus = "CheckIn",
+                            TimeIn = "",
+                            Timeout = ""
                         });
                     }
                     else
@@ -179,7 +178,9 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
                             Status = 1, //Checkin
-                            CheckStatus = "CheckIn"
+                            CheckStatus = "CheckIn",
+                            TimeIn = "",
+                            Timeout = ""
                         });
                     }
                 }                    
@@ -192,37 +193,45 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
                             Status = 6,//tan ca
-                            CheckStatus = "EndCheck"
+                            CheckStatus = "EndCheck",
+                            TimeIn = latestCheckOutTime.TimeCheckOut,
+                            Timeout = DateTime.Now.TimeOfDay
                         });
                     }
-                    else if (latestCheckOutTime == null)
+                    else if (latestCheckOutTime.TimeCheckOut == null)
                     {
-                        if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 6,
-                                CheckStatus = "CheckIn"
-                            });
-                        }
-                        else
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 5,
-                                CheckStatus = "CheckIn"
-                            });
-                        }
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = 2,// dang co mat
+                            CheckStatus = "EndCheck",
+                            TimeIn = latestCheckOutTime.TimeCheckIn,
+                            Timeout = ""
+                        });
                     }
-                    
+                    else
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = 5,//tam ngung 
+                            CheckStatus = "CheckIn",
+                            TimeIn = latestCheckOutTime.TimeCheckIn,
+                            Timeout = latestCheckOutTime.TimeCheckOut
+                        });
+                    }                                                
                 }
                 
             }
-            return result;
+            time.Add(new
+            {
+                TimeIn = teamId.TimeIn,
+                Timeout = teamId.Timeout,
+                Result = result
+            });
+            return time;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
