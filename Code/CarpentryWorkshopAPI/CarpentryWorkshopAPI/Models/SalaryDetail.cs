@@ -7,7 +7,7 @@ namespace CarpentryWorkshopAPI.Models
     {
         public SalaryDetail()
         {
-            SalarySalaryDetails = new HashSet<SalarySalaryDetail>();
+            Salaries = new HashSet<Salary>();
         }
 
         public int SalaryDetailId { get; set; }
@@ -17,6 +17,6 @@ namespace CarpentryWorkshopAPI.Models
         public int? SalaryTypeId { get; set; }
 
         public virtual SalaryType? SalaryType { get; set; }
-        public virtual ICollection<SalarySalaryDetail> SalarySalaryDetails { get; set; }
+        public virtual ICollection<Salary> Salaries { get; set; }
     }
 }

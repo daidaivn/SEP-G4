@@ -30,9 +30,16 @@ namespace CarpentryWorkshopAPI.Services.SalaryType
             var dto = _mapper.Map<Models.SalaryType>(salaryType);
             _context.SalaryTypes.Add(dto);
             _context.SaveChanges();
-            return dto;
+            return "Create new salary type successful";
         }
 
+        public dynamic UpdateType(SalaryTypeDTO salaryType)
+        {
+            var dto = _mapper.Map<Models.SalaryType>(salaryType);
+            _context.SalaryTypes.Update(dto);
+            _context.SaveChanges();
+            return "Update salary type successful";
+        }
         public dynamic SearchSalaryTypes(string input)
         {
             var query = _context.SalaryTypes.ToList().AsQueryable();
