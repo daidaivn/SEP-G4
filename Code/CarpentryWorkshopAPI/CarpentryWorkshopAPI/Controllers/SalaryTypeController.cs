@@ -29,19 +29,20 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (result == null)
                 {
                     return NotFound();
-                }               
+                }
                 return Ok(result);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost] 
+        [HttpPost]
         public IActionResult CreateAndUpdateSalaryType([FromBody] SalaryTypeDTO salaryTypeDTO)
         {
             try
             {
-                if (salaryTypeDTO.SalaryTypeId == 0) 
+                if (salaryTypeDTO.SalaryTypeId == 0)
                 {
                     var result = _mapper.Map<SalaryType>(salaryTypeDTO);
                     if (result == null)
@@ -63,8 +64,9 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return Ok("Update salary type successful");
                 }
-                
-            }catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -84,10 +86,22 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(result);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost]
+        public dynamic AddType(SalaryTypeDTO salaryType)
+        {
+            try
+            {
+                var input = _salaryTypeService.AddType(salaryType);
+                return Ok(input);
+            }
+            catch (Exception ex) { return ex.Message; }
         }
     }
 }
