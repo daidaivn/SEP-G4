@@ -6,9 +6,11 @@ using CarpentryWorkshopAPI.Models;
 using CarpentryWorkshopAPI.Mapper;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Options;
-
-
+using CarpentryWorkshopAPI.IServices.ISalaryType;
+using CarpentryWorkshopAPI.Services.SalaryType;
+//using Microsoft.Extensions.Options;
+//using CarpentryWorkshopAPI.Services;
+//using CarpentryWorkshopAPI.IServices.t;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerGen(c =>
@@ -77,6 +79,7 @@ builder.Services.AddDbContext<SEPG4CCMSContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 });
+builder.Services.AddScoped<ISalaryTypeService,SalaryTypeService>();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
