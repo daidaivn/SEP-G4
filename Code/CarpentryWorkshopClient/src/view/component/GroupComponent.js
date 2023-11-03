@@ -352,7 +352,6 @@ const GroupComponent = () => {
     }
   });
   useEffect(() => {
-    // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
   }, []);
 
