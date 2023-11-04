@@ -25,7 +25,6 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<Department, DepartmentDTO>().ReverseMap();
             //Dependent
             CreateMap<Dependent, DependentDTO>()
-                .ForMember(de => de.Genderstring, option => option.MapFrom(d => d.Gender == true ? "Nam" : "Nữ"))
                 .ReverseMap();
             CreateMap<Dependent, DependentListDTO>()
                 .ForMember(de => de.EmployeesName, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
