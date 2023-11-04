@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Code/CarpentryWorkshopAPI/**'  # Run only when changes are made to files in the CarpentryWorkshopAPI directory
   workflow_dispatch:
 
 jobs:
@@ -23,16 +25,20 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: |
+          cd Code/CarpentryWorkshopAPI
+          dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: |
+          cd Code/CarpentryWorkshopAPI
+          dotnet publish -c Release -o ./publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: Code/CarpentryWorkshopAPI/publish 
 
   deploy:
     runs-on: windows-latest
