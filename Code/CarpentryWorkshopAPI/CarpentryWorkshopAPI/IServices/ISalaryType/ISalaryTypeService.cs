@@ -7,5 +7,6 @@ namespace CarpentryWorkshopAPI.IServices.ISalaryType
         dynamic GetAllSalaryType();
         dynamic SearchSalaryTypes(string input);
         dynamic AddType(SalaryTypeDTO salaryType);
+        dynamic UpdateType(SalaryTypeDTO salaryType);
     }
 }

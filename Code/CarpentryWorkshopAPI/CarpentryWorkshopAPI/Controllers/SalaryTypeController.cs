@@ -11,13 +11,10 @@ namespace CarpentryWorkshopAPI.Controllers
     public class SalaryTypeController : Controller
     {
         private readonly ISalaryTypeService _salaryTypeService;
-        private readonly IMapper _mapper;
-        private readonly SEPG4CCMSContext _context;
-        public SalaryTypeController(ISalaryTypeService salaryTypeService, IMapper mapper, SEPG4CCMSContext context)
+        public SalaryTypeController(ISalaryTypeService salaryTypeService)
         {
             _salaryTypeService = salaryTypeService;
-            _mapper = mapper;
-            _context = context;
+           
         }
 
         [HttpGet]
@@ -38,31 +35,27 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CreateAndUpdateSalaryType([FromBody] SalaryTypeDTO salaryTypeDTO)
+        public dynamic CreateAndUpdateSalaryType([FromBody] SalaryTypeDTO salaryTypeDTO)
         {
             try
             {
                 if (salaryTypeDTO.SalaryTypeId == 0)
                 {
-                    var result = _mapper.Map<SalaryType>(salaryTypeDTO);
+                    var result = _salaryTypeService.AddType(salaryTypeDTO);
                     if (result == null)
                     {
                         return NotFound();
                     }
-                    _context.SalaryTypes.Add(result);
-                    _context.SaveChanges();
-                    return Ok("Create salary type successful");
+                    return Ok(result);
                 }
                 else
                 {
-                    var result = _mapper.Map<SalaryType>(salaryTypeDTO);
+                    var result = _salaryTypeService.UpdateType(salaryTypeDTO);
                     if (result == null)
                     {
                         return NotFound();
                     }
-                    _context.SalaryTypes.Update(result);
-                    _context.SaveChanges();
-                    return Ok("Update salary type successful");
+                    return Ok(result);
                 }
 
             }
@@ -72,7 +65,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult SearchTypes(string input)
+        public dynamic SearchTypes(string input)
         {
             try
             {
@@ -91,17 +84,6 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpPost]
-        public dynamic AddType(SalaryTypeDTO salaryType)
-        {
-            try
-            {
-                var input = _salaryTypeService.AddType(salaryType);
-                return Ok(input);
-            }
-            catch (Exception ex) { return ex.Message; }
         }
     }
 }
