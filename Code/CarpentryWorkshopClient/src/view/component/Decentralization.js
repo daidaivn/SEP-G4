@@ -253,7 +253,7 @@ const Decentralization = () => {
                 {pages.map((pages) => (
                   <tr key={pages.pageId}>
                     <td>
-                      <span>{pages.pageName}</span>
+                      <span>{pages.pageNameVn}</span>
                     </td>
                     {roles.map((roles) => (
                       <td key={roles.roleID}>
