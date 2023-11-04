@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import { Switch, Form, Input } from "antd";
+import { toast } from "react-toastify";
 import {
   fetchAllDepadment,
   searchAndFilterDepartment,
+  addDepartment
 } from "../../sevices/DepartmentService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -16,6 +18,7 @@ function ListDepartmentComponent() {
   const [isModalOpenDepartment, setIsModalOpenDepartment] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [filterOption, setFilterOption] = useState(true);
+  const [departmentName, setDepartmentName] = useState('');
 
   const handleChange = (value) => {
     setFilterOption(value);
@@ -30,6 +33,7 @@ function ListDepartmentComponent() {
   };
   const handleOkDepartment = () => {
     setIsModalOpenDepartment(false);
+    handleSearchInput();
   };
   const handleCancelDepartment = () => {
     setIsModalOpenDepartment(false);
@@ -54,16 +58,49 @@ function ListDepartmentComponent() {
         console.error("Lỗi khi tải dữ liệu phòng ban:", error);
       });
   };
+  const newDepartment = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        addDepartment(departmentName)
+          .then((data) => {
+            handleOkDepartment();
+            fetData();
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
+  };
 
+  const fetData = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllDepadment()
+          .then((data) => {
+            setDepartments(data);
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
+  };
+  
   useEffect(() => {
-    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
-    fetchAllDepadment()
-      .then((data) => {
-        setDepartments(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu phòng ban:", error);
-      });
+    fetData();
   }, []);
   return (
     <>
@@ -525,14 +562,17 @@ function ListDepartmentComponent() {
           <div className="modal-body modal-body-department">
             <div className="info-add-department">
               <div className="text-department">Tên phòng - ban</div>
-              <Input />
+              <Input
+              value={departmentName}
+              onChange={(e) => setDepartmentName(e.target.value)}
+            />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment footer-deparment-fix">
             <button className="btn-cancel" onClick={handleCancelDepartment}>
               Hủy bỏ
             </button>
-            <button className="btn-edit btn-save" onClick={handleOkDepartment}>
+            <button className="btn-edit btn-save" onClick={newDepartment}>
               Lưu
             </button>
           </div>
