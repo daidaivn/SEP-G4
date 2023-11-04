@@ -249,6 +249,11 @@ i {
 .list-table :where(.css-dev-only-do-not-override-1vr7spz).ant-form-item {
   margin: 0 !important;
 }
+
+.list-table :where(.css-1vr7spz).ant-switch.ant-switch-checked{
+  background: #34c759 !important;
+}
+
 tr {
   border-radius: 60px;
   background: #fff;
