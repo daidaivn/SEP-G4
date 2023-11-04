@@ -9,9 +9,11 @@ namespace CarpentryWorkshopAPI.Mapper
     {
         public MapperProfile() 
         {
-            
-            CreateMap<Employee, CreateEmployeeDTO>()
-               .ReverseMap();
+
+            CreateMap<CreateEmployeeDTO, Employee>()
+               .ForMember(de => de.Dob, option => option.MapFrom(d => DateTime.ParseExact(d.Dobstring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)));
+               
             CreateMap<Employee, EmployeeSearchDTO>() 
                .ReverseMap();
             CreateMap<Role, RoleDTO>()
@@ -23,10 +25,11 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<Department, DepartmentDTO>().ReverseMap();
             //Dependent
             CreateMap<Dependent, DependentDTO>()
+                .ForMember(de => de.Genderstring, option => option.MapFrom(d => d.Gender == true ? "Nam" : "Nữ"))
                 .ReverseMap();
             CreateMap<Dependent, DependentListDTO>()
                 .ForMember(de => de.EmployeesName, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
-                .ForMember(de => de.GenderString, option => option.MapFrom(d => d.Gender == true ? "nam" : "nữ"))
+                .ForMember(de => de.GenderString, option => option.MapFrom(d => d.Gender == true ? "Nam" : "Nữ"))
                 .ForMember(de => de.DobString, option => option.MapFrom(d => d.Dob != null ? d.Dob.Value.ToString("dd'-'MM'-'yyyy") : ""))
                 .ForMember(de => de.StartDateString, option => option.MapFrom(d => d.StartDate != null ? d.StartDate.Value.ToString("dd'-'MM'-'yyyy") : ""))
                 .ForMember(de => de.EndDateString, option => option.MapFrom(d => d.EndDate != null ? d.EndDate.Value.ToString("dd'-'MM'-'yyyy") : ""));
