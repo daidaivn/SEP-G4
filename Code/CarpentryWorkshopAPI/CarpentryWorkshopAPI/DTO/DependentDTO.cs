@@ -6,7 +6,7 @@
         public int? EmployeeId { get; set; }
         public string? FullName { get; set; }
         public string? IdentifierCode { get; set; }
-        public bool? Gender { get; set; }
+        public string? Genderstring { get; set; }
         public string? Relationship { get; set; }
         public string? DobString { get; set; }
         public string? StartDateString { get; set; }
