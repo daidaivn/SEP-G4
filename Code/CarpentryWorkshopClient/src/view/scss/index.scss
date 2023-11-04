@@ -248,6 +248,11 @@ i {
 .list-table .ant-form-item {
   margin: 0 !important;
 }
+
+// .list-table .ant-switch.ant-switch-checked{
+//   background: #34c759 !important;
+// }
+
 tr {
   border-radius: 60px;
   background: #fff;
@@ -437,8 +442,14 @@ i .logo-responsive {
 .select-input {
   border: none;
 }
+
 .ant-select:not(.ant-select-customize-input) .ant-select-selector {
   border: none !important;
+
+.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border: none !important; 
+
   background: #f6f6f6 !important;
 }
 // .list-filter-icon2 {

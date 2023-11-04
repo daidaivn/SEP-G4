@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Switch, Form } from "antd";
+import { Switch, Form } from "antd";
 
 function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
   return (

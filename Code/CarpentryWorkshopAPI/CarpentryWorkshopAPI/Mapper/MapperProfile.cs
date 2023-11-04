@@ -105,21 +105,37 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<WorkArea, WorkAreasDTO>()
                 .ReverseMap();
             CreateMap<UnitCost, UnitCostDTO>()
-                .ReverseMap();
-            CreateMap<Wage, WageDTO>()
-               .ForMember(de => de.StartDatestring, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
-               .ForMember(de => de.EndDatestring, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
-               .ReverseMap();
+                .ReverseMap();            
             CreateMap<CreateWageDTO, Wage>()
                 .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture)))
                 .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture)));
-            CreateMap<WageStatusHistory, WageStatusHistoryDTO>()
-              .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
-             .ReverseMap();
             CreateMap<Employee, LeadDetailDTO>()
                .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
+               .ReverseMap();
+            CreateMap<SalaryType, SalaryTypeDTO>()
+               .ReverseMap();
+            CreateMap<SalaryDetail, SalaryDetailDTO>()
+               .ForMember(de => de.StartDatestring, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.EndDatestring, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.SalaryTypeName, option => option.MapFrom(d => d.SalaryType.Name))
+               .ReverseMap();
+            CreateMap<CreateSalaryDetailDTO, SalaryDetail>()
+              .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)))
+              .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)));
+            //Salary
+            CreateMap<CreateSalaryDTO, Salary>()
+              .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDateString, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)))
+              .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDateString, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)));
+            CreateMap<Salary, SalaryListDTO>()
+               .ForMember(de => de.EmloyeeName, option => option.MapFrom(d => d.Emloyee.FirstName + " " + d.Emloyee.LastName))
+               .ForMember(de => de.StartDatestring, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.EndDatestring, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
         }
     }

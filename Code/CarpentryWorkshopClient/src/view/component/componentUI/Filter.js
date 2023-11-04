@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "antd";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 function Filter() {
   const handleChange = (value) => {
     console.log(`selected ${value}`);

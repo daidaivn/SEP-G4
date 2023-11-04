@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
+    [Authorize(Roles = "TimeKeeping")]
     public class CheckInOutController : ControllerBase
     {
+        
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
         public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)
@@ -96,22 +100,22 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound("Team Leader not found");
             }
-
+            
             var employees = await _context.EmployeeTeams
                 .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
                 .Select(et => et.Employee)
                 .ToListAsync();
-
             if (employees.Count == 0)
             {
                 return NotFound("No employees found in the team with EndDate == null");
             }
 
             var result = new List<object>();
+            var time = new List<object>();
             foreach (var employee in employees)
             {
                 var currentDate = DateTime.Now.Date;
-
+                
                 var checkInTime = await _context.CheckInOuts
                     .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
                     .OrderBy(c=>c.Date)
@@ -123,19 +127,37 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
                     .OrderBy(c => c.Date)
                     .ThenBy(c => c.TimeCheckIn)
-                    .Select(c => c.TimeCheckOut)
                     .LastOrDefaultAsync();
-                if(teamId.WorkId.Count() < 0)
+                if(DateTime.Now.TimeOfDay > teamId.Timeout)
+                {
+                    if(latestCheckOutTime.TimeCheckOut == null)
+                    {
+                        var AutoCheck = await _context.CheckInOuts
+                            .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                            .OrderBy(c => c.Date)
+                            .ThenBy(c => c.TimeCheckIn)
+                            .LastOrDefaultAsync();
+                        if(AutoCheck != null)
+                        {
+                            AutoCheck.TimeCheckOut = teamId.Timeout;
+                            _context.Update(AutoCheck);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+                if(teamId.WorkId.Count() <= 0)
                 {
                     result.Add(new
                     {
                         EmployeeId = employee.EmployeeId,
                         Name = employee.FirstName + " " + employee.LastName,
-                        Status = "không có việc",
-                        CheckStatus = "CheckIn"
+                        Status = 4, //Chưa có công việc
+                        CheckStatus = "CheckIn",
+                        TimeIn = "",
+                        Timeout = "",
                     });
                 }
-                if (checkInTime == null)
+                else if (checkInTime == null)
                 {
                     if (DateTime.Now.TimeOfDay > teamId.TimeIn)
                     {
@@ -143,8 +165,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Vắng mặt",
-                            CheckStatus = "CheckIn"
+                            Status = 3, //Vắng mặt
+                            CheckStatus = "CheckIn",
+                            TimeIn = "",
+                            Timeout = ""
                         });
                     }
                     else
@@ -153,22 +177,37 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Chưa có mặt",
-                            CheckStatus = "CheckIn"
+                            Status = 1, //Checkin
+                            CheckStatus = "CheckIn",
+                            TimeIn = "",
+                            Timeout = ""
                         });
                     }
-                }
-                    
+                }                    
                 else
                 {
-                    if (latestCheckOutTime == null)
+                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
                     {
                         result.Add(new
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Có mặt",
-                            CheckStatus = "CheckOut"
+                            Status = 6,//tan ca
+                            CheckStatus = "EndCheck",
+                            TimeIn = latestCheckOutTime.TimeCheckOut,
+                            Timeout = DateTime.Now.TimeOfDay
+                        });
+                    }
+                    else if (latestCheckOutTime.TimeCheckOut == null)
+                    {
+                        result.Add(new
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            Name = employee.FirstName + " " + employee.LastName,
+                            Status = 2,// dang co mat
+                            CheckStatus = "EndCheck",
+                            TimeIn = latestCheckOutTime.TimeCheckIn,
+                            Timeout = ""
                         });
                     }
                     else
@@ -177,15 +216,22 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "Chưa có mặt",
-                            CheckStatus = "CheckIn"
+                            Status = 5,//tam ngung 
+                            CheckStatus = "CheckIn",
+                            TimeIn = latestCheckOutTime.TimeCheckIn,
+                            Timeout = latestCheckOutTime.TimeCheckOut
                         });
-                    }
-                    
+                    }                                                
                 }
                 
             }
-            return result;
+            time.Add(new
+            {
+                TimeIn = teamId.TimeIn,
+                Timeout = teamId.Timeout,
+                Result = result
+            });
+            return time;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
@@ -237,17 +283,34 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenBy(c => c.TimeCheckIn)
                         .Select(c => c.TimeCheckOut)
                         .LastOrDefaultAsync();
-                    if (teamId.WorkId.Count() < 0)
+                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
+                    {
+                        if (latestCheckOutTime == null)
+                        {
+                            var AutoCheck = await _context.CheckInOuts
+                                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                                .OrderBy(c => c.Date)
+                                .ThenBy(c => c.TimeCheckIn)
+                                .LastOrDefaultAsync();
+                            if (AutoCheck != null)
+                            {
+                                AutoCheck.TimeCheckOut = teamId.Timeout;
+                                _context.Update(AutoCheck);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                    if (teamId.WorkId.Count() <= 0)
                     {
                         result.Add(new
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = "không có việc",
+                            Status = 4,
                             CheckStatus = "CheckIn"
                         });
                     }
-                    if (checkInTime == null)
+                    else if (checkInTime == null)
                     {
                         if (DateTime.Now.TimeOfDay > teamId.TimeIn)
                         {
@@ -255,7 +318,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Vắng mặt",
+                                Status = 3,
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -265,7 +328,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Chưa có mặt",
+                                Status = 1,
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -273,13 +336,23 @@ namespace CarpentryWorkshopAPI.Controllers
 
                     else
                     {
-                        if (latestCheckOutTime == null)
+                        if (DateTime.Now.TimeOfDay > teamId.Timeout)
                         {
                             result.Add(new
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Có mặt",
+                                Status = 6,//tan ca
+                                CheckStatus = "EndCheck"
+                            });
+                        }
+                        else if (latestCheckOutTime == null)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 2,//Checkout
                                 CheckStatus = "CheckOut"
                             });
                         }
@@ -289,7 +362,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             {
                                 EmployeeId = employee.EmployeeId,
                                 Name = employee.FirstName + " " + employee.LastName,
-                                Status = "Chưa có mặt",
+                                Status = 5,//tam vang
                                 CheckStatus = "CheckIn"
                             });
                         }
@@ -335,7 +408,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 DateTime dateTime = DateTime.Now.Date;
                 var Attendance = _context.CheckInOuts.Where(a => a.Date.Value.Date == dateTime.Date && a.EmployeeId == employeeId).AsQueryable();
-                if (Attendance == null)
+                if (Attendance.Count() <= 0)
                 {
                     var checkInOut = new CheckInOut()
                     {

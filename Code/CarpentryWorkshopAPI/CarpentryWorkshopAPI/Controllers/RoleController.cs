@@ -10,6 +10,7 @@ using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class RoleController : Controller
@@ -21,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        //[Authorize(Roles = "Role")]
+        [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
         [HttpGet]
         public IActionResult GetAllRoles()
         {
@@ -35,7 +36,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleID = roled.RoleId,
                         RoleName = roled.RoleName,
                         Status = roled.Status,
-                        Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                        Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
+                        .Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
                         NumberOfEmployee = roled.RolesEmployees.Count(roleemp => roleemp.EndDate == null)
                     });
                 if (rolelist == null)
@@ -62,7 +64,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleID = roled.RoleId,
                         RoleName = roled.RoleName,
                         Status = roled.Status,
-                        Employees = roled.RolesEmployees.Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                        Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
+                        .Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
                         NumberOfEmployee = roled.RolesEmployees.Select(x => x.Employee).Count(),
                     });
                 if (role == null)
@@ -75,6 +78,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPost]
         public ActionResult<Role> CreateRoles([FromBody] RoleDTO roleDTO)
         { 
@@ -102,6 +106,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPut]
         public IActionResult UpdateRole([FromBody] RoleDTO roleDTO)
         {
@@ -129,6 +134,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPut]
         public IActionResult ChangeStatusRole(int rid) 
         {
@@ -171,11 +177,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Role")]
         [HttpPost]
         public IActionResult SearchRole([FromBody] RoleSearchDTO roleSearchDTO)
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(roleSearchDTO.InputText))
+                {
+                    return BadRequest("Search input is empty");
+                }
                 var query = _context.Roles
                     .Include(x => x.RolesEmployees)
                     .ToList()
@@ -196,7 +207,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleName = r.RoleName,
                         Status = r.Status,
                         Employees = r.RolesEmployees
-                            .Where(x => x.Employee != null)
+                            .Where(x => x.Employee != null && x.Employee.Status == true)
                             .Select(x => x.Employee.FirstName + " " + x.Employee.LastName)
                             .ToList(),
                         NumberOfEmployee = r.RolesEmployees.Select(x => x.Employee).Count(),

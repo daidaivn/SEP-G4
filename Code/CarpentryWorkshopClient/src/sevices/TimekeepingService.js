@@ -1,6 +1,9 @@
 import axios from "./customize-axios";
 
-const fetchAllCheckInOut = () => {
-  return axios.get("/CCMSapi/CheckInOut/GetAllCheckInOut");
+const fetchAllCheckInOut = (EmployeeID) => {
+  return axios.get(`/CCMSapi/CheckInOut/GetEmployeesByTeamLeaderIdOrTeamSubLeaderId/GetEmployeesByTeamLeaderId/${EmployeeID}`);
 };
-export { fetchAllCheckInOut };
+const addAllCheckInOut = (EmployeeID) => {
+  return axios.post(`/CCMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
+};
+export { fetchAllCheckInOut, addAllCheckInOut };

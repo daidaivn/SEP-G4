@@ -8,9 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using CarpentryWorkshopAPI.Models;
 using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
+    [Authorize(Roles = "DependentPerson")]
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsController : ControllerBase
@@ -36,8 +40,8 @@ namespace CarpentryWorkshopAPI.Controllers
             _context.UpdateRange(deEndDate);
             _context.SaveChanges();
             List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
-          List<DependentListDTO> dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependents);
-          return Ok(dependentDTOs);
+            List<DependentListDTO> dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependents);
+            return Ok(dependentDTOs);
         }
 
         // GET: api/Dependents/5
@@ -191,10 +195,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 var dependentsList = _context.Dependents.Include(de => de.Employee).AsQueryable();
                 if (!string.IsNullOrEmpty(dependentsSearchDTO.InputText))
                 {
-                    dependentsList = dependentsList.Where(de => de.FullName.ToLower().Contains(dependentsSearchDTO.InputText.ToLower()) ||
-                                                    de.IdentifierCode.Contains(dependentsSearchDTO.InputText.ToLower()) ||
-                                                    (de.Employee.FirstName+de.Employee.LastName).ToLower().Contains(dependentsSearchDTO.InputText.ToLower())||
-                                                    de.EmployeeId.ToString() == dependentsSearchDTO.InputText);
+                    string text = dependentsSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
+                    dependentsList = dependentsList.Where(de => de.FullName.ToLower().Normalize(NormalizationForm.FormD).Contains(text) ||
+                                                    de.IdentifierCode.Contains(text) ||
+                                                    (de.Employee.FirstName+de.Employee.LastName).ToLower().Normalize(NormalizationForm.FormD).Contains(text)||
+                                                    de.EmployeeId.ToString() == text);
                 }
                 if (dependentsSearchDTO.Status.HasValue)
                 {
