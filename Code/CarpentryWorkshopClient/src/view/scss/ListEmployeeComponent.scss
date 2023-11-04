@@ -560,7 +560,7 @@
             border-radius: 60px;
           }
           .ant-select-selector {
-            background-color: #fff !important;
+            background-color: #fff;
             color: #80808f;
             font-family: Noto Sans;
             font-size: 21px;
@@ -621,3 +621,11 @@
 .modal-add-fix {
   justify-content: flex-end;
 }
+
+
+.list-input-search .ant-input {
+  background: unset !important;
+  border: unset !important;
+  padding: unset !important;
+}
+
