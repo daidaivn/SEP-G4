@@ -445,10 +445,9 @@ i .logo-responsive {
 
 .ant-select:not(.ant-select-customize-input) .ant-select-selector {
   border: none !important;
-
-.ant-select:not(.ant-select-customize-input)
-  .ant-select-selector {
-  border: none !important; 
+}
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border: none !important;
 
   background: #f6f6f6 !important;
 }
@@ -909,6 +908,7 @@ i .logo-responsive {
   padding: 20px 65px 65px 65px !important;
   gap: 10px !important;
 }
+
 .modal-footer-group {
   .btn-edit {
     width: 199px;
@@ -920,6 +920,7 @@ i .logo-responsive {
     width: unset !important;
   }
 }
+
 .btn-fix-group {
   width: unset !important;
   padding: 14px 19px 17px 21px !important;
