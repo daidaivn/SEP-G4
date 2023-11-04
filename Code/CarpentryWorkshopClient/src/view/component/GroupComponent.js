@@ -266,6 +266,7 @@ const GroupComponent = () => {
   };
 
   const handleGetAllMember = () => {
+    console.log(selectedChangeid1);
     fetchAllStaffs()
       .then((data) => {
         setGetStaffsNoTeam(data);

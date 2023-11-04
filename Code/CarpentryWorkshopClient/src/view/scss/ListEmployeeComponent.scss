@@ -3,7 +3,7 @@
   display: flex;
 }
 
-:where(.css-dev-only-do-not-override-1vr7spz).ant-switch.ant-switch-checked {
+.ant-switch.ant-switch-checked {
   background-color: #34c759 !important;
 }
 
@@ -11,15 +11,15 @@
   padding: 0 !important;
 }
 
-:where(.css-dev-only-do-not-override-1vr7spz).ant-modal .ant-modal-content {
-  position: absolute;
-  right: -250px;
-  top: -79px;
-  padding: 0;
-  border-radius: 60px;
-  overflow: hidden;
-  background: #f9faf5;
-  margin-left: 40px;
+.ant-modal .ant-modal-content {
+  position: absolute !important;
+  right: -250px !important;
+  top: -79px !important;
+  padding: 0 !important;
+  border-radius: 60px !important;
+  overflow: hidden !important;
+  background: #f9faf5 !important;
+  margin-left: 40px !important;
 }
 .ant-modal-close,
 .ant-modal-footer {
@@ -120,21 +120,19 @@
     }
   }
 }
-:where(.css-dev-only-do-not-override-1vr7spz).ant-input {
-  padding: 14px 24px;
-  border-radius: 56px;
-  border: 1px solid #e6e5ea;
-  background: #fff;
-  color: #000;
-  font-family: Noto Sans;
-  font-size: 22px;
-  font-weight: 400;
+.ant-input {
+  padding: 14px 24px !important;
+  border-radius: 56px !important;
+  border: 1px solid #e6e5ea !important;
+  background: #fff !important;
+  color: #000 !important;
+  font-family: Noto Sans !important;
+  font-size: 22px !important;
+  font-weight: 400 !important;
 }
-:where(.css-dev-only-do-not-override-1vr7spz).ant-radio-wrapper
-  .ant-radio-checked
-  .ant-radio-inner {
-  border-color: #386641;
-  background-color: #386641;
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  border-color: #386641 !important;
+  background-color: #386641 !important;
 }
 .gender {
   color: #000;
@@ -165,16 +163,17 @@
   background: #f9faf5;
   border-radius: 60px;
 }
-.ant-select-show-search:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-customize-input)
+.ant-select-show-search
+  .ant-select:not(.ant-select-customize-input)
   .ant-select-selector {
-  padding: 14px 24px;
-  border-radius: 56px;
-  border: 1px solid #e6e5ea;
-  background: #fff;
-  color: #000;
-  font-family: Noto Sans;
-  font-size: 22px;
-  font-weight: 400;
+  padding: 14px 24px !important;
+  border-radius: 56px !important;
+  border: 1px solid #e6e5ea !important;
+  background: #fff !important;
+  color: #000 !important;
+  font-family: Noto Sans !important;
+  font-size: 22px !important;
+  font-weight: 400 !important;
 }
 .modal-add-employee-all {
   display: flex;
@@ -621,4 +620,10 @@
 }
 .modal-add-fix {
   justify-content: flex-end;
+}
+
+.list-input-search .ant-input {
+  background: #fff !important;
+  border: 1px solid #e6e5ea !important;
+  padding: 14px 24px !important;
 }

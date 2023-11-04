@@ -1,4 +1,5 @@
 import React from "react";
+
 import { createRoot } from "react-dom/client";
 import {
   BrowserRouter,
@@ -29,12 +30,11 @@ function ProtectedRoute({ children }) {
 
   if (!hasUserToken) {
     // Hiển thị toast và giữ người dùng ở trang hiện tại
-    toast('Bạn cần đăng nhập để truy cập trang này', { type: 'error' });
+    toast("Bạn cần đăng nhập để truy cập trang này", { type: "error" });
     return <Navigate to="/login" state={{ from: location.pathname }} />;
   }
   return children;
 }
-
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
