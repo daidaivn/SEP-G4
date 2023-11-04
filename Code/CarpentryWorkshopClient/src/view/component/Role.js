@@ -581,7 +581,7 @@ function Role() {
           <div className="modal-all-group">
             <div className="modal-head">
               {" "}
-              <h3>Thêm nhóm</h3>
+              <h3>Chuyển chức vụ</h3>
             </div>
             <div className="modal-end-group">
               <div className="body-modal-end-group">
