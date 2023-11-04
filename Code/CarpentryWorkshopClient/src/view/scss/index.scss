@@ -608,6 +608,7 @@ i .logo-responsive {
     align-self: stretch;
   }
   .child5-group {
+    text-align: center;
     display: flex;
     width: 160px;
     justify-content: center;
@@ -924,4 +925,8 @@ i .logo-responsive {
 .btn-fix-group {
   width: unset !important;
   padding: 14px 19px 17px 21px !important;
+}
+.select-modal-end .ant-select-selector {
+  background: #f9faf5 !important;
+  border: none !important;
 }
