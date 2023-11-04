@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy ASP.Net Core app to Azure Web App - TestAPIC
 
 on:
@@ -19,20 +22,17 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
-      - name: Change directory to CarpentryWorkshopAPI
-        run: cd Code/CarpentryWorkshopAPI
-
       - name: Build with dotnet
-        run: dotnet build --configuration Release Code/CarpentryWorkshopAPI
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish Code/CarpentryWorkshopAPI -c Release -o published
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: published
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'TestAPIC'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_67988659E191405DAEF49C49730E9A4F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B2722824B75A4F5880C102685AE60446 }}
           package: .
