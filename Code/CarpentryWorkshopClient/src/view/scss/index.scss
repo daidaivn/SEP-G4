@@ -241,12 +241,11 @@ i {
   align-self: stretch;
 }
 
-.list-table
-  :where(.css-dev-only-do-not-override-1vr7spz).ant-switch.ant-switch-checked {
+.list-table .ant-switch.ant-switch-checked {
   background: #34c759 !important;
 }
 
-.list-table :where(.css-dev-only-do-not-override-1vr7spz).ant-form-item {
+.list-table .ant-form-item {
   margin: 0 !important;
 }
 tr {
@@ -432,16 +431,15 @@ i .logo-responsive {
 .active-res {
   margin-top: 14px;
 }
-:where(.css-dev-only-do-not-override-1vr7spz).ant-form-item {
-  margin-bottom: 0;
+.ant-form-item {
+  margin-bottom: 0 !important;
 }
 .select-input {
   border: none;
 }
-:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-customize-input)
-  .ant-select-selector {
-  border: none;
-  background: #f6f6f6;
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border: none !important;
+  background: #f6f6f6 !important;
 }
 // .list-filter-icon2 {
 //   display: none;
@@ -452,20 +450,19 @@ i .logo-responsive {
   }
 }
 
-:where(.css-dev-only-do-not-override-1vr7spz).ant-select .ant-select-arrow {
-  mask-image: url("../assets/images/icons/Polygon\ 7.svg");
-  width: 15px;
-  height: 14px;
-  background-color: #a1a1ab;
+.ant-select .ant-select-arrow {
+  mask-image: url("../assets/images/icons/Polygon\ 7.svg") !important;
+  width: 15px !important;
+  height: 14px !important;
+  background-color: #a1a1ab !important;
 }
 
-:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover
+.ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover
   .ant-select-selector,
-:where(.css-dev-only-do-not-override-1vr7spz).ant-select:not(.ant-select-customize-input)
-  .ant-select-selector,
+.ant-select:not(.ant-select-customize-input) .ant-select-selector,
 .ant-select .ant-select-selector {
-  border-color: initial;
-  box-shadow: none;
+  border-color: initial !important;
+  box-shadow: none !important;
 }
 .modal-head {
   height: 149px;
