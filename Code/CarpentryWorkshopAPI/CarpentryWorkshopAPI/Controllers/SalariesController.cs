@@ -40,7 +40,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(create);
+                return Ok(update);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);

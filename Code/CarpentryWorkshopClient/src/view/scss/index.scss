@@ -927,6 +927,7 @@ i .logo-responsive {
   width: unset !important;
   padding: 14px 19px 17px 21px !important;
 }
+
 .select-modal-end .ant-select .ant-select-selector {
   background: #f9faf5 !important;
   border: none !important;
@@ -1094,4 +1095,10 @@ i .logo-responsive {
       background: #fff;
     }
   }
+
+.list-input-search .ant-input {
+  background: none!important;
+    border: none !important;
+    padding: 0!important;
+    border-radius: 0 !important;
 }

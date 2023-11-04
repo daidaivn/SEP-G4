@@ -363,10 +363,6 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(employeeSearchDTO.InputText))
-                {
-                    return BadRequest("Search input is empty");
-                }
                 var query = _context.Employees
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
@@ -405,7 +401,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     EmployeeID = employee.EmployeeId,
                     Image = employee.Image,
                     FullName = $"{employee.FirstName} {employee.LastName}",
-                    Gender = (bool)employee.Gender ? "Male" : "Female",
+                    Gender = (bool)employee.Gender ? "Nam" : "Nữ",
                     PhoneNumber = employee.PhoneNumber,
                     Roles = employee.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel)
                         .Select(re => re.Role.RoleName)

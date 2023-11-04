@@ -11,4 +11,10 @@ const searchAndFilterDepartment = (departmentName, status) => {
   } ; 
   return axios.post(`/CCMSapi/Departments/SearchAndFilterDepartment/search`, name);
 };
-export { fetchAllDepadment, searchAndFilterDepartment };
+const addDepartment = (Name) => {
+  const name = Name;
+  return axios.post(
+    `/CCMSapi/Departments/CreateDepartment?departmentName=${name}`
+  );
+};
+export { fetchAllDepadment, searchAndFilterDepartment,addDepartment};

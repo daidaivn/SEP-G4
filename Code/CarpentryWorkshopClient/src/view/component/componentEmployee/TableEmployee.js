@@ -14,6 +14,9 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
           <td>Trạng thái</td>
         </tr>
       </thead>
+      {employees.length === 0 ? (
+        <p>Loading...</p>
+      ) : (
       <tbody className="scrollbar" id="style-15">
         {employees.map((employee, index) => (
           <tr
@@ -36,6 +39,7 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
           </tr>
         ))}
       </tbody>
+      )}
     </table>
   );
 }
