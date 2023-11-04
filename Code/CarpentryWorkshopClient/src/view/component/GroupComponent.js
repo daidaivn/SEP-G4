@@ -355,6 +355,10 @@ const GroupComponent = () => {
     fetchData();
   }, []);
 
+
+
+
+  //UI
   return (
     <>
       <div className="col-right-container">
