@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy Node.js app to Azure Web App - SEP-G4-Client
 
 on:
@@ -18,17 +21,17 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: npm install and build
+      - name: npm install, build, and test
         run: |
-          cd Code/CarpentryWorkshopClient
           npm install
           npm run build --if-present
+          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: Code/CarpentryWorkshopClient/build/
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,5 +52,5 @@ jobs:
         with:
           app-name: 'SEP-G4-Client'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FDEED7C3261E4C538B2C501E83F54C29 }}
-          package: node-app # This should point to the directory within the artifact where the build contents are.
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DE029713C4104CBD808E745C1D2717C0 }}
+          package: .
