@@ -67,11 +67,13 @@
 }
 
 .list-user-header {
+  z-index: 1;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 18px;
   align-self: stretch;
+  position: relative;
 }
 
 .list-user-header span {
@@ -506,7 +508,7 @@ i .logo-responsive {
   background: #1967ff !important;
 }
 .modal-footer-deparment {
-  padding-right: 15px;
+  padding-right: 106px;
   gap: 10px;
 }
 .modal-group {
@@ -926,7 +928,50 @@ i .logo-responsive {
   width: unset !important;
   padding: 14px 19px 17px 21px !important;
 }
-.select-modal-end .ant-select-selector {
+.select-modal-end .ant-select .ant-select-selector {
   background: #f9faf5 !important;
   border: none !important;
+}
+.modal1-change .select-all-change .ant-select .ant-select-selector {
+  background: #f9faf5 !important;
+  border: none !important;
+}
+.modal-add-group1
+  .body-modal-change
+  .modal1-change
+  .select-all-change
+  .ant-select
+  .ant-select-selector {
+  background: unset !important;
+}
+.user-all {
+  // display: none !important;
+  z-index: 1;
+  right: 156px;
+  position: absolute;
+  top: 151px;
+  display: flex;
+  height: 212px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 20px;
+  background: #3a5a40;
+  .view-info {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    p {
+      color: #fff;
+      font-family: Noto Sans;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  .view-info:first-child {
+    justify-content: flex-end;
+  }
 }
