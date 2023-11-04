@@ -266,6 +266,7 @@ const GroupComponent = () => {
   };
 
   const handleGetAllMember = () => {
+    console.log(selectedChangeid1);
     fetchAllStaffs()
       .then((data) => {
         setGetStaffsNoTeam(data);
@@ -355,6 +356,10 @@ const GroupComponent = () => {
     fetchData();
   }, []);
 
+
+
+
+  //UI
   return (
     <>
       <div className="col-right-container">
