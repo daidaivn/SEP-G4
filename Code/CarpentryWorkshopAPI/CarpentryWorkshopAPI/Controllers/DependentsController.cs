@@ -192,7 +192,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var dependentsList = _context.Dependents.Include(de => de.Employee).AsQueryable();
+                var dependentsList = _context.Dependents.Include(de => de.Employee).ToList().AsQueryable();
                 if (!string.IsNullOrEmpty(dependentsSearchDTO.InputText))
                 {
                     string text = dependentsSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
@@ -213,7 +213,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("no data");
                 }
-                List<DependentDTO> dependentDTOs = _mapper.Map<List<DependentDTO>>(dependentsList.ToList());
+                var dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependentsList.ToList());
+
                 return Ok(dependentDTOs);
             }
             catch (Exception ex)
