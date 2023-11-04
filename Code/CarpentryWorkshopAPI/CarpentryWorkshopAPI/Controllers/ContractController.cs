@@ -266,10 +266,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(searchContractDTO.InputText))
-                {
-                    return BadRequest("Search input is empty");
-                }
+              
                 var query = _context.Contracts
                     .Include(emp => emp.Employee)
                     .Include(ctt => ctt.ContractType)

@@ -624,5 +624,23 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
         }
+        [HttpPost]
+        public IActionResult ChangeTeamName(string newName, int teamid)
+        {
+            try
+            {
+                var exteam = _context.Teams.FirstOrDefault(x => x.TeamId == teamid);
+                if (exteam == null)
+                {
+                    return NotFound();
+                }
+                exteam.TeamName = newName;
+                _context.SaveChanges();
+                return Ok("Change team name successful");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
     }
