@@ -50,6 +50,17 @@ function ListUserHeader() {
   const handleCancelUserContract = () => {
     setIsModalOpenUserContract(false);
   };
+
+  const [isModalOpenPayroll, setIsModalOpenPayroll] = useState(false);
+  const showModalPayroll = () => {
+    setIsModalOpenPayroll(true);
+  };
+  const handleOkPayroll = () => {
+    setIsModalOpenUser(false);
+  };
+  const handleCancelPayroll = () => {
+    setIsModalOpenPayroll(false);
+  };
   return (
     <>
       <div className="list-user-header">
@@ -108,7 +119,7 @@ function ListUserHeader() {
             </svg>
             <p>Xem thông tin</p>
           </div>
-          <div className="view-info">
+          <div className="view-info" onClick={showModalPayroll}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -212,30 +223,6 @@ function ListUserHeader() {
                 <div className="box2-child-cn">
                   <div className="div1-child-employee">
                     <p>Chức vụ</p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="27"
-                      height="25"
-                      viewBox="0 0 27 25"
-                      fill="none"
-                    >
-                      <g clip-path="url(#clip0_787_1150)">
-                        <path
-                          d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
-                          fill="#3A5A40"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_787_1150">
-                          <rect
-                            width="26"
-                            height="25"
-                            fill="white"
-                            transform="translate(0.25)"
-                          />
-                        </clipPath>
-                      </defs>
-                    </svg>
                     <p>Phòng / Ban</p>
                   </div>
                   <div className="div2-child-employee">
@@ -371,6 +358,52 @@ function ListUserHeader() {
             <button className="btn-cancel" onClick={handleCancelUserContract}>
               Thoát
             </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenPayroll}
+        on
+        Ok={handleOkPayroll}
+        onCancel={handleCancelPayroll}
+      >
+        <div className="modal-payroll">
+          <div className="modal-head">
+            {" "}
+            <h3>Bảng lương</h3>
+          </div>
+          <div className="body-payroll1">
+            <p>Lương tháng:</p>
+            <Select
+              className="select-input"
+              defaultValue="lucy"
+              style={{
+                width: "236",
+              }}
+              onChange={handleChange}
+              options={[
+                {
+                  value: "jack",
+                  label: "Jack",
+                },
+                {
+                  value: "lucy",
+                  label: "Lucy",
+                },
+                {
+                  value: "Yiminghe",
+                  label: "yiminghe",
+                },
+                {
+                  value: "disabled",
+                  label: "Disabled",
+                },
+              ]}
+            />
+          </div>
+          <div className="body-payroll2">
+            <div className="body-child"></div>
           </div>
         </div>
       </Modal>
