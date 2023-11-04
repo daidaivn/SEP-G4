@@ -20,4 +20,10 @@ const SearchEmployees = (inputName, filterGender, filterStatus, filterRole) => {
     `/CCMSapi/Employee/SearchEmployee`, requestBody
   );
 };
-export { fetchAllEmplyee , fetchEmplyeebyid , SearchEmployees };
+const DetailID = (id) => {
+  var eid = id;
+  return axios.get(
+    `/CCMSapi/Employee/GetEmployeeDetail?eid=${eid}`
+  );
+};
+export { fetchAllEmplyee , fetchEmplyeebyid , SearchEmployees, DetailID };

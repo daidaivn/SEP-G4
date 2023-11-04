@@ -16,7 +16,8 @@ import React, { useState, useEffect } from "react";
 import {
   fetchAllEmplyee,
   fetchEmplyeebyid,
-  SearchEmployees
+  SearchEmployees,
+  DetailID
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import profile from "../assets/images/Ellipse 72.svg";
@@ -36,6 +37,8 @@ function ListEmployeeComponent() {
   const [roles, setRoles] = useState([]);
 
   const [id, setId] = useState(null);
+  const [idDetail, setIdDetail] = useState(null);
+
   const [isEditing, setIsEditing] = useState(false);
   const [address, setAddress] = useState("Hà Nội");
   const [gender, setGender] = useState("Nguyễn Văn An");
@@ -72,13 +75,14 @@ function ListEmployeeComponent() {
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
-          .then((data) => {
-            setEmployees(data)
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      .then((data) => {
+        setEmployees(data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
 
   const fetchData = () => {
     toast.promise(
@@ -95,15 +99,37 @@ function ListEmployeeComponent() {
       }),
       {
         pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
+        success: 'Tải dữ liệu thành công',
         error: 'Lỗi thêm vào nhóm',
+      }
+    );
+  };
+  const handlelDetail = () => {
+    console.log('aaaaaaaaaaaid', id);
+    toast.promise(
+      new Promise((resolve) => {
+        DetailID(id)
+          .then((data) => {
+            setIdDetail(data)
+            setIsModalOpen(true);
+            console.log(data);
+
+            resolve(data)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Detail',
+        error: 'Detail',
       }
     );
   };
 
   useEffect(() => {
     fetchData();
-
     if (id !== null) {
       fetchEmplyeebyid(id)
         .then((response) => {
@@ -117,7 +143,7 @@ function ListEmployeeComponent() {
   }, [id]);
 
   function handleSelectChange(value) {
-    const actualValue  = value === null ? null : value;
+    const actualValue = value === null ? null : value;
     setFilterRole(actualValue);
     searchandfilter(inputSearch, filterGender, filterStatus, actualValue);
   }
@@ -1039,12 +1065,13 @@ function ListEmployeeComponent() {
       </div>
 
       <TableEmployeeRes employees={employees} />
-        <TableEmployee
-          employees={employees}
-          showModal={showModal}
-          setId={setId}
-          setIsModalOpen={setIsModalOpen}
-        />
+      <TableEmployee
+        employees={employees}
+        showModal={showModal}
+        setId={setId}
+        handlelDetail={handlelDetail}
+        setIsModalOpen={setIsModalOpen}
+      />
       <div>
         {isEditing ? (
           <AddEmployeeModal
@@ -1583,54 +1610,55 @@ function ListEmployeeComponent() {
               <div className="modal-employee-box1">
                 <div className="modal-child-body1">
                   <div className="img-body1">
-                    <img src={avt} alt="" />
+                    <img src={idDetail && idDetail.image ? idDetail.image : avt} alt="" />
                   </div>
                 </div>
                 <div className="modal-child-body2">
                   <div className="div-modal-child2 div-detail">
                     <p>Họ và tên:</p>
-                    <Input value="Nguyễn Văn An" />
-                  </div>
+                    <Input value={idDetail && idDetail.fullName ? idDetail.fullName : 'Chưa có thông tin'} />
 
+                  </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
-                      <Input value="Nam" />
+                      <Input value={idDetail && idDetail.gender ? idDetail.gender : 'Chưa có thông tin'} />
                     </div>
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Quốc tịch:</p>
-                    <Input value="Việt Nam" />
+                    <Input value={idDetail && idDetail.country ? idDetail.country : 'Chưa có thông tin'} />
                   </div>
+
                   <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
-                    <Input value="Hà Nội" />
+                    <Input value={idDetail && idDetail.address ? idDetail.address : 'Chưa có thông tin'} />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
-                    <Input value="000125558995" />
+                    <Input value={idDetail && idDetail.cic ? idDetail.cic : 'Chưa có thông tin'} />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Số điện thoại: </p>
-                    <Input value="0192568746" />
+                    <Input value={idDetail && idDetail.phoneNumber ? idDetail.phoneNumber : 'Chưa có thông tin'} />
                   </div>
                 </div>
               </div>
-              <div className="modal-employee-box2 ">
+              <div className="modal-employee-box2">
                 <div className="modal-box2-child">
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
-                      <Input value="0987654321" />
+                      <Input value={idDetail && idDetail.taxId ? idDetail.taxId : 'Chưa có thông tin'} />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
+                      <Input value={idDetail && idDetail.wageNumber ? idDetail.wageNumber : 'Chưa có thông tin'} className="salary" />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái hợp đồng:</p>
                       <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
+                        <Switch checked={idDetail && idDetail.status ? idDetail.status : 'Chưa có thông tin'} />
                       </Form.Item>
                       <p>Hợp đồng:</p>
                       <div className="edit-ct1">
@@ -1645,13 +1673,13 @@ function ListEmployeeComponent() {
                       </div>
                     </div>
                   </div>
-                  <div className="box2-child-cn ">
+                  <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Chức vụ:</p>
                       <div className="value">
                         <div className="value2">
                           <div className="value3">
-                            <p>Trưởng phòng</p>
+                            <p>{idDetail && idDetail.mainRole ? idDetail.mainRole : 'Chưa có thông tin'}</p>
                           </div>
                         </div>
                       </div>
@@ -1659,33 +1687,36 @@ function ListEmployeeComponent() {
                     <div className="box-child-employee1 div-detail">
                       <p>Kiêm nghiệm chức vụ:</p>
                       <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Nhân viên</p>
-                          </div>
-                        </div>
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Nhân viên</p>
-                          </div>
-                        </div>
+                        {idDetail && idDetail.subRoles ? (
+                          idDetail.subRoles.map((subRole, index) => (
+                            <div className="value2" key={index}>
+                              <div className="value3">
+                                <p>{subRole}</p>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p>Không có dữ liệu</p>
+                        )}
                       </div>
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Phòng ban:</p>
                       <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Phòng kế toán</p>
-                          </div>
-                        </div>
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Phòng kế toán</p>
-                          </div>
-                        </div>
+                        {idDetail && idDetail.departments ? (
+                          idDetail.departments.map((department, index) => (
+                            <div className="value2" key={index}>
+                              <div className="value3">
+                                <p>{department}</p>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p>Không có dữ liệu</p>
+                        )}
                       </div>
                     </div>
+
                   </div>
                 </div>
               </div>
