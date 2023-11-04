@@ -401,7 +401,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     EmployeeID = employee.EmployeeId,
                     Image = employee.Image,
                     FullName = $"{employee.FirstName} {employee.LastName}",
-                    Gender = (bool)employee.Gender ? "Male" : "Female",
+                    Gender = (bool)employee.Gender ? "Nam" : "Nữ",
                     PhoneNumber = employee.PhoneNumber,
                     Roles = employee.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel)
                         .Select(re => re.Role.RoleName)
