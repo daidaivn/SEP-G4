@@ -54,6 +54,20 @@ function ListDepartmentComponent() {
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
   };
+  const [
+    isModalOpenChangeDepartment,
+    setIsModalOpenChangeDepartment,
+  ] = useState(false);
+
+  const showModalChangeDepartment = () => {
+    setIsModalOpenChangeDepartment(true);
+  };
+  const handleOkChangeDepartment = () => {
+    setIsModalOpenChangeDepartment(false);
+  };
+  const handleCancelChangeDepartment = () => {
+    setIsModalOpenChangeDepartment(false);
+  };
   const handleSearchFilter = (inputValue, filterValue) => {
     searchAndFilterDepartment(inputValue, filterValue) // Sử dụng hàm API để tìm kiếm và bộ lọc
       .then((data) => {
@@ -367,6 +381,7 @@ function ListDepartmentComponent() {
                       <div className="box5-child">
                         <p className="child5-group">
                           <svg
+                            onClick={showModalChangeDepartment}
                             xmlns="http://www.w3.org/2000/svg"
                             width="30"
                             height="30"
@@ -396,6 +411,7 @@ function ListDepartmentComponent() {
                       <div className="box5-child">
                         <p className="child5-group">
                           <svg
+                            onClick={showModalChangeDepartment}
                             xmlns="http://www.w3.org/2000/svg"
                             width="30"
                             height="30"
@@ -425,6 +441,7 @@ function ListDepartmentComponent() {
                       <div className="box5-child">
                         <p className="child5-group">
                           <svg
+                            onClick={showModalChangeDepartment}
                             xmlns="http://www.w3.org/2000/svg"
                             width="30"
                             height="30"
@@ -511,6 +528,113 @@ function ListDepartmentComponent() {
             >
               Lưu
             </button>
+          </div>
+        </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenChangeDepartment}
+          on
+          Ok={handleOkChangeDepartment}
+          onCancel={handleCancelChangeDepartment}
+          width={566}
+        >
+          <div className="modal-all-group">
+            <div className="modal-head">
+              {" "}
+              <h3>Chuyển chức vụ</h3>
+            </div>
+            <div className="modal-end-group">
+              <div className="body-modal-end-group">
+                <div className="modal1">
+                  <div className="modal1-child">
+                    <p>Nhân viên: </p>
+                    <p>Nguyễn Thị Lan</p>
+                  </div>
+                  <div className="modal1-child">
+                    <p>Mã số nhân viên: </p>
+                    <p>1</p>
+                  </div>
+                  <div className="modal1-child">
+                    <p>Phòng ban hiện tại:</p>
+                    <p>Phòng kế toán</p>
+                  </div>
+                </div>
+                <div className="modal2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="51"
+                    height="50"
+                    viewBox="0 0 51 50"
+                    fill="none"
+                  >
+                    <path
+                      d="M30.5625 12.3545L43.2083 25.0003L30.5625 37.6462"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.7915 25H42.854"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div className="modal3">
+                  <div className="modal3-child">
+                    <p>Phòng ban chuyển đến:</p>
+
+                    <div className="list-filter select-modal-end">
+                      <Select
+                        className="select-input"
+                        defaultValue="lucy"
+                        style={{
+                          width: 120,
+                        }}
+                        onChange={handleChange}
+                        options={[
+                          {
+                            value: "jack",
+                            label: "Jack",
+                          },
+                          {
+                            value: "lucy",
+                            label: "Lucy",
+                          },
+                          {
+                            value: "Yiminghe",
+                            label: "yiminghe",
+                          },
+                          {
+                            value: "disabled",
+                            label: "Disabled",
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-group">
+              <button
+                className="btn-cancel"
+                onClick={handleCancelChangeDepartment}
+              >
+                Hủy bỏ
+              </button>
+              <button
+                className="btn-edit btn-save"
+                onClick={handleOkChangeDepartment}
+              >
+                Lưu
+              </button>
+            </div>
           </div>
         </Modal>
       </div>
