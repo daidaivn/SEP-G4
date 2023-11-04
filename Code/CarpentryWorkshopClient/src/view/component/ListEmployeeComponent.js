@@ -1039,17 +1039,12 @@ function ListEmployeeComponent() {
       </div>
 
       <TableEmployeeRes employees={employees} />
-
-      {employees.length === 0 ? (
-        <p>Loading...</p>
-      ) : (
         <TableEmployee
           employees={employees}
           showModal={showModal}
           setId={setId}
           setIsModalOpen={setIsModalOpen}
         />
-      )}
       <div>
         {isEditing ? (
           <AddEmployeeModal
