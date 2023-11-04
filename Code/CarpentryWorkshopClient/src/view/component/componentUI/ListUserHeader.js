@@ -39,6 +39,17 @@ function ListUserHeader() {
   const handleCancelUser = () => {
     setIsModalOpenUser(false);
   };
+
+  const [isModalOpenUserContract, setIsModalOpenUserContract] = useState(false);
+  const showModalUserContract = () => {
+    setIsModalOpenUserContract(true);
+  };
+  const handleOkUserContract = () => {
+    setIsModalOpenUserContract(false);
+  };
+  const handleCancelUserContract = () => {
+    setIsModalOpenUserContract(false);
+  };
   return (
     <>
       <div className="list-user-header">
@@ -191,7 +202,9 @@ function ListUserHeader() {
                     <p>Hợp đồng:</p>
                     <div className="edit-ct1">
                       <div className="edit-ct2">
-                        <span onClick={""}>Xem chi tiết</span>
+                        <span onClick={showModalUserContract}>
+                          Xem chi tiết
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -254,6 +267,110 @@ function ListUserHeader() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenUserContract}
+        on
+        Ok={handleOkUserContract}
+        onCancel={handleCancelUserContract}
+      >
+        <div className="modal-add-roleyee-employee modal-contract">
+          <div className="modal-head">
+            {" "}
+            <h3>Thêm / sửa hợp đồng</h3>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead className="thead-first"></thead>
+              <div className="body-table body-table-contract">
+                <tr className="fix-color">
+                  <Input
+                    className="select-input"
+                    placeholder="Mã hợp đồng"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  />
+                </tr>
+                <tr>
+                  <div className="input-date fix-color">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date fix-color">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date fix-color">
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date fix-color">
+                    <Input
+                      className="select-input"
+                      placeholder="Đường dẫn hợp đồng"
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                    <div className="input-date-cn">
+                      <p>Trạng thái: </p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked="true" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </tr>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+          <div className="modal-footer modal-footer-add-employee add">
+            <button className="btn-cancel" onClick={handleCancelUserContract}>
+              Thoát
+            </button>
           </div>
         </div>
       </Modal>
