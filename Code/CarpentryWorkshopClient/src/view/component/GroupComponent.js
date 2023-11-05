@@ -594,7 +594,7 @@ const GroupComponent = () => {
             </tr>
           </thead>
           {roles.length === 0 ? (
-            <p>Thông tin nhân viên chưa sẵn sàng hoặc không tồn tại.</p>
+            <p>Thông tin nhóm chưa sẵn sàng hoặc không tồn tại.</p>
           ) : (
             <tbody class="scrollbar" id="style-15">
               {
