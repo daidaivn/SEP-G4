@@ -93,19 +93,16 @@ function ListEmployeeComponent() {
             resolve(data);
           })
           .catch((error) => {
-            fetchData()
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Tải dữ liệu thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: 'Đang tải dữ liệu',
+        error: 'Lỗi tải dữ liệu',
       }
     );
   };
   const handlelDetail = () => {
-    console.log('aaaaaaaaaaaid', id);
     toast.promise(
       new Promise((resolve) => {
         DetailID(id)

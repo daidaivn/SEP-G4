@@ -115,13 +115,12 @@ function ListDepartmentComponent() {
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: 'Đang tải dữ liệu',
+        error: 'Lỗi tải dữ liệu',
       }
     );
   };
-  
+
   useEffect(() => {
     fetData();
   }, []);
@@ -356,20 +355,24 @@ function ListDepartmentComponent() {
               <td>STT</td>
             </tr>
           </thead>
-          <tbody class="scrollbar" id="style-15">
-            {departments.map((department, index) => (
-              <tr key={department.departmentId} onClick={showModalDetail}>
-                <td>{index + 1}</td>
-                <td>{department.departmentName}</td>
-                <td>{department.number}</td>
-                <td>
-                  <Form.Item valuePropName="checked">
-                    <Switch checked={department.status} />
-                  </Form.Item>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {departments.length === 0 ? (
+            <p>Thông tin phòng ban chưa sẵn sàng hoặc không tồn tại.</p>
+          ) : (
+            <tbody class="scrollbar" id="style-15">
+              {departments.map((department, index) => (
+                <tr key={department.departmentId} onClick={showModalDetail}>
+                  <td>{index + 1}</td>
+                  <td>{department.departmentName}</td>
+                  <td>{department.number}</td>
+                  <td>
+                    <Form.Item valuePropName="checked">
+                      <Switch checked={department.status} />
+                    </Form.Item>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
         <Modal
           open={isModalOpenDetail}
@@ -526,9 +529,9 @@ function ListDepartmentComponent() {
             <div className="info-add-department">
               <div className="text-department">Tên phòng - ban</div>
               <Input
-              value={departmentName}
-              onChange={(e) => setDepartmentName(e.target.value)}
-            />
+                value={departmentName}
+                onChange={(e) => setDepartmentName(e.target.value)}
+              />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment footer-deparment-fix">

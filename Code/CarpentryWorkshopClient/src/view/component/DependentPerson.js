@@ -25,8 +25,8 @@ function DependentPerson() {
   const [inputSearch, setInputSearch] = useState('');
 
   const handleEdit = () => {
-    console.log('date',date);
-    
+    console.log('date', date);
+
     setIsEditing(true);
   };
   const handleChangeFilterStatus = (value) => {
@@ -45,7 +45,7 @@ function DependentPerson() {
   const handleSave = () => {
     setIsEditing(false);
   };
-  
+
   const [dependent, setDependent] = useState([]);
   const [isModalOpenDependent, setIsModalOpenDependent] = useState(false);
   const handleChange = (value) => {
@@ -68,7 +68,7 @@ function DependentPerson() {
         GetDependentPeopleById(value)
           .then((data) => {
             resolve(data);
-            const {employeesName, relationship, identifierCode, dobString, identifierName } = data;
+            const { employeesName, relationship, identifierCode, dobString, identifierName } = data;
             setemployeesName(employeesName)
             setGuardian(data.fullName);
             setRelationship(relationship);
@@ -86,7 +86,7 @@ function DependentPerson() {
       }
     );
   };
-  
+
   const searchandfilter = (ipSearch, ftGender, ftStatus) => {
     SearchDependents(ipSearch, ftGender, ftStatus)
       .then((data) => {
@@ -98,13 +98,23 @@ function DependentPerson() {
   };
 
   const fetchData = () => {
-    fetchAllDependent()
-      .then((data) => {
-        setDependent(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu ", error);
-      });
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllDependent()
+          .then((data) => {
+            setDependent(data);
+            resolve(data)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+
+      }),
+      {
+        pending: 'Đang tải dữ liệu',
+        error: 'Lỗi tải dữ liệu',
+      }
+    );
   };
 
   useEffect(() => {

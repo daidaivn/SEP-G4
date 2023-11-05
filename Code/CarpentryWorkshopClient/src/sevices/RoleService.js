@@ -22,5 +22,15 @@ const GetRoleById = (ID) => {
     `/CCMSapi/Role/GetRoleById?rid=${rid}`
   );
 };
-
-export { fetchAllRole, SearchRoles, GetRoleById};
+const UpdateRole = (id, name, status) => {
+  const requestBody = {
+    roleId: id,
+    roleName: name,
+    status: status
+  };
+  console.log(`/CCMSapi/Role/UpdateRole`, requestBody);
+  return axios.put(
+    `/CCMSapi/Role/UpdateRole`, requestBody
+  );
+};
+export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole};

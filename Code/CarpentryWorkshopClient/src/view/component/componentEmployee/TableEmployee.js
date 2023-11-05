@@ -15,7 +15,7 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen, handlelDet
         </tr>
       </thead>
       {employees.length === 0 ? (
-        <p>Không có nhân viên phù hợp tìm kiếm.</p>
+        <p>Thông tin nhân viên chưa sẵn sàng hoặc không tồn tại.</p>
       ) : (
       <tbody className="scrollbar" id="style-15">
         {employees.map((employee, index) => (
