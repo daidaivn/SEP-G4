@@ -29,34 +29,41 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var teams = _context.Teams
-                    .Include(x => x.Works)
+                    .Include(t => t.TeamWorks) 
+                    .ThenInclude(tw => tw.Work)
                     .ThenInclude(w => w.WorkArea)
-                    .Include(x => x.EmployeeTeams)
-                    .ThenInclude(tl => tl.Employee)
+                    .Include(t => t.EmployeeTeams)
+                    .ThenInclude(et => et.Employee)
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
                         NumberOfTeamMember = t.EmployeeTeams
-                            .Where(x => x.EndDate == null)
-                            .GroupBy(x => new { x.EmployeeId, x.TeamId })
+                            .Where(et => et.EndDate == null)
+                            .GroupBy(et => new { et.EmployeeId, et.TeamId })
                             .Count(),
-                        TeamLeaderName = (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).FirstName + " " +
-                        (_context.Employees.FirstOrDefault(x => x.EmployeeId == t.TeamLeaderId)).LastName
+                        TeamLeaderName = _context.Employees
+                            .Where(e => e.EmployeeId == t.TeamLeaderId)
+                            .Select(e => e.FirstName + " " + e.LastName)
+                            .FirstOrDefault() ?? string.Empty
+                    })
+                    .ToList(); 
 
-                    }) ;
-                if (teams == null)
+                if (!teams.Any()) 
                 {
                     return NotFound();
                 }
-               
+
                 return Ok(teams);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
         }
+
+
+
         [HttpPost]
         public IActionResult AddTeamMember([FromBody] AddTeamMemberDTO addTeamMemberDTO)
         {
@@ -344,28 +351,34 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var availbableteam = _context.Teams
+                var availableTeams = _context.Teams
                     .Where(x => x.TeamId != teamid)
-                    .Include(x => x.Works)
-                    .ThenInclude(w => w.WorkArea)
+                    .Include(x => x.TeamWorks) 
+                        .ThenInclude(tw => tw.Work) 
+                        .ThenInclude(w => w.WorkArea) 
                     .Include(x => x.EmployeeTeams)
-                    .ThenInclude(tl => tl.Employee)
+                        .ThenInclude(et => et.Employee)
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
                         TeamName = t.TeamName,
                         NumberOfTeamMember = t.EmployeeTeams.Count(),
-                    });
-                if (availbableteam ==  null)
+                    })
+                    .ToList();
+
+                if (availableTeams == null)
                 {
                     return NotFound();
-                }       
-                return Ok(availbableteam);
-            }catch(Exception ex)
+                }
+
+                return Ok(availableTeams);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost]
         public IActionResult ChangeTeamStaff(int teamid, int employeeid)
         {

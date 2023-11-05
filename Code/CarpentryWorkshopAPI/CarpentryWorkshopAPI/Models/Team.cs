@@ -9,8 +9,8 @@ namespace CarpentryWorkshopAPI.Models
         {
             EmployeeTeams = new HashSet<EmployeeTeam>();
             HistoryChangeTeams = new HashSet<HistoryChangeTeam>();
+            TeamWorks = new HashSet<TeamWork>();
             WorkSchedules = new HashSet<WorkSchedule>();
-            Works = new HashSet<Work>();
         }
 
         public int TeamId { get; set; }
@@ -21,8 +21,7 @@ namespace CarpentryWorkshopAPI.Models
 
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
         public virtual ICollection<HistoryChangeTeam> HistoryChangeTeams { get; set; }
+        public virtual ICollection<TeamWork> TeamWorks { get; set; }
         public virtual ICollection<WorkSchedule> WorkSchedules { get; set; }
-
-        public virtual ICollection<Work> Works { get; set; }
     }
 }

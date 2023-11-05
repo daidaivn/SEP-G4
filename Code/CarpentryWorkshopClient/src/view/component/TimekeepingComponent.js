@@ -207,6 +207,12 @@ const TimekeepingComponent = () => {
             </svg>
           </i>
         </div>
+        <div className="list-search-filter-add">
+          {checksInOut.map((employee, index) => (
+            <p>Thời gian ca làm: {employee.timeIn} đến {employee.timeout} ngày 11/02/2023</p>
+          ))
+          }
+        </div>
         <div className="list-text-header-res">
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
@@ -225,7 +231,7 @@ const TimekeepingComponent = () => {
             <p>Thông tin điểm danh theo nhóm chưa sẵn sàng hoặc không tồn tại.</p>
           ) : (
             <tbody>
-              {checksInOut.map((employee, index) => (
+              {checksInOut.length > 0 && checksInOut[0].result.map((employee, index) => (
                 <tr key={employee.employeeId}>
                   <td>{index + 1}</td>
                   <td>{employee.name}</td>
