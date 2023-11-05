@@ -24,7 +24,7 @@ import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 import {
   TableEmployee,
   TableEmployeeRes,
@@ -127,15 +127,13 @@ function ListEmployeeComponent() {
 
   useEffect(() => {
     fetchData();
-    if (id !== null) {
-      fetchEmplyeebyid(id)
-        .then((response) => {
-          setEmployeeData(response);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    }
+    fetchEmplyeebyid(id)
+      .then((response) => {
+        setEmployeeData(response);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     allRole();
   }, [id]);
 

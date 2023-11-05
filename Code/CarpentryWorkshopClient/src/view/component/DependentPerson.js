@@ -7,6 +7,8 @@ import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import { fetchAllDependent, SearchDependents, GetDependentPeopleById } from "../../sevices/DependentPersonService";
+import { fetchAllEmplyee } from "../../sevices/EmployeeService";
+import { GetRelationshipsType } from "../../sevices/RelationshipsType";
 import { toast } from "react-toastify";
 import { Input } from "antd";
 import { Modal } from "antd";
@@ -15,14 +17,17 @@ import { Col, Row } from "antd";
 function DependentPerson() {
   const [isEditing, setIsEditing] = useState(false);
   const [guardian, setGuardian] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+  const [employees, setEmployees] = useState([]);
   const [employeesName, setemployeesName] = useState("");
-  const [Relationship, setRelationship] = useState("");
+  const [Relationship, setRelationship] = useState('');
   const [Identifier, setIdentifier] = useState("");
   const [date, setDate] = useState("");
   const [status, setStatus] = useState(true);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
   const [inputSearch, setInputSearch] = useState('');
+  const [relationshipsType, setRelationshipsType] = useState([]);
 
   const handleEdit = () => {
     console.log('date', date);
@@ -45,7 +50,16 @@ function DependentPerson() {
   const handleSave = () => {
     setIsEditing(false);
   };
-
+  const convertDateFormat = (originalDate) => {
+    const parts = originalDate.split('-');
+    if (parts.length === 3) {
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
+    }
+    return originalDate;
+  };
   const [dependent, setDependent] = useState([]);
   const [isModalOpenDependent, setIsModalOpenDependent] = useState(false);
   const handleChange = (value) => {
@@ -68,12 +82,13 @@ function DependentPerson() {
         GetDependentPeopleById(value)
           .then((data) => {
             resolve(data);
-            const { employeesName, relationship, identifierCode, dobString, identifierName } = data;
+            const { employeesName, relationshipName, identifierCode, dobString, identifierName } = data;
             setemployeesName(employeesName)
             setGuardian(data.fullName);
-            setRelationship(relationship);
+            setRelationship(relationshipName);
             setIdentifier(identifierCode);
             setDate(dobString);
+            setEmployeeId(data.employeeId);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -86,6 +101,30 @@ function DependentPerson() {
       }
     );
   };
+
+
+  const fetchRelationshipsType = () => {
+    GetRelationshipsType()
+      .then((data) => {
+        setRelationshipsType(data)
+        handleEdit()
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+
+  const getchAllEmplyees = () => {
+    fetchAllEmplyee()
+      .then((rs) => {
+        setEmployees(rs)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
 
   const searchandfilter = (ipSearch, ftGender, ftStatus) => {
     SearchDependents(ipSearch, ftGender, ftStatus)
@@ -118,8 +157,8 @@ function DependentPerson() {
   };
 
   useEffect(() => {
-    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
     fetchData();
+    getchAllEmplyees()
   }, []);
   return (
     <>
@@ -471,15 +510,17 @@ function DependentPerson() {
                           <th className="text">Người giám hộ:</th>
                           <td className="input-text">
                             <select
-                              name="guardian"
-                              id="guardian"
+                              name="employeeId"
+                              id="employeeId"
                               className="select"
-                              onChange={(e) => setGuardian(e.target.value)}
+                              onChange={(e) => setEmployeeId(e.target.value)}
+                              value={employeeId}
                             >
-                              <option value="1">Volvo</option>
-                              <option value="2">Saab</option>
-                              <option value="3">Opel</option>
-                              <option value="4">Audi</option>
+                              {employees.map((employee) => (
+                                <option key={employee.employeeID} value={employee.employeeID}>
+                                  {employee.fullName}
+                                </option>
+                              ))}
                             </select>
                           </td>
                         </tr>
@@ -493,14 +534,20 @@ function DependentPerson() {
                               onChange={(e) => setRelationship(e.target.value)}
                               value={Relationship}
                             >
-                              <option value="Con trai">Con trai</option>
-                              <option value="Con gái">Con gái</option>
-                              <option value="Bố đẻ">Bố đẻ</option>
-                              <option value="Mẹ đẻ">Mẹ đẻ</option>
-                              <option value="Bố chồng">Bố chồng</option>
-                              <option value="Mẹ chồng">Mẹ chồng</option>
-                              <option value="">Bỏ chọn</option>
+                              {!Relationship && (
+                                <option value="" disabled>Chọn quan hệ</option>
+                              )}
+                              {relationshipsType.map((type) => (
+                                <option key={type.relationshipId} value={type.relationshipName}>
+                                  {type.relationshipName}
+                                </option>
+                              ))}
+                              {Relationship && (
+                                <option value="">Bỏ chọn</option>
+                              )}
                             </select>
+
+
                           </td>
                         </tr>
                         <tr>
@@ -518,9 +565,9 @@ function DependentPerson() {
                           <td className="input-text">
                             <Input
                               type="date"
-                              placeholder="mm/dd/yyyy"
-                              value={date}
-                              onChange={(e) => setDate(e.target.value)}
+                              placeholder="yyyy-MM-dd"
+                              value={convertDateFormat(date)}
+                              onChange={(e) => setDate(convertDateFormat(e.target.value))}
                             />
                           </td>
                         </tr>
@@ -625,7 +672,7 @@ function DependentPerson() {
               <button className="btn-cancel" onClick={handleCancelDependent}>
                 Hủy bỏ
               </button>
-              <button className="btn-edit" onClick={handleEdit}>
+              <button className="btn-edit" onClick={fetchRelationshipsType}>
                 Chỉnh sửa
               </button>
             </div>

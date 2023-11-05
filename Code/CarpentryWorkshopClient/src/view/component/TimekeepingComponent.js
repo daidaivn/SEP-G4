@@ -209,7 +209,7 @@ const TimekeepingComponent = () => {
         </div>
         <div className="list-search-filter-add">
           {checksInOut.map((employee, index) => (
-            <p>Thời gian ca làm: {employee.timeIn} đến {employee.timeout} ngày 11/02/2023</p>
+            <p>Thời gian ca làm: {employee.timeIn} đến {employee.timeout} ngày {employee.date} </p>
           ))
           }
         </div>
