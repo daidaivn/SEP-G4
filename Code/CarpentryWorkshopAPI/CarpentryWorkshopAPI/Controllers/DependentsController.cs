@@ -11,6 +11,7 @@ using CarpentryWorkshopAPI.DTO;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using System.Text;
+using System.Data.Common;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -39,9 +40,29 @@ namespace CarpentryWorkshopAPI.Controllers
             deEndDate.Select(de => de.Status = false);
             _context.UpdateRange(deEndDate);
             _context.SaveChanges();
-            List<Dependent> dependents = _context.Dependents.Include(de=>de.Employee).ToList();
-            List<DependentListDTO> dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependents);
-            return Ok(dependentDTOs);
+            var dependents = _context.Dependents.Include(de=>de.Employee).Include(de=>de.Relationship)
+                .Select(de=>new DependentListDTO
+                {
+                    DependentId = de.DependentId,
+                    EmployeeId = de.DependentId,
+                    EmployeesName = de.Employee.FirstName +" "+ de.Employee.LastName,
+                    FullName = de.FullName,
+                    IdentifierCode = de.IdentifierCode,
+                    Gender = de.Gender,
+                    GenderString = de.Gender == true ? "nam" : "nữ",
+                    DobString = de.Dob != null ? de.Dob.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    StartDateString = de.StartDate != null ? de.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    IdentifierName = de.IdentifierName,
+                    NoteReason = de.NoteReason,
+                    Relation = de.Relation,
+                    RelationshipId = de.RelationshipId,
+                    RelationshipName = de.Relationship.RelationshipName,
+                    Status = de.Status,
+
+                }).ToList();
+            
+            return Ok(dependents);
         }
 
         // GET: api/Dependents/5
@@ -52,14 +73,33 @@ namespace CarpentryWorkshopAPI.Controllers
           {
               return NotFound();
           }
-            Dependent dependent = _context.Dependents.SingleOrDefault(de=>de.DependentId == id);
-            DependentListDTO dependentDTO = _mapper.Map<DependentListDTO>(dependent);
+            var dependent = _context.Dependents.Where(de=>de.DependentId == id).Include(de => de.Employee).Include(de => de.Relationship)
+                .Select(de => new DependentListDTO
+                {
+                    DependentId = de.DependentId,
+                    EmployeeId = de.DependentId,
+                    EmployeesName = de.Employee.FirstName + " " + de.Employee.LastName,
+                    FullName = de.FullName,
+                    IdentifierCode = de.IdentifierCode,
+                    Gender = de.Gender,
+                    GenderString = de.Gender == true ? "nam" : "nữ",
+                    DobString = de.Dob != null ? de.Dob.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    StartDateString = de.StartDate != null ? de.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    IdentifierName = de.IdentifierName,
+                    NoteReason = de.NoteReason,
+                    Relation = de.Relation,
+                    RelationshipId = de.RelationshipId,
+                    RelationshipName = de.Relationship.RelationshipName,
+                    Status = de.Status,
+
+                }).FirstOrDefault();
             if (dependent == null)
             {
                 return NotFound();
             }
 
-            return Ok(dependentDTO);
+            return Ok(dependent);
         }
 
         // PUT: api/Dependents/5
@@ -192,7 +232,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var dependentsList = _context.Dependents.Include(de => de.Employee).ToList().AsQueryable();
+                var dependentsList = _context.Dependents.Include(de => de.Employee).Include(de=>de.Relationship).ToList().AsQueryable();
                 if (!string.IsNullOrEmpty(dependentsSearchDTO.InputText))
                 {
                     string text = dependentsSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
@@ -213,9 +253,28 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("no data");
                 }
-                var dependentDTOs = _mapper.Map<List<DependentListDTO>>(dependentsList.ToList());
+                var dto = dependentsList.Select(de => new DependentListDTO
+                {
+                    DependentId = de.DependentId,
+                    EmployeeId = de.DependentId,
+                    EmployeesName = de.Employee.FirstName + " " + de.Employee.LastName,
+                    FullName = de.FullName,
+                    IdentifierCode = de.IdentifierCode,
+                    Gender = de.Gender,
+                    GenderString = de.Gender == true ? "nam" : "nữ",
+                    DobString = de.Dob != null ? de.Dob.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    StartDateString = de.StartDate != null ? de.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    IdentifierName = de.IdentifierName,
+                    NoteReason = de.NoteReason,
+                    Relation = de.Relation,
+                    RelationshipId = de.RelationshipId,
+                    RelationshipName = de.Relationship.RelationshipName,
+                    Status = de.Status,
 
-                return Ok(dependentDTOs);
+                });
+
+                return Ok(dto);
             }
             catch (Exception ex)
             {
