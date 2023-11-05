@@ -554,7 +554,7 @@ function ListEmployeeComponent() {
         >
           <div className="modal-add-employee">
             <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
+              <h3>Thêm nhân viên</h3>
             </div>
             <div className="modal-add-employee-all">
               <div className="modal-employee-box1">
@@ -564,13 +564,19 @@ function ListEmployeeComponent() {
                   </div>
                 </div>
                 <div className="modal-child-body2">
-                  <div className="div-modal-child2">
-                    <p>Họ:</p>
-                    <Input placeholder="Nhập họ kèm tên đệm" />
+                  <div className="div-modal-child2 div-detail div1-modal-child2">
+                    <div className="div1-modal-cn">
+                      <p>Họ:</p>
+                      <Input placeholder="Nhập họ" />
+                    </div>
+                    <div className="div1-modal-cn div2-fix">
+                      <p>Tên:</p>
+                      <Input placeholder="Nhập tên" />
+                    </div>
                   </div>
-                  <div className="div-modal-child2">
-                    <p>Tên:</p>
-                    <Input placeholder="Nhập tên" />
+                  <div className="div-modal-child2 div-detail">
+                    <p>Số điện thoại:</p>
+                    <Input placeholder="Nhập số điện thoại" />
                   </div>
 
                   <div className="div-modal-child2">
@@ -593,7 +599,7 @@ function ListEmployeeComponent() {
                     <p>Quốc tịch:</p>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      defaultValue="Chọn quốc tịch"
                       style={{
                         width: "100%",
                       }}
@@ -604,8 +610,8 @@ function ListEmployeeComponent() {
                           label: "Jack",
                         },
                         {
-                          value: "lucy",
-                          label: "Lucy",
+                          value: "Chọn quốc tịch",
+                          label: "Chọn quốc tịch",
                         },
                         {
                           value: "Yiminghe",
@@ -618,11 +624,11 @@ function ListEmployeeComponent() {
                       ]}
                     />
                   </div>
-                  <div className="div-modal-child2">
+                  <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
                     <Input placeholder="Nhập địa chỉ" />
                   </div>
-                  <div className="div-modal-child2">
+                  <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
                     <Input placeholder="Nhập mã định danh" />
                   </div>
@@ -630,92 +636,56 @@ function ListEmployeeComponent() {
               </div>
               <div className="modal-employee-box2">
                 <div className="modal-box2-child">
-                  <div className="box2-child-cn">
-                    <div className="box-child-employee1">
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
                       <Input placeholder="Nhập mã số thuế" />
                     </div>
                     <div className="box-child-employee1">
                       <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
-                    </div>
-                    <div className="box-child-employee1">
-                      <p>Hợp đồng:</p>
-                      <span
-                        className="add-contract"
-                        onClick={showModalAddContract}
-                      >
-                        Thêm hợp đồng
-                      </span>
+                      <p className="fix-input">99999999999</p>
                     </div>
                   </div>
                   <div className="box2-child-cn">
-                    <div className="div1-child-employee">
-                      <p>Chức vụ</p>
-                      <svg
-                        onClick={showModalAddRole}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="27"
-                        height="25"
-                        viewBox="0 0 27 25"
-                        fill="none"
-                      >
-                        <g clip-path="url(#clip0_787_1150)">
-                          <path
-                            d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
-                            fill="#3A5A40"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_787_1150">
-                            <rect
-                              width="26"
-                              height="25"
-                              fill="white"
-                              transform="translate(0.25)"
-                            />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p>Phòng / Ban</p>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Ngày sinh:</p>
+                      <input type="date" placeholder="Chọn ngày sinh" />
                     </div>
-                    <div className="div2-child-employee">
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Trường phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Hành chính</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Phó phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Kế toán</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Nhân viên</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Tài vụ</p>
-                        </div>
-                      </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Trạng thái:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch
+                          checked={
+                            idDetail && idDetail.status
+                              ? idDetail.status
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </Form.Item>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="modal-footer modal-footer-add modal-add-fix">
-              <button className="btn-cancel" onClick={handleCancelAdd}>
-                Hủy bỏ
-              </button>
-              <button className="btn-edit btn-save" onClick={handleOkAdd}>
-                Lưu
-              </button>
+            <div className="modal-footer modal-footer-add">
+              <div className="btn-left">
+                <div
+                  className="modal-footer1 add-green"
+                  onClick={showModalAddContract1}
+                >
+                  Thêm hợp đồng
+                </div>
+                <div className="modal-footer1 add-green">Thêm chức vụ</div>
+              </div>
+
+              <div className="modal-footer modal-footer2">
+                <button className="btn-cancel" onClick={handleCancel}>
+                  Thoát
+                </button>
+                <button className="btn-edit btn-save" onClick={handleSave}>
+                  Lưu
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
@@ -1428,7 +1398,7 @@ function ListEmployeeComponent() {
         >
           <div className="modal-add-employee">
             <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
+              <h3>Sửa thông tin nhân viên</h3>
             </div>
             <div className="modal-add-employee-all">
               <div className="modal-employee-box1">
@@ -1570,7 +1540,7 @@ function ListEmployeeComponent() {
         >
           <div className="modal-add-employee">
             <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
+              <h3>Thông tin nhân viên chi tiết</h3>
             </div>
             <div className="modal-add-employee-all">
               <div className="modal-employee-box1">

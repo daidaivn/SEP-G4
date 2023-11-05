@@ -505,6 +505,9 @@ i .logo-responsive {
   .btn-left {
     display: flex;
     gap: 10px;
+    .add-green {
+      background: #3a5a40;
+    }
   }
 }
 .btn-save {
