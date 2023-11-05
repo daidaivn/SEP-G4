@@ -31,6 +31,7 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ForMember(de => de.GenderString, option => option.MapFrom(d => d.Gender == true ? "Nam" : "Nữ"))
                 .ForMember(de => de.DobString, option => option.MapFrom(d => d.Dob != null ? d.Dob.Value.ToString("dd'-'MM'-'yyyy") : ""))
                 .ForMember(de => de.StartDateString, option => option.MapFrom(d => d.StartDate != null ? d.StartDate.Value.ToString("dd'-'MM'-'yyyy") : ""))
+                .ForMember(de => de.RelationshipName, option => option.MapFrom(d => d.Relationship.RelationshipName))
                 .ForMember(de => de.EndDateString, option => option.MapFrom(d => d.EndDate != null ? d.EndDate.Value.ToString("dd'-'MM'-'yyyy") : ""));
             //
             CreateMap<CreateContractDTO, Contract>()
