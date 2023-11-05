@@ -16,4 +16,10 @@ const SearchDependents = (inputName, filterGender, filterStatus) => {
     `/CCMSapi/Dependents/SearchDependents`, requestBody
   );
 };
-export { fetchAllDependent,SearchDependents };
+const GetDependentPeopleById = (ID) => {
+  const id = ID;
+  return axios.get(
+    `https://sep-g4-api.azurewebsites.net/CCMSapi/Dependents/GetDependentPeopleById/${id}`
+  );
+};
+export { fetchAllDependent,SearchDependents,GetDependentPeopleById };

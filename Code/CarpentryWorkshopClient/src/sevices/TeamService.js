@@ -72,6 +72,21 @@ const searchData = (Input) => {
   console.log(`/CCMSapi/Team/SearchTeam?input=${input}`);
   return axios.post(`/CCMSapi/Team/SearchTeam?input=${input}`);
 };
+
+const DeleteTeamMember = (eid, tid) => {
+  const employeeid = eid;
+  const teamid = tid;
+  return axios.delete(
+    `/CCMSapi/Team/DeleteTeamMember?employeeid=${employeeid}&teamid=${teamid}`
+  );
+};
+const ChangeTeamName = (name, id) => {
+  const newName = name;
+  const teamid = id;
+  return axios.post(
+    `/CCMSapi/Team/ChangeTeamName?newName=${newName}&teamid=${teamid}`
+  );
+};
 export {
   fetchAllTeam,
   createTeam,
@@ -85,5 +100,7 @@ export {
   changeStafId,
   fetTeamContinue,
   createTeamMember,
-  searchData
+  searchData,
+  DeleteTeamMember,
+  ChangeTeamName
 };
