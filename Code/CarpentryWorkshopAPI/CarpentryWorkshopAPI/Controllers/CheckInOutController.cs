@@ -88,13 +88,12 @@ namespace CarpentryWorkshopAPI.Controllers
             
             var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et=>et.Works).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et=>et.TeamWorks).ThenInclude(et=>et.Work).Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w=>w.WorkId),
-                    Date = et.Works.Select(w=>w.Date)
+                    WorkId = et.TeamWorks.Select(w=>w.WorkId),
                 })
                 .FirstOrDefaultAsync();
             
@@ -250,12 +249,12 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var teamId = await _context.Teams
                 .Where(t=>t.TeamId == Id)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.Works).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et=>et.Work).Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w => w.WorkId)
+                    WorkId = et.TeamWorks.Select(w => w.WorkId)
                 })
                 .FirstOrDefaultAsync();
 
