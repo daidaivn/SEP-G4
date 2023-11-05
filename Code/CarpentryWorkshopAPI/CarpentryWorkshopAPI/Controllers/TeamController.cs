@@ -29,7 +29,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var teams = _context.Teams
-                    .Include(t => t.TeamWorks) // Giả định Team có thuộc tính TeamWorks (thay thế Works)
+                    .Include(t => t.TeamWorks) 
                     .ThenInclude(tw => tw.Work)
                     .ThenInclude(w => w.WorkArea)
                     .Include(t => t.EmployeeTeams)
