@@ -82,306 +82,306 @@ namespace CarpentryWorkshopAPI.Controllers
 
         }
 
-        [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
-        public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
-        {
+        //[HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
+        //public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
+        //{
             
-            var teamId = await _context.Teams
-                .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et=>et.Works).Select(et => new
-                {
-                    TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
-                    Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
-                    TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w=>w.WorkId),
-                    Date = et.Works.Select(w=>w.Date)
-                })
-                .FirstOrDefaultAsync();
+        //    var teamId = await _context.Teams
+        //        .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
+        //        .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et=>et.Works).Select(et => new
+        //        {
+        //            TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
+        //            Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
+        //            TeamId = et.TeamId,
+        //            WorkId = et.Works.Select(w=>w.WorkId),
+        //            Date = et.Works.Select(w=>w.Date)
+        //        })
+        //        .FirstOrDefaultAsync();
             
-            if (teamId.TeamId == 0)
-            {
-                return NotFound("Team Leader not found");
-            }
+        //    if (teamId.TeamId == 0)
+        //    {
+        //        return NotFound("Team Leader not found");
+        //    }
             
-            var employees = await _context.EmployeeTeams
-                .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
-                .Select(et => et.Employee)
-                .ToListAsync();
-            if (employees.Count == 0)
-            {
-                return NotFound("No employees found in the team with EndDate == null");
-            }
+        //    var employees = await _context.EmployeeTeams
+        //        .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
+        //        .Select(et => et.Employee)
+        //        .ToListAsync();
+        //    if (employees.Count == 0)
+        //    {
+        //        return NotFound("No employees found in the team with EndDate == null");
+        //    }
 
-            var result = new List<object>();
-            var time = new List<object>();
-            foreach (var employee in employees)
-            {
-                var currentDate = DateTime.Now.Date;
+        //    var result = new List<object>();
+        //    var time = new List<object>();
+        //    foreach (var employee in employees)
+        //    {
+        //        var currentDate = DateTime.Now.Date;
                 
-                var checkInTime = await _context.CheckInOuts
-                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                    .OrderBy(c=>c.Date)
-                    .ThenBy(c => c.TimeCheckIn)
-                    .Select(c => c.TimeCheckIn)
-                    .FirstOrDefaultAsync();
+        //        var checkInTime = await _context.CheckInOuts
+        //            .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+        //            .OrderBy(c=>c.Date)
+        //            .ThenBy(c => c.TimeCheckIn)
+        //            .Select(c => c.TimeCheckIn)
+        //            .FirstOrDefaultAsync();
 
-                var latestCheckOutTime = await _context.CheckInOuts
-                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                    .OrderBy(c => c.Date)
-                    .ThenBy(c => c.TimeCheckIn)
-                    .LastOrDefaultAsync();
-                if(DateTime.Now.TimeOfDay > teamId.Timeout)
-                {
-                    if(latestCheckOutTime.TimeCheckOut == null)
-                    {
-                        var AutoCheck = await _context.CheckInOuts
-                            .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                            .OrderBy(c => c.Date)
-                            .ThenBy(c => c.TimeCheckIn)
-                            .LastOrDefaultAsync();
-                        if(AutoCheck != null)
-                        {
-                            AutoCheck.TimeCheckOut = teamId.Timeout;
-                            _context.Update(AutoCheck);
-                            _context.SaveChanges();
-                        }
-                    }
-                }
-                if(teamId.WorkId.Count() <= 0)
-                {
-                    result.Add(new
-                    {
-                        EmployeeId = employee.EmployeeId,
-                        Name = employee.FirstName + " " + employee.LastName,
-                        Status = 4, //Chưa có công việc
-                        CheckStatus = "CheckIn",
-                        TimeIn = "",
-                        Timeout = "",
+        //        var latestCheckOutTime = await _context.CheckInOuts
+        //            .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+        //            .OrderBy(c => c.Date)
+        //            .ThenBy(c => c.TimeCheckIn)
+        //            .LastOrDefaultAsync();
+        //        if(DateTime.Now.TimeOfDay > teamId.Timeout)
+        //        {
+        //            if(latestCheckOutTime.TimeCheckOut == null)
+        //            {
+        //                var AutoCheck = await _context.CheckInOuts
+        //                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+        //                    .OrderBy(c => c.Date)
+        //                    .ThenBy(c => c.TimeCheckIn)
+        //                    .LastOrDefaultAsync();
+        //                if(AutoCheck != null)
+        //                {
+        //                    AutoCheck.TimeCheckOut = teamId.Timeout;
+        //                    _context.Update(AutoCheck);
+        //                    _context.SaveChanges();
+        //                }
+        //            }
+        //        }
+        //        if(teamId.WorkId.Count() <= 0)
+        //        {
+        //            result.Add(new
+        //            {
+        //                EmployeeId = employee.EmployeeId,
+        //                Name = employee.FirstName + " " + employee.LastName,
+        //                Status = 4, //Chưa có công việc
+        //                CheckStatus = "CheckIn",
+        //                TimeIn = "",
+        //                Timeout = "",
                         
-                    });
-                }
-                else if (checkInTime == null)
-                {
-                    if (DateTime.Now.TimeOfDay > teamId.TimeIn)
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 3, //Vắng mặt
-                            CheckStatus = "CheckIn",
-                            TimeIn = "",
-                            Timeout = "",
+        //            });
+        //        }
+        //        else if (checkInTime == null)
+        //        {
+        //            if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+        //            {
+        //                result.Add(new
+        //                {
+        //                    EmployeeId = employee.EmployeeId,
+        //                    Name = employee.FirstName + " " + employee.LastName,
+        //                    Status = 3, //Vắng mặt
+        //                    CheckStatus = "CheckIn",
+        //                    TimeIn = "",
+        //                    Timeout = "",
                             
-                        });
-                    }
-                    else
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 1, //Checkin
-                            CheckStatus = "CheckIn",
-                            TimeIn = "",
-                            Timeout = "",
+        //                });
+        //            }
+        //            else
+        //            {
+        //                result.Add(new
+        //                {
+        //                    EmployeeId = employee.EmployeeId,
+        //                    Name = employee.FirstName + " " + employee.LastName,
+        //                    Status = 1, //Checkin
+        //                    CheckStatus = "CheckIn",
+        //                    TimeIn = "",
+        //                    Timeout = "",
                             
-                        });
-                    }
-                }                    
-                else
-                {
-                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 6,//tan ca
-                            CheckStatus = "EndCheck",
-                            TimeIn = latestCheckOutTime.TimeCheckOut,
-                            Timeout = DateTime.Now.TimeOfDay,
+        //                });
+        //            }
+        //        }                    
+        //        else
+        //        {
+        //            if (DateTime.Now.TimeOfDay > teamId.Timeout)
+        //            {
+        //                result.Add(new
+        //                {
+        //                    EmployeeId = employee.EmployeeId,
+        //                    Name = employee.FirstName + " " + employee.LastName,
+        //                    Status = 6,//tan ca
+        //                    CheckStatus = "EndCheck",
+        //                    TimeIn = latestCheckOutTime.TimeCheckOut,
+        //                    Timeout = DateTime.Now.TimeOfDay,
                             
-                        });
-                    }
-                    else if (latestCheckOutTime.TimeCheckOut == null)
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 2,// dang co mat
-                            CheckStatus = "EndCheck",
-                            TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = "",
+        //                });
+        //            }
+        //            else if (latestCheckOutTime.TimeCheckOut == null)
+        //            {
+        //                result.Add(new
+        //                {
+        //                    EmployeeId = employee.EmployeeId,
+        //                    Name = employee.FirstName + " " + employee.LastName,
+        //                    Status = 2,// dang co mat
+        //                    CheckStatus = "EndCheck",
+        //                    TimeIn = latestCheckOutTime.TimeCheckIn,
+        //                    Timeout = "",
                            
-                        });
-                    }
-                    else
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 5,//tam ngung 
-                            CheckStatus = "CheckIn",
-                            TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = latestCheckOutTime.TimeCheckOut,
-                            Date= latestCheckOutTime.Date.Value.ToString("dd'-'MM'-'yyyy")
-                        });
-                    }                                                
-                }
+        //                });
+        //            }
+        //            else
+        //            {
+        //                result.Add(new
+        //                {
+        //                    EmployeeId = employee.EmployeeId,
+        //                    Name = employee.FirstName + " " + employee.LastName,
+        //                    Status = 5,//tam ngung 
+        //                    CheckStatus = "CheckIn",
+        //                    TimeIn = latestCheckOutTime.TimeCheckIn,
+        //                    Timeout = latestCheckOutTime.TimeCheckOut,
+        //                    Date= latestCheckOutTime.Date.Value.ToString("dd'-'MM'-'yyyy")
+        //                });
+        //            }                                                
+        //        }
                 
-            }
-            time.Add(new
-            {
-                TimeIn = teamId.TimeIn,
-                Timeout = teamId.Timeout,
-                Date = DateTime.Now.Date,
-                Result = result
-            });
-            return time;
-        }
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
-        {
-            var result = new List<object>();
-            foreach (var Id in _context.Teams.Select(t => t.TeamId).ToList())
-            {
-                var teamId = await _context.Teams
-                .Where(t=>t.TeamId == Id)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.Works).Select(et => new
-                {
-                    TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
-                    Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
-                    TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w => w.WorkId)
-                })
-                .FirstOrDefaultAsync();
+        //    }
+        //    time.Add(new
+        //    {
+        //        TimeIn = teamId.TimeIn,
+        //        Timeout = teamId.Timeout,
+        //        Date = DateTime.Now.Date,
+        //        Result = result
+        //    });
+        //    return time;
+        //}
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
+        //{
+        //    var result = new List<object>();
+        //    foreach (var Id in _context.Teams.Select(t => t.TeamId).ToList())
+        //    {
+        //        var teamId = await _context.Teams
+        //        .Where(t=>t.TeamId == Id)
+        //        .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.Works).Select(et => new
+        //        {
+        //            TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
+        //            Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
+        //            TeamId = et.TeamId,
+        //            WorkId = et.Works.Select(w => w.WorkId)
+        //        })
+        //        .FirstOrDefaultAsync();
 
-                if (teamId.TeamId == 0)
-                {
-                    return NotFound("Team Leader not found");
-                }
+        //        if (teamId.TeamId == 0)
+        //        {
+        //            return NotFound("Team Leader not found");
+        //        }
 
-                var employees = await _context.EmployeeTeams
-                    .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
-                    .Select(et => et.Employee)
-                    .ToListAsync();
+        //        var employees = await _context.EmployeeTeams
+        //            .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
+        //            .Select(et => et.Employee)
+        //            .ToListAsync();
 
-                //if (employees.Count == 0)
-                //{
-                //    return NotFound("No employees found in the team with EndDate == null");
-                //}
+        //        //if (employees.Count == 0)
+        //        //{
+        //        //    return NotFound("No employees found in the team with EndDate == null");
+        //        //}
 
 
-                foreach (var employee in employees)
-                {
-                    var currentDate = DateTime.Now.Date;
+        //        foreach (var employee in employees)
+        //        {
+        //            var currentDate = DateTime.Now.Date;
 
-                    var checkInTime = await _context.CheckInOuts
-                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                        .OrderBy(c => c.Date)
-                        .ThenBy(c => c.TimeCheckIn)
-                        .Select(c => c.TimeCheckIn)
-                        .FirstOrDefaultAsync();
+        //            var checkInTime = await _context.CheckInOuts
+        //                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+        //                .OrderBy(c => c.Date)
+        //                .ThenBy(c => c.TimeCheckIn)
+        //                .Select(c => c.TimeCheckIn)
+        //                .FirstOrDefaultAsync();
 
-                    var latestCheckOutTime = await _context.CheckInOuts
-                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                        .OrderBy(c => c.Date)
-                        .ThenBy(c => c.TimeCheckIn)
-                        .Select(c => c.TimeCheckOut)
-                        .LastOrDefaultAsync();
-                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
-                    {
-                        if (latestCheckOutTime == null)
-                        {
-                            var AutoCheck = await _context.CheckInOuts
-                                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                                .OrderBy(c => c.Date)
-                                .ThenBy(c => c.TimeCheckIn)
-                                .LastOrDefaultAsync();
-                            if (AutoCheck != null)
-                            {
-                                AutoCheck.TimeCheckOut = teamId.Timeout;
-                                _context.Update(AutoCheck);
-                                _context.SaveChanges();
-                            }
-                        }
-                    }
-                    if (teamId.WorkId.Count() <= 0)
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 4,
-                            CheckStatus = "CheckIn"
-                        });
-                    }
-                    else if (checkInTime == null)
-                    {
-                        if (DateTime.Now.TimeOfDay > teamId.TimeIn)
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 3,
-                                CheckStatus = "CheckIn"
-                            });
-                        }
-                        else
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 1,
-                                CheckStatus = "CheckIn"
-                            });
-                        }
-                    }
+        //            var latestCheckOutTime = await _context.CheckInOuts
+        //                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+        //                .OrderBy(c => c.Date)
+        //                .ThenBy(c => c.TimeCheckIn)
+        //                .Select(c => c.TimeCheckOut)
+        //                .LastOrDefaultAsync();
+        //            if (DateTime.Now.TimeOfDay > teamId.Timeout)
+        //            {
+        //                if (latestCheckOutTime == null)
+        //                {
+        //                    var AutoCheck = await _context.CheckInOuts
+        //                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+        //                        .OrderBy(c => c.Date)
+        //                        .ThenBy(c => c.TimeCheckIn)
+        //                        .LastOrDefaultAsync();
+        //                    if (AutoCheck != null)
+        //                    {
+        //                        AutoCheck.TimeCheckOut = teamId.Timeout;
+        //                        _context.Update(AutoCheck);
+        //                        _context.SaveChanges();
+        //                    }
+        //                }
+        //            }
+        //            if (teamId.WorkId.Count() <= 0)
+        //            {
+        //                result.Add(new
+        //                {
+        //                    EmployeeId = employee.EmployeeId,
+        //                    Name = employee.FirstName + " " + employee.LastName,
+        //                    Status = 4,
+        //                    CheckStatus = "CheckIn"
+        //                });
+        //            }
+        //            else if (checkInTime == null)
+        //            {
+        //                if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+        //                {
+        //                    result.Add(new
+        //                    {
+        //                        EmployeeId = employee.EmployeeId,
+        //                        Name = employee.FirstName + " " + employee.LastName,
+        //                        Status = 3,
+        //                        CheckStatus = "CheckIn"
+        //                    });
+        //                }
+        //                else
+        //                {
+        //                    result.Add(new
+        //                    {
+        //                        EmployeeId = employee.EmployeeId,
+        //                        Name = employee.FirstName + " " + employee.LastName,
+        //                        Status = 1,
+        //                        CheckStatus = "CheckIn"
+        //                    });
+        //                }
+        //            }
 
-                    else
-                    {
-                        if (DateTime.Now.TimeOfDay > teamId.Timeout)
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 6,//tan ca
-                                CheckStatus = "EndCheck"
-                            });
-                        }
-                        else if (latestCheckOutTime == null)
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 2,//Checkout
-                                CheckStatus = "CheckOut"
-                            });
-                        }
-                        else
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.FirstName + " " + employee.LastName,
-                                Status = 5,//tam vang
-                                CheckStatus = "CheckIn"
-                            });
-                        }
+        //            else
+        //            {
+        //                if (DateTime.Now.TimeOfDay > teamId.Timeout)
+        //                {
+        //                    result.Add(new
+        //                    {
+        //                        EmployeeId = employee.EmployeeId,
+        //                        Name = employee.FirstName + " " + employee.LastName,
+        //                        Status = 6,//tan ca
+        //                        CheckStatus = "EndCheck"
+        //                    });
+        //                }
+        //                else if (latestCheckOutTime == null)
+        //                {
+        //                    result.Add(new
+        //                    {
+        //                        EmployeeId = employee.EmployeeId,
+        //                        Name = employee.FirstName + " " + employee.LastName,
+        //                        Status = 2,//Checkout
+        //                        CheckStatus = "CheckOut"
+        //                    });
+        //                }
+        //                else
+        //                {
+        //                    result.Add(new
+        //                    {
+        //                        EmployeeId = employee.EmployeeId,
+        //                        Name = employee.FirstName + " " + employee.LastName,
+        //                        Status = 5,//tam vang
+        //                        CheckStatus = "CheckIn"
+        //                    });
+        //                }
 
-                    }
+        //            }
 
-                }
-            }
-            return result;
-        }
+        //        }
+        //    }
+        //    return result;
+        //}
         [HttpGet("{employeeId}/{date}")]
         public IActionResult GetCheckInOutForEmoployeeId(int employeeId, string date)
         {
