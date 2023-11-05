@@ -37,7 +37,12 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleName = roled.RoleName,
                         Status = roled.Status,
                         Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
-                        .Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                        .Select(x => new RoleDetailDTO.EmployeeRole
+                        {
+                            EmployeeId = x.EmployeeId,
+                            EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
+                        }
+                        ).ToList(),
                         NumberOfEmployee = roled.RolesEmployees.Count(roleemp => roleemp.EndDate == null)
                     });
                 if (rolelist == null)
@@ -65,7 +70,12 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleName = roled.RoleName,
                         Status = roled.Status,
                         Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
-                        .Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
+                        .Select(x => new RoleDetailDTO.EmployeeRole
+                        {
+                            EmployeeId = x.EmployeeId,
+                            EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
+                        }
+                        ).ToList(),
                         NumberOfEmployee = roled.RolesEmployees.Select(x => x.Employee).Count(),
                     }).FirstOrDefault();
                 if (role == null)
@@ -202,10 +212,13 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleID = r.RoleId,
                         RoleName = r.RoleName,
                         Status = r.Status,
-                        Employees = r.RolesEmployees
-                            .Where(x => x.Employee != null && x.Employee.Status == true)
-                            .Select(x => x.Employee.FirstName + " " + x.Employee.LastName)
-                            .ToList(),
+                        Employees = r.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
+                        .Select(x => new RoleDetailDTO.EmployeeRole
+                        {
+                            EmployeeId = x.EmployeeId,
+                            EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
+                        }
+                        ).ToList(),
                         NumberOfEmployee = r.RolesEmployees.Select(x => x.Employee).Count(),
                     }
                     );
