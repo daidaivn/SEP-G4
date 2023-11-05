@@ -153,6 +153,21 @@ function ListUserHeader() {
         <div className="modal-add-employee">
           <div className="modal-head-employee">
             <h3>Thông tin cá nhân</h3>
+            <svg
+              onClick={handleCancelUser}
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
+                fill="white"
+              />
+            </svg>
           </div>
           <div className="modal-add-employee-all modal-user-all">
             <div className="modal-employee-box1">
@@ -186,7 +201,7 @@ function ListUserHeader() {
                 </div>
                 <div className="div-modal-child2 fix-color">
                   <p>Quốc tịch:</p>
-                  <Input value="0192568746" />
+                  <p className="fix-input">abc</p>
                 </div>
                 <div className="div-modal-child2 div-detail">
                   <p>Địa chỉ: </p>
@@ -194,7 +209,7 @@ function ListUserHeader() {
                 </div>
                 <div className="div-modal-child2 div-detail fix-color">
                   <p>Mã định danh: </p>
-                  <Input value="000125558995" />
+                  <p className="fix-input">000125558995</p>
                 </div>
               </div>
             </div>
@@ -203,11 +218,11 @@ function ListUserHeader() {
                 <div className="box2-child-cn ">
                   <div className="box-child-employee1 div-detail fix-color">
                     <p>Mã số thuế:</p>
-                    <Input value="0987654321" />
+                    <p className="fix-input">000125558995</p>
                   </div>
                   <div className="box-child-employee1 fix-color">
                     <p>Lương cơ bản:</p>
-                    <Input value="4000000" className="salary" />
+                    <p className="fix-input">000125558995</p>
                   </div>
                   <div className="box-child-employee1">
                     <p>Hợp đồng:</p>
