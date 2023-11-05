@@ -17,7 +17,7 @@ import {
   fetchAllEmplyee,
   fetchEmplyeebyid,
   SearchEmployees,
-  DetailID
+  DetailID,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import profile from "../assets/images/Ellipse 72.svg";
@@ -52,8 +52,7 @@ function ListEmployeeComponent() {
   const [filterGender, setFilterGender] = useState(null);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterRole, setFilterRole] = useState(null);
-  const [inputSearch, setInputSearch] = useState('');
-
+  const [inputSearch, setInputSearch] = useState("");
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -66,23 +65,19 @@ function ListEmployeeComponent() {
   const allRole = () => {
     fetchAllRole()
       .then((data) => {
-        setRoles(data)
+        setRoles(data);
       })
-      .catch((error) => {
-
-      });
-
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
       .then((data) => {
-        setEmployees(data)
+        setEmployees(data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
 
   const fetchData = () => {
     toast.promise(
@@ -97,8 +92,8 @@ function ListEmployeeComponent() {
           });
       }),
       {
-        pending: 'Đang tải dữ liệu',
-        error: 'Lỗi tải dữ liệu',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
       }
     );
   };
@@ -107,20 +102,20 @@ function ListEmployeeComponent() {
       new Promise((resolve) => {
         DetailID(id)
           .then((data) => {
-            setIdDetail(data)
+            setIdDetail(data);
             setIsModalOpen(true);
             console.log(data);
 
-            resolve(data)
+            resolve(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Detail',
-        error: 'Detail',
+        pending: "Đang xử lý",
+        success: "Detail",
+        error: "Detail",
       }
     );
   };
@@ -145,10 +140,14 @@ function ListEmployeeComponent() {
     searchandfilter(inputSearch, filterGender, filterStatus, actualValue);
   }
   const selectOptions = [
-    ...(filterRole ? [{
-      value: null,
-      label: "Bỏ chọn",
-    }] : []),
+    ...(filterRole
+      ? [
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
+      : []),
     ...roles.map((role) => ({
       value: role.roleID,
       label: role.roleName,
@@ -320,7 +319,10 @@ function ListEmployeeComponent() {
               </g>
             </svg>
           </i>
-          <Input placeholder="Tìm kiếm" onChange={handleChangeInnputSearch}></Input>
+          <Input
+            placeholder="Tìm kiếm"
+            onChange={handleChangeInnputSearch}
+          ></Input>
         </div>
         <div className="list-filter">
           <i className="list-filter-icon1">
@@ -373,14 +375,13 @@ function ListEmployeeComponent() {
               },
               filterGender !== null
                 ? {
-                  value: null,
-                  label: "Bỏ chọn",
-                }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
           />
-
         </div>
         <div className="list-filter">
           <i className="list-filter-icon1">
@@ -423,8 +424,6 @@ function ListEmployeeComponent() {
             options={selectOptions}
             placeholder="Chọn chức vụ"
           />
-
-
         </div>
         <div className="list-filter">
           <i className="list-filter-icon1">
@@ -477,9 +476,9 @@ function ListEmployeeComponent() {
               },
               filterStatus !== null
                 ? {
-                  value: null,
-                  label: "Bỏ chọn",
-                }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn trạng thái"
@@ -1607,37 +1606,75 @@ function ListEmployeeComponent() {
               <div className="modal-employee-box1">
                 <div className="modal-child-body1">
                   <div className="img-body1">
-                    <img src={idDetail && idDetail.image ? idDetail.image : avt} alt="" />
+                    <img
+                      src={idDetail && idDetail.image ? idDetail.image : avt}
+                      alt=""
+                    />
                   </div>
                 </div>
                 <div className="modal-child-body2">
                   <div className="div-modal-child2 div-detail">
                     <p>Họ và tên:</p>
-                    <Input value={idDetail && idDetail.fullName ? idDetail.fullName : 'Chưa có thông tin'} />
-
+                    <Input
+                      value={
+                        idDetail && idDetail.fullName
+                          ? idDetail.fullName
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
-                      <Input value={idDetail && idDetail.gender ? idDetail.gender : 'Chưa có thông tin'} />
+                      <Input
+                        value={
+                          idDetail && idDetail.gender
+                            ? idDetail.gender
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Quốc tịch:</p>
-                    <Input value={idDetail && idDetail.country ? idDetail.country : 'Chưa có thông tin'} />
+                    <Input
+                      value={
+                        idDetail && idDetail.country
+                          ? idDetail.country
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
 
                   <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
-                    <Input value={idDetail && idDetail.address ? idDetail.address : 'Chưa có thông tin'} />
+                    <Input
+                      value={
+                        idDetail && idDetail.address
+                          ? idDetail.address
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
-                    <Input value={idDetail && idDetail.cic ? idDetail.cic : 'Chưa có thông tin'} />
+                    <Input
+                      value={
+                        idDetail && idDetail.cic
+                          ? idDetail.cic
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Số điện thoại: </p>
-                    <Input value={idDetail && idDetail.phoneNumber ? idDetail.phoneNumber : 'Chưa có thông tin'} />
+                    <Input
+                      value={
+                        idDetail && idDetail.phoneNumber
+                          ? idDetail.phoneNumber
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -1646,80 +1683,55 @@ function ListEmployeeComponent() {
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
-                      <Input value={idDetail && idDetail.taxId ? idDetail.taxId : 'Chưa có thông tin'} />
+                      <Input
+                        value={
+                          idDetail && idDetail.taxId
+                            ? idDetail.taxId
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Lương cơ bản:</p>
-                      <Input value={idDetail && idDetail.wageNumber ? idDetail.wageNumber : 'Chưa có thông tin'} className="salary" />
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Trạng thái hợp đồng:</p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked={idDetail && idDetail.status ? idDetail.status : 'Chưa có thông tin'} />
-                      </Form.Item>
-                      <p>Hợp đồng:</p>
-                      <div className="edit-ct1">
-                        <div className="edit-ct2">
-                          <span
-                            className="edit-contract"
-                            onClick={showModalAddContract1}
-                          >
-                            Sửa
-                          </span>
-                        </div>
-                      </div>
+                      <Input
+                        value={
+                          idDetail && idDetail.wageNumber
+                            ? idDetail.wageNumber
+                            : "Chưa có thông tin"
+                        }
+                        className="salary"
+                      />
                     </div>
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
-                      <p>Chức vụ:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>{idDetail && idDetail.mainRole ? idDetail.mainRole : 'Chưa có thông tin'}</p>
-                          </div>
-                        </div>
-                      </div>
+                      <p>Ngày sinh:</p>
+                      <input type="date" />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Kiêm nghiệm chức vụ:</p>
-                      <div className="value">
-                        {idDetail && idDetail.subRoles ? (
-                          idDetail.subRoles.map((subRole, index) => (
-                            <div className="value2" key={index}>
-                              <div className="value3">
-                                <p>{subRole}</p>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <p>Không có dữ liệu</p>
-                        )}
-                      </div>
+                      <p>Trạng thái:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch
+                          checked={
+                            idDetail && idDetail.status
+                              ? idDetail.status
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </Form.Item>
                     </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Phòng ban:</p>
-                      <div className="value">
-                        {idDetail && idDetail.departments ? (
-                          idDetail.departments.map((department, index) => (
-                            <div className="value2" key={index}>
-                              <div className="value3">
-                                <p>{department}</p>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <p>Không có dữ liệu</p>
-                        )}
-                      </div>
-                    </div>
-
                   </div>
                 </div>
               </div>
             </div>
             <div className="modal-footer modal-footer-add">
-              <div className="modal-footer1">Người phụ thuộc</div>
+              <div className="btn-left">
+                <div className="modal-footer1" onClick={showModalAddContract1}>
+                  Xem hợp đồng
+                </div>
+                <div className="modal-footer1">Xem chức vụ</div>
+              </div>
+
               <div className="modal-footer modal-footer2">
                 <button className="btn-cancel" onClick={handleCancelAdd}>
                   Hủy bỏ

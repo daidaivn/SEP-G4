@@ -228,6 +228,20 @@
       font-size: 24px;
       font-weight: 400;
     }
+    .fix-input {
+      display: flex;
+      width: 350px;
+      padding: 10px 30px;
+      align-items: center;
+      gap: 10px;
+      border-radius: 60px;
+      border: 1px solid #e6e5ea;
+      background: #e9e9e9;
+      color: #000;
+      font-family: Noto Sans;
+      font-size: 24px;
+      font-weight: 400;
+    }
     .radio-employee {
       display: flex;
       width: 350px;
@@ -263,19 +277,19 @@
 }
 .modal-head-employee {
   display: flex;
-  padding: 36px 115px;
+  padding: 36px 59px 36px 115px;
   justify-content: center;
   align-items: center;
-  gap: 10px;
   align-self: stretch;
   border-bottom: 1px solid #fff;
   background: #3a5a40;
   h3 {
     color: #fff;
+    text-align: center;
     font-family: Noto Sans;
     font-size: 40px;
     font-weight: 600;
-    text-align: center;
+    flex: 1 0 0;
   }
 }
 .modal-employee-box2 {
@@ -349,7 +363,30 @@
         align-content: center;
         gap: 20px;
         flex-wrap: wrap;
-
+        input {
+          display: flex;
+          width: 350px;
+          padding: 10px 30px;
+          align-items: flex-start;
+          gap: 10px;
+          border-radius: 60px;
+          border: 1px solid #e6e5ea;
+          background: #fff;
+        }
+        .fix-input {
+          display: flex;
+          width: 350px;
+          padding: 10px 30px;
+          align-items: center;
+          gap: 10px;
+          border-radius: 60px;
+          border: 1px solid #e6e5ea;
+          background: #e9e9e9;
+          color: #000;
+          font-family: Noto Sans;
+          font-size: 24px;
+          font-weight: 400;
+        }
         p {
           color: #000;
           font-family: Noto Sans;
@@ -622,10 +659,8 @@
   justify-content: flex-end;
 }
 
-
 .list-input-search .ant-input {
   background: unset !important;
   border: unset !important;
   padding: unset !important;
 }
-

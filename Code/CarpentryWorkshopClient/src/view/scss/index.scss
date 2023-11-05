@@ -502,6 +502,10 @@ i .logo-responsive {
     border-radius: 20px;
     border: none;
   }
+  .btn-left {
+    display: flex;
+    gap: 10px;
+  }
 }
 .btn-save {
   background: #1967ff !important;
