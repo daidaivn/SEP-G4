@@ -47,6 +47,7 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<SalaryType> SalaryTypes { get; set; } = null!;
         public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
+        public virtual DbSet<TeamWork> TeamWorks { get; set; } = null!;
         public virtual DbSet<UnitCost> UnitCosts { get; set; } = null!;
         public virtual DbSet<UnitCostStatusHistory> UnitCostStatusHistories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
@@ -635,21 +636,26 @@ namespace CarpentryWorkshopAPI.Models
                 entity.Property(e => e.TeamName).HasMaxLength(100);
 
                 entity.Property(e => e.TeamSubLeaderId).HasColumnName("TeamSubLeaderID");
+            });
 
-                entity.HasMany(d => d.Works)
-                    .WithMany(p => p.Teams)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "TeamWork",
-                        l => l.HasOne<Work>().WithMany().HasForeignKey("WorkId").HasConstraintName("FK_TeamWork_Work"),
-                        r => r.HasOne<Team>().WithMany().HasForeignKey("TeamId").HasConstraintName("FK_TeamWork_Teams"),
-                        j =>
-                        {
-                            j.HasKey("TeamId", "WorkId");
+            modelBuilder.Entity<TeamWork>(entity =>
+            {
+                entity.ToTable("TeamWork");
 
-                            j.ToTable("TeamWork");
+                entity.Property(e => e.Date).HasColumnType("datetime");
 
-                            j.IndexerProperty<int>("TeamId").HasColumnName("TeamID");
-                        });
+                entity.Property(e => e.TeamId).HasColumnName("TeamID");
+
+                entity.HasOne(d => d.Team)
+                    .WithMany(p => p.TeamWorks)
+                    .HasForeignKey(d => d.TeamId)
+                    .HasConstraintName("FK_TeamWork_Teams");
+
+                entity.HasOne(d => d.Work)
+                    .WithMany(p => p.TeamWorks)
+                    .HasForeignKey(d => d.WorkId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TeamWork_Work1");
             });
 
             modelBuilder.Entity<UnitCost>(entity =>
@@ -726,7 +732,9 @@ namespace CarpentryWorkshopAPI.Models
             {
                 entity.ToTable("Work");
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.WorkName).HasMaxLength(100);
 
