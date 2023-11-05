@@ -36,8 +36,9 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost("gettoken")]
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            var user = await YourAuthenticationLogicAsync(request.UserName, passwordHash);
+            //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            
+            var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
             if (user == null)
             {
                 return Unauthorized("Sai rồi");
@@ -94,16 +95,23 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ThenInclude(u => u.Role)
                 .ThenInclude(u => u.Pages)
                 .FirstOrDefaultAsync(u => u.UserName == username && u.Status == true);
-            if (!BCrypt.Net.BCrypt.Verify(username, userAccount.Password))
+
+            if (userAccount == null)
             {
-                return userAccount;
+                // User account not found or is inactive (Status is false)
+                return null;
             }
-            else
+
+            if (!BCrypt.Net.BCrypt.Verify(password, userAccount.Password))
             {
-                userAccount = null;
+                // Password does not match
+                return null;
             }
+
+            // Authentication succeeded, return the user account
             return userAccount;
         }
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {

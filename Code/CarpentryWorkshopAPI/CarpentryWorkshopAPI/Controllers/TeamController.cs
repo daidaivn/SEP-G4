@@ -12,7 +12,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    [Authorize(Roles = "ListGroup")]
+    //[Authorize(Roles = "ListGroup")]
     public class TeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
@@ -93,7 +93,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpPost]
         public IActionResult DeleteTeamMember(int employeeid, int teamid)
         {
             try
@@ -113,12 +113,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     return Ok("Your employee has been provided can not delete");
                 }
                 var dtm = _context.EmployeeTeams
-                    .FirstOrDefault(x => x.EmployeeId == employeeid && x.TeamId == teamid);
+                    .Where(x => x.EmployeeId == employeeid && x.TeamId == teamid)
+                    .OrderByDescending(x => x.StartDate)
+                    .FirstOrDefault();
                 if (dtm == null)
                 {
                     return NotFound();
                 }
-                _context.EmployeeTeams.Remove(dtm);
+                dtm.EndDate = DateTime.Now;
+                _context.EmployeeTeams.Update(dtm);
                 _context.SaveChanges();
                 return Ok("Delete teammenber successful");
 
@@ -463,6 +466,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ToList();
                 var teammem = new
                 {
+                    TeamName = team.TeamName,
                     ShiftManager = _mapper.Map<TeamMemberDTO>(shiftmanager),
                     ShiftAssistant = _mapper.Map<TeamMemberDTO>(shiftassistant),
                     Staff = _mapper.Map<List<TeamMemberDTO>>(staff)
@@ -487,12 +491,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     .AsQueryable();
                 if (!string.IsNullOrEmpty(input))
                 {
-                    string work = input.ToLower().Normalize(NormalizationForm.FormD);
+                    string work = input.ToLower();
                     query = query.Where(x =>
-                        x.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.TeamName.ToLower().Contains(input) ||
                         x.EmployeeTeams.Any(et =>
-                            et.Employee.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
-                            et.Employee.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
+                            (et.Employee.FirstName + et.Employee.LastName).ToLower().Contains(input)                         
                         )
                     );
                 }

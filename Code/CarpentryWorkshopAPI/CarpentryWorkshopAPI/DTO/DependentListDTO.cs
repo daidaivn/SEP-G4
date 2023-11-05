@@ -9,6 +9,7 @@
         public string? IdentifierCode { get; set; }
         public bool? Gender { get; set; }
         public string? GenderString { get; set; }
+        public int? RelationshipId { get; set; }
         public string? Relationship { get; set; }
         public string? DobString { get; set; }
         public string? StartDateString { get; set; }
