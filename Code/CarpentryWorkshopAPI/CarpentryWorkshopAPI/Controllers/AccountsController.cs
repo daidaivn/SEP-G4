@@ -94,16 +94,23 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ThenInclude(u => u.Role)
                 .ThenInclude(u => u.Pages)
                 .FirstOrDefaultAsync(u => u.UserName == username && u.Status == true);
-            if (!BCrypt.Net.BCrypt.Verify(username, userAccount.Password))
+
+            if (userAccount == null)
             {
-                return userAccount;
+                // User account not found or is inactive (Status is false)
+                return null;
             }
-            else
+
+            if (!BCrypt.Net.BCrypt.Verify(password, userAccount.Password))
             {
-                userAccount = null;
+                // Password does not match
+                return null;
             }
+
+            // Authentication succeeded, return the user account
             return userAccount;
         }
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
