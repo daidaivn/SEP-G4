@@ -204,13 +204,22 @@ const GroupComponent = () => {
   };
 
   const fetchData = () => {
-    fetchAllTeam()
-      .then((data) => {
-        setRoles(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
-      });
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllTeam()
+          .then((data) => {
+            setRoles(data);
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
+      }
+    );
   };
   const searchForData = (Inputvalue) => {
     setInputSearch(Inputvalue);
@@ -289,7 +298,7 @@ const GroupComponent = () => {
     );
   };
 
-  const handleDetailGroup = (teamId,teamName) => {
+  const handleDetailGroup = (teamId, teamName) => {
     toast.promise(
       new Promise((resolve) => {
         detailTeamByID(teamId)
@@ -309,8 +318,8 @@ const GroupComponent = () => {
       }
     );
   };
-  console.log('teamName',teamName);
-  
+  console.log('teamName', teamName);
+
   const handleGetAllMember = () => {
     console.log(selectedChangeid1);
     fetchAllStaffs()
@@ -584,19 +593,25 @@ const GroupComponent = () => {
               <td>Trưởng nhóm</td>
             </tr>
           </thead>
-          <tbody class="scrollbar" id="style-15">
-            {roles.map((role, index) => (
-              <tr
-                key={role.teamId}
-                onClick={() => handleDetailGroup(role.teamId,role.teamName)}
-              >
-                <td>{index + 1}</td>
-                <td>{role.teamName}</td>
-                <td>{role.numberOfTeamMember}</td>
-                <td>{role.teamLeaderName}</td>
-              </tr>
-            ))}
-          </tbody>
+          {roles.length === 0 ? (
+            <p>Thông tin nhóm chưa sẵn sàng hoặc không tồn tại.</p>
+          ) : (
+            <tbody class="scrollbar" id="style-15">
+              {
+                roles.map((role, index) => (
+                  <tr
+                    key={role.teamId}
+                    onClick={() => handleDetailGroup(role.teamId, role.teamName)}
+                  >
+                    <td>{index + 1}</td>
+                    <td>{role.teamName}</td>
+                    <td>{role.numberOfTeamMember}</td>
+                    <td>{role.teamLeaderName}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          )}
         </table>
         <Modal
           className="modal"
@@ -670,8 +685,8 @@ const GroupComponent = () => {
               <div className="info-detail-group">
                 <div className="info-body-group">
                   {detailTeamID.shiftManager ||
-                  detailTeamID.shiftAssistant ||
-                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                    detailTeamID.shiftAssistant ||
+                    (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
                     <>
                       <div className="box1-modal-group">
                         <div className="box1-child">

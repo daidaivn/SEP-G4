@@ -234,8 +234,14 @@ const Decentralization = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        {decentralizations.length === 0 ? (
-          <p>Loading...</p>
+        {decentralizations.length === 0 || roles.length === 0 || pages.length === 0 ? (
+          <p>
+            {decentralizations.length === 0
+              ? "Thông tin chi tiết về vai trò chưa sẵn sàng hoặc không tồn tại."
+              : roles.length === 0
+                ? "Không có vai trò nào để hiển thị."
+                : "Không có trang nào để hiển thị."}
+          </p>
         ) : (
           <table className="table-Decent">
             <thead>
