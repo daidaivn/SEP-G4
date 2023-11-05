@@ -1091,9 +1091,23 @@ function ListEmployeeComponent() {
         onCancel={handleCancelAddContract1}
       >
         <div className="modal-add-roleyee-employee modal-contract">
-          <div className="modal-head">
-            {" "}
-            <h3>Thêm / sửa hợp đồng</h3>
+          <div className="modal-head-employee">
+            <h3>Thông tin cá nhân</h3>
+            <svg
+              onClick={handleCancelAddContract}
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
+                fill="white"
+              />
+            </svg>
           </div>
           <div className="body-add-role-employee">
             <table>
