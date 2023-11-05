@@ -466,6 +466,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ToList();
                 var teammem = new
                 {
+                    TeamName = team.TeamName,
                     ShiftManager = _mapper.Map<TeamMemberDTO>(shiftmanager),
                     ShiftAssistant = _mapper.Map<TeamMemberDTO>(shiftassistant),
                     Staff = _mapper.Map<List<TeamMemberDTO>>(staff)
