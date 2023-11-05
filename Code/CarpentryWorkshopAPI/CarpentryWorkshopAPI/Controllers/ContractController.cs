@@ -8,6 +8,8 @@ using System.Diagnostics.Contracts;
 using System.Security.Cryptography;
 using System.Text;
 
+
+
 namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
@@ -78,7 +80,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }).ToList();
                 if (employeecontract == null)
                 {
-                    return NotFound();
+                    return Ok("Nhân viên này chưa có hợp đồng nào");
                 }
                 return Ok(employeecontract);
             }
@@ -143,17 +145,30 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CreateContract([FromBody] CreateContractDTO createContractDTO)
+        public IActionResult CreateContract([FromBody] CreateContractDTO createContractDTO, int employeeid)
         {
             try
             {
+                var emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
                 var newct = _mapper.Map<Models.Contract>(createContractDTO);
                 if (newct == null)
                 {
                     return NotFound();
                 }
+                newct.EmployeeId = emp.EmployeeId;
+                newct.Status = true;
+                emp.Status = true;
+                _context.Employees.Update(emp);
                 _context.Contracts.Add(newct);
                 _context.SaveChanges();
+                EmployeesStatusHistory ehistory = new EmployeesStatusHistory
+                {
+                    EmployeeId = emp.EmployeeId,
+                    Action = "Change Status",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId = null,
+                };
+                _context.EmployeesStatusHistories.Add(ehistory);
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
                     ContractId = newct.ContractId,
@@ -266,10 +281,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(searchContractDTO.InputText))
-                {
-                    return BadRequest("Search input is empty");
-                }
+              
                 var query = _context.Contracts
                     .Include(emp => emp.Employee)
                     .Include(ctt => ctt.ContractType)

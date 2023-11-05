@@ -1,11 +1,14 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - TestAPIC
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - SEP-G4-API
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'Code/CarpentryWorkshopAPI/**'  # Run only when changes are made to files in the CarpentryWorkshopAPI directory
+      - 'Code/CarpentryWorkshopAPI/**'  
   workflow_dispatch:
 
 jobs:
@@ -54,7 +57,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'TestAPIC'
+          app-name: 'SEP-G4-API'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B2722824B75A4F5880C102685AE60446 }}
-          package: .  
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34A1F774D87146B7819FE77F5D5D7538 }}
+          package: .

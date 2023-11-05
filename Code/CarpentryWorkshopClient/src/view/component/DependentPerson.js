@@ -6,7 +6,7 @@ import "../scss/fonts.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllDependent } from "../../sevices/DependentPersonService";
+import { fetchAllDependent, SearchDependents } from "../../sevices/DependentPersonService";
 import { Input } from "antd";
 import { Modal } from "antd";
 import { Select } from "antd";
@@ -19,8 +19,24 @@ function DependentPerson() {
   const [date, setDate] = useState("abc");
   const [identifierType, setIdentifierType] = useState("abc");
   const [status, setStatus] = useState(true);
+  const [filterStatus, setFilterStatus] = useState(null);
+  const [filterGender, setFilterGender] = useState(null);
+  const [inputSearch, setInputSearch] = useState('');
+
   const handleEdit = () => {
     setIsEditing(true);
+  };
+  const handleChangeFilterStatus = (value) => {
+    setFilterStatus(value);
+    searchandfilter(inputSearch, filterGender, value);
+  };
+  const handleChangeFilterGender = (value) => {
+    setFilterGender(value);
+    searchandfilter(inputSearch, value, filterStatus);
+  };
+  const handleChangeInnputSearch = (e) => {
+    setInputSearch(e.target.value);
+    searchandfilter(e.target.value, filterGender, filterStatus);
   };
 
   const handleSave = () => {
@@ -42,15 +58,30 @@ function DependentPerson() {
   const handleCancelDependent = () => {
     setIsModalOpenDependent(false);
   };
-  useEffect(() => {
-    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
-    fetchAllDependent()
+
+  const searchandfilter = (ipSearch, ftGender, ftStatus) => {
+    SearchDependents(ipSearch, ftGender, ftStatus)
       .then((data) => {
-        setDependent(data);
+        setDependent(data)
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu ", error);
+        console.log(error);
       });
+  };
+
+  const fetchData = () => {
+    fetchAllDependent()
+    .then((data) => {
+      setDependent(data);
+    })
+    .catch((error) => {
+      console.error("Lỗi khi tải dữ liệu ", error);
+    });
+  };
+
+  useEffect(() => {
+    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
+    fetchData();
   }, []);
   return (
     <>
@@ -131,6 +162,66 @@ function DependentPerson() {
             <Input placeholder="Tìm kiếm"></Input>
           </div>
           <div className="list-filter">
+          <i className="list-filter-icon1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M14.3201 19.07C14.3201 19.68 13.92 20.48 13.41 20.79L12.0001 21.7C10.6901 22.51 8.87006 21.6 8.87006 19.98V14.63C8.87006 13.92 8.47006 13.01 8.06006 12.51L4.22003 8.47C3.71003 7.96 3.31006 7.06001 3.31006 6.45001V4.13C3.31006 2.92 4.22008 2.01001 5.33008 2.01001H18.67C19.78 2.01001 20.6901 2.92 20.6901 4.03V6.25C20.6901 7.06 20.1801 8.07001 19.6801 8.57001"
+                stroke="#3A5A40"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16.07 16.5201C17.8373 16.5201 19.27 15.0874 19.27 13.3201C19.27 11.5528 17.8373 10.1201 16.07 10.1201C14.3027 10.1201 12.87 11.5528 12.87 13.3201C12.87 15.0874 14.3027 16.5201 16.07 16.5201Z"
+                stroke="#3A5A40"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M19.87 17.1201L18.87 16.1201"
+                stroke="#3A5A40"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </i>
+          <Select
+            className="select-input"
+            value={filterGender}
+            style={{
+              width: 120,
+            }}
+            onChange={handleChangeFilterGender}
+            options={[
+              {
+                value: true,
+                label: "Nam",
+              },
+              {
+                value: false,
+                label: "Nữ",
+              },
+              filterGender !== null
+                ? {
+                  value: null,
+                  label: "Bỏ chọn",
+                }
+                : null,
+            ].filter(Boolean)}
+            placeholder="Chọn giới tính"
+          />
+
+        </div>
+          <div className="list-filter">
             <i className="list-filter-icon1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -164,32 +255,32 @@ function DependentPerson() {
               </svg>
             </i>
             <Select
-              className="select-input"
-              defaultValue="lucy"
-              style={{
-                width: 120,
-              }}
-              onChange={handleChange}
-              options={[
-                {
-                  value: "jack",
-                  label: "Jack",
-                },
-                {
-                  value: "lucy",
-                  label: "Lucy",
-                },
-                {
-                  value: "Yiminghe",
-                  label: "yiminghe",
-                },
-                {
-                  value: "disabled",
-                  label: "Disabled",
-                },
-              ]}
-            />
+            className="select-input"
+            value={filterStatus}
+            style={{
+              width: 120,
+            }}
+            onChange={handleChangeFilterStatus}
+            options={[
+              {
+                value: true,
+                label: "Bật",
+              },
+              {
+                value: false,
+                label: "Tắt",
+              },
+              filterStatus !== null
+                ? {
+                  value: null,
+                  label: "Bỏ chọn",
+                }
+                : null,
+            ].filter(Boolean)}
+            placeholder="Chọn trạng thái"
+          />
           </div>
+          
           <i className="icon-responsive icon-filter">
             <svg
               xmlns="http://www.w3.org/2000/svg"

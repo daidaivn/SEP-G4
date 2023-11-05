@@ -101,14 +101,14 @@ const GroupComponent = () => {
     setIdChange(id);
     setNameChange(name);
     setRoleMember(role);
-    console.log('id',id);
-    
+    console.log("id", id);
+
     setIsModalOpenChange(true);
     fetDataTeamContinue();
   };
 
-  console.log('idChange',idChange);
-  
+  console.log("idChange", idChange);
+
   const handleOkChange = () => {
     setIsModalOpenChange(false);
     fetchData();
@@ -266,6 +266,7 @@ const GroupComponent = () => {
   };
 
   const handleGetAllMember = () => {
+    console.log(selectedChangeid1);
     fetchAllStaffs()
       .then((data) => {
         setGetStaffsNoTeam(data);
@@ -354,9 +355,6 @@ const GroupComponent = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-
-
 
   //UI
   return (
@@ -867,7 +865,7 @@ const GroupComponent = () => {
           onCancel={handleCancelAdd}
           width={566}
         >
-          <div className="modal-add-group">
+          <div className="modal-add-group1">
             <div className="modal-head">
               {" "}
               <h3>Thêm nhân viên nhóm {teamID}</h3>
