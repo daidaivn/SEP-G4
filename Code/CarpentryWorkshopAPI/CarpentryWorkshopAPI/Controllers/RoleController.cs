@@ -67,7 +67,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
                         .Select(x => x.Employee.FirstName + " " + x.Employee.LastName).ToList(),
                         NumberOfEmployee = roled.RolesEmployees.Select(x => x.Employee).Count(),
-                    });
+                    }).ToList();
                 if (role == null)
                 {
                     return NotFound();
