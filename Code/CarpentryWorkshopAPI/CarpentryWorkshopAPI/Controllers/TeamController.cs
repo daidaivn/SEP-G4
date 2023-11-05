@@ -12,7 +12,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    [Authorize(Roles = "ListGroup")]
+    //[Authorize(Roles = "ListGroup")]
     public class TeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
@@ -487,12 +487,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     .AsQueryable();
                 if (!string.IsNullOrEmpty(input))
                 {
-                    string work = input.ToLower().Normalize(NormalizationForm.FormD);
+                    string work = input.ToLower();
                     query = query.Where(x =>
-                        x.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.TeamName.ToLower().Contains(input) ||
                         x.EmployeeTeams.Any(et =>
-                            et.Employee.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
-                            et.Employee.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
+                            (et.Employee.FirstName + et.Employee.LastName).ToLower().Contains(input)                         
                         )
                     );
                 }
