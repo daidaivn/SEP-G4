@@ -4,6 +4,7 @@ using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System.Data;
  
 namespace CarpentryWorkshopAPI.Controllers
@@ -92,7 +93,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w=>w.WorkId)
+                    WorkId = et.Works.Select(w=>w.WorkId),
+                    Date = et.Works.Select(w=>w.Date)
                 })
                 .FirstOrDefaultAsync();
             
@@ -155,6 +157,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         CheckStatus = "CheckIn",
                         TimeIn = "",
                         Timeout = "",
+                        
                     });
                 }
                 else if (checkInTime == null)
@@ -168,7 +171,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 3, //Vắng mặt
                             CheckStatus = "CheckIn",
                             TimeIn = "",
-                            Timeout = ""
+                            Timeout = "",
+                            
                         });
                     }
                     else
@@ -180,7 +184,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 1, //Checkin
                             CheckStatus = "CheckIn",
                             TimeIn = "",
-                            Timeout = ""
+                            Timeout = "",
+                            
                         });
                     }
                 }                    
@@ -195,7 +200,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 6,//tan ca
                             CheckStatus = "EndCheck",
                             TimeIn = latestCheckOutTime.TimeCheckOut,
-                            Timeout = DateTime.Now.TimeOfDay
+                            Timeout = DateTime.Now.TimeOfDay,
+                            
                         });
                     }
                     else if (latestCheckOutTime.TimeCheckOut == null)
@@ -207,7 +213,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 2,// dang co mat
                             CheckStatus = "EndCheck",
                             TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = ""
+                            Timeout = "",
+                           
                         });
                     }
                     else
@@ -219,7 +226,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 5,//tam ngung 
                             CheckStatus = "CheckIn",
                             TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = latestCheckOutTime.TimeCheckOut
+                            Timeout = latestCheckOutTime.TimeCheckOut,
+                            Date= latestCheckOutTime.Date.Value.ToString("dd'-'MM'-'yyyy")
                         });
                     }                                                
                 }
@@ -229,6 +237,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 TimeIn = teamId.TimeIn,
                 Timeout = teamId.Timeout,
+                Date = DateTime.Now.Date,
                 Result = result
             });
             return time;
