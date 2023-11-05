@@ -93,7 +93,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpPost]
         public IActionResult DeleteTeamMember(int employeeid, int teamid)
         {
             try
@@ -113,12 +113,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     return Ok("Your employee has been provided can not delete");
                 }
                 var dtm = _context.EmployeeTeams
-                    .FirstOrDefault(x => x.EmployeeId == employeeid && x.TeamId == teamid);
+                    .Where(x => x.EmployeeId == employeeid && x.TeamId == teamid)
+                    .OrderByDescending(x => x.StartDate)
+                    .FirstOrDefault();
                 if (dtm == null)
                 {
                     return NotFound();
                 }
-                _context.EmployeeTeams.Remove(dtm);
+                dtm.EndDate = DateTime.Now;
+                _context.EmployeeTeams.Update(dtm);
                 _context.SaveChanges();
                 return Ok("Delete teammenber successful");
 
