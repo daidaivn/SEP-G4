@@ -36,8 +36,9 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost("gettoken")]
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            var user = await YourAuthenticationLogicAsync(request.UserName, passwordHash);
+            //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            
+            var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
             if (user == null)
             {
                 return Unauthorized("Sai rồi");
