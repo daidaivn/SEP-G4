@@ -13,7 +13,6 @@ namespace CarpentryWorkshopAPI.Models
         public int RelationshipId { get; set; }
         public string? RelationshipName { get; set; }
         public string? Note { get; set; }
-        public bool? Status { get; set; }
 
         public virtual ICollection<Dependent> Dependents { get; set; }
     }

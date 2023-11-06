@@ -6,7 +6,12 @@ import "../scss/fonts.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllDependent, SearchDependents, GetDependentPeopleById, UpdateDependent } from "../../sevices/DependentPersonService";
+import {
+  fetchAllDependent,
+  SearchDependents,
+  GetDependentPeopleById,
+  UpdateDependent,
+} from "../../sevices/DependentPersonService";
 import { fetchAllEmplyee } from "../../sevices/EmployeeService";
 import { GetRelationshipsType } from "../../sevices/RelationshipsType";
 import { toast } from "react-toastify";
@@ -20,25 +25,22 @@ function DependentPerson() {
   const [employeeId, setEmployeeId] = useState("");
   const [employees, setEmployees] = useState([]);
   const [employeesName, setemployeesName] = useState("");
-  const [Relationship, setRelationship] = useState('');
-  const [dependentId, setdependentId] = useState('');
-  const [relationshipName, setRelationshipName] = useState('');
+  const [Relationship, setRelationship] = useState("");
+  const [dependentId, setdependentId] = useState("");
+  const [relationshipName, setRelationshipName] = useState("");
   const [Identifier, setIdentifier] = useState("");
   const [date, setDate] = useState("");
   const [status, setStatus] = useState(false);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
-  const [inputSearch, setInputSearch] = useState('');
+  const [inputSearch, setInputSearch] = useState("");
   const [relationshipsType, setRelationshipsType] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
   const handleSwitchChange = () => {
-    setIsChecked(!isChecked); 
+    setIsChecked(!isChecked);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
   const handleChangeFilterStatus = (value) => {
     setFilterStatus(value);
     searchandfilter(inputSearch, filterGender, value);
@@ -52,11 +54,8 @@ function DependentPerson() {
     searchandfilter(e.target.value, filterGender, filterStatus);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-  };
   const convertDateFormat = (originalDate) => {
-    const parts = originalDate.split('-');
+    const parts = originalDate.split("-");
     if (parts.length === 3) {
       const day = parts[0];
       const month = parts[1];
@@ -72,13 +71,19 @@ function DependentPerson() {
   };
   const showModalDependent = (value) => {
     setIsModalOpenDependent(true);
-    fetchDepartmentById(value)
+    fetchDepartmentById(value);
   };
   const handleOkDependent = () => {
     setIsModalOpenDependent(false);
   };
   const handleCancelDependent = () => {
     setIsModalOpenDependent(false);
+  };
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+  const handleSave = () => {
+    setIsEditing(false);
   };
 
   const fetchDepartmentById = (value) => {
@@ -87,69 +92,82 @@ function DependentPerson() {
         GetDependentPeopleById(value)
           .then((data) => {
             resolve(data);
-            const { dependentId, employeesName, relationshipName, relationshipId, identifierCode, dobString, identifierName, status } = data;
-            setemployeesName(employeesName)
+            const {
+              dependentId,
+              employeesName,
+              relationshipName,
+              relationshipId,
+              identifierCode,
+              dobString,
+              identifierName,
+              status,
+            } = data;
+            setemployeesName(employeesName);
             setGuardian(data.fullName);
             setRelationship(relationshipId);
             setIdentifier(identifierCode);
             setDate(dobString);
             setRelationshipName(relationshipName);
             setEmployeeId(data.employeeId);
-            setIsChecked(status)
-            setdependentId(dependentId)
-            setStatus(status)
+            setIsChecked(status);
+            setdependentId(dependentId);
+            setStatus(status);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        error: 'Lỗi dữ liệu hiển thị',
+        pending: "Đang xử lý",
+        error: "Lỗi dữ liệu hiển thị",
       }
     );
   };
-  console.log('date', status);
+  console.log("date", status);
 
   const update = () => {
-    UpdateDependent(dependentId, employeeId, Relationship, Identifier, date, isChecked)
+    UpdateDependent(
+      dependentId,
+      employeeId,
+      Relationship,
+      Identifier,
+      date,
+      isChecked
+    )
       .then((data) => {
-        console.log('data',data);
-        handleSave()
+        console.log("data", data);
+        handleSave();
       })
       .catch((error) => {
-        console.log('error',error);
-        
-      })
-  }
+        console.log("error", error);
+      });
+  };
 
   const fetchRelationshipsType = () => {
     GetRelationshipsType()
       .then((data) => {
-        setRelationshipsType(data)
-        handleEdit()
+        setRelationshipsType(data);
+        handleEdit();
       })
       .catch((error) => {
         console.log(error);
-      })
-
-  }
+      });
+  };
 
   const getchAllEmplyees = () => {
     fetchAllEmplyee()
       .then((rs) => {
-        setEmployees(rs)
+        setEmployees(rs);
       })
       .catch((error) => {
         console.log(error);
-      })
-
-  }
+      });
+  };
 
   const searchandfilter = (ipSearch, ftGender, ftStatus) => {
     SearchDependents(ipSearch, ftGender, ftStatus)
       .then((data) => {
-        setDependent(data)
+        setDependent(data);
       })
       .catch((error) => {
         console.log(error);
@@ -162,24 +180,22 @@ function DependentPerson() {
         fetchAllDependent()
           .then((data) => {
             setDependent(data);
-            resolve(data)
+            resolve(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
-
       }),
       {
-        pending: 'Đang tải dữ liệu',
-        error: 'Lỗi tải dữ liệu',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
       }
     );
   };
 
   useEffect(() => {
     fetchData();
-    getchAllEmplyees()
-    
+    getchAllEmplyees();
   }, []);
   return (
     <>
@@ -257,7 +273,10 @@ function DependentPerson() {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm" onChange={handleChangeInnputSearch}></Input>
+            <Input
+              placeholder="Tìm kiếm"
+              onChange={handleChangeInnputSearch}
+            ></Input>
           </div>
           <div className="list-filter">
             <i className="list-filter-icon1">
@@ -310,14 +329,13 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
             />
-
           </div>
           <div className="list-filter">
             <i className="list-filter-icon1">
@@ -370,9 +388,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -408,7 +426,7 @@ function DependentPerson() {
               />
             </svg>
           </i>
-          <div className="list-add" onClick={showModalDependent}>
+          <div className="list-add">
             <i className="icon-web">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -489,7 +507,10 @@ function DependentPerson() {
           ) : (
             <tbody class="scrollbar" id="style-15">
               {dependent.map((dependent, index) => (
-                <tr key={dependent.dependentId} onClick={() => showModalDependent(dependent.dependentId)}>
+                <tr
+                  key={dependent.dependentId}
+                  onClick={() => showModalDependent(dependent.dependentId)}
+                >
                   <td>{index + 1}</td>
                   <td>{dependent.fullName}</td>
                   <td>{dependent.genderString}</td>
@@ -538,7 +559,10 @@ function DependentPerson() {
                               value={employeeId}
                             >
                               {employees.map((employee) => (
-                                <option key={employee.employeeID} value={employee.employeeID}>
+                                <option
+                                  key={employee.employeeID}
+                                  value={employee.employeeID}
+                                >
                                   {employee.fullName}
                                 </option>
                               ))}
@@ -556,10 +580,15 @@ function DependentPerson() {
                               value={Relationship}
                             >
                               {!Relationship && (
-                                <option value="" disabled>Chọn quan hệ</option>
+                                <option value="" disabled>
+                                  Chọn quan hệ
+                                </option>
                               )}
                               {relationshipsType.map((type) => (
-                                <option key={type.relationshipId} value={type.relationshipId}>
+                                <option
+                                  key={type.relationshipId}
+                                  value={type.relationshipId}
+                                >
                                   {type.relationshipName}
                                 </option>
                               ))}
@@ -567,8 +596,6 @@ function DependentPerson() {
                                 <option value="">Bỏ chọn</option>
                               )}
                             </select>
-
-
                           </td>
                         </tr>
                         <tr>
@@ -588,7 +615,9 @@ function DependentPerson() {
                               type="date"
                               placeholder="yyyy-MM-dd"
                               value={convertDateFormat(date)}
-                              onChange={(e) => setDate(convertDateFormat(e.target.value))}
+                              onChange={(e) =>
+                                setDate(convertDateFormat(e.target.value))
+                              }
                             />
                           </td>
                         </tr>
@@ -596,7 +625,10 @@ function DependentPerson() {
                           <th className="text">Trạng thái:</th>
                           <td className="input-text">
                             <Form.Item valuePropName={status}>
-                              <Switch checked={isChecked} onChange={handleSwitchChange} />
+                              <Switch
+                                checked={isChecked}
+                                onChange={handleSwitchChange}
+                              />
                             </Form.Item>
                             Còn phụ thuộc
                           </td>
