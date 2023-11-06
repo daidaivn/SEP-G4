@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CarpentryWorkshopAPI.Models
 {
-    public partial class RelationshipsType
+    public partial class RelationshipType
     {
-        public RelationshipsType()
+        public RelationshipType()
         {
             Dependents = new HashSet<Dependent>();
         }

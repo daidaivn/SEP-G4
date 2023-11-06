@@ -55,7 +55,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     IdentifierName = de.IdentifierName,
                     NoteReason = de.NoteReason,
-                    Relation = de.Relation,
                     RelationshipId = de.RelationshipId,
                     RelationshipName = de.Relationship.RelationshipName,
                     Status = de.Status,
@@ -88,7 +87,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     IdentifierName = de.IdentifierName,
                     NoteReason = de.NoteReason,
-                    Relation = de.Relation,
                     RelationshipId = de.RelationshipId,
                     RelationshipName = de.Relationship.RelationshipName,
                     Status = de.Status,
@@ -107,13 +105,37 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPut]
         public IActionResult UpdateDependent([FromBody]DependentDTO dependentDTO)
         {
-            Dependent dependent = _mapper.Map<Dependent>(dependentDTO);
-            dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
-                                        System.Globalization.CultureInfo.InvariantCulture) : null;
-            dependent.EndDate = !string.IsNullOrEmpty(dependentDTO.EndDateString) ? DateTime.ParseExact(dependentDTO.EndDateString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture) : null;
+            var dependent = _context.Dependents.FirstOrDefault(x => x.DependentId == dependentDTO.DependentId);
+            if(dependent == null)
+            {
+                return NotFound();
+            }
             dependent.Dob = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture) : null;
+                                       System.Globalization.CultureInfo.InvariantCulture) : dependent.Dob;
+            dependent.EmployeeId= dependentDTO.EmployeeId >0 ? dependentDTO.EmployeeId : dependent.EmployeeId;
+            dependent.FullName = !string.IsNullOrEmpty(dependentDTO.FullName) ? dependentDTO.FullName : dependent.FullName;
+            dependent.IdentifierCode = !string.IsNullOrEmpty(dependentDTO.IdentifierCode) ? dependentDTO.IdentifierCode : dependent.IdentifierCode;
+            dependent.Gender = dependentDTO.Gender.HasValue ? dependentDTO.Gender : dependent.Gender;
+            dependent.IdentifierName = !string.IsNullOrEmpty(dependentDTO.IdentifierName) ? dependentDTO.IdentifierName : dependent.IdentifierName;
+            dependent.Status = dependentDTO.Status.HasValue ? dependentDTO.Status : dependent.Status;
+            dependent.NoteReason = !string.IsNullOrEmpty(dependentDTO.NoteReason) ? dependentDTO.NoteReason : dependent.NoteReason;
+            dependent.RelationshipId = dependentDTO.RelationshipId > 0 ? dependentDTO.RelationshipId : dependent.RelationshipId;
+            if(dependentDTO.RelationshipId == 1)
+            {
+                DateTime? DOB = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture) : dependent.Dob;
+                if (DOB.HasValue)
+                {
+                    dependent.EndDate = DOB.Value.AddYears(18);
+                    dependent.StartDate = DOB;
+                }               
+            }
+            else
+            {
+                dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture) : dependent.StartDate;
+                dependent.EndDate = null;
+            }
             _context.Entry(dependent).State = EntityState.Modified;
             _context.SaveChanges();
             DependentsStatusHistory dependentsStatusHistory= new DependentsStatusHistory() 
@@ -267,7 +289,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     IdentifierName = de.IdentifierName,
                     NoteReason = de.NoteReason,
-                    Relation = de.Relation,
                     RelationshipId = de.RelationshipId,
                     RelationshipName = de.Relationship.RelationshipName,
                     Status = de.Status,
