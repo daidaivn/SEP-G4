@@ -41,7 +41,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     Note = re.Note,
                     Status = re.Status,
                 })
-                .ToList();
+                .FirstOrDefault();
             return Ok(relationshipsType);
         }
 

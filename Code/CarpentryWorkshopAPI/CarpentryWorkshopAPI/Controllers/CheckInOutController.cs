@@ -226,7 +226,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             CheckStatus = "CheckIn",
                             TimeIn = latestCheckOutTime.TimeCheckIn,
                             Timeout = latestCheckOutTime.TimeCheckOut,
-                            Date= latestCheckOutTime.Date.Value.ToString("dd'-'MM'-'yyyy")
+                            
                         });
                     }                                                
                 }
@@ -236,7 +236,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 TimeIn = teamId.TimeIn,
                 Timeout = teamId.Timeout,
-                Date = DateTime.Now.Date,
+                Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
                 Result = result
             });
             return time;
