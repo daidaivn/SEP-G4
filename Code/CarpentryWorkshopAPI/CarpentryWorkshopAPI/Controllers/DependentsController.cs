@@ -55,7 +55,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     IdentifierName = de.IdentifierName,
                     NoteReason = de.NoteReason,
-                    Relation = de.Relation,
                     RelationshipId = de.RelationshipId,
                     RelationshipName = de.Relationship.RelationshipName,
                     Status = de.Status,
@@ -88,7 +87,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     IdentifierName = de.IdentifierName,
                     NoteReason = de.NoteReason,
-                    Relation = de.Relation,
                     RelationshipId = de.RelationshipId,
                     RelationshipName = de.Relationship.RelationshipName,
                     Status = de.Status,
@@ -121,7 +119,6 @@ namespace CarpentryWorkshopAPI.Controllers
             dependent.IdentifierName = !string.IsNullOrEmpty(dependentDTO.IdentifierName) ? dependentDTO.IdentifierName : dependent.IdentifierName;
             dependent.Status = dependentDTO.Status.HasValue ? dependentDTO.Status : dependent.Status;
             dependent.NoteReason = !string.IsNullOrEmpty(dependentDTO.NoteReason) ? dependentDTO.NoteReason : dependent.NoteReason;
-            dependent.Relation = !string.IsNullOrEmpty(dependentDTO.Relation) ? dependentDTO.Relation : dependent.Relation;
             dependent.RelationshipId = dependentDTO.RelationshipId > 0 ? dependentDTO.RelationshipId : dependent.RelationshipId;
             if(dependentDTO.RelationshipId == 1)
             {
@@ -292,7 +289,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     IdentifierName = de.IdentifierName,
                     NoteReason = de.NoteReason,
-                    Relation = de.Relation,
                     RelationshipId = de.RelationshipId,
                     RelationshipName = de.Relationship.RelationshipName,
                     Status = de.Status,

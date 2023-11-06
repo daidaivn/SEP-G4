@@ -38,14 +38,14 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var salary = _context.Salaries
                     .Select(s => new SalaryListDTO
                     {
-                        SalaryId = s.SalaryId,
-                        SalaryName = s.SalaryName,
-                        SalaryDetailId = s.SalaryDetailId,
-                        AmountOfMoney = s.AmountOfMoney,
-                        EmloyeeIdInput = s.EmloyeeIdInput,
-                        EmployeeName = s.SalarySalaryDetails.Where(ssd=>ssd.EmployeeId == s.EmloyeeIdInput).Select(ssd => ssd.Employee.FirstName + " " + ssd.Employee.LastName).FirstOrDefault(),
-                        MonthSalary = s.MonthSalary,
-                        Year = s.Year,
+                        //SalaryId = s.SalaryId,
+                        //SalaryName = s.SalaryName,
+                        //SalaryDetailId = s.SalaryDetailId,
+                        //AmountOfMoney = s.AmountOfMoney,
+                        //EmloyeeIdInput = s.EmloyeeIdInput,
+                        //EmployeeName = s.SalarySalaryDetails.Where(ssd=>ssd.EmployeeId == s.EmloyeeIdInput).Select(ssd => ssd.Employee.FirstName + " " + ssd.Employee.LastName).FirstOrDefault(),
+                        //MonthSalary = s.MonthSalary,
+                        //Year = s.Year,
                     })
                     .ToList();
                 
