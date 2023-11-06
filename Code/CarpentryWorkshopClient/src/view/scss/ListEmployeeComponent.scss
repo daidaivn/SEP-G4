@@ -561,6 +561,26 @@
 .modal-footer-edit {
   justify-content: end;
 }
+.body-modal-add-contract {
+  table {
+    .thead-first {
+      color: #fff;
+      font-family: Noto Sans;
+      font-size: 21px;
+      font-weight: 400;
+    }
+    .body-table {
+      tr {
+        .ant-select {
+          height: 100%;
+          .ant-select-selector {
+            background: #fff !important;
+          }
+        }
+      }
+    }
+  }
+}
 .modal-add-roleyee-employee {
   display: flex;
   width: 886px;
@@ -719,6 +739,12 @@
             align-items: center;
             gap: 10px;
             flex: 1 0 0;
+            .ant-select {
+              height: 100%;
+              .ant-select-selector {
+                background-color: #fff !important;
+              }
+            }
             .input-date-cn {
               display: flex;
               justify-content: center;
@@ -734,7 +760,7 @@
             }
           }
           Input {
-            color: #80808f;
+            color: #80808f !important;
             font-family: Noto Sans;
             font-size: 21px;
             font-weight: 400;
