@@ -20,9 +20,8 @@ namespace CarpentryWorkshopAPI.Models
         public DateTime? EndDate { get; set; }
         public string? IdentifierName { get; set; }
         public bool? Status { get; set; }
-        public string? NoteReason { get; set; }
-        public string? Relation { get; set; }
         public int? RelationshipId { get; set; }
+        public string? NoteReason { get; set; }
 
         public virtual Employee? Employee { get; set; }
         public virtual RelationshipsType? Relationship { get; set; }

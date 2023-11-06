@@ -25,7 +25,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     RelationshipId = re.RelationshipId, 
                     RelationshipName = re.RelationshipName,
                     Note = re.Note,
-                    Status= re.Status,
                 })
                 .ToList();
             return Ok(relationshipsType);
@@ -39,7 +38,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     RelationshipId = re.RelationshipId,
                     RelationshipName = re.RelationshipName,
                     Note = re.Note,
-                    Status = re.Status,
                 })
                 .FirstOrDefault();
             return Ok(relationshipsType);
