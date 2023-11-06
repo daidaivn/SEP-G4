@@ -4,7 +4,7 @@ import "../scss/ListEmployeeComponent.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/responsive/ListEmployee.scss";
 import "../scss/fonts.scss";
-import { Input, Switch, Form } from "antd";
+import { Input, Switch, Form, Space } from "antd";
 import { toast } from "react-toastify";
 import { Col, Row } from "antd";
 import user from "../assets/images/Ellipse 69.svg";
@@ -32,6 +32,7 @@ import {
   DetailEmployeeModal,
 } from "./componentEmployee";
 import avt from "../assets/images/Frame 1649.svg";
+import { a } from "react-spring";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -197,9 +198,7 @@ function ListEmployeeComponent() {
     setValue(e.target.value);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+
   const showModalDetail = () => {
     setIsModalOpen(true);
   };
@@ -208,6 +207,10 @@ function ListEmployeeComponent() {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+  const handleCancelView = () => {
+    setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
+    setIsModalOpen(true); // Mở modal "Thông tin nhân viên chi tiết"
   };
 
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
@@ -756,164 +759,128 @@ function ListEmployeeComponent() {
                   <tr>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      mode="multiple"
+                      defaultValue={"duong"}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
+                      // defaultValue={selectedChangeid1}
+                      optionLabelProp="label"
+                    >
+                      <Option key={"1"} value={"duong"} label={"duong"}>
+                        <Space>duong</Space>
+                      </Option>
+                      <Option key={"2"} value={"hai"} label={"hai"}>
+                        <Space>hai</Space>
+                      </Option>
+                      <Option key={"3"} value={"khoe"} label={"khoe"}>
+                        <Space>khoe</Space>
+                      </Option>
+                    </Select>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      mode="multiple"
+                      defaultValue={"duong"}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
+                      // defaultValue={selectedChangeid1}
+                      optionLabelProp="label"
+                    >
+                      <Option key={"1"} value={"duong"} label={"duong"}>
+                        <Space>duong</Space>
+                      </Option>
+                      <Option key={"2"} value={"hai"} label={"hai"}>
+                        <Space>hai</Space>
+                      </Option>
+                      <Option key={"3"} value={"khoe"} label={"khoe"}>
+                        <Space>khoe</Space>
+                      </Option>
+                    </Select>
                   </tr>
                   <tr>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      mode="multiple"
+                      defaultValue={"duong"}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
+                      // defaultValue={selectedChangeid1}
+                      optionLabelProp="label"
+                    >
+                      <Option key={"1"} value={"duong"} label={"duong"}>
+                        <Space>duong</Space>
+                      </Option>
+                      <Option key={"2"} value={"hai"} label={"hai"}>
+                        <Space>hai</Space>
+                      </Option>
+                      <Option key={"3"} value={"khoe"} label={"khoe"}>
+                        <Space>khoe</Space>
+                      </Option>
+                    </Select>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      mode="multiple"
+                      defaultValue={"duong"}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
+                      // defaultValue={selectedChangeid1}
+                      optionLabelProp="label"
+                    >
+                      <Option key={"1"} value={"duong"} label={"duong"}>
+                        <Space>duong</Space>
+                      </Option>
+                      <Option key={"2"} value={"hai"} label={"hai"}>
+                        <Space>hai</Space>
+                      </Option>
+                      <Option key={"3"} value={"khoe"} label={"khoe"}>
+                        <Space>khoe</Space>
+                      </Option>
+                    </Select>
                   </tr>
                   <tr>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      mode="multiple"
+                      defaultValue={"duong"}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
+                      // defaultValue={selectedChangeid1}
+                      optionLabelProp="label"
+                    >
+                      <Option key={"1"} value={"duong"} label={"duong"}>
+                        <Space>duong</Space>
+                      </Option>
+                      <Option key={"2"} value={"hai"} label={"hai"}>
+                        <Space>hai</Space>
+                      </Option>
+                      <Option key={"3"} value={"khoe"} label={"khoe"}>
+                        <Space>khoe</Space>
+                      </Option>
+                    </Select>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      mode="multiple"
+                      defaultValue={"duong"}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
+                      // defaultValue={selectedChangeid1}
+                      optionLabelProp="label"
+                    >
+                      <Option key={"1"} value={"duong"} label={"duong"}>
+                        <Space>duong</Space>
+                      </Option>
+                      <Option key={"2"} value={"hai"} label={"hai"}>
+                        <Space>hai</Space>
+                      </Option>
+                      <Option key={"3"} value={"khoe"} label={"khoe"}>
+                        <Space>khoe</Space>
+                      </Option>
+                    </Select>
                   </tr>
                 </div>
                 <thead className="thead-last"></thead>
@@ -1184,7 +1151,7 @@ function ListEmployeeComponent() {
       <TableEmployeeRes employees={employees} />
       <TableEmployee
         employees={employees}
-        showModal={showModal}
+        showModal={showModalDetail}
         setId={setId}
         handlelDetail={handlelDetail}
         setIsModalOpen={setIsModalOpen}
@@ -1600,7 +1567,7 @@ function ListEmployeeComponent() {
               </div>
 
               <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancel}>
+                <button className="btn-cancel" onClick={handleCancelView}>
                   Hủy bỏ
                 </button>
                 <button className="btn-edit btn-save" onClick={handleSave}>
@@ -1758,7 +1725,7 @@ function ListEmployeeComponent() {
               </div>
 
               <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancelContract}>
+                <button className="btn-cancel" onClick={handleCancel}>
                   Hủy bỏ
                 </button>
                 <button className="btn-edit" onClick={handleEdit}>

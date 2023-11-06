@@ -84,6 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
                        Email = emp.Email,
                        Status = emp.Status,
                        RoleDepartments = emp.RolesEmployees
+                            .OrderByDescending(e => e.Role.RoleLevel)
                             .Select(roleemp => new EmployeeDetailBasicDTO.RoleDepartment
                             {
                                 RoleID = roleemp.Role.RoleId,
