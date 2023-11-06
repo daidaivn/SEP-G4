@@ -656,6 +656,12 @@
             padding: 20px 20px;
             background-color: #fff;
             border-radius: 60px;
+            .ant-select-selector {
+              background: #fff !important;
+              .ant-select-selection-item {
+                height: 30px;
+              }
+            }
           }
           .ant-select-selector {
             background-color: #fff;
