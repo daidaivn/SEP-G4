@@ -20,6 +20,7 @@ import {
   DetailID,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
+import { fetchAllDepadment } from "../../sevices/DepartmentService";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
@@ -36,6 +37,7 @@ import { a } from "react-spring";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [departments, setDepartments] = useState([]);
 
   const [id, setId] = useState(null);
   const [idDetail, setIdDetail] = useState(null);
@@ -51,6 +53,9 @@ function ListEmployeeComponent() {
   const [originalDOB, setOriginalDOB] = useState("");
   const [originalStatus, setOriginalStatus] = useState(false);
   const [originalWage, SetOriginalWage] = useState("");
+  const [originalDepartment, setOriginalDepartment] = useState("");
+
+
 
   const [gender, setGender] = useState();
 
@@ -101,7 +106,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -119,6 +124,15 @@ function ListEmployeeComponent() {
     }
     return dobstring;
   };
+  const fetDataDepartment = () => {
+    fetchAllDepadment()
+      .then((data) => {
+        setDepartments(data);
+      })
+      .catch((error) => {
+      });
+  };
+
   const fetchData = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -179,6 +193,7 @@ function ListEmployeeComponent() {
         console.error("Error fetching data:", error);
       });
     allRole();
+    fetDataDepartment();
   }, [id]);
 
   function handleSelectChange(value) {
@@ -189,11 +204,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -431,9 +446,9 @@ function ListEmployeeComponent() {
               },
               filterGender !== null
                 ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                  value: null,
+                  label: "Bỏ chọn",
+                }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
@@ -532,9 +547,9 @@ function ListEmployeeComponent() {
               },
               filterStatus !== null
                 ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                  value: null,
+                  label: "Bỏ chọn",
+                }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn trạng thái"
@@ -1327,7 +1342,7 @@ function ListEmployeeComponent() {
         >
           <div className="modal-add-roleyee-employee">
             <div className="modal-head-employee">
-              <h3>chức vụ / phòng ban</h3>
+              <h3>Sửa chức vụ / phòng ban</h3>
             </div>
             <div className="body-add-role-employee">
               <table>
@@ -1336,169 +1351,52 @@ function ListEmployeeComponent() {
                   <td>Phòng ban</td>
                 </thead>
                 <div className="body-table">
-                  <tr>
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </tr>
-                  <tr>
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </tr>
-                  <tr>
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </tr>
+                  {idDetail.roleDepartments.map((roleDept, index) => (
+                    <tr key={index}>
+                      <Select
+                        className="select-input"
+                        value={roleDept.roleID}
+                        onChange={(value) => {
+                          const updatedIdDetail = { ...idDetail };
+                          updatedIdDetail.roleDepartments[index].roleID = value;
+                          setIdDetail(updatedIdDetail);
+                        }}
+                        style={{
+                          width: "100%",
+                        }}
+                        options={[
+                          { value: null, label: "Bỏ chức vụ" },
+                          ...roles.map((role) => ({
+                            value: role.roleID,
+                            label: role.roleName,
+                          })),
+                        ]}
+                      />
+                      <Select
+                        className="select-input"
+                        value={roleDept.departmentID}
+                        onChange={(value) => {
+                          const updatedIdDetail = { ...idDetail };
+                          updatedIdDetail.roleDepartments[index].departmentID = value;
+                          setIdDetail(updatedIdDetail);
+                        }}
+                        style={{
+                          width: "100%",
+                        }}
+                        options={[
+                          { value: null, label: "Bỏ phòng - ban" },
+                          ...departments.map((department) => ({
+                            value: department.departmentId,
+                            label: department.departmentName,
+                          })),
+                        ]}
+                      />
+                    </tr>
+                  ))}
                 </div>
+
+
+
                 <thead className="thead-last"></thead>
               </table>
             </div>
@@ -1513,6 +1411,7 @@ function ListEmployeeComponent() {
           </div>
         </Modal>
       ) : (
+        // view chức vụ
         <Modal
           className="modal"
           open={isModalOpenEditRole}
@@ -1521,7 +1420,7 @@ function ListEmployeeComponent() {
         >
           <div className="modal-add-roleyee-employee">
             <div className="modal-head-employee">
-              <h3>chức vụ / phòng ban</h3>
+              <h3>Chức vụ / phòng ban</h3>
             </div>
             <div className="body-add-role-employee">
               <table>
@@ -1530,42 +1429,41 @@ function ListEmployeeComponent() {
                   <td>Phòng ban</td>
                 </thead>
                 <div className="body-table">
-                  <div className="show-role">
-                    <div className="show-item-role">
-                      <tr>
-                        <p>Chức vụ chính:</p>
-                      </tr>
-                      <tr>
-                        <div className="tr-child">
-                          <Input type="text" value={"Trưởng ca"}></Input>
-                        </div>
-                        <div className="tr-child">
-                          <Input type="text" value={"Phòng sản xuất"}></Input>
-                        </div>
-                      </tr>
+                  {idDetail && idDetail.roleDepartments && (
+                    <div className="show-role">
+                      <div className="show-item-role">
+                        <tr >
+                          <p>Chức vụ chính:</p>
+                        </tr>
+                        {idDetail.roleDepartments.length > 0 && (
+                          <tr>
+                            <div className="tr-child">
+                              <Input type="text" value={idDetail.roleDepartments[0].roleName} ></Input>
+                            </div>
+
+                            <div className="tr-child">
+                              <Input type="text" value={idDetail.roleDepartments[0].departmentName}></Input>
+                            </div>
+                          </tr>
+                        )}
+                      </div>
+                      <div className="show-item-role role-fix">
+                        <tr>
+                          <p>Kiêm chức vụ:</p>
+                        </tr>
+                        {idDetail.roleDepartments.slice(1).map((roleDept, index) => (
+                          <tr key={index}>
+                            <div className="tr-child">
+                              <Input type="text" value={roleDept.roleName}></Input>
+                            </div>
+                            <div className="tr-child">
+                              <Input type="text" value={roleDept.departmentName}></Input>
+                            </div>
+                          </tr>
+                        ))}
+                      </div>
                     </div>
-                    <div className="show-item-role role-fix">
-                      <tr>
-                        <p>Chức vụ chính:</p>
-                      </tr>
-                      <tr>
-                        <div className="tr-child">
-                          <Input type="text" value={"Phó phòng"}></Input>
-                        </div>
-                        <div className="tr-child">
-                          <Input type="text" value={"Phòng kĩ thuật"}></Input>
-                        </div>
-                      </tr>
-                      <tr>
-                        <div className="tr-child">
-                          <Input type="text" value={"Nhân viên"}></Input>
-                        </div>
-                        <div className="tr-child">
-                          <Input type="text" value={"Quản lý nhân sự"}></Input>
-                        </div>
-                      </tr>
-                    </div>
-                  </div>
+                  )}
                 </div>
                 <thead className="thead-last"></thead>
               </table>
