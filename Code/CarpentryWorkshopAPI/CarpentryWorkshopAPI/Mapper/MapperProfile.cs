@@ -132,9 +132,6 @@ namespace CarpentryWorkshopAPI.Mapper
             //Salary
             CreateMap<CreateSalaryDTO, Salary>()
               .ReverseMap();
-            CreateMap<Salary, SalaryListDTO>()
-              .ForMember(de => de.EmployeeName, option => option.MapFrom(d => d.SalarySalaryDetails.Select(ssd=>ssd.Employee.FirstName +" "+ ssd.Employee.LastName).FirstOrDefault()))
-              .ReverseMap();
         }
     }
 }
