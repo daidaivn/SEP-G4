@@ -131,15 +131,10 @@ namespace CarpentryWorkshopAPI.Mapper
                                    System.Globalization.CultureInfo.InvariantCulture)));
             //Salary
             CreateMap<CreateSalaryDTO, Salary>()
-              .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDateString, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture)))
-              .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDateString, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture)));
+              .ReverseMap();
             CreateMap<Salary, SalaryListDTO>()
-               .ForMember(de => de.EmloyeeName, option => option.MapFrom(d => d.Emloyee.FirstName + " " + d.Emloyee.LastName))
-               .ForMember(de => de.StartDateString, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
-               .ForMember(de => de.EndDateString, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
-               .ReverseMap();
+              .ForMember(de => de.EmployeeName, option => option.MapFrom(d => d.SalarySalaryDetails.Select(ssd=>ssd.Employee.FirstName +" "+ ssd.Employee.LastName).FirstOrDefault()))
+              .ReverseMap();
         }
     }
 }

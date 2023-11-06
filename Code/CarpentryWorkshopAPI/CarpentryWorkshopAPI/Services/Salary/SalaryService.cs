@@ -35,9 +35,22 @@ namespace CarpentryWorkshopAPI.Services.Salary
         {
             try
             {
-                var salary = _context.Salaries.Include(s=>s.Emloyee).ToList();
-                var dto = _mapper.Map<SalaryListDTO>(salary);
-                return dto;
+                var salary = _context.Salaries
+                    .Select(s => new SalaryListDTO
+                    {
+                        SalaryId = s.SalaryId,
+                        SalaryName = s.SalaryName,
+                        SalaryDetailId = s.SalaryDetailId,
+                        AmountOfMoney = s.AmountOfMoney,
+                        EmloyeeIdInput = s.EmloyeeIdInput,
+                        EmployeeName = s.SalarySalaryDetails.Where(ssd=>ssd.EmployeeId == s.EmloyeeIdInput).Select(ssd => ssd.Employee.FirstName + " " + ssd.Employee.LastName).FirstOrDefault(),
+                        MonthSalary = s.MonthSalary,
+                        Year = s.Year,
+                    })
+                    .ToList();
+                
+                
+                return salary;
             }
             catch(Exception ex)
             {
