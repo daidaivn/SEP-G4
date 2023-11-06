@@ -1092,9 +1092,9 @@ function ListEmployeeComponent() {
       >
         <div className="modal-add-roleyee-employee modal-contract">
           <div className="modal-head-employee">
-            <h3>Thông tin cá nhân</h3>
+            <h3>Hợp đồng</h3>
             <svg
-              onClick={handleCancelAddContract}
+              onClick={handleOkAddContract1}
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
@@ -1193,17 +1193,6 @@ function ListEmployeeComponent() {
               </div>
               <thead className="thead-last"></thead>
             </table>
-          </div>
-          <div className="modal-footer modal-footer-add-employee add">
-            <button className="btn-cancel" onClick={handleCancelAddContract1}>
-              Hủy bỏ
-            </button>
-            <button
-              className="btn-edit btn-save"
-              onClick={handleOkAddContract1}
-            >
-              Lưu
-            </button>
           </div>
         </div>
       </Modal>
