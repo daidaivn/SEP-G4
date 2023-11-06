@@ -22,4 +22,20 @@ const GetDependentPeopleById = (ID) => {
     `https://sep-g4-api.azurewebsites.net/CCMSapi/Dependents/GetDependentPeopleById/${id}`
   );
 };
-export { fetchAllDependent,SearchDependents,GetDependentPeopleById };
+
+const UpdateDependent = (dependentId, employeeId, relationshipId,identifierCode, dobString, status) => {
+  const requestBody = {
+    dependentId : dependentId,
+    employeeId: employeeId,
+    relationshipId: relationshipId,
+    identifierCode: identifierCode,
+    dobString: dobString,
+    status: status,
+  };
+  console.log(`/CCMSapi/Dependents/UpdateDependent`, requestBody);
+  
+  return axios.put(
+    `/CCMSapi/Dependents/UpdateDependent`, requestBody
+  );
+};
+export { fetchAllDependent,SearchDependents,GetDependentPeopleById, UpdateDependent };
