@@ -1318,7 +1318,6 @@ function ListEmployeeComponent() {
         handlelDetail={handlelDetail}
         setIsModalOpen={setIsModalOpen}
       />
-
       {isEditingRole ? (
         <Modal
           className="modal"

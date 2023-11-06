@@ -71,7 +71,6 @@ function DependentPerson() {
   };
   const showModalDependent = (value) => {
     setIsModalOpenDependent(true);
-    fetchDepartmentById(value);
   };
   const handleOkDependent = () => {
     setIsModalOpenDependent(false);
@@ -91,6 +90,7 @@ function DependentPerson() {
       new Promise((resolve) => {
         GetDependentPeopleById(value)
           .then((data) => {
+            showModalDependent()
             resolve(data);
             const {
               dependentId,
@@ -126,21 +126,33 @@ function DependentPerson() {
   console.log("date", status);
 
   const update = () => {
-    UpdateDependent(
-      dependentId,
-      employeeId,
-      Relationship,
-      Identifier,
-      date,
-      isChecked
-    )
-      .then((data) => {
-        console.log("data", data);
-        handleSave();
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+    toast.promise(
+      new Promise((resolve) => {
+        UpdateDependent(
+          dependentId,
+          employeeId,
+          Relationship,
+          Identifier,
+          date,
+          isChecked
+        )
+          .then((data) => {
+            handleSave();
+            fetchDepartmentById(dependentId)
+            fetchData()
+            resolve(data)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        success: "Thay đổi thông tin thành công",
+        error: "Lỗi thay đổi",
+      }
+    );
   };
 
   const fetchRelationshipsType = () => {
@@ -329,9 +341,9 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
@@ -388,9 +400,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -509,7 +521,7 @@ function DependentPerson() {
               {dependent.map((dependent, index) => (
                 <tr
                   key={dependent.dependentId}
-                  onClick={() => showModalDependent(dependent.dependentId)}
+                  onClick={() => fetchDepartmentById(dependent.dependentId)}
                 >
                   <td>{index + 1}</td>
                   <td>{dependent.fullName}</td>
