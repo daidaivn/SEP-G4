@@ -231,6 +231,16 @@ function ListEmployeeComponent() {
   const handleCancelRole = () => {
     setIsModalOpenRole(false);
   };
+  const [isModalOpenEditRole, setIsModalOpenEditRole] = useState(false);
+  const showModalEditRole = () => {
+    setIsModalOpenEditRole(true);
+  };
+  const handleOkEditRole = () => {
+    setIsModalOpenEditRole(false);
+  };
+  const handleCancelEditRole = () => {
+    setIsModalOpenEditRole(false);
+  };
 
   const [isModalOpenAddRole, setIsModalOpenAddRole] = useState(false);
   const showModalAddRole = () => {
@@ -918,7 +928,7 @@ function ListEmployeeComponent() {
           <div className="modal-add-roleyee-employee modal-contract">
             <div className="modal-head">
               {" "}
-              <h3>Thêm / sửa hợp đồng</h3>
+              <h3>Thêm hợp đồng</h3>
             </div>
             <div className="body-add-role-employee">
               <table>
@@ -1240,6 +1250,73 @@ function ListEmployeeComponent() {
           </div>
         </div>
       </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenEditRole}
+        onOk={handleOkEditRole}
+        onCancel={handleCancelEditRole}
+      >
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head-employee">
+            <h3>Sửa chức vụ / phòng ban</h3>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                <div className="show-role">
+                  <div className="show-item-role">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Trưởng ca"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phòng sản xuất"}></Input>
+                      </div>
+                    </tr>
+                  </div>
+                  <div className="show-item-role role-fix">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phó phòng"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phòng kĩ thuật"}></Input>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Nhân viên"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Quản lý nhân sự"}></Input>
+                      </div>
+                    </tr>
+                  </div>
+                </div>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+          <div className="modal-footer modal-edit-role">
+            <button className="btn-cancel" onClick={handleCancelEditRole}>
+              Thoát
+            </button>
+            <button className="btn-edit" onClick={handleOkEditRole}>
+              Sửa chức vụ
+            </button>
+          </div>
+        </div>
+      </Modal>
       {isEditing ? (
         <Modal
           className="modal"
@@ -1392,11 +1469,16 @@ function ListEmployeeComponent() {
               <div className="btn-left">
                 <div
                   className="modal-footer1 add-origin"
-                  onClick={showModalContract}
+                  // onClick={showModalContract}
                 >
                   Sửa hợp đồng
                 </div>
-                <div className="modal-footer1 add-origin">Sửa chức vụ</div>
+                <div
+                  className="modal-footer1 add-origin"
+                  onClick={showModalEditRole}
+                >
+                  Sửa chức vụ
+                </div>
               </div>
 
               <div className="modal-footer modal-footer2">
