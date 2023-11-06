@@ -15,7 +15,6 @@
         public string? IdentifierName { get; set; }
         public bool? Status { get; set; }
         public string? NoteReason { get; set; }
-        public string? Relation { get; set; }
         public int? RelationshipId { get; set; }
         public string? RelationshipName { get; set; }
     }
