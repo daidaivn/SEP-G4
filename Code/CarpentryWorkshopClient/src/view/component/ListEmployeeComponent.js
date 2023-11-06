@@ -54,7 +54,6 @@ function ListEmployeeComponent() {
 
   const [gender, setGender] = useState();
 
-
   const [employeeData, setEmployeeData] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
   const [filterStatus, setFilterStatus] = useState(null);
@@ -74,7 +73,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -86,7 +85,7 @@ function ListEmployeeComponent() {
       });
   };
   const convertDobToISO = (dobstring) => {
-    const parts = dobstring.split('-');
+    const parts = dobstring.split("-");
     if (parts.length === 3) {
       return `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
@@ -115,8 +114,10 @@ function ListEmployeeComponent() {
       new Promise((resolve) => {
         DetailID(value)
           .then((data) => {
-            setIdDetail(data)
-            setOriginalLastName(data.fullName.split(" ").slice(0, -1).join(" "));
+            setIdDetail(data);
+            setOriginalLastName(
+              data.fullName.split(" ").slice(0, -1).join(" ")
+            );
             setOriginalFirstName(data.fullName.split(" ").slice(-1).join(" "));
             setOriginalPhoneNumber(data.phoneNumber);
             setOriginalGender(data.gender);
@@ -127,7 +128,7 @@ function ListEmployeeComponent() {
             setOriginalDOB(data.dobstring);
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
-            resolve(data)
+            resolve(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -160,11 +161,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-        {
-          value: null,
-          label: "Bỏ chọn",
-        },
-      ]
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -220,15 +221,25 @@ function ListEmployeeComponent() {
     setIsModalOpenAdd(false);
   };
 
-  const [isModalOpenAddRole1, setIsModalOpenAddRole1] = useState(false);
-  const showModalAddRole1 = () => {
-    setIsModalOpenAddRole1(true);
+  const [isModalOpenRole, setIsModalOpenRole] = useState(false);
+  const showModalRole = () => {
+    setIsModalOpenRole(true);
   };
-  const handleOkAddRole1 = () => {
-    setIsModalOpenAddRole1(false);
+  const handleOkRole = () => {
+    setIsModalOpenRole(false);
   };
-  const handleCancelAddRole1 = () => {
-    setIsModalOpenAddRole1(false);
+  const handleCancelRole = () => {
+    setIsModalOpenRole(false);
+  };
+  const [isModalOpenEditRole, setIsModalOpenEditRole] = useState(false);
+  const showModalEditRole = () => {
+    setIsModalOpenEditRole(true);
+  };
+  const handleOkEditRole = () => {
+    setIsModalOpenEditRole(false);
+  };
+  const handleCancelEditRole = () => {
+    setIsModalOpenEditRole(false);
   };
 
   const [isModalOpenAddRole, setIsModalOpenAddRole] = useState(false);
@@ -242,6 +253,17 @@ function ListEmployeeComponent() {
     setIsModalOpenAddRole(false);
   };
 
+  const [isModalOpenEditContract, setIsModalOpenEditContract] = useState(false);
+  const showModalEditContract = () => {
+    setIsModalOpenEditContract(true);
+  };
+  const handleOkEditContract = () => {
+    setIsModalOpenEditContract(false);
+  };
+  const handleCancelEditContract = () => {
+    setIsModalOpenEditContract(false);
+  };
+
   const [isModalOpenAddContract, setIsModalOpenAddContract] = useState(false);
   const showModalAddContract = () => {
     setIsModalOpenAddContract(true);
@@ -253,15 +275,15 @@ function ListEmployeeComponent() {
     setIsModalOpenAddContract(false);
   };
 
-  const [isModalOpenAddContract1, setIsModalOpenAddContract1] = useState(false);
-  const showModalAddContract1 = () => {
-    setIsModalOpenAddContract1(true);
+  const [isModalOpenContract, setIsModalOpenContract] = useState(false);
+  const showModalContract = () => {
+    setIsModalOpenContract(true);
   };
-  const handleOkAddContract1 = () => {
-    setIsModalOpenAddContract1(false);
+  const handleOkContract = () => {
+    setIsModalOpenContract(false);
   };
-  const handleCancelAddContract1 = () => {
-    setIsModalOpenAddContract(false);
+  const handleCancelContract = () => {
+    setIsModalOpenContract(false);
   };
   return (
     <div className="col-right-container">
@@ -393,9 +415,9 @@ function ListEmployeeComponent() {
               },
               filterGender !== null
                 ? {
-                  value: null,
-                  label: "Bỏ chọn",
-                }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
@@ -494,9 +516,9 @@ function ListEmployeeComponent() {
               },
               filterStatus !== null
                 ? {
-                  value: null,
-                  label: "Bỏ chọn",
-                }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn trạng thái"
@@ -531,6 +553,7 @@ function ListEmployeeComponent() {
             />
           </svg>
         </i>
+
         <div className="list-add" onClick={showModalAdd}>
           <i className="icon-web">
             <svg
@@ -561,7 +584,6 @@ function ListEmployeeComponent() {
             </svg>
           </i>
         </div>
-
         <Modal
           className="modal"
           open={isModalOpenAdd}
@@ -689,11 +711,16 @@ function ListEmployeeComponent() {
               <div className="btn-left">
                 <div
                   className="modal-footer1 add-green"
-                  onClick={showModalAddContract1}
+                  onClick={showModalAddContract}
                 >
                   Thêm hợp đồng
                 </div>
-                <div className="modal-footer1 add-green">Thêm chức vụ</div>
+                <div
+                  className="modal-footer1 add-green"
+                  onClick={showModalAddRole}
+                >
+                  Thêm chức vụ
+                </div>
               </div>
 
               <div className="modal-footer modal-footer2">
@@ -707,8 +734,6 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
-
-
         <Modal
           className="modal"
           open={isModalOpenAddRole}
@@ -914,7 +939,112 @@ function ListEmployeeComponent() {
           <div className="modal-add-roleyee-employee modal-contract">
             <div className="modal-head">
               {" "}
-              <h3>Thêm / sửa hợp đồng</h3>
+              <h3>Thêm hợp đồng</h3>
+            </div>
+            <div className="body-add-role-employee body-modal-add-contract">
+              <table>
+                <thead className="thead-first">
+                  Bạn cần tạo hợp đồng để hoàn tất thêm nhân viên
+                </thead>
+                <div className="body-table body-table-contract">
+                  <tr>
+                    <Input
+                      className="select-input"
+                      placeholder="Mã hợp đồng"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
+                    <Select
+                      className="select-input"
+                      defaultValue="lucy"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+
+                  <tr>
+                    <div className="input-date">
+                      <Input
+                        className="select-input"
+                        placeholder="Thời gian bắt đầu"
+                        type="date"
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                    <div className="input-date">
+                      <Input
+                        className="select-input"
+                        placeholder="Thời gian bắt đầu"
+                        type="date"
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                  </tr>
+                  <tr>
+                    <div className="input-date">
+                      <Input
+                        className="select-input"
+                        placeholder="Đường dẫn hợp đồng"
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                  </tr>
+                </div>
+                <thead className="thead-last"></thead>
+              </table>
+            </div>
+            <div className="modal-footer modal-footer-add-employee add">
+              <button className="btn-cancel" onClick={handleCancelAddContract}>
+                Hủy bỏ
+              </button>
+              <button
+                className="btn-edit btn-save"
+                onClick={handleOkAddContract}
+              >
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          className="modal"
+          open={isModalOpenEditContract}
+          on
+          Ok={handleOkEditContract}
+          onCancel={handleCancelEditContract}
+        >
+          <div className="modal-add-roleyee-employee modal-contract">
+            <div className="modal-head">
+              {" "}
+              <h3>Sửa hợp đồng</h3>
             </div>
             <div className="body-add-role-employee">
               <table>
@@ -1002,18 +1132,19 @@ function ListEmployeeComponent() {
               </table>
             </div>
             <div className="modal-footer modal-footer-add-employee add">
-              <button className="btn-cancel" onClick={handleCancelAddContract}>
+              <button className="btn-cancel" onClick={handleCancelEditContract}>
                 Hủy bỏ
               </button>
               <button
                 className="btn-edit btn-save"
-                onClick={handleOkAddContract}
+                onClick={handleOkEditContract}
               >
                 Lưu
               </button>
             </div>
           </div>
         </Modal>
+
         <i className="icon-responsive icon-filter icon-add">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -1059,18 +1190,12 @@ function ListEmployeeComponent() {
         setIsModalOpen={setIsModalOpen}
       />
 
-      <Modal
-        className="modal"
-        open={isModalOpenAddContract1}
-        on
-        Ok={handleOkAddContract1}
-        onCancel={handleCancelAddContract1}
-      >
+      <Modal className="modal" open={isModalOpenContract}>
         <div className="modal-add-roleyee-employee modal-contract">
           <div className="modal-head-employee">
-            <h3>Thông tin cá nhân</h3>
+            <h3>Hợp đồng</h3>
             <svg
-              onClick={handleCancelAddContract}
+              onClick={handleOkContract}
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
@@ -1170,30 +1295,27 @@ function ListEmployeeComponent() {
               <thead className="thead-last"></thead>
             </table>
           </div>
-          <div className="modal-footer modal-footer-add-employee add">
-            <button className="btn-cancel" onClick={handleCancelAddContract1}>
-              Hủy bỏ
-            </button>
-            <button
-              className="btn-edit btn-save"
-              onClick={handleOkAddContract1}
-            >
-              Lưu
-            </button>
-          </div>
         </div>
       </Modal>
-      <Modal
-        className="modal"
-        open={isModalOpenAddRole1}
-        on
-        Ok={handleOkAddRole1}
-        onCancel={handleCancelAddRole1}
-      >
+      <Modal className="modal" open={isModalOpenRole}>
         <div className="modal-add-roleyee-employee">
-          <div className="modal-head">
-            {" "}
-            <h3>Chọn chức vụ / phòng ban</h3>
+          <div className="modal-head-employee">
+            <h3>Chức vụ / phòng ban</h3>
+            <svg
+              onClick={handleCancelRole}
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
+                fill="white"
+              />
+            </svg>
           </div>
           <div className="body-add-role-employee">
             <table>
@@ -1202,178 +1324,111 @@ function ListEmployeeComponent() {
                 <td>Phòng ban</td>
               </thead>
               <div className="body-table">
-                <tr>
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                </tr>
-                <tr>
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                </tr>
-                <tr>
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                  <Select
-                    className="select-input"
-                    defaultValue="lucy"
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
-                  />
-                </tr>
+                <div className="show-role">
+                  <div className="show-item-role">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Trưởng ca"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phòng sản xuất"}></Input>
+                      </div>
+                    </tr>
+                  </div>
+                  <div className="show-item-role role-fix">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phó phòng"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phòng kĩ thuật"}></Input>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Nhân viên"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Quản lý nhân sự"}></Input>
+                      </div>
+                    </tr>
+                  </div>
+                </div>
               </div>
               <thead className="thead-last"></thead>
             </table>
           </div>
-          <div className="modal-footer modal-footer-add-employee add">
-            <button className="btn-cancel" onClick={handleCancelAddRole1}>
-              Hủy bỏ
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenEditRole}
+        onOk={handleOkEditRole}
+        onCancel={handleCancelEditRole}
+      >
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head-employee">
+            <h3>Sửa chức vụ / phòng ban</h3>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                <div className="show-role">
+                  <div className="show-item-role">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Trưởng ca"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phòng sản xuất"}></Input>
+                      </div>
+                    </tr>
+                  </div>
+                  <div className="show-item-role role-fix">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phó phòng"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Phòng kĩ thuật"}></Input>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value={"Nhân viên"}></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value={"Quản lý nhân sự"}></Input>
+                      </div>
+                    </tr>
+                  </div>
+                </div>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+          <div className="modal-footer modal-edit-role">
+            <button className="btn-cancel" onClick={handleCancelEditRole}>
+              Thoát
             </button>
-            <button className="btn-edit btn-save" onClick={handleOkAddRole1}>
-              Lưu
+            <button className="btn-edit" onClick={handleOkEditRole}>
+              Sửa chức vụ
             </button>
           </div>
         </div>
@@ -1528,10 +1583,18 @@ function ListEmployeeComponent() {
             </div>
             <div className="modal-footer modal-footer-add">
               <div className="btn-left">
-                <div className="modal-footer1" onClick={showModalAddContract1}>
-                  Xem hợp đồng
+                <div
+                  className="modal-footer1 add-origin"
+                  onClick={showModalEditContract}
+                >
+                  Sửa hợp đồng
                 </div>
-                <div className="modal-footer1">Xem chức vụ</div>
+                <div
+                  className="modal-footer1 add-origin"
+                  onClick={showModalEditRole}
+                >
+                  Sửa chức vụ
+                </div>
               </div>
 
               <div className="modal-footer modal-footer2">
@@ -1545,9 +1608,7 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
-
       ) : (
-
         <Modal
           className="modal"
           visible={isModalOpen}
@@ -1675,7 +1736,9 @@ function ListEmployeeComponent() {
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
                       <Switch
-                        checked={idDetail && idDetail.status ? idDetail.status : false}
+                        checked={
+                          idDetail && idDetail.status ? idDetail.status : false
+                        }
                       />
                     </div>
                   </div>
@@ -1684,14 +1747,16 @@ function ListEmployeeComponent() {
             </div>
             <div className="modal-footer modal-footer-add">
               <div className="btn-left">
-                <div className="modal-footer1" onClick={showModalAddContract1}>
+                <div className="modal-footer1" onClick={showModalContract}>
                   Xem hợp đồng
                 </div>
-                <div className="modal-footer1">Xem chức vụ</div>
+                <div className="modal-footer1" onClick={showModalRole}>
+                  Xem chức vụ
+                </div>
               </div>
 
               <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancelAdd}>
+                <button className="btn-cancel" onClick={handleCancelContract}>
                   Hủy bỏ
                 </button>
                 <button className="btn-edit" onClick={handleEdit}>
