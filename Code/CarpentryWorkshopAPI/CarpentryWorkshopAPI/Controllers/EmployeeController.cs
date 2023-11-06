@@ -84,6 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
                        Email = emp.Email,
                        Status = emp.Status,
                        RoleDepartments = emp.RolesEmployees
+                            .Where(e => e.EndDate == null)
                             .OrderByDescending(e => e.Role.RoleLevel)
                             .Select(roleemp => new EmployeeDetailBasicDTO.RoleDepartment
                             {
@@ -210,6 +211,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleId = rd.RoleID,
                         EmployeeId = newemp.EmployeeId,
                         StartDate = DateTime.Now,
+                        EndDate = null,
                         DepartmentId = rd.DepartmentID,
                         Status = true,
                     };
@@ -274,6 +276,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             RoleId = rd.RoleID,
                             EmployeeId = employee.EmployeeId,
                             StartDate = DateTime.Now,
+                            EndDate = null,
                             DepartmentId = rd.DepartmentID,
                             Status = true,
                         };
