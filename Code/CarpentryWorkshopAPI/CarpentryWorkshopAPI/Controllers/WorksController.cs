@@ -17,9 +17,9 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        public IActionResult GetAllWorks() 
-        {
+        //public IActionResult GetAllWorks() 
+        //{
 
-        }
+        //}
     }
 }

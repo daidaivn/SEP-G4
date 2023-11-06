@@ -17,6 +17,8 @@ namespace CarpentryWorkshopAPI.Models
         public int? WorkAreaId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public double? Cost { get; set; }
+        public string? Note { get; set; }
 
         public virtual UnitCost? UniCost { get; set; }
         public virtual WorkArea? WorkArea { get; set; }

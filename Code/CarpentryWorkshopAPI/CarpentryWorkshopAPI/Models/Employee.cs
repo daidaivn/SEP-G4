@@ -14,7 +14,7 @@ namespace CarpentryWorkshopAPI.Models
             EmployeeTeams = new HashSet<EmployeeTeam>();
             EmployeesStatusHistories = new HashSet<EmployeesStatusHistory>();
             RolesEmployees = new HashSet<RolesEmployee>();
-            SalarySalaryDetails = new HashSet<SalarySalaryDetail>();
+            Salaries = new HashSet<Salary>();
         }
 
         public int EmployeeId { get; set; }
@@ -40,6 +40,6 @@ namespace CarpentryWorkshopAPI.Models
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
         public virtual ICollection<EmployeesStatusHistory> EmployeesStatusHistories { get; set; }
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
-        public virtual ICollection<SalarySalaryDetail> SalarySalaryDetails { get; set; }
+        public virtual ICollection<Salary> Salaries { get; set; }
     }
 }

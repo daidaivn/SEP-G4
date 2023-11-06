@@ -44,7 +44,6 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<RolesStatusHistory> RolesStatusHistories { get; set; } = null!;
         public virtual DbSet<Salary> Salaries { get; set; } = null!;
         public virtual DbSet<SalaryDetail> SalaryDetails { get; set; } = null!;
-        public virtual DbSet<SalarySalaryDetail> SalarySalaryDetails { get; set; } = null!;
         public virtual DbSet<SalaryType> SalaryTypes { get; set; } = null!;
         public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
@@ -582,6 +581,21 @@ namespace CarpentryWorkshopAPI.Models
             modelBuilder.Entity<Salary>(entity =>
             {
                 entity.ToTable("Salary");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Emloyee)
+                    .WithMany(p => p.Salaries)
+                    .HasForeignKey(d => d.EmloyeeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Salary_Employees");
+
+                entity.HasOne(d => d.SalaryDetail)
+                    .WithMany(p => p.Salaries)
+                    .HasForeignKey(d => d.SalaryDetailId)
+                    .HasConstraintName("FK_Salary_SalaryDetail");
             });
 
             modelBuilder.Entity<SalaryDetail>(entity =>
@@ -597,34 +611,6 @@ namespace CarpentryWorkshopAPI.Models
                     .HasForeignKey(d => d.SalaryTypeId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_SalaryDetail_SalaryType");
-            });
-
-            modelBuilder.Entity<SalarySalaryDetail>(entity =>
-            {
-                entity.HasKey(e => e.SlarySalaryDetailId);
-
-                entity.ToTable("Salary.SalaryDetail");
-
-                entity.Property(e => e.SlarySalaryDetailId).HasColumnName("Slary.SalaryDetailID");
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.SalarySalaryDetails)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK_Salary.SalaryDetail_Employees");
-
-                entity.HasOne(d => d.SalaryDetail)
-                    .WithMany(p => p.SalarySalaryDetails)
-                    .HasForeignKey(d => d.SalaryDetailId)
-                    .HasConstraintName("FK_Salary.SalaryDetail_SalaryDetail");
-
-                entity.HasOne(d => d.Salary)
-                    .WithMany(p => p.SalarySalaryDetails)
-                    .HasForeignKey(d => d.SalaryId)
-                    .HasConstraintName("FK_Salary.SalaryDetail_Salary");
             });
 
             modelBuilder.Entity<SalaryType>(entity =>
