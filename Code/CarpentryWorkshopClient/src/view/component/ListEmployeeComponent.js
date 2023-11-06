@@ -24,7 +24,7 @@ import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 import {
   TableEmployee,
   TableEmployeeRes,
@@ -40,13 +40,20 @@ function ListEmployeeComponent() {
   const [idDetail, setIdDetail] = useState(null);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [address, setAddress] = useState("Hà Nội");
-  const [gender, setGender] = useState("Nguyễn Văn An");
-  const [phone, setPhone] = useState("0899999577");
-  const [fax, setFax] = useState("0899999577");
-  const [idCard, setIdCard] = useState("0899999577");
-  const [role, setRole] = useState("Nhân viên");
-  const [department, setDepartment] = useState("Phòng kế toán");
+  const [originalLastName, setOriginalLastName] = useState("");
+  const [originalFirstName, setOriginalFirstName] = useState("");
+  const [originalPhoneNumber, setOriginalPhoneNumber] = useState("");
+  const [originalGender, setOriginalGender] = useState("");
+  const [originalNationality, setOriginalNationality] = useState("");
+  const [originalAddress, setOriginalAddress] = useState("");
+  const [originalCIC, setOriginalCIC] = useState("");
+  const [originalTaxId, setOriginalTaxId] = useState("");
+  const [originalDOB, setOriginalDOB] = useState("");
+  const [originalStatus, setOriginalStatus] = useState(false);
+  const [originalWage, SetOriginalWage] = useState("");
+
+  const [gender, setGender] = useState();
+
 
   const [employeeData, setEmployeeData] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
@@ -67,7 +74,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -78,7 +85,13 @@ function ListEmployeeComponent() {
         console.log(error);
       });
   };
-
+  const convertDobToISO = (dobstring) => {
+    const parts = dobstring.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dobstring;
+  };
   const fetchData = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -97,16 +110,24 @@ function ListEmployeeComponent() {
       }
     );
   };
-  const handlelDetail = () => {
+  const handlelDetail = (value) => {
     toast.promise(
       new Promise((resolve) => {
-        DetailID(id)
+        DetailID(value)
           .then((data) => {
-            setIdDetail(data);
-            setIsModalOpen(true);
-            console.log(data);
-
-            resolve(data);
+            setIdDetail(data)
+            setOriginalLastName(data.fullName.split(" ").slice(0, -1).join(" "));
+            setOriginalFirstName(data.fullName.split(" ").slice(-1).join(" "));
+            setOriginalPhoneNumber(data.phoneNumber);
+            setOriginalGender(data.gender);
+            setOriginalNationality(data.country);
+            setOriginalAddress(data.address);
+            setOriginalCIC(data.cic);
+            setOriginalTaxId(data.taxId);
+            setOriginalDOB(data.dobstring);
+            setOriginalStatus(data.status);
+            SetOriginalWage(data.wave);
+            resolve(data)
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -114,23 +135,20 @@ function ListEmployeeComponent() {
       }),
       {
         pending: "Đang xử lý",
-        success: "Detail",
-        error: "Detail",
+        error: "Lỗi dữ liệu thông tin chi tiết!",
       }
     );
   };
 
   useEffect(() => {
     fetchData();
-    if (id !== null) {
-      fetchEmplyeebyid(id)
-        .then((response) => {
-          setEmployeeData(response);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    }
+    fetchEmplyeebyid(id)
+      .then((response) => {
+        setEmployeeData(response);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     allRole();
   }, [id]);
 
@@ -142,11 +160,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -375,9 +393,9 @@ function ListEmployeeComponent() {
               },
               filterGender !== null
                 ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                  value: null,
+                  label: "Bỏ chọn",
+                }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
@@ -476,9 +494,9 @@ function ListEmployeeComponent() {
               },
               filterStatus !== null
                 ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                  value: null,
+                  label: "Bỏ chọn",
+                }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn trạng thái"
@@ -643,7 +661,7 @@ function ListEmployeeComponent() {
                     </div>
                     <div className="box-child-employee1">
                       <p>Lương cơ bản:</p>
-                      <p className="fix-input">99999999999</p>
+                      <p className="fix-input">99999999998</p>
                     </div>
                   </div>
                   <div className="box2-child-cn">
@@ -689,6 +707,8 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
+
+
         <Modal
           className="modal"
           open={isModalOpenAddRole}
@@ -1038,51 +1058,7 @@ function ListEmployeeComponent() {
         handlelDetail={handlelDetail}
         setIsModalOpen={setIsModalOpen}
       />
-      <div>
-        {isEditing ? (
-          <AddEmployeeModal
-            isModalOpen={isModalOpen}
-            handleOk={handleOk}
-            handleCancel={handleCancel}
-            address={address}
-            setAddress={setAddress}
-            gender={gender}
-            setGender={setGender}
-            phone={phone}
-            setPhone={setPhone}
-            idCard={idCard}
-            setIdCard={setIdCard}
-            fax={fax}
-            setFax={setFax}
-            handleChange={handleChange}
-            Option={Option}
-          />
-        ) : (
-          <DetailEmployeeModal
-            isModalOpen={isModalOpen}
-            handleOk={handleOk}
-            handleCancel={handleCancel}
-            address={address}
-            setAddress={setAddress}
-            gender={gender}
-            setGender={setGender}
-            phone={phone}
-            setPhone={setPhone}
-            idCard={idCard}
-            setIdCard={setIdCard}
-            fax={fax}
-            setFax={setFax}
-            role={role}
-            department={department}
-            setRole={setRole}
-            setDepartment={setDepartment}
-            value={value}
-            onChangeRadio={onChangeRadio}
-            handleEdit={handleEdit}
-            Option={Option}
-          />
-        )}
-      </div>
+
       <Modal
         className="modal"
         open={isModalOpenAddContract1}
@@ -1395,7 +1371,7 @@ function ListEmployeeComponent() {
         <Modal
           className="modal"
           visible={isModalOpen}
-          onOk={handleOk}
+          onOk={handleSave}
           onCancel={handleCancel}
           width={1252}
         >
@@ -1414,24 +1390,33 @@ function ListEmployeeComponent() {
                   <div className="div-modal-child2 div-detail div1-modal-child2">
                     <div className="div1-modal-cn">
                       <p>Họ:</p>
-                      <Input value="Nguyễn Văn" />
+                      <Input
+                        value={originalLastName}
+                        onChange={(e) => setOriginalLastName(e.target.value)}
+                      />
                     </div>
                     <div className="div1-modal-cn div2-fix">
                       <p>Tên:</p>
-                      <Input value="An" />
+                      <Input
+                        value={originalFirstName}
+                        onChange={(e) => setOriginalFirstName(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Số điện thoại:</p>
-                    <Input value="0192568746" />
+                    <Input
+                      value={originalPhoneNumber}
+                      onChange={(e) => setOriginalPhoneNumber(e.target.value)}
+                    />
                   </div>
 
                   <div className="div-modal-child2">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
                       <Radio.Group
-                        onChange={(e) => setGender(e.target.value)}
-                        value={gender}
+                        onChange={(e) => setOriginalGender(e.target.value)}
+                        value={originalGender}
                       >
                         <Radio value={1} className="gender">
                           Nam
@@ -1446,11 +1431,11 @@ function ListEmployeeComponent() {
                     <p>Quốc tịch:</p>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
                       options={[
                         {
                           value: "jack",
@@ -1473,11 +1458,17 @@ function ListEmployeeComponent() {
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
-                    <Input value="Hà Nội" />
+                    <Input
+                      value={originalAddress}
+                      onChange={(e) => setOriginalAddress(e.target.value)}
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
-                    <Input value="000125558995" />
+                    <Input
+                      value={originalCIC}
+                      onChange={(e) => setOriginalCIC(e.target.value)}
+                    />
                   </div>
                 </div>
               </div>
@@ -1486,27 +1477,37 @@ function ListEmployeeComponent() {
                   <div className="box2-child-cn ">
                     <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
-                      <Input value="0987654321" />
+                      <Input
+                        value={originalTaxId}
+                        onChange={(e) => setOriginalTaxId(e.target.value)}
+                      />
                     </div>
-                    <div className="box-child-employee1">
+                    <div className="box-child-employee1 div-detail">
                       <p>Lương cơ bản:</p>
-                      <p className="fix-input">99999999999</p>
+                      <Input
+                        value={
+                          idDetail && idDetail.wageNumber
+                            ? idDetail.wageNumber
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Ngày sinh:</p>
-                      <input type="date" />
+                      <input
+                        type="date"
+                        value={originalDOB}
+                        onChange={(e) => setOriginalDOB(e.target.value)}
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
                       <Form.Item valuePropName="checked" className="action">
                         <Switch
-                          checked={
-                            idDetail && idDetail.status
-                              ? idDetail.status
-                              : "Chưa có thông tin"
-                          }
+                          checked={originalStatus}
+                          onChange={(checked) => setOriginalStatus(checked)}
                         />
                       </Form.Item>
                     </div>
@@ -1533,7 +1534,9 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
+
       ) : (
+
         <Modal
           className="modal"
           visible={isModalOpen}
@@ -1541,6 +1544,7 @@ function ListEmployeeComponent() {
           onCancel={handleCancel}
           width={1252}
         >
+          {/* Modail view detail */}
           <div className="modal-add-employee">
             <div className="modal-head-employee">
               <h3>Thông tin nhân viên chi tiết</h3>
@@ -1636,34 +1640,32 @@ function ListEmployeeComponent() {
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Lương cơ bản:</p>
-                      <p
-                        className="fix-input"
+                      <Input
                         value={
                           idDetail && idDetail.wageNumber
                             ? idDetail.wageNumber
                             : "Chưa có thông tin"
                         }
-                      >
-                        99999999999
-                      </p>
+                      />
                     </div>
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Ngày sinh:</p>
-                      <input type="date" />
+                      <input
+                        type="date"
+                        value={
+                          idDetail && idDetail.dobstring
+                            ? convertDobToISO(idDetail.dobstring)
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch
-                          checked={
-                            idDetail && idDetail.status
-                              ? idDetail.status
-                              : "Chưa có thông tin"
-                          }
-                        />
-                      </Form.Item>
+                      <Switch
+                        checked={idDetail && idDetail.status ? idDetail.status : false}
+                      />
                     </div>
                   </div>
                 </div>

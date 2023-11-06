@@ -37,36 +37,34 @@ const Decentralization = () => {
     console.log(isChecked);
 
     if (isChecked) {
-      // Gọi API để thêm quyền truy cập
       addRolePage(pageId, roleId)
         .then((response) => {
-          // Xử lý thành công
           console.log("Thêm thành công");
-          // Sau khi thêm thành công, gọi lại các hàm tải dữ liệu
           fetchData();
         })
         .catch((error) => {
-          // Xử lý lỗi
           console.error("Lỗi khi thêm quyền truy cập:", error);
         });
     } else {
-      // Gọi API để xóa quyền truy cập
       deleteRolePage(pageId, roleId)
-        .then((response) => {
-          // Xử lý thành công
-          console.log("Xóa thành công");
-          // Sau khi xóa thành công, gọi lại các hàm tải dữ liệu
+        .then(() => {
           fetchData();
         })
         .catch((error) => {
-          // Xử lý lỗi
           console.error("Lỗi khi xóa quyền truy cập:", error);
         });
     }
   };
-
-  // Hàm tải lại dữ liệu
-  const fetchData = () => {
+  const featchDataPage=()=>{
+    fetchAllPages()
+    .then((data) => {
+      setPages(data);
+    })
+    .catch((error) => {
+      console.error("Lỗi khi tải dữ liệu RolePage", error);
+    });
+  }
+  const featchDatarole=()=>{
     fetchAllRole()
       .then((data) => {
         setRoles(data);
@@ -74,15 +72,8 @@ const Decentralization = () => {
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu phòng ban:", error);
       });
-
-    fetchAllPages()
-      .then((data) => {
-        setPages(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu RolePage", error);
-      });
-
+  }
+  const fetchData = () => {
     fetchAllDecentralization()
       .then((data) => {
         setDecentralizations(data);
@@ -93,7 +84,8 @@ const Decentralization = () => {
   };
 
   useEffect(() => {
-    // Ban đầu, gọi hàm tải dữ liệu
+    featchDataPage()
+    featchDatarole()
     fetchData();
   }, []);
   return (

@@ -23,8 +23,7 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen, handlelDet
             key={employee.employeeID}
             onClick={() => {
               setId(employee.employeeID);
-              
-              handlelDetail();
+              handlelDetail(employee.employeeID);
             }}
           >
             <td>{employee.image}</td>
