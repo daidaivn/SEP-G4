@@ -40,7 +40,6 @@ function ListEmployeeComponent() {
   const [id, setId] = useState(null);
   const [idDetail, setIdDetail] = useState(null);
 
-  const [isEditing, setIsEditing] = useState(false);
   const [originalLastName, setOriginalLastName] = useState("");
   const [originalFirstName, setOriginalFirstName] = useState("");
   const [originalPhoneNumber, setOriginalPhoneNumber] = useState("");
@@ -61,14 +60,42 @@ function ListEmployeeComponent() {
   const [filterRole, setFilterRole] = useState(null);
   const [inputSearch, setInputSearch] = useState("");
 
+  const [isEditing, setIsEditing] = useState(false);
   const handleEdit = () => {
     setIsEditing(true);
   };
-
   const handleSave = () => {
     setIsEditing(false);
   };
 
+  const [isEditingRole, setIsEditingRole] = useState(false);
+  const handleEditRole = () => {
+    setIsEditingRole(true);
+  };
+  const handleSaveRole = () => {
+    setIsEditingRole(false);
+  };
+
+  const [isEditingContract, setIsEditingContract] = useState(false);
+  const handleEditContract = () => {
+    setIsEditingContract(true);
+  };
+  const handleSaveContract = () => {
+    setIsEditingContract(false);
+  };
+
+  const handleCancelView = () => {
+    setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
+    setIsModalOpen(true);
+  };
+  const handleCancelView1 = () => {
+    setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
+    setIsModalOpenEditRole(true);
+  };
+  const handleCancelViewContract = () => {
+    setIsEditingContract(false); // Đặt trạng thái chỉnh sửa về false
+    setIsModalOpenEditContract(true);
+  };
   const allRole = () => {
     fetchAllRole()
       .then((data) => {
@@ -208,14 +235,6 @@ function ListEmployeeComponent() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleCancelView = () => {
-    setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
-    setIsModalOpen(true); // Mở modal "Thông tin nhân viên chi tiết"
-  };
-  const handleCancelView1 = () => {
-    setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
-    setIsModalOpenEditRole(true);
-  };
 
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const showModalAdd = () => {
@@ -228,16 +247,6 @@ function ListEmployeeComponent() {
     setIsModalOpenAdd(false);
   };
 
-  const [isModalOpenRole, setIsModalOpenRole] = useState(false);
-  const showModalRole = () => {
-    setIsModalOpenRole(true);
-  };
-  const handleOkRole = () => {
-    setIsModalOpenRole(false);
-  };
-  const handleCancelRole = () => {
-    setIsModalOpenRole(false);
-  };
   const [isModalOpenEditRole, setIsModalOpenEditRole] = useState(false);
   const showModalEditRole = () => {
     setIsModalOpenEditRole(true);
@@ -847,117 +856,232 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
-        <Modal
-          className="modal"
-          open={isModalOpenEditContract}
-          on
-          Ok={handleOkEditContract}
-          onCancel={handleCancelEditContract}
-        >
-          <div className="modal-add-roleyee-employee modal-contract">
-            <div className="modal-head">
-              {" "}
-              <h3>Sửa hợp đồng</h3>
-            </div>
-            <div className="body-add-role-employee">
-              <table>
-                <thead className="thead-first"></thead>
-                <div className="body-table body-table-contract">
-                  <tr>
-                    <Input
-                      className="select-input"
-                      placeholder="Mã hợp đồng"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
-                  </tr>
-                  <tr>
-                    <div className="input-date">
-                      <Input
-                        className="select-input"
-                        placeholder="Thời gian bắt đầu"
-                        type="date"
-                        style={{
-                          width: "100%",
-                        }}
-                      />
-                    </div>
-                    <div className="input-date">
-                      <Input
-                        className="select-input"
-                        placeholder="Thời gian bắt đầu"
-                        type="date"
-                        style={{
-                          width: "100%",
-                        }}
-                      />
-                    </div>
-                    <div className="input-date">
-                      <Select
-                        className="select-input"
-                        defaultValue="lucy"
-                        style={{
-                          width: "100%",
-                        }}
-                        onChange={handleChange}
-                        options={[
-                          {
-                            value: "jack",
-                            label: "Jack",
-                          },
-                          {
-                            value: "lucy",
-                            label: "Lucy",
-                          },
-                          {
-                            value: "Yiminghe",
-                            label: "yiminghe",
-                          },
-                          {
-                            value: "disabled",
-                            label: "Disabled",
-                          },
-                        ]}
-                      />
-                    </div>
-                  </tr>
-                  <tr>
-                    <div className="input-date">
-                      <Input
-                        className="select-input"
-                        placeholder="Đường dẫn hợp đồng"
-                        style={{
-                          width: "100%",
-                        }}
-                      />
-                      <div className="input-date-cn">
-                        <p>Trạng thái: </p>
-                        <Form.Item valuePropName="checked" className="action">
-                          <Switch checked="true" />
-                        </Form.Item>
-                      </div>
-                    </div>
-                  </tr>
-                </div>
-                <thead className="thead-last"></thead>
-              </table>
-            </div>
-            <div className="modal-footer modal-footer-add-employee add">
-              <button className="btn-cancel" onClick={handleCancelEditContract}>
-                Hủy bỏ
-              </button>
-              <button
-                className="btn-edit btn-save"
-                onClick={handleOkEditContract}
-              >
-                Lưu
-              </button>
-            </div>
-          </div>
-        </Modal>
 
+        {isEditingContract ? (
+          <Modal
+            className="modal"
+            open={isModalOpenEditContract}
+            on
+            Ok={handleOkEditContract}
+            onCancel={handleCancelEditContract}
+          >
+            <div className="modal-add-roleyee-employee modal-contract">
+              <div className="modal-head">
+                {" "}
+                <h3>Sửa hợp đồng</h3>
+              </div>
+              <div className="body-add-role-employee">
+                <table>
+                  <thead className="thead-first"></thead>
+                  <div className="body-table body-table-contract">
+                    <tr>
+                      <Input
+                        className="select-input"
+                        placeholder="Mã hợp đồng"
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                        }}
+                      />
+                    </tr>
+                    <tr>
+                      <div className="input-date">
+                        <Input
+                          className="select-input"
+                          placeholder="Thời gian bắt đầu"
+                          type="date"
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </div>
+                      <div className="input-date">
+                        <Input
+                          className="select-input"
+                          placeholder="Thời gian bắt đầu"
+                          type="date"
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </div>
+                      <div className="input-date">
+                        <Select
+                          className="select-input"
+                          defaultValue="lucy"
+                          style={{
+                            width: "100%",
+                          }}
+                          onChange={handleChange}
+                          options={[
+                            {
+                              value: "jack",
+                              label: "Jack",
+                            },
+                            {
+                              value: "lucy",
+                              label: "Lucy",
+                            },
+                            {
+                              value: "Yiminghe",
+                              label: "yiminghe",
+                            },
+                            {
+                              value: "disabled",
+                              label: "Disabled",
+                            },
+                          ]}
+                        />
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="input-date">
+                        <Input
+                          className="select-input"
+                          placeholder="Đường dẫn hợp đồng"
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                        <div className="input-date-cn">
+                          <p>Trạng thái: </p>
+                          <Form.Item valuePropName="checked" className="action">
+                            <Switch checked="true" />
+                          </Form.Item>
+                        </div>
+                      </div>
+                    </tr>
+                  </div>
+                  <thead className="thead-last"></thead>
+                </table>
+              </div>
+              <div className="modal-footer modal-footer-add-employee add">
+                <button
+                  className="btn-cancel"
+                  onClick={handleCancelViewContract}
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  className="btn-edit btn-save"
+                  onClick={handleSaveContract}
+                >
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </Modal>
+        ) : (
+          <Modal
+            className="modal"
+            open={isModalOpenEditContract}
+            on
+            Ok={handleOkEditContract}
+            onCancel={handleCancelEditContract}
+          >
+            <div className="modal-add-roleyee-employee modal-contract">
+              <div className="modal-head">
+                {" "}
+                <h3>Hợp đồng</h3>
+              </div>
+              <div className="body-add-role-employee">
+                <table>
+                  <thead className="thead-first"></thead>
+                  <div className="body-table body-table-contract">
+                    <tr>
+                      <Input
+                        className="select-input"
+                        value={"abc"}
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                        }}
+                      />
+                    </tr>
+                    <tr>
+                      <div className="input-date">
+                        <Input
+                          className="select-input"
+                          type="date"
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </div>
+                      <div className="input-date">
+                        <Input
+                          className="select-input"
+                          placeholder="Thời gian bắt đầu"
+                          type="date"
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </div>
+                      <div className="input-date">
+                        <Select
+                          className="select-input"
+                          defaultValue="lucy"
+                          style={{
+                            width: "100%",
+                          }}
+                          onChange={handleChange}
+                          options={[
+                            {
+                              value: "jack",
+                              label: "Jack",
+                            },
+                            {
+                              value: "lucy",
+                              label: "Lucy",
+                            },
+                            {
+                              value: "Yiminghe",
+                              label: "yiminghe",
+                            },
+                            {
+                              value: "disabled",
+                              label: "Disabled",
+                            },
+                          ]}
+                        />
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="input-date">
+                        <Input
+                          className="select-input"
+                          value={"abc"}
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                        <div className="input-date-cn">
+                          <p>Trạng thái: </p>
+                          <Form.Item valuePropName="checked" className="action">
+                            <Switch checked="true" />
+                          </Form.Item>
+                        </div>
+                      </div>
+                    </tr>
+                  </div>
+                  <thead className="thead-last"></thead>
+                </table>
+              </div>
+              <div className="modal-footer modal-footer-add-employee add">
+                <button
+                  className="btn-cancel"
+                  onClick={handleCancelEditContract}
+                >
+                  Hủy bỏ
+                </button>
+                <button className="btn-edit" onClick={handleEditContract}>
+                  Chỉnh sửa
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )}
         <i className="icon-responsive icon-filter icon-add">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -1003,183 +1127,7 @@ function ListEmployeeComponent() {
         setIsModalOpen={setIsModalOpen}
       />
 
-      {/* <Modal className="modal" open={isModalOpenContract}>
-        <div className="modal-add-roleyee-employee modal-contract">
-          <div className="modal-head-employee">
-            <h3>Hợp đồng</h3>
-            <svg
-              onClick={handleOkContract}
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
-                fill="white"
-              />
-            </svg>
-          </div>
-          <div className="body-add-role-employee">
-            <table>
-              <thead className="thead-first"></thead>
-              <div className="body-table body-table-contract">
-                <tr>
-                  <Input
-                    className="select-input"
-                    placeholder="Mã hợp đồng"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                  />
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian bắt đầu"
-                      type="date"
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian bắt đầu"
-                      type="date"
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                  <div className="input-date">
-                    <Select
-                      className="select-input"
-                      defaultValue="lucy"
-                      style={{
-                        width: "100%",
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Đường dẫn hợp đồng"
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                    <div className="input-date-cn">
-                      <p>Trạng thái: </p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                </tr>
-              </div>
-              <thead className="thead-last"></thead>
-            </table>
-          </div>
-        </div>
-      </Modal> */}
-      <Modal className="modal" open={isModalOpenRole}>
-        <div className="modal-add-roleyee-employee">
-          <div className="modal-head-employee">
-            <h3>Chức vụ / phòng ban</h3>
-            <svg
-              onClick={handleCancelRole}
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
-                fill="white"
-              />
-            </svg>
-          </div>
-          <div className="body-add-role-employee">
-            <table>
-              <thead>
-                <td>Chức vụ</td>
-                <td>Phòng ban</td>
-              </thead>
-              <div className="body-table">
-                <div className="show-role">
-                  <div className="show-item-role">
-                    <tr>
-                      <p>Chức vụ chính:</p>
-                    </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value={"Trưởng ca"}></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value={"Phòng sản xuất"}></Input>
-                      </div>
-                    </tr>
-                  </div>
-                  <div className="show-item-role role-fix">
-                    <tr>
-                      <p>Chức vụ chính:</p>
-                    </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value={"Phó phòng"}></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value={"Phòng kĩ thuật"}></Input>
-                      </div>
-                    </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value={"Nhân viên"}></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value={"Quản lý nhân sự"}></Input>
-                      </div>
-                    </tr>
-                  </div>
-                </div>
-              </div>
-              <thead className="thead-last"></thead>
-            </table>
-          </div>
-        </div>
-      </Modal>
-      {isEditing ? (
+      {isEditingRole ? (
         <Modal
           className="modal"
           open={isModalOpenEditRole}
@@ -1367,7 +1315,7 @@ function ListEmployeeComponent() {
               <button className="btn-cancel" onClick={handleCancelView1}>
                 Hủy bỏ
               </button>
-              <button className="btn-edit btn-save" onClick={handleSave}>
+              <button className="btn-edit btn-save" onClick={handleSaveRole}>
                 Lưu
               </button>
             </div>
@@ -1435,7 +1383,7 @@ function ListEmployeeComponent() {
               <button className="btn-cancel" onClick={handleCancelEditRole}>
                 Thoát
               </button>
-              <button className="btn-edit" onClick={handleEdit}>
+              <button className="btn-edit" onClick={handleEditRole}>
                 Sửa chức vụ
               </button>
             </div>
@@ -1756,10 +1704,10 @@ function ListEmployeeComponent() {
             </div>
             <div className="modal-footer modal-footer-add">
               <div className="btn-left">
-                <div className="modal-footer1" onClick={showModalEditRole}>
+                <div className="modal-footer1" onClick={showModalEditContract}>
                   Xem hợp đồng
                 </div>
-                <div className="modal-footer1" onClick={showModalRole}>
+                <div className="modal-footer1" onClick={showModalEditRole}>
                   Xem chức vụ
                 </div>
               </div>
