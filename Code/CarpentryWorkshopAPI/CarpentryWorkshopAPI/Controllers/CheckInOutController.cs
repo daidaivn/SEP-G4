@@ -4,8 +4,9 @@ using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System.Data;
-
+ 
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
@@ -87,12 +88,12 @@ namespace CarpentryWorkshopAPI.Controllers
             
             var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et=>et.Works).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work).Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w=>w.WorkId)
+                    WorkId = et.TeamWorks.Select(w=>w.WorkId),
                 })
                 .FirstOrDefaultAsync();
             
@@ -105,7 +106,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
                 .Select(et => et.Employee)
                 .ToListAsync();
-            if (employees.Count == 0)
+            if (employees.Count() == 0)
             {
                 return NotFound("No employees found in the team with EndDate == null");
             }
@@ -155,6 +156,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         CheckStatus = "CheckIn",
                         TimeIn = "",
                         Timeout = "",
+                        
                     });
                 }
                 else if (checkInTime == null)
@@ -168,7 +170,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 3, //Vắng mặt
                             CheckStatus = "CheckIn",
                             TimeIn = "",
-                            Timeout = ""
+                            Timeout = "",
+                            
                         });
                     }
                     else
@@ -180,7 +183,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 1, //Checkin
                             CheckStatus = "CheckIn",
                             TimeIn = "",
-                            Timeout = ""
+                            Timeout = "",
+                            
                         });
                     }
                 }                    
@@ -195,7 +199,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 6,//tan ca
                             CheckStatus = "EndCheck",
                             TimeIn = latestCheckOutTime.TimeCheckOut,
-                            Timeout = DateTime.Now.TimeOfDay
+                            Timeout = DateTime.Now.TimeOfDay,
+                            
                         });
                     }
                     else if (latestCheckOutTime.TimeCheckOut == null)
@@ -207,7 +212,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 2,// dang co mat
                             CheckStatus = "EndCheck",
                             TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = ""
+                            Timeout = "",
+                           
                         });
                     }
                     else
@@ -219,7 +225,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = 5,//tam ngung 
                             CheckStatus = "CheckIn",
                             TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = latestCheckOutTime.TimeCheckOut
+                            Timeout = latestCheckOutTime.TimeCheckOut,
+                            Date= latestCheckOutTime.Date.Value.ToString("dd'-'MM'-'yyyy")
                         });
                     }                                                
                 }
@@ -229,6 +236,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 TimeIn = teamId.TimeIn,
                 Timeout = teamId.Timeout,
+                Date = DateTime.Now.Date,
                 Result = result
             });
             return time;
@@ -241,12 +249,12 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var teamId = await _context.Teams
                 .Where(t=>t.TeamId == Id)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.Works).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work).Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
-                    WorkId = et.Works.Select(w => w.WorkId)
+                    WorkId = et.TeamWorks.Select(w => w.WorkId)
                 })
                 .FirstOrDefaultAsync();
 

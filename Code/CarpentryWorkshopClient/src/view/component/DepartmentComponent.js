@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import {
   fetchAllDepadment,
   searchAndFilterDepartment,
-  addDepartment
+  addDepartment,
 } from "../../sevices/DepartmentService";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -18,7 +18,7 @@ function ListDepartmentComponent() {
   const [isModalOpenDepartment, setIsModalOpenDepartment] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [filterOption, setFilterOption] = useState(true);
-  const [departmentName, setDepartmentName] = useState('');
+  const [departmentName, setDepartmentName] = useState("");
 
   const handleChange = (value) => {
     setFilterOption(value);
@@ -95,9 +95,9 @@ function ListDepartmentComponent() {
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -115,13 +115,12 @@ function ListDepartmentComponent() {
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
       }
     );
   };
-  
+
   useEffect(() => {
     fetData();
   }, []);
@@ -356,20 +355,24 @@ function ListDepartmentComponent() {
               <td>STT</td>
             </tr>
           </thead>
-          <tbody class="scrollbar" id="style-15">
-            {departments.map((department, index) => (
-              <tr key={department.departmentId} onClick={showModalDetail}>
-                <td>{index + 1}</td>
-                <td>{department.departmentName}</td>
-                <td>{department.number}</td>
-                <td>
-                  <Form.Item valuePropName="checked">
-                    <Switch checked={department.status} />
-                  </Form.Item>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {departments.length === 0 ? (
+            <p>Thông tin phòng ban chưa sẵn sàng hoặc không tồn tại.</p>
+          ) : (
+            <tbody class="scrollbar" id="style-15">
+              {departments.map((department, index) => (
+                <tr key={department.departmentId} onClick={showModalDetail}>
+                  <td>{index + 1}</td>
+                  <td>{department.departmentName}</td>
+                  <td>{department.number}</td>
+                  <td>
+                    <Form.Item valuePropName="checked">
+                      <Switch checked={department.status} />
+                    </Form.Item>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
         <Modal
           open={isModalOpenDetail}
@@ -399,7 +402,7 @@ function ListDepartmentComponent() {
                         <p className="child3-group">Họ và tên</p>
                       </div>
                       <div className="box5-child">
-                        <p className="child5-group">Đổi phòng ban</p>
+                        <p className="child5-group">Đổi chức vụ</p>
                       </div>
                     </div>
                     <div className="box2-modal-group"></div>
@@ -526,9 +529,9 @@ function ListDepartmentComponent() {
             <div className="info-add-department">
               <div className="text-department">Tên phòng - ban</div>
               <Input
-              value={departmentName}
-              onChange={(e) => setDepartmentName(e.target.value)}
-            />
+                value={departmentName}
+                onChange={(e) => setDepartmentName(e.target.value)}
+              />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment footer-deparment-fix">
@@ -581,7 +584,7 @@ function ListDepartmentComponent() {
           <div className="modal-all-group">
             <div className="modal-head">
               {" "}
-              <h3>Chuyển chức vụ</h3>
+              <h3>Đổi chéo chức vụ phòng kế toán</h3>
             </div>
             <div className="modal-end-group">
               <div className="body-modal-end-group">
@@ -595,40 +598,39 @@ function ListDepartmentComponent() {
                     <p>1</p>
                   </div>
                   <div className="modal1-child">
-                    <p>Phòng ban hiện tại:</p>
-                    <p>Phòng kế toán</p>
+                    <p>Chức vụ hiện tại:</p>
+                    <p>Ca trưởng</p>
                   </div>
                 </div>
                 <div className="modal2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="51"
-                    height="50"
-                    viewBox="0 0 51 50"
+                    width="53"
+                    height="46"
+                    viewBox="0 0 53 46"
                     fill="none"
                   >
-                    <path
-                      d="M30.5625 12.3545L43.2083 25.0003L30.5625 37.6462"
-                      stroke="#292D32"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M7.7915 25H42.854"
-                      stroke="#292D32"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                    <g clip-path="url(#clip0_1026_1197)">
+                      <path
+                        d="M41.7951 33.4236L51.5451 24.9861C52.8147 23.8875 52.8147 22.1033 51.5451 21.0046L41.7951 12.5671C40.5256 11.4685 38.4639 11.4685 37.1943 12.5671C35.9248 13.6658 35.9248 15.45 37.1943 16.5486L41.399 20.1873H11.5904L15.7951 16.5486C17.0646 15.45 17.0646 13.6658 15.7951 12.5671C14.5256 11.4685 12.4639 11.4685 11.1943 12.5671L1.44434 21.0046C0.174805 22.1033 0.174805 23.8875 1.44434 24.9861L11.1943 33.4236C12.4639 34.5222 14.5256 34.5222 15.7951 33.4236C17.0646 32.325 17.0646 30.5408 15.7951 29.4421L11.6006 25.8123H41.4092L37.2045 29.4509C35.935 30.5496 35.935 32.3337 37.2045 33.4324C38.474 34.531 40.5357 34.531 41.8053 33.4324L41.7951 33.4236Z"
+                        fill="#FC1E1E"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_1026_1197">
+                        <rect
+                          width="52"
+                          height="45"
+                          fill="white"
+                          transform="translate(0.5 0.5)"
+                        />
+                      </clipPath>
+                    </defs>
                   </svg>
                 </div>
                 <div className="modal3">
                   <div className="modal3-child">
-                    <p>Phòng ban chuyển đến:</p>
-
+                    <p>Nhân viên: </p>
                     <div className="list-filter select-modal-end">
                       <Select
                         className="select-input"
@@ -657,6 +659,14 @@ function ListDepartmentComponent() {
                         ]}
                       />
                     </div>
+                  </div>
+                  <div className="modal3-child modal3-child1">
+                    <p>Mã số nhân viên: </p>
+                    <p>1</p>
+                  </div>
+                  <div className="modal3-child modal3-child1">
+                    <p>Chức vụ hiện tại: </p>
+                    <p>Nhân viên</p>
                   </div>
                 </div>
               </div>

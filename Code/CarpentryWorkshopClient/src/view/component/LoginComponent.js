@@ -30,7 +30,6 @@ const LoginComponent = () => {
       new Promise((resolve) => {
         apiLogin.login(userData)
           .then(response => {
-            console.log('Phản hồi thành công:', response);
             if (rememberMe) {
               localStorage.setItem('userToken', response.token);
               localStorage.setItem('userName', response.name);

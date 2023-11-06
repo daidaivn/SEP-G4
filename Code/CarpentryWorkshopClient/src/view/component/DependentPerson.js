@@ -6,35 +6,73 @@ import "../scss/fonts.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllDependent } from "../../sevices/DependentPersonService";
+import { fetchAllDependent, SearchDependents, GetDependentPeopleById, UpdateDependent } from "../../sevices/DependentPersonService";
+import { fetchAllEmplyee } from "../../sevices/EmployeeService";
+import { GetRelationshipsType } from "../../sevices/RelationshipsType";
+import { toast } from "react-toastify";
 import { Input } from "antd";
 import { Modal } from "antd";
 import { Select } from "antd";
 import { Col, Row } from "antd";
 function DependentPerson() {
   const [isEditing, setIsEditing] = useState(false);
-  const [guardian, setGuardian] = useState("abc");
-  const [Relationship, setRelationship] = useState("abc");
-  const [Identifier, setIdentifier] = useState("abc");
-  const [date, setDate] = useState("abc");
-  const [identifierType, setIdentifierType] = useState("abc");
-  const [status, setStatus] = useState(true);
+  const [guardian, setGuardian] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+  const [employees, setEmployees] = useState([]);
+  const [employeesName, setemployeesName] = useState("");
+  const [Relationship, setRelationship] = useState('');
+  const [dependentId, setdependentId] = useState('');
+  const [relationshipName, setRelationshipName] = useState('');
+  const [Identifier, setIdentifier] = useState("");
+  const [date, setDate] = useState("");
+  const [status, setStatus] = useState(false);
+  const [filterStatus, setFilterStatus] = useState(null);
+  const [filterGender, setFilterGender] = useState(null);
+  const [inputSearch, setInputSearch] = useState('');
+  const [relationshipsType, setRelationshipsType] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleSwitchChange = () => {
+    setIsChecked(!isChecked); 
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
   };
+  const handleChangeFilterStatus = (value) => {
+    setFilterStatus(value);
+    searchandfilter(inputSearch, filterGender, value);
+  };
+  const handleChangeFilterGender = (value) => {
+    setFilterGender(value);
+    searchandfilter(inputSearch, value, filterStatus);
+  };
+  const handleChangeInnputSearch = (e) => {
+    setInputSearch(e.target.value);
+    searchandfilter(e.target.value, filterGender, filterStatus);
+  };
 
   const handleSave = () => {
-    // Thực hiện lưu thông tin chỉnh sửa vào cơ sở dữ liệu hoặc làm gì bạn cần ở đây
-    // Sau khi lưu, quay trở lại chế độ không chỉnh sửa và cập nhật nút
     setIsEditing(false);
+  };
+  const convertDateFormat = (originalDate) => {
+    const parts = originalDate.split('-');
+    if (parts.length === 3) {
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
+    }
+    return originalDate;
   };
   const [dependent, setDependent] = useState([]);
   const [isModalOpenDependent, setIsModalOpenDependent] = useState(false);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
-  const showModalDependent = () => {
+  const showModalDependent = (value) => {
     setIsModalOpenDependent(true);
+    fetchDepartmentById(value)
   };
   const handleOkDependent = () => {
     setIsModalOpenDependent(false);
@@ -42,15 +80,106 @@ function DependentPerson() {
   const handleCancelDependent = () => {
     setIsModalOpenDependent(false);
   };
-  useEffect(() => {
-    // Sử dụng fetchAllDepadment để tải dữ liệu từ API
-    fetchAllDependent()
+
+  const fetchDepartmentById = (value) => {
+    toast.promise(
+      new Promise((resolve) => {
+        GetDependentPeopleById(value)
+          .then((data) => {
+            resolve(data);
+            const { dependentId, employeesName, relationshipName, relationshipId, identifierCode, dobString, identifierName, status } = data;
+            setemployeesName(employeesName)
+            setGuardian(data.fullName);
+            setRelationship(relationshipId);
+            setIdentifier(identifierCode);
+            setDate(dobString);
+            setRelationshipName(relationshipName);
+            setEmployeeId(data.employeeId);
+            setIsChecked(status)
+            setdependentId(dependentId)
+            setStatus(status)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        error: 'Lỗi dữ liệu hiển thị',
+      }
+    );
+  };
+  console.log('date', status);
+
+  const update = () => {
+    UpdateDependent(dependentId, employeeId, Relationship, Identifier, date, isChecked)
       .then((data) => {
-        setDependent(data);
+        console.log('data',data);
+        handleSave()
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu ", error);
+        console.log('error',error);
+        
+      })
+  }
+
+  const fetchRelationshipsType = () => {
+    GetRelationshipsType()
+      .then((data) => {
+        setRelationshipsType(data)
+        handleEdit()
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+
+  const getchAllEmplyees = () => {
+    fetchAllEmplyee()
+      .then((rs) => {
+        setEmployees(rs)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+
+  const searchandfilter = (ipSearch, ftGender, ftStatus) => {
+    SearchDependents(ipSearch, ftGender, ftStatus)
+      .then((data) => {
+        setDependent(data)
+      })
+      .catch((error) => {
+        console.log(error);
       });
+  };
+
+  const fetchData = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllDependent()
+          .then((data) => {
+            setDependent(data);
+            resolve(data)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+
+      }),
+      {
+        pending: 'Đang tải dữ liệu',
+        error: 'Lỗi tải dữ liệu',
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchData();
+    getchAllEmplyees()
+    
   }, []);
   return (
     <>
@@ -128,7 +257,7 @@ function DependentPerson() {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm"></Input>
+            <Input placeholder="Tìm kiếm" onChange={handleChangeInnputSearch}></Input>
           </div>
           <div className="list-filter">
             <i className="list-filter-icon1">
@@ -165,31 +294,91 @@ function DependentPerson() {
             </i>
             <Select
               className="select-input"
-              defaultValue="lucy"
+              value={filterGender}
               style={{
                 width: 120,
               }}
-              onChange={handleChange}
+              onChange={handleChangeFilterGender}
               options={[
                 {
-                  value: "jack",
-                  label: "Jack",
+                  value: true,
+                  label: "Nam",
                 },
                 {
-                  value: "lucy",
-                  label: "Lucy",
+                  value: false,
+                  label: "Nữ",
+                },
+                filterGender !== null
+                  ? {
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
+                  : null,
+              ].filter(Boolean)}
+              placeholder="Chọn giới tính"
+            />
+
+          </div>
+          <div className="list-filter">
+            <i className="list-filter-icon1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M14.3201 19.07C14.3201 19.68 13.92 20.48 13.41 20.79L12.0001 21.7C10.6901 22.51 8.87006 21.6 8.87006 19.98V14.63C8.87006 13.92 8.47006 13.01 8.06006 12.51L4.22003 8.47C3.71003 7.96 3.31006 7.06001 3.31006 6.45001V4.13C3.31006 2.92 4.22008 2.01001 5.33008 2.01001H18.67C19.78 2.01001 20.6901 2.92 20.6901 4.03V6.25C20.6901 7.06 20.1801 8.07001 19.6801 8.57001"
+                  stroke="#3A5A40"
+                  stroke-width="1.5"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M16.07 16.5201C17.8373 16.5201 19.27 15.0874 19.27 13.3201C19.27 11.5528 17.8373 10.1201 16.07 10.1201C14.3027 10.1201 12.87 11.5528 12.87 13.3201C12.87 15.0874 14.3027 16.5201 16.07 16.5201Z"
+                  stroke="#3A5A40"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M19.87 17.1201L18.87 16.1201"
+                  stroke="#3A5A40"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </i>
+            <Select
+              className="select-input"
+              value={filterStatus}
+              style={{
+                width: 120,
+              }}
+              onChange={handleChangeFilterStatus}
+              options={[
+                {
+                  value: true,
+                  label: "Bật",
                 },
                 {
-                  value: "Yiminghe",
-                  label: "yiminghe",
+                  value: false,
+                  label: "Tắt",
                 },
-                {
-                  value: "disabled",
-                  label: "Disabled",
-                },
-              ]}
+                filterStatus !== null
+                  ? {
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
+                  : null,
+              ].filter(Boolean)}
+              placeholder="Chọn trạng thái"
             />
           </div>
+
           <i className="icon-responsive icon-filter">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +408,7 @@ function DependentPerson() {
               />
             </svg>
           </i>
-          <div className="list-add">
+          <div className="list-add" onClick={showModalDependent}>
             <i className="icon-web">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -295,21 +484,25 @@ function DependentPerson() {
               <td>Trạng thái</td>
             </tr>
           </thead>
-          <tbody class="scrollbar" id="style-15">
-            {dependent.map((dependent, index) => (
-              <tr key={dependent.dependentId} onClick={showModalDependent}>
-                <td>{index + 1}</td>
-                <td>{dependent.fullName}</td>
-                <td>{dependent.genderString}</td>
-                <td>{dependent.identifierCode}</td>
-                <td>
-                  <Form.Item valuePropName="checked">
-                    <Switch checked={dependent.status} />
-                  </Form.Item>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {dependent.length === 0 ? (
+            <p>Không tìm thấy người phụ thuộc trong dữ liệu.</p>
+          ) : (
+            <tbody class="scrollbar" id="style-15">
+              {dependent.map((dependent, index) => (
+                <tr key={dependent.dependentId} onClick={() => showModalDependent(dependent.dependentId)}>
+                  <td>{index + 1}</td>
+                  <td>{dependent.fullName}</td>
+                  <td>{dependent.genderString}</td>
+                  <td>{dependent.identifierCode}</td>
+                  <td>
+                    <Form.Item valuePropName="checked">
+                      <Switch checked={dependent.status} />
+                    </Form.Item>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
         {isEditing ? (
           <Modal
@@ -322,11 +515,11 @@ function DependentPerson() {
           >
             <div className="modal-head">
               {" "}
-              <h3>Thông tin người phụ thuộc</h3>
+              <h3>Thay đổi thông tin người phụ thuộc</h3>
             </div>
             <div className="modal-body modal-body-dependent">
               <div className="name-person-dependent">
-                <h3>name</h3>
+                <h3>{guardian}</h3>
               </div>
 
               <div className="info-detail-dependent">
@@ -338,15 +531,17 @@ function DependentPerson() {
                           <th className="text">Người giám hộ:</th>
                           <td className="input-text">
                             <select
-                              name="guardian"
-                              id="guardian"
+                              name="employeeId"
+                              id="employeeId"
                               className="select"
-                              onChange={(e) => setGuardian(e.target.value)}
+                              onChange={(e) => setEmployeeId(e.target.value)}
+                              value={employeeId}
                             >
-                              <option value="1">Volvo</option>
-                              <option value="2">Saab</option>
-                              <option value="3">Opel</option>
-                              <option value="4">Audi</option>
+                              {employees.map((employee) => (
+                                <option key={employee.employeeID} value={employee.employeeID}>
+                                  {employee.fullName}
+                                </option>
+                              ))}
                             </select>
                           </td>
                         </tr>
@@ -358,12 +553,22 @@ function DependentPerson() {
                               id="Relationship"
                               className="select"
                               onChange={(e) => setRelationship(e.target.value)}
+                              value={Relationship}
                             >
-                              <option value="1">Volvo</option>
-                              <option value="2">Saab</option>
-                              <option value="3">Opel</option>
-                              <option value="4">Audi</option>
+                              {!Relationship && (
+                                <option value="" disabled>Chọn quan hệ</option>
+                              )}
+                              {relationshipsType.map((type) => (
+                                <option key={type.relationshipId} value={type.relationshipId}>
+                                  {type.relationshipName}
+                                </option>
+                              ))}
+                              {Relationship && (
+                                <option value="">Bỏ chọn</option>
+                              )}
                             </select>
+
+
                           </td>
                         </tr>
                         <tr>
@@ -381,34 +586,17 @@ function DependentPerson() {
                           <td className="input-text">
                             <Input
                               type="date"
-                              placeholder="Basic usage"
-                              value={date}
-                              onChange={(e) => setDate(e.target.value)}
+                              placeholder="yyyy-MM-dd"
+                              value={convertDateFormat(date)}
+                              onChange={(e) => setDate(convertDateFormat(e.target.value))}
                             />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Loại mã định danh:</th>
-                          <td className="input-text">
-                            <select
-                              name="identifierType"
-                              id="identifierType"
-                              className="select"
-                              onChange={(e) => setRelationship(e.target.value)}
-                            >
-                              <option value="1">Volvo</option>
-                              <option value="2">Saab</option>
-                              <option value="3">Opel</option>
-                              <option value="4">Audi</option>
-                            </select>
                           </td>
                         </tr>
                         <tr>
                           <th className="text">Trạng thái:</th>
                           <td className="input-text">
-                            {" "}
                             <Form.Item valuePropName={status}>
-                              <Switch value="checked" />
+                              <Switch checked={isChecked} onChange={handleSwitchChange} />
                             </Form.Item>
                             Còn phụ thuộc
                           </td>
@@ -423,7 +611,7 @@ function DependentPerson() {
               <button className="btn-cancel" onClick={handleCancelDependent}>
                 Hủy bỏ
               </button>
-              <button className="btn-save" onClick={handleSave}>
+              <button className="btn-save" onClick={update}>
                 Lưu
               </button>
             </div>
@@ -443,7 +631,7 @@ function DependentPerson() {
             </div>
             <div className="modal-body modal-body-dependent">
               <div className="name-person-dependent">
-                <h3>name</h3>
+                <h3>{guardian}</h3>
               </div>
 
               <div className="info-detail-dependent">
@@ -455,8 +643,8 @@ function DependentPerson() {
                           <th className="text">Người giám hộ:</th>
                           <td className="input-text">
                             <Input
-                              placeholder="Basic usage"
-                              value={guardian}
+                              placeholder="Người phục thuộc"
+                              value={employeesName}
                             ></Input>
                           </td>
                         </tr>
@@ -464,8 +652,8 @@ function DependentPerson() {
                           <th className="text">Mối quan hệ:</th>
                           <td className="input-text">
                             <Input
-                              placeholder="Basic usage"
-                              value={Relationship}
+                              placeholder="Mối quan hệ"
+                              value={relationshipName}
                             />
                           </td>
                         </tr>
@@ -473,7 +661,7 @@ function DependentPerson() {
                           <th className="text">Mã định danh:</th>
                           <td className="input-text">
                             <Input
-                              placeholder="Basic usage"
+                              placeholder="Mã định danh"
                               value={Identifier}
                             />
                           </td>
@@ -481,16 +669,7 @@ function DependentPerson() {
                         <tr>
                           <th className="text">Ngày sinh:</th>
                           <td className="input-text">
-                            <Input placeholder="Basic usage" value={date} />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Loại mã định danh:</th>
-                          <td className="input-text">
-                            <Input
-                              placeholder="Basic usage"
-                              value={identifierType}
-                            />
+                            <Input placeholder="Ngày sinh" value={date} />
                           </td>
                         </tr>
                         <tr>
@@ -498,9 +677,9 @@ function DependentPerson() {
                           <td className="input-text">
                             {" "}
                             <Form.Item valuePropName={status}>
-                              <Switch value={status} />
+                              <Switch checked={status} />
                             </Form.Item>
-                            Còn phụ thuộc
+                            Phụ thuộc
                           </td>
                         </tr>
                       </tbody>
@@ -513,7 +692,7 @@ function DependentPerson() {
               <button className="btn-cancel" onClick={handleCancelDependent}>
                 Hủy bỏ
               </button>
-              <button className="btn-edit" onClick={handleEdit}>
+              <button className="btn-edit" onClick={fetchRelationshipsType}>
                 Chỉnh sửa
               </button>
             </div>

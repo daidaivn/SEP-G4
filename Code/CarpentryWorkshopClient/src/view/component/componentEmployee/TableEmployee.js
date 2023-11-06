@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Form } from "antd";
 
-function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
+function TableEmployee({ employees, showModal, setId, setIsModalOpen, handlelDetail }) {
   return (
     <table className="list-table" onClick={showModal}>
       <thead>
@@ -15,15 +15,15 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen }) {
         </tr>
       </thead>
       {employees.length === 0 ? (
-        <p>Loading...</p>
+        <p>Thông tin nhân viên chưa sẵn sàng hoặc không tồn tại.</p>
       ) : (
       <tbody className="scrollbar" id="style-15">
         {employees.map((employee, index) => (
           <tr
-            key={employee.employeesId}
+            key={employee.employeeID}
             onClick={() => {
-              setId(employee.employeesId);
-              setIsModalOpen(true);
+              setId(employee.employeeID);
+              handlelDetail(employee.employeeID);
             }}
           >
             <td>{employee.image}</td>

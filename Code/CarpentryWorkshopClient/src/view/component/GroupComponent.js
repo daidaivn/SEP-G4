@@ -20,6 +20,8 @@ import {
   fetTeamContinue,
   createTeamMember,
   searchData,
+  DeleteTeamMember,
+  ChangeTeamName
 } from "../../sevices/TeamService";
 import { Select } from "antd";
 import { Modal } from "antd";
@@ -47,6 +49,8 @@ const GroupComponent = () => {
   const [teamsContinue, setTeamsContinue] = useState([]);
   const [getStaffsNoTeam, setGetStaffsNoTeam] = useState([]);
   const [inputSearch, setInputSearch] = useState([]);
+  const [teamName, setTeamName] = useState('');
+
 
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
@@ -107,7 +111,47 @@ const GroupComponent = () => {
     fetDataTeamContinue();
   };
 
-  console.log("idChange", idChange);
+  const DelteMemberForTeam = (id) => {
+    toast.promise(
+      new Promise((resolve) => {
+        DeleteTeamMember(id, teamID)
+          .then((data) => {
+            resolve(data);
+            handleDetailGroup(teamID);
+            fetchData();
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Xóa thành công',
+        error: 'Lỗi xóa',
+      }
+    );
+  };
+
+  const ChangeNameTeam = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        ChangeTeamName(newTeamName, teamID)
+          .then((data) => {
+            resolve(data);
+            handleDetailGroup(teamID);
+            fetchData();
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Đổi tên nhóm thành công',
+        error: 'Lỗi đổi tên nhóm',
+      }
+    );
+  };
 
   const handleOkChange = () => {
     setIsModalOpenChange(false);
@@ -138,6 +182,7 @@ const GroupComponent = () => {
   };
   const handleOkChangeName = () => {
     setIsModalOpenChangeName(false);
+    ChangeNameTeam()
   };
   const handleCancelChangeName = () => {
     setIsModalOpenChangeName(false);
@@ -159,13 +204,22 @@ const GroupComponent = () => {
   };
 
   const fetchData = () => {
-    fetchAllTeam()
-      .then((data) => {
-        setRoles(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
-      });
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllTeam()
+          .then((data) => {
+            setRoles(data);
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
+      }
+    );
   };
   const searchForData = (Inputvalue) => {
     setInputSearch(Inputvalue);
@@ -244,19 +298,19 @@ const GroupComponent = () => {
     );
   };
 
-  const handleDetailGroup = (teamId) => {
+  const handleDetailGroup = (teamId, teamName) => {
     toast.promise(
       new Promise((resolve) => {
         detailTeamByID(teamId)
           .then((data) => {
             setDetailTeamID(data);
             setTeamID(teamId);
+            setTeamName(teamName);
             showModalDetail();
             resolve();
           })
           .catch((error) => {
-            console.error("Lỗi thêm nhóm:", error);
-            resolve();
+            resolve(error);
           });
       }),
       {
@@ -264,6 +318,7 @@ const GroupComponent = () => {
       }
     );
   };
+  console.log('teamName', teamName);
 
   const handleGetAllMember = () => {
     console.log(selectedChangeid1);
@@ -538,19 +593,25 @@ const GroupComponent = () => {
               <td>Trưởng nhóm</td>
             </tr>
           </thead>
-          <tbody class="scrollbar" id="style-15">
-            {roles.map((role, index) => (
-              <tr
-                key={role.teamId}
-                onClick={() => handleDetailGroup(role.teamId)}
-              >
-                <td>{index + 1}</td>
-                <td>{role.teamName}</td>
-                <td>{role.numberOfTeamMember}</td>
-                <td>{role.teamLeaderName}</td>
-              </tr>
-            ))}
-          </tbody>
+          {roles.length === 0 ? (
+            <p>Thông tin nhóm chưa sẵn sàng hoặc không tồn tại.</p>
+          ) : (
+            <tbody class="scrollbar" id="style-15">
+              {
+                roles.map((role, index) => (
+                  <tr
+                    key={role.teamId}
+                    onClick={() => handleDetailGroup(role.teamId, role.teamName)}
+                  >
+                    <td>{index + 1}</td>
+                    <td>{role.teamName}</td>
+                    <td>{role.numberOfTeamMember}</td>
+                    <td>{role.teamLeaderName}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          )}
         </table>
         <Modal
           className="modal"
@@ -618,14 +679,14 @@ const GroupComponent = () => {
           <div className="modal-dependent modal-detail-group">
             <div className="modal-head">
               {" "}
-              <h3>Nhóm {teamID}</h3>
+              <h3>{teamName}</h3>
             </div>
             <div className=" modal-group">
               <div className="info-detail-group">
                 <div className="info-body-group">
                   {detailTeamID.shiftManager ||
-                  detailTeamID.shiftAssistant ||
-                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                    detailTeamID.shiftAssistant ||
+                    (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
                     <>
                       <div className="box1-modal-group">
                         <div className="box1-child">
@@ -791,7 +852,6 @@ const GroupComponent = () => {
                                   showModalChange(
                                     staffMember.employeeId,
                                     staffMember.fullName,
-                                    3
                                   );
                                 }
                               }}
@@ -812,7 +872,13 @@ const GroupComponent = () => {
                               </p>
                             </div>
                             <div className="box4-child">
-                              <p className="child4-group">
+                              <p className="child4-group" onClick={() => {
+                                if (staffMember) {
+                                  DelteMemberForTeam(
+                                    staffMember.employeeId,
+                                  );
+                                }
+                              }}>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   width="24"
@@ -933,7 +999,7 @@ const GroupComponent = () => {
                   </div>
                   <div className="modal1-child">
                     <p>Nhóm hiện tại:</p>
-                    <p>Nhóm {teamID}</p>
+                    <p>{teamName}</p>
                   </div>
                 </div>
                 <div className="modal2">

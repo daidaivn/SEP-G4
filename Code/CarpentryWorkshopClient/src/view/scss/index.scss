@@ -502,6 +502,13 @@ i .logo-responsive {
     border-radius: 20px;
     border: none;
   }
+  .btn-left {
+    display: flex;
+    gap: 10px;
+    .add-green {
+      background: #3a5a40;
+    }
+  }
 }
 .btn-save {
   background: #1967ff !important;
@@ -802,7 +809,6 @@ i .logo-responsive {
       padding: 20px;
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
       flex: 1 0 0;
       border-radius: 20px;
       background: #f9faf5;
@@ -842,12 +848,9 @@ i .logo-responsive {
       background: #f9faf5;
       .modal3-child {
         display: flex;
-        padding: 20px;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
+        padding: 0px 10px;
+        align-items: center;
         gap: 10px;
-        flex: 1 0 0;
         align-self: stretch;
         p {
           color: #000;
@@ -859,18 +862,22 @@ i .logo-responsive {
         }
         .select-modal-end {
           display: flex;
-          padding: 14px 24px;
+          padding: 10px 20px;
           align-items: center;
           gap: 10px;
+          flex: 1 0 0;
           align-self: stretch;
-          background: none;
-          .ant-select-selector {
-            background: #f9faf5;
+          background: #fff;
+          .ant-select .ant-select-selector {
+            background: #fff !important;
           }
           .ant-select {
             width: 100% !important;
           }
         }
+      }
+      .modal3-child1 {
+        padding: 0px 10px;
       }
     }
   }

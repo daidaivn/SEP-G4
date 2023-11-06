@@ -37,36 +37,34 @@ const Decentralization = () => {
     console.log(isChecked);
 
     if (isChecked) {
-      // Gọi API để thêm quyền truy cập
       addRolePage(pageId, roleId)
         .then((response) => {
-          // Xử lý thành công
           console.log("Thêm thành công");
-          // Sau khi thêm thành công, gọi lại các hàm tải dữ liệu
           fetchData();
         })
         .catch((error) => {
-          // Xử lý lỗi
           console.error("Lỗi khi thêm quyền truy cập:", error);
         });
     } else {
-      // Gọi API để xóa quyền truy cập
       deleteRolePage(pageId, roleId)
-        .then((response) => {
-          // Xử lý thành công
-          console.log("Xóa thành công");
-          // Sau khi xóa thành công, gọi lại các hàm tải dữ liệu
+        .then(() => {
           fetchData();
         })
         .catch((error) => {
-          // Xử lý lỗi
           console.error("Lỗi khi xóa quyền truy cập:", error);
         });
     }
   };
-
-  // Hàm tải lại dữ liệu
-  const fetchData = () => {
+  const featchDataPage=()=>{
+    fetchAllPages()
+    .then((data) => {
+      setPages(data);
+    })
+    .catch((error) => {
+      console.error("Lỗi khi tải dữ liệu RolePage", error);
+    });
+  }
+  const featchDatarole=()=>{
     fetchAllRole()
       .then((data) => {
         setRoles(data);
@@ -74,15 +72,8 @@ const Decentralization = () => {
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu phòng ban:", error);
       });
-
-    fetchAllPages()
-      .then((data) => {
-        setPages(data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu RolePage", error);
-      });
-
+  }
+  const fetchData = () => {
     fetchAllDecentralization()
       .then((data) => {
         setDecentralizations(data);
@@ -93,7 +84,8 @@ const Decentralization = () => {
   };
 
   useEffect(() => {
-    // Ban đầu, gọi hàm tải dữ liệu
+    featchDataPage()
+    featchDatarole()
     fetchData();
   }, []);
   return (
@@ -234,8 +226,14 @@ const Decentralization = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        {decentralizations.length === 0 ? (
-          <p>Loading...</p>
+        {decentralizations.length === 0 || roles.length === 0 || pages.length === 0 ? (
+          <p>
+            {decentralizations.length === 0
+              ? "Thông tin chi tiết về vai trò chưa sẵn sàng hoặc không tồn tại."
+              : roles.length === 0
+                ? "Không có vai trò nào để hiển thị."
+                : "Không có trang nào để hiển thị."}
+          </p>
         ) : (
           <table className="table-Decent">
             <thead>
@@ -253,7 +251,7 @@ const Decentralization = () => {
                 {pages.map((pages) => (
                   <tr key={pages.pageId}>
                     <td>
-                      <span>{pages.pageName}</span>
+                      <span>{pages.pageNameVn}</span>
                     </td>
                     {roles.map((roles) => (
                       <td key={roles.roleID}>

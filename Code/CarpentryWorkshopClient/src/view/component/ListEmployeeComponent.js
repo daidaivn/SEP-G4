@@ -16,14 +16,15 @@ import React, { useState, useEffect } from "react";
 import {
   fetchAllEmplyee,
   fetchEmplyeebyid,
-  SearchEmployees
+  SearchEmployees,
+  DetailID,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 import {
   TableEmployee,
   TableEmployeeRes,
@@ -36,21 +37,29 @@ function ListEmployeeComponent() {
   const [roles, setRoles] = useState([]);
 
   const [id, setId] = useState(null);
+  const [idDetail, setIdDetail] = useState(null);
+
   const [isEditing, setIsEditing] = useState(false);
-  const [address, setAddress] = useState("Hà Nội");
-  const [gender, setGender] = useState("Nguyễn Văn An");
-  const [phone, setPhone] = useState("0899999577");
-  const [fax, setFax] = useState("0899999577");
-  const [idCard, setIdCard] = useState("0899999577");
-  const [role, setRole] = useState("Nhân viên");
-  const [department, setDepartment] = useState("Phòng kế toán");
+  const [originalLastName, setOriginalLastName] = useState("");
+  const [originalFirstName, setOriginalFirstName] = useState("");
+  const [originalPhoneNumber, setOriginalPhoneNumber] = useState("");
+  const [originalGender, setOriginalGender] = useState("");
+  const [originalNationality, setOriginalNationality] = useState("");
+  const [originalAddress, setOriginalAddress] = useState("");
+  const [originalCIC, setOriginalCIC] = useState("");
+  const [originalTaxId, setOriginalTaxId] = useState("");
+  const [originalDOB, setOriginalDOB] = useState("");
+  const [originalStatus, setOriginalStatus] = useState(false);
+  const [originalWage, SetOriginalWage] = useState("");
+
+  const [gender, setGender] = useState();
+
 
   const [employeeData, setEmployeeData] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterRole, setFilterRole] = useState(null);
-  const [inputSearch, setInputSearch] = useState('');
-
+  const [inputSearch, setInputSearch] = useState("");
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -63,23 +72,26 @@ function ListEmployeeComponent() {
   const allRole = () => {
     fetchAllRole()
       .then((data) => {
-        setRoles(data)
+        setRoles(data);
       })
-      .catch((error) => {
-
-      });
-
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
-          .then((data) => {
-            setEmployees(data)
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      .then((data) => {
+        setEmployees(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
-
+  const convertDobToISO = (dobstring) => {
+    const parts = dobstring.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dobstring;
+  };
   const fetchData = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -89,43 +101,71 @@ function ListEmployeeComponent() {
             resolve(data);
           })
           .catch((error) => {
-            fetchData()
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
+      }
+    );
+  };
+  const handlelDetail = (value) => {
+    toast.promise(
+      new Promise((resolve) => {
+        DetailID(value)
+          .then((data) => {
+            setIdDetail(data)
+            setOriginalLastName(data.fullName.split(" ").slice(0, -1).join(" "));
+            setOriginalFirstName(data.fullName.split(" ").slice(-1).join(" "));
+            setOriginalPhoneNumber(data.phoneNumber);
+            setOriginalGender(data.gender);
+            setOriginalNationality(data.country);
+            setOriginalAddress(data.address);
+            setOriginalCIC(data.cic);
+            setOriginalTaxId(data.taxId);
+            setOriginalDOB(data.dobstring);
+            setOriginalStatus(data.status);
+            SetOriginalWage(data.wave);
+            resolve(data)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        error: "Lỗi dữ liệu thông tin chi tiết!",
       }
     );
   };
 
   useEffect(() => {
     fetchData();
-
-    if (id !== null) {
-      fetchEmplyeebyid(id)
-        .then((response) => {
-          setEmployeeData(response);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    }
+    fetchEmplyeebyid(id)
+      .then((response) => {
+        setEmployeeData(response);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     allRole();
   }, [id]);
 
   function handleSelectChange(value) {
-    const actualValue  = value === null ? null : value;
+    const actualValue = value === null ? null : value;
     setFilterRole(actualValue);
     searchandfilter(inputSearch, filterGender, filterStatus, actualValue);
   }
   const selectOptions = [
-    ...(filterRole ? [{
-      value: null,
-      label: "Bỏ chọn",
-    }] : []),
+    ...(filterRole
+      ? [
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
+      : []),
     ...roles.map((role) => ({
       value: role.roleID,
       label: role.roleName,
@@ -297,7 +337,10 @@ function ListEmployeeComponent() {
               </g>
             </svg>
           </i>
-          <Input placeholder="Tìm kiếm" onChange={handleChangeInnputSearch}></Input>
+          <Input
+            placeholder="Tìm kiếm"
+            onChange={handleChangeInnputSearch}
+          ></Input>
         </div>
         <div className="list-filter">
           <i className="list-filter-icon1">
@@ -357,7 +400,6 @@ function ListEmployeeComponent() {
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
           />
-
         </div>
         <div className="list-filter">
           <i className="list-filter-icon1">
@@ -400,8 +442,6 @@ function ListEmployeeComponent() {
             options={selectOptions}
             placeholder="Chọn chức vụ"
           />
-
-
         </div>
         <div className="list-filter">
           <i className="list-filter-icon1">
@@ -532,7 +572,7 @@ function ListEmployeeComponent() {
         >
           <div className="modal-add-employee">
             <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
+              <h3>Thêm nhân viên</h3>
             </div>
             <div className="modal-add-employee-all">
               <div className="modal-employee-box1">
@@ -542,13 +582,19 @@ function ListEmployeeComponent() {
                   </div>
                 </div>
                 <div className="modal-child-body2">
-                  <div className="div-modal-child2">
-                    <p>Họ:</p>
-                    <Input placeholder="Nhập họ kèm tên đệm" />
+                  <div className="div-modal-child2 div-detail div1-modal-child2">
+                    <div className="div1-modal-cn">
+                      <p>Họ:</p>
+                      <Input placeholder="Nhập họ" />
+                    </div>
+                    <div className="div1-modal-cn div2-fix">
+                      <p>Tên:</p>
+                      <Input placeholder="Nhập tên" />
+                    </div>
                   </div>
-                  <div className="div-modal-child2">
-                    <p>Tên:</p>
-                    <Input placeholder="Nhập tên" />
+                  <div className="div-modal-child2 div-detail">
+                    <p>Số điện thoại:</p>
+                    <Input placeholder="Nhập số điện thoại" />
                   </div>
 
                   <div className="div-modal-child2">
@@ -571,7 +617,7 @@ function ListEmployeeComponent() {
                     <p>Quốc tịch:</p>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      defaultValue="Chọn quốc tịch"
                       style={{
                         width: "100%",
                       }}
@@ -582,8 +628,8 @@ function ListEmployeeComponent() {
                           label: "Jack",
                         },
                         {
-                          value: "lucy",
-                          label: "Lucy",
+                          value: "Chọn quốc tịch",
+                          label: "Chọn quốc tịch",
                         },
                         {
                           value: "Yiminghe",
@@ -596,11 +642,11 @@ function ListEmployeeComponent() {
                       ]}
                     />
                   </div>
-                  <div className="div-modal-child2">
+                  <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
                     <Input placeholder="Nhập địa chỉ" />
                   </div>
-                  <div className="div-modal-child2">
+                  <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
                     <Input placeholder="Nhập mã định danh" />
                   </div>
@@ -608,95 +654,61 @@ function ListEmployeeComponent() {
               </div>
               <div className="modal-employee-box2">
                 <div className="modal-box2-child">
-                  <div className="box2-child-cn">
-                    <div className="box-child-employee1">
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
                       <Input placeholder="Nhập mã số thuế" />
                     </div>
                     <div className="box-child-employee1">
                       <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
-                    </div>
-                    <div className="box-child-employee1">
-                      <p>Hợp đồng:</p>
-                      <span
-                        className="add-contract"
-                        onClick={showModalAddContract}
-                      >
-                        Thêm hợp đồng
-                      </span>
+                      <p className="fix-input">99999999998</p>
                     </div>
                   </div>
                   <div className="box2-child-cn">
-                    <div className="div1-child-employee">
-                      <p>Chức vụ</p>
-                      <svg
-                        onClick={showModalAddRole}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="27"
-                        height="25"
-                        viewBox="0 0 27 25"
-                        fill="none"
-                      >
-                        <g clip-path="url(#clip0_787_1150)">
-                          <path
-                            d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
-                            fill="#3A5A40"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_787_1150">
-                            <rect
-                              width="26"
-                              height="25"
-                              fill="white"
-                              transform="translate(0.25)"
-                            />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p>Phòng / Ban</p>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Ngày sinh:</p>
+                      <input type="date" placeholder="Chọn ngày sinh" />
                     </div>
-                    <div className="div2-child-employee">
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Trường phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Hành chính</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Phó phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Kế toán</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Nhân viên</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Tài vụ</p>
-                        </div>
-                      </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Trạng thái:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch
+                          checked={
+                            idDetail && idDetail.status
+                              ? idDetail.status
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </Form.Item>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="modal-footer modal-footer-add modal-add-fix">
-              <button className="btn-cancel" onClick={handleCancelAdd}>
-                Hủy bỏ
-              </button>
-              <button className="btn-edit btn-save" onClick={handleOkAdd}>
-                Lưu
-              </button>
+            <div className="modal-footer modal-footer-add">
+              <div className="btn-left">
+                <div
+                  className="modal-footer1 add-green"
+                  onClick={showModalAddContract1}
+                >
+                  Thêm hợp đồng
+                </div>
+                <div className="modal-footer1 add-green">Thêm chức vụ</div>
+              </div>
+
+              <div className="modal-footer modal-footer2">
+                <button className="btn-cancel" onClick={handleCancel}>
+                  Thoát
+                </button>
+                <button className="btn-edit btn-save" onClick={handleSave}>
+                  Lưu
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
+
+
         <Modal
           className="modal"
           open={isModalOpenAddRole}
@@ -1039,57 +1051,14 @@ function ListEmployeeComponent() {
       </div>
 
       <TableEmployeeRes employees={employees} />
-        <TableEmployee
-          employees={employees}
-          showModal={showModal}
-          setId={setId}
-          setIsModalOpen={setIsModalOpen}
-        />
-      <div>
-        {isEditing ? (
-          <AddEmployeeModal
-            isModalOpen={isModalOpen}
-            handleOk={handleOk}
-            handleCancel={handleCancel}
-            address={address}
-            setAddress={setAddress}
-            gender={gender}
-            setGender={setGender}
-            phone={phone}
-            setPhone={setPhone}
-            idCard={idCard}
-            setIdCard={setIdCard}
-            fax={fax}
-            setFax={setFax}
-            handleChange={handleChange}
-            Option={Option}
-          />
-        ) : (
-          <DetailEmployeeModal
-            isModalOpen={isModalOpen}
-            handleOk={handleOk}
-            handleCancel={handleCancel}
-            address={address}
-            setAddress={setAddress}
-            gender={gender}
-            setGender={setGender}
-            phone={phone}
-            setPhone={setPhone}
-            idCard={idCard}
-            setIdCard={setIdCard}
-            fax={fax}
-            setFax={setFax}
-            role={role}
-            department={department}
-            setRole={setRole}
-            setDepartment={setDepartment}
-            value={value}
-            onChangeRadio={onChangeRadio}
-            handleEdit={handleEdit}
-            Option={Option}
-          />
-        )}
-      </div>
+      <TableEmployee
+        employees={employees}
+        showModal={showModal}
+        setId={setId}
+        handlelDetail={handlelDetail}
+        setIsModalOpen={setIsModalOpen}
+      />
+
       <Modal
         className="modal"
         open={isModalOpenAddContract1}
@@ -1098,9 +1067,23 @@ function ListEmployeeComponent() {
         onCancel={handleCancelAddContract1}
       >
         <div className="modal-add-roleyee-employee modal-contract">
-          <div className="modal-head">
-            {" "}
-            <h3>Thêm / sửa hợp đồng</h3>
+          <div className="modal-head-employee">
+            <h3>Thông tin cá nhân</h3>
+            <svg
+              onClick={handleCancelAddContract}
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
+                fill="white"
+              />
+            </svg>
           </div>
           <div className="body-add-role-employee">
             <table>
@@ -1399,13 +1382,13 @@ function ListEmployeeComponent() {
         <Modal
           className="modal"
           visible={isModalOpen}
-          onOk={handleOk}
+          onOk={handleSave}
           onCancel={handleCancel}
           width={1252}
         >
           <div className="modal-add-employee">
             <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
+              <h3>Sửa thông tin nhân viên</h3>
             </div>
             <div className="modal-add-employee-all">
               <div className="modal-employee-box1">
@@ -1415,21 +1398,36 @@ function ListEmployeeComponent() {
                   </div>
                 </div>
                 <div className="modal-child-body2">
-                  <div className="div-modal-child2 div-detail">
-                    <p>Họ:</p>
-                    <Input value="Nguyễn Văn" />
+                  <div className="div-modal-child2 div-detail div1-modal-child2">
+                    <div className="div1-modal-cn">
+                      <p>Họ:</p>
+                      <Input
+                        value={originalLastName}
+                        onChange={(e) => setOriginalLastName(e.target.value)}
+                      />
+                    </div>
+                    <div className="div1-modal-cn div2-fix">
+                      <p>Tên:</p>
+                      <Input
+                        value={originalFirstName}
+                        onChange={(e) => setOriginalFirstName(e.target.value)}
+                      />
+                    </div>
                   </div>
                   <div className="div-modal-child2 div-detail">
-                    <p>Tên:</p>
-                    <Input value="An" />
+                    <p>Số điện thoại:</p>
+                    <Input
+                      value={originalPhoneNumber}
+                      onChange={(e) => setOriginalPhoneNumber(e.target.value)}
+                    />
                   </div>
 
                   <div className="div-modal-child2">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
                       <Radio.Group
-                        onChange={(e) => setGender(e.target.value)}
-                        value={gender}
+                        onChange={(e) => setOriginalGender(e.target.value)}
+                        value={originalGender}
                       >
                         <Radio value={1} className="gender">
                           Nam
@@ -1444,11 +1442,11 @@ function ListEmployeeComponent() {
                     <p>Quốc tịch:</p>
                     <Select
                       className="select-input"
-                      defaultValue="lucy"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
                       options={[
                         {
                           value: "jack",
@@ -1471,11 +1469,17 @@ function ListEmployeeComponent() {
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
-                    <Input value="Hà Nội" />
+                    <Input
+                      value={originalAddress}
+                      onChange={(e) => setOriginalAddress(e.target.value)}
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
-                    <Input value="000125558995" />
+                    <Input
+                      value={originalCIC}
+                      onChange={(e) => setOriginalCIC(e.target.value)}
+                    />
                   </div>
                 </div>
               </div>
@@ -1484,90 +1488,66 @@ function ListEmployeeComponent() {
                   <div className="box2-child-cn ">
                     <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
-                      <Input value="0987654321" />
+                      <Input
+                        value={originalTaxId}
+                        onChange={(e) => setOriginalTaxId(e.target.value)}
+                      />
                     </div>
-                    <div className="box-child-employee1">
+                    <div className="box-child-employee1 div-detail">
                       <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
-                    </div>
-                    <div className="box-child-employee1">
-                      <p>Trạng thái hợp đồng:</p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
-                      </Form.Item>
+                      <Input
+                        value={
+                          idDetail && idDetail.wageNumber
+                            ? idDetail.wageNumber
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                   </div>
                   <div className="box2-child-cn">
-                    <div className="div1-child-employee">
-                      <p>Chức vụ</p>
-                      <svg
-                        onClick={showModalAddRole1}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="27"
-                        height="25"
-                        viewBox="0 0 27 25"
-                        fill="none"
-                      >
-                        <g clip-path="url(#clip0_787_1150)">
-                          <path
-                            d="M13.25 25C16.6978 25 20.0044 23.683 22.4424 21.3388C24.8804 18.9946 26.25 15.8152 26.25 12.5C26.25 9.18479 24.8804 6.00537 22.4424 3.66117C20.0044 1.31696 16.6978 0 13.25 0C9.80219 0 6.49558 1.31696 4.05761 3.66117C1.61964 6.00537 0.25 9.18479 0.25 12.5C0.25 15.8152 1.61964 18.9946 4.05761 21.3388C6.49558 23.683 9.80219 25 13.25 25ZM12.0312 16.7969V13.6719H8.78125C8.10586 13.6719 7.5625 13.1494 7.5625 12.5C7.5625 11.8506 8.10586 11.3281 8.78125 11.3281H12.0312V8.20312C12.0312 7.55371 12.5746 7.03125 13.25 7.03125C13.9254 7.03125 14.4688 7.55371 14.4688 8.20312V11.3281H17.7188C18.3941 11.3281 18.9375 11.8506 18.9375 12.5C18.9375 13.1494 18.3941 13.6719 17.7188 13.6719H14.4688V16.7969C14.4688 17.4463 13.9254 17.9688 13.25 17.9688C12.5746 17.9688 12.0312 17.4463 12.0312 16.7969Z"
-                            fill="#3A5A40"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_787_1150">
-                            <rect
-                              width="26"
-                              height="25"
-                              fill="white"
-                              transform="translate(0.25)"
-                            />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p>Phòng / Ban</p>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Ngày sinh:</p>
+                      <input
+                        type="date"
+                        value={originalDOB}
+                        onChange={(e) => setOriginalDOB(e.target.value)}
+                      />
                     </div>
-                    <div className="div2-child-employee">
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Trường phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Hành chính</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Phó phòng</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Kế toán</p>
-                        </div>
-                      </div>
-                      <div className="div2-child">
-                        <div className="div2-child-cn">
-                          <p>Nhân viên</p>
-                        </div>
-                        <div className="div2-child-cn">
-                          <p>Tài vụ</p>
-                        </div>
-                      </div>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Trạng thái:</p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch
+                          checked={originalStatus}
+                          onChange={(checked) => setOriginalStatus(checked)}
+                        />
+                      </Form.Item>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="modal-footer modal-footer-add modal-footer-edit">
-              <button className="btn-cancel" onClick={handleCancelAdd}>
-                Hủy bỏ
-              </button>
-              <button className="btn-edit btn-save" onClick={handleSave}>
-                Lưu
-              </button>
+            <div className="modal-footer modal-footer-add">
+              <div className="btn-left">
+                <div className="modal-footer1" onClick={showModalAddContract1}>
+                  Xem hợp đồng
+                </div>
+                <div className="modal-footer1">Xem chức vụ</div>
+              </div>
+
+              <div className="modal-footer modal-footer2">
+                <button className="btn-cancel" onClick={handleCancel}>
+                  Hủy bỏ
+                </button>
+                <button className="btn-edit btn-save" onClick={handleSave}>
+                  Lưu
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
+
       ) : (
+
         <Modal
           className="modal"
           visible={isModalOpen}
@@ -1575,123 +1555,141 @@ function ListEmployeeComponent() {
           onCancel={handleCancel}
           width={1252}
         >
+          {/* Modail view detail */}
           <div className="modal-add-employee">
             <div className="modal-head-employee">
-              <h3>Thông tin cá nhân</h3>
+              <h3>Thông tin nhân viên chi tiết</h3>
             </div>
             <div className="modal-add-employee-all">
               <div className="modal-employee-box1">
                 <div className="modal-child-body1">
                   <div className="img-body1">
-                    <img src={avt} alt="" />
+                    <img
+                      src={idDetail && idDetail.image ? idDetail.image : avt}
+                      alt=""
+                    />
                   </div>
                 </div>
                 <div className="modal-child-body2">
                   <div className="div-modal-child2 div-detail">
                     <p>Họ và tên:</p>
-                    <Input value="Nguyễn Văn An" />
+                    <Input
+                      value={
+                        idDetail && idDetail.fullName
+                          ? idDetail.fullName
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
-
                   <div className="div-modal-child2 div-detail">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
-                      <Input value="Nam" />
+                      <Input
+                        value={
+                          idDetail && idDetail.gender
+                            ? idDetail.gender
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Quốc tịch:</p>
-                    <Input value="Việt Nam" />
+                    <Input
+                      value={
+                        idDetail && idDetail.country
+                          ? idDetail.country
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
+
                   <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
-                    <Input value="Hà Nội" />
+                    <Input
+                      value={
+                        idDetail && idDetail.address
+                          ? idDetail.address
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
-                    <Input value="000125558995" />
+                    <Input
+                      value={
+                        idDetail && idDetail.cic
+                          ? idDetail.cic
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Số điện thoại: </p>
-                    <Input value="0192568746" />
+                    <Input
+                      value={
+                        idDetail && idDetail.phoneNumber
+                          ? idDetail.phoneNumber
+                          : "Chưa có thông tin"
+                      }
+                    />
                   </div>
                 </div>
               </div>
-              <div className="modal-employee-box2 ">
+              <div className="modal-employee-box2">
                 <div className="modal-box2-child">
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
-                      <Input value="0987654321" />
+                      <Input
+                        value={
+                          idDetail && idDetail.taxId
+                            ? idDetail.taxId
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Lương cơ bản:</p>
-                      <Input value="4000000" className="salary" />
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Trạng thái hợp đồng:</p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
-                      </Form.Item>
-                      <p>Hợp đồng:</p>
-                      <div className="edit-ct1">
-                        <div className="edit-ct2">
-                          <span
-                            className="edit-contract"
-                            onClick={showModalAddContract1}
-                          >
-                            Sửa
-                          </span>
-                        </div>
-                      </div>
+                      <Input
+                        value={
+                          idDetail && idDetail.wageNumber
+                            ? idDetail.wageNumber
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                   </div>
-                  <div className="box2-child-cn ">
+                  <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
-                      <p>Chức vụ:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Trưởng phòng</p>
-                          </div>
-                        </div>
-                      </div>
+                      <p>Ngày sinh:</p>
+                      <input
+                        type="date"
+                        value={
+                          idDetail && idDetail.dobstring
+                            ? convertDobToISO(idDetail.dobstring)
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Kiêm nghiệm chức vụ:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Nhân viên</p>
-                          </div>
-                        </div>
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Nhân viên</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="box-child-employee1 div-detail">
-                      <p>Phòng ban:</p>
-                      <div className="value">
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Phòng kế toán</p>
-                          </div>
-                        </div>
-                        <div className="value2">
-                          <div className="value3">
-                            <p>Phòng kế toán</p>
-                          </div>
-                        </div>
-                      </div>
+                      <p>Trạng thái:</p>
+                      <Switch
+                        checked={idDetail && idDetail.status ? idDetail.status : false}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="modal-footer modal-footer-add">
-              <div className="modal-footer1">Người phụ thuộc</div>
+              <div className="btn-left">
+                <div className="modal-footer1" onClick={showModalAddContract1}>
+                  Xem hợp đồng
+                </div>
+                <div className="modal-footer1">Xem chức vụ</div>
+              </div>
+
               <div className="modal-footer modal-footer2">
                 <button className="btn-cancel" onClick={handleCancelAdd}>
                   Hủy bỏ

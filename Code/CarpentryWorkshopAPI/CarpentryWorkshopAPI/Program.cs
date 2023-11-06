@@ -10,6 +10,8 @@ using CarpentryWorkshopAPI.IServices.ISalaryType;
 using CarpentryWorkshopAPI.Services.SalaryType;
 using CarpentryWorkshopAPI.IServices.ISalaryDetail;
 using CarpentryWorkshopAPI.Services.SalaryDetail;
+using CarpentryWorkshopAPI.IServices.Salary;
+using CarpentryWorkshopAPI.Services.Salary;
 //using Microsoft.Extensions.Options;
 //using CarpentryWorkshopAPI.Services;
 //using CarpentryWorkshopAPI.IServices.t;
@@ -83,6 +85,7 @@ builder.Services.AddDbContext<SEPG4CCMSContext>(options =>
 });
 builder.Services.AddScoped<ISalaryTypeService,SalaryTypeService>();
 builder.Services.AddScoped<ISalaryDetailService, SalaryDetailService>();
+builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
