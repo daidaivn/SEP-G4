@@ -740,10 +740,10 @@ function ListEmployeeComponent() {
               </div>
 
               <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancel}>
+                <button className="btn-cancel" onClick={handleOkAdd}>
                   Thoát
                 </button>
-                <button className="btn-edit btn-save" onClick={handleSave}>
+                <button className="btn-edit btn-save" onClick={handleCancelAdd}>
                   Lưu
                 </button>
               </div>
@@ -856,7 +856,199 @@ function ListEmployeeComponent() {
             </div>
           </div>
         </Modal>
-
+        <Modal
+          className="modal"
+          open={isModalOpenAddRole}
+          onOk={handleOkAddRole}
+          onCancel={handleCancelAddRole}
+        >
+          <div className="modal-add-roleyee-employee">
+            <div className="modal-head-employee">
+              <h3>Thêm chức vụ / phòng ban</h3>
+            </div>
+            <div className="body-add-role-employee">
+              <table>
+                <thead>
+                  <td>Chức vụ</td>
+                  <td>Phòng ban</td>
+                </thead>
+                <div className="body-table">
+                  <tr>
+                    <Select
+                      className="select-input"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                    <Select
+                      className="select-input"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+                  <tr>
+                    <Select
+                      className="select-input"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                    <Select
+                      className="select-input"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+                  <tr>
+                    <Select
+                      className="select-input"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                    <Select
+                      className="select-input"
+                      value={originalNationality}
+                      onChange={(value) => setOriginalNationality(value)}
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                        {
+                          value: "disabled",
+                          label: "Disabled",
+                        },
+                      ]}
+                    />
+                  </tr>
+                </div>
+                <thead className="thead-last"></thead>
+              </table>
+            </div>
+            <div className="modal-footer modal-edit-role">
+              <button className="btn-cancel" onClick={handleCancelAddRole}>
+                Hủy bỏ
+              </button>
+              <button className="btn-edit btn-save" onClick={handleOkAddRole}>
+                Lưu
+              </button>
+            </div>
+          </div>
+        </Modal>
         {isEditingContract ? (
           <Modal
             className="modal"
