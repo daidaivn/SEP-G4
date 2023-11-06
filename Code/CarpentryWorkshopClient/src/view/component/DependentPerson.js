@@ -6,7 +6,7 @@ import "../scss/fonts.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllDependent, SearchDependents, GetDependentPeopleById } from "../../sevices/DependentPersonService";
+import { fetchAllDependent, SearchDependents, GetDependentPeopleById, UpdateDependent } from "../../sevices/DependentPersonService";
 import { fetchAllEmplyee } from "../../sevices/EmployeeService";
 import { GetRelationshipsType } from "../../sevices/RelationshipsType";
 import { toast } from "react-toastify";
@@ -21,17 +21,22 @@ function DependentPerson() {
   const [employees, setEmployees] = useState([]);
   const [employeesName, setemployeesName] = useState("");
   const [Relationship, setRelationship] = useState('');
+  const [dependentId, setdependentId] = useState('');
+  const [relationshipName, setRelationshipName] = useState('');
   const [Identifier, setIdentifier] = useState("");
   const [date, setDate] = useState("");
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(false);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
   const [inputSearch, setInputSearch] = useState('');
   const [relationshipsType, setRelationshipsType] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleSwitchChange = () => {
+    setIsChecked(!isChecked); 
+  };
 
   const handleEdit = () => {
-    console.log('date', date);
-
     setIsEditing(true);
   };
   const handleChangeFilterStatus = (value) => {
@@ -82,13 +87,17 @@ function DependentPerson() {
         GetDependentPeopleById(value)
           .then((data) => {
             resolve(data);
-            const { employeesName, relationshipName, identifierCode, dobString, identifierName } = data;
+            const { dependentId, employeesName, relationshipName, relationshipId, identifierCode, dobString, identifierName, status } = data;
             setemployeesName(employeesName)
             setGuardian(data.fullName);
-            setRelationship(relationshipName);
+            setRelationship(relationshipId);
             setIdentifier(identifierCode);
             setDate(dobString);
+            setRelationshipName(relationshipName);
             setEmployeeId(data.employeeId);
+            setIsChecked(status)
+            setdependentId(dependentId)
+            setStatus(status)
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -96,12 +105,23 @@ function DependentPerson() {
       }),
       {
         pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        error: 'Lỗi dữ liệu hiển thị',
       }
     );
   };
+  console.log('date', status);
 
+  const update = () => {
+    UpdateDependent(dependentId, employeeId, Relationship, Identifier, date, isChecked)
+      .then((data) => {
+        console.log('data',data);
+        handleSave()
+      })
+      .catch((error) => {
+        console.log('error',error);
+        
+      })
+  }
 
   const fetchRelationshipsType = () => {
     GetRelationshipsType()
@@ -159,6 +179,7 @@ function DependentPerson() {
   useEffect(() => {
     fetchData();
     getchAllEmplyees()
+    
   }, []);
   return (
     <>
@@ -494,11 +515,11 @@ function DependentPerson() {
           >
             <div className="modal-head">
               {" "}
-              <h3>Thông tin người phụ thuộc</h3>
+              <h3>Thay đổi thông tin người phụ thuộc</h3>
             </div>
             <div className="modal-body modal-body-dependent">
               <div className="name-person-dependent">
-                <h3>name</h3>
+                <h3>{guardian}</h3>
               </div>
 
               <div className="info-detail-dependent">
@@ -538,7 +559,7 @@ function DependentPerson() {
                                 <option value="" disabled>Chọn quan hệ</option>
                               )}
                               {relationshipsType.map((type) => (
-                                <option key={type.relationshipId} value={type.relationshipName}>
+                                <option key={type.relationshipId} value={type.relationshipId}>
                                   {type.relationshipName}
                                 </option>
                               ))}
@@ -574,9 +595,8 @@ function DependentPerson() {
                         <tr>
                           <th className="text">Trạng thái:</th>
                           <td className="input-text">
-                            {" "}
                             <Form.Item valuePropName={status}>
-                              <Switch value="checked" />
+                              <Switch checked={isChecked} onChange={handleSwitchChange} />
                             </Form.Item>
                             Còn phụ thuộc
                           </td>
@@ -591,7 +611,7 @@ function DependentPerson() {
               <button className="btn-cancel" onClick={handleCancelDependent}>
                 Hủy bỏ
               </button>
-              <button className="btn-save" onClick={handleSave}>
+              <button className="btn-save" onClick={update}>
                 Lưu
               </button>
             </div>
@@ -620,7 +640,7 @@ function DependentPerson() {
                     <table className="table-info-detail">
                       <tbody>
                         <tr>
-                          <th className="text">Người phụ thuộc:</th>
+                          <th className="text">Người giám hộ:</th>
                           <td className="input-text">
                             <Input
                               placeholder="Người phục thuộc"
@@ -633,7 +653,7 @@ function DependentPerson() {
                           <td className="input-text">
                             <Input
                               placeholder="Mối quan hệ"
-                              value={Relationship}
+                              value={relationshipName}
                             />
                           </td>
                         </tr>
@@ -657,7 +677,7 @@ function DependentPerson() {
                           <td className="input-text">
                             {" "}
                             <Form.Item valuePropName={status}>
-                              <Switch value={status} />
+                              <Switch checked={status} />
                             </Form.Item>
                             Phụ thuộc
                           </td>
