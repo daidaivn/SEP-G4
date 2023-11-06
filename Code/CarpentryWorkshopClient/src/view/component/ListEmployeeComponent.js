@@ -73,7 +73,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -161,11 +161,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -415,9 +415,9 @@ function ListEmployeeComponent() {
               },
               filterGender !== null
                 ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                  value: null,
+                  label: "Bỏ chọn",
+                }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
@@ -516,9 +516,9 @@ function ListEmployeeComponent() {
               },
               filterStatus !== null
                 ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                  value: null,
+                  label: "Bỏ chọn",
+                }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn trạng thái"
@@ -1192,10 +1192,9 @@ function ListEmployeeComponent() {
 
       <Modal className="modal" open={isModalOpenContract}>
         <div className="modal-add-roleyee-employee modal-contract">
-          <div className="modal-head-employee">
+          <div className="modal-head-employee" onClick={handleOkContract}>
             <h3>Hợp đồng</h3>
             <svg
-              onClick={handleOkContract}
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
@@ -1299,10 +1298,9 @@ function ListEmployeeComponent() {
       </Modal>
       <Modal className="modal" open={isModalOpenRole}>
         <div className="modal-add-roleyee-employee">
-          <div className="modal-head-employee">
+          <div className="modal-head-employee" onClick={handleCancelRole}>
             <h3>Chức vụ / phòng ban</h3>
             <svg
-              onClick={handleCancelRole}
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
@@ -1329,35 +1327,39 @@ function ListEmployeeComponent() {
                     <tr>
                       <p>Chức vụ chính:</p>
                     </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value={"Trưởng ca"}></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value={"Phòng sản xuất"}></Input>
-                      </div>
-                    </tr>
+                    {idDetail &&
+                      idDetail.roleDepartments &&
+                      idDetail.roleDepartments.length > 0 && (
+                        <tr>
+                          <div className="tr-child">
+                            <Input type="text" value={idDetail.roleDepartments[0].roleName}></Input>
+                          </div>
+                          <div className="tr-child">
+                            <Input type="text" value={idDetail.roleDepartments[0].departmentName}></Input>
+                          </div>
+                        </tr>
+                      )}
                   </div>
                   <div className="show-item-role role-fix">
                     <tr>
-                      <p>Chức vụ chính:</p>
+                      <p>Chức vụ phụ:</p>
                     </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value={"Phó phòng"}></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value={"Phòng kĩ thuật"}></Input>
-                      </div>
-                    </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value={"Nhân viên"}></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value={"Quản lý nhân sự"}></Input>
-                      </div>
-                    </tr>
+                    {idDetail &&
+                      idDetail.roleDepartments &&
+                      idDetail.roleDepartments.length > 1 && (
+                        idDetail.roleDepartments
+                          .slice(1) // Lấy các chức vụ kiêm sau chức vụ chính
+                          .map((roleDepartment, index) => (
+                            <tr>
+                              <div className="tr-child">
+                                <Input type="text" value={roleDepartment.roleName}></Input>
+                              </div>
+                              <div className="tr-child">
+                                <Input type="text" value={roleDepartment.departmentName}></Input>
+                              </div>
+                            </tr>
+                          ))
+                      )}
                   </div>
                 </div>
               </div>
