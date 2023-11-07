@@ -18,6 +18,7 @@ import {
   fetchEmplyeebyid,
   SearchEmployees,
   DetailID,
+  UpdateEmployee
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
@@ -41,6 +42,7 @@ function ListEmployeeComponent() {
 
   const [id, setId] = useState(null);
   const [idDetail, setIdDetail] = useState(null);
+  const updatedIdDetail = { ...idDetail };
 
   const [originalLastName, setOriginalLastName] = useState("");
   const [originalFirstName, setOriginalFirstName] = useState("");
@@ -69,9 +71,60 @@ function ListEmployeeComponent() {
   const handleEdit = () => {
     setIsEditing(true);
   };
-  const handleSave = () => {
-    setIsEditing(false);
+
+  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map((roleDept) => ({
+    roleID: roleDept.roleID,
+    departmentID: roleDept.departmentID,
+  }));
+  const UpdateEditEmployee = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        UpdateEmployee(id,
+          originalLastName,
+          originalFirstName,
+          originalPhoneNumber,
+          originalGender,
+          originalNationality,
+          originalAddress,
+          originalCIC,
+          originalTaxId,
+          originalDOB,
+          originalStatus,
+          updatedRoleDepartments)
+          .then((data) => {
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
   };
+  const jsonString = JSON.stringify(updatedRoleDepartments);
+  
+  const handleSave = () => {
+    console.log('id',id);
+    console.log('LastName',originalLastName);
+    console.log('FirstName',originalFirstName);
+    console.log('PhoneNumber',originalPhoneNumber);
+    console.log('Gender',originalGender);
+    console.log('NationalityID',originalNationality);
+    console.log('Address',originalAddress);
+    console.log('CIC',originalCIC);
+    console.log('TaxId',originalTaxId);
+    console.log('DOB',originalDOB);
+    console.log('TaxStatus',originalStatus);
+    console.log("Roles:", updatedRoleDepartments);
+    setIsEditing(false);
+    UpdateEditEmployee();
+  };
+
+  
 
   const [isEditingRole, setIsEditingRole] = useState(false);
   const handleEditRole = () => {
@@ -120,7 +173,10 @@ function ListEmployeeComponent() {
   const convertDobToISO = (dobstring) => {
     const parts = dobstring.split("-");
     if (parts.length === 3) {
-      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
     }
     return dobstring;
   };
@@ -163,7 +219,7 @@ function ListEmployeeComponent() {
             setOriginalFirstName(data.fullName.split(" ").slice(-1).join(" "));
             setOriginalPhoneNumber(data.phoneNumber);
             setOriginalGender(data.gender);
-            setOriginalNationality(data.country);
+            setOriginalNationality(data.countryId);
             setOriginalAddress(data.address);
             setOriginalCIC(data.cic);
             setOriginalTaxId(data.taxId);
@@ -185,13 +241,6 @@ function ListEmployeeComponent() {
 
   useEffect(() => {
     fetchData();
-    fetchEmplyeebyid(id)
-      .then((response) => {
-        setEmployeeData(response);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
     allRole();
     fetDataDepartment();
   }, [id]);
@@ -201,6 +250,7 @@ function ListEmployeeComponent() {
     setFilterRole(actualValue);
     searchandfilter(inputSearch, filterGender, filterStatus, actualValue);
   }
+
   const selectOptions = [
     ...(filterRole
       ? [
@@ -1357,7 +1407,6 @@ function ListEmployeeComponent() {
                         className="select-input"
                         value={roleDept.roleID}
                         onChange={(value) => {
-                          const updatedIdDetail = { ...idDetail };
                           updatedIdDetail.roleDepartments[index].roleID = value;
                           setIdDetail(updatedIdDetail);
                         }}
@@ -1376,7 +1425,6 @@ function ListEmployeeComponent() {
                         className="select-input"
                         value={roleDept.departmentID}
                         onChange={(value) => {
-                          const updatedIdDetail = { ...idDetail };
                           updatedIdDetail.roleDepartments[index].departmentID = value;
                           setIdDetail(updatedIdDetail);
                         }}
@@ -1610,8 +1658,8 @@ function ListEmployeeComponent() {
                       <p>Ngày sinh:</p>
                       <input
                         type="date"
-                        value={originalDOB}
-                        onChange={(e) => setOriginalDOB(e.target.value)}
+                        value={convertDobToISO(originalDOB)}
+                        onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
@@ -1693,8 +1741,8 @@ function ListEmployeeComponent() {
                     <div className="radio-employee">
                       <Input
                         value={
-                          idDetail && idDetail.gender
-                            ? idDetail.gender
+                          idDetail && idDetail.genderstring
+                            ? idDetail.genderstring
                             : "Chưa có thông tin"
                         }
                       />
