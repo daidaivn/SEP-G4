@@ -14,7 +14,7 @@ using System.Diagnostics.Contracts;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    //[Authorize(Roles = "ListEmployee")]
+    [Authorize(Roles = "ListEmployee")]
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
@@ -435,6 +435,56 @@ namespace CarpentryWorkshopAPI.Controllers
                 return Ok(employeesDTO);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult ChangeRoleInDepartment(int oldemployeeid, int oldroleid, int newemployeeid,
+            int newroleid, int departmentid)
+        {
+            try
+            {
+                var old = _context.RolesEmployees
+                    .Where(x => x.EmployeeId == oldemployeeid && x.RoleId == oldroleid && x.DepartmentId == departmentid)
+                    .ToList();
+                foreach (var ol in old)
+                {
+                    ol.EndDate = DateTime.Now;
+                    _context.RolesEmployees.Update(ol);
+                }
+                var newemp = _context.RolesEmployees
+                    .Where(x => x.EmployeeId == newemployeeid && x.RoleId == newroleid && x.DepartmentId == departmentid)
+                    .ToList();
+                foreach (var newe in newemp)
+                {
+                    newe.EndDate = DateTime.Now;
+                    _context.RolesEmployees.Update(newe);
+                }
+                RolesEmployee newforold = new RolesEmployee()
+                {
+                    EmployeeId = newemployeeid,
+                    RoleId = oldroleid,
+                    DepartmentId = departmentid,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                    Status = true,
+                };
+                _context.RolesEmployees.Add(newforold);
+                RolesEmployee oldfornew = new RolesEmployee()
+                {
+                    EmployeeId = oldemployeeid,
+                    RoleId = newroleid,
+                    DepartmentId = departmentid,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                    Status = true,
+                };
+                _context.RolesEmployees.Add(oldfornew);
+                _context.SaveChanges();
+                return Ok("Change role in department successful");
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
