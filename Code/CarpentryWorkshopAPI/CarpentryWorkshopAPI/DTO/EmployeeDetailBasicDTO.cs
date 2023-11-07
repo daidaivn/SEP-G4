@@ -13,6 +13,7 @@
         public int? TaxId { get; set; }
         public string? Email { get; set; }
         public string? Country { get; set; }
+        public int? CountryId { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
         public List<RoleDepartment> RoleDepartments { get; set; }
