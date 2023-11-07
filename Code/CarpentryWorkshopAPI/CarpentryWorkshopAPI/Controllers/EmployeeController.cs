@@ -14,7 +14,7 @@ using System.Diagnostics.Contracts;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Authorize(Roles = "ListEmployee")]
+    //[Authorize(Roles = "ListEmployee")]
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
@@ -252,10 +252,7 @@ namespace CarpentryWorkshopAPI.Controllers
                       .ThenInclude(role => role.RolesEmployees)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
-                      .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
-                      && x.PhoneNumber == createEmployeeDTO.PhoneNumber
-                      && x.Email == createEmployeeDTO.Email
-                      && x.Cic == createEmployeeDTO.Cic);
+                      .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId);
                 if (employee == null)
                 {
                     return NotFound();
