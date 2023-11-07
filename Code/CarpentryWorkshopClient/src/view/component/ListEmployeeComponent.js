@@ -54,6 +54,8 @@ function ListEmployeeComponent() {
   const [originalTaxId, setOriginalTaxId] = useState("");
   const [originalDOB, setOriginalDOB] = useState("");
   const [originalStatus, setOriginalStatus] = useState(false);
+  const [originalEmail, setOriginalEmail] = useState(null);
+  const [originalImage, setOriginalImage] = useState(null);
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
 
@@ -90,7 +92,9 @@ function ListEmployeeComponent() {
           originalTaxId,
           originalDOB,
           originalStatus,
-          updatedRoleDepartments)
+          updatedRoleDepartments,
+          originalEmail,
+          originalImage)
           .then((data) => {
             resolve(data);
           })

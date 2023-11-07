@@ -35,7 +35,9 @@ const UpdateEmployee = (
   originalTaxId,
   originalDOB,
   originalStatus,
-  updatedRoleDepartments
+  updatedRoleDepartments,
+  Email,
+  Image
 ) => {
   const requestBody = {
     employeeId: id,
@@ -44,12 +46,14 @@ const UpdateEmployee = (
     phoneNumber: originalPhoneNumber,
     gender: originalGender,
     countryId: originalNationality,
-    gender: originalAddress,
+    address: originalAddress,
     cic: originalCIC,
     taxId: originalTaxId,
     dobstring: originalDOB,
     status: originalStatus,
     rDs: updatedRoleDepartments,
+    email: Email,
+    image: Image,
   };
   console.log(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 
