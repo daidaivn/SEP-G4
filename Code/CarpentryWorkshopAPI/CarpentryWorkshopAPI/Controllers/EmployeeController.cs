@@ -260,18 +260,18 @@ namespace CarpentryWorkshopAPI.Controllers
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
                     var roleemployees = _context.RolesEmployees
-                .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
-                && x.RoleId == rd.RoleID
-                && x.DepartmentId == rd.DepartmentID);
-
-                    if (roleemployees != null)
+                    .Where(x => x.EmployeeId == createEmployeeDTO.EmployeeId)
+                    .ToList();
+                    foreach (var role in roleemployees)
                     {
-                        roleemployees.Status = createEmployeeDTO.Status;
-                        roleemployees.EndDate = DateTime.Now;
-                        _context.RolesEmployees.Update(roleemployees);
+                        if (role != null)
+                        {
+                            role.Status = createEmployeeDTO.Status;
+                            role.EndDate = DateTime.Now;
+                            _context.RolesEmployees.Update(role);
+                        }
                     }
-                    else
-                    {
+                  
                         RolesEmployee newremp = new RolesEmployee
                         {
                             RoleId = rd.RoleID,
@@ -282,7 +282,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             Status = true,
                         };
                         _context.RolesEmployees.Add(newremp);
-                    }
+                    
                 }
                 employee.Image = createEmployeeDTO.Image;
                 employee.FirstName = createEmployeeDTO.FirstName;
