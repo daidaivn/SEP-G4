@@ -78,6 +78,9 @@ namespace CarpentryWorkshopAPI.Controllers
                        Address = emp.Address,
                        Cic = emp.Cic,
                        Country = emp.Country.CountryName,
+
+                       CountryId= emp.CountryId,
+
                        Genderstring = (bool)emp.Gender ? "Nam" : "Nữ",
                        Gender = emp.Gender,
                        PhoneNumber = emp.PhoneNumber,
