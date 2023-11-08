@@ -14,9 +14,6 @@ const createTeam = (teamName, teamleaderId, teamsubleaderId) => {
 const detailTeamByID = (teamID) => {
   return axios.get(`/CCMSapi/Team/GetTeamMembers/${teamID}/members`);
 };
-const fetchAllShiftManagers = () => {
-  return axios.get("/CCMSapi/Team/GetShiftManagers");
-};
 const fetchAllLeader = () => {
   return axios.get("/CCMSapi/Team/GetLeaderForTeam");
 };
@@ -76,7 +73,7 @@ const searchData = (Input) => {
 const DeleteTeamMember = (eid, tid) => {
   const employeeid = eid;
   const teamid = tid;
-  return axios.delete(
+  return axios.post(
     `/CCMSapi/Team/DeleteTeamMember?employeeid=${employeeid}&teamid=${teamid}`
   );
 };
@@ -91,7 +88,6 @@ export {
   fetchAllTeam,
   createTeam,
   detailTeamByID,
-  fetchAllShiftManagers,
   fetchAllSubLeader,
   fetchAllLeader,
   fetchAllStaffs,
