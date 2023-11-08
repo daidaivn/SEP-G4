@@ -44,6 +44,7 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<RolesStatusHistory> RolesStatusHistories { get; set; } = null!;
         public virtual DbSet<Salary> Salaries { get; set; } = null!;
         public virtual DbSet<SalaryDetail> SalaryDetails { get; set; } = null!;
+        public virtual DbSet<SalaryGroupType> SalaryGroupTypes { get; set; } = null!;
         public virtual DbSet<SalaryType> SalaryTypes { get; set; } = null!;
         public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
@@ -613,11 +614,21 @@ namespace CarpentryWorkshopAPI.Models
                     .HasConstraintName("FK_SalaryDetail_SalaryType");
             });
 
+            modelBuilder.Entity<SalaryGroupType>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<SalaryType>(entity =>
             {
                 entity.ToTable("SalaryType");
 
                 entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.HasOne(d => d.SalaryGroupType)
+                    .WithMany(p => p.SalaryTypes)
+                    .HasForeignKey(d => d.SalaryGroupTypeId)
+                    .HasConstraintName("FK_SalaryType_SalaryGroupTypes");
             });
 
             modelBuilder.Entity<ShiftType>(entity =>

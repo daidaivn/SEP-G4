@@ -12,7 +12,9 @@ namespace CarpentryWorkshopAPI.Models
 
         public int SalaryTypeId { get; set; }
         public string? Name { get; set; }
+        public int? SalaryGroupTypeId { get; set; }
 
+        public virtual SalaryGroupType? SalaryGroupType { get; set; }
         public virtual ICollection<SalaryDetail> SalaryDetails { get; set; }
     }
 }
