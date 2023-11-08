@@ -59,4 +59,11 @@ const UpdateEmployee = (
 
   return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 };
-export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee};
+
+
+const GetAllCountry = () => {
+  return axios.get(
+    `/CCMSapi/Country/GetAllCountry`
+  );
+};
+export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry};

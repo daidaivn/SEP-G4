@@ -18,7 +18,8 @@ import {
   fetchEmplyeebyid,
   SearchEmployees,
   DetailID,
-  UpdateEmployee
+  UpdateEmployee,
+  GetAllCountry
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
@@ -37,6 +38,8 @@ import avt from "../assets/images/Frame 1649.svg";
 import { a } from "react-spring";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
+  const [countries, setCountries] = useState([]);
+
   const [roles, setRoles] = useState([]);
   const [departments, setDepartments] = useState([]);
 
@@ -53,9 +56,9 @@ function ListEmployeeComponent() {
   const [originalCIC, setOriginalCIC] = useState("");
   const [originalTaxId, setOriginalTaxId] = useState("");
   const [originalDOB, setOriginalDOB] = useState("");
-  const [originalStatus, setOriginalStatus] = useState(false);
-  const [originalEmail, setOriginalEmail] = useState(null);
-  const [originalImage, setOriginalImage] = useState(null);
+  const [originalStatus, setOriginalStatus] = useState("");
+  const [originalEmail, setOriginalEmail] = useState("");
+  const [originalImage, setOriginalImage] = useState("");
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
 
@@ -63,14 +66,41 @@ function ListEmployeeComponent() {
 
   const [gender, setGender] = useState();
 
-  const [employeeData, setEmployeeData] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterRole, setFilterRole] = useState(null);
   const [inputSearch, setInputSearch] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
+  const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
+
+  const addDependent = () =>{
+    if (updatedIdDetail && updatedIdDetail.roleDepartments) {
+      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map((roleDept) => ({
+        roleID: roleDept.roleID,
+        departmentID: roleDept.departmentID,
+      }));
+      setRoleDepartmentValues(newRoleDepartmentValues);
+    }
+  }
+
+  const updatedRoleDepartmentsAdd = roleDepartmentValues.map((value) => {
+    const updatedValue = {};
+    if (value) {
+      updatedValue.roleID = value.roleID;
+      updatedValue.departmentID = value.departmentID;
+    } else {
+      updatedValue.roleID = null;
+      updatedValue.departmentID = null;
+    }
+    return updatedValue;
+  });
+  
+
+
+
   const handleEdit = () => {
+    fetchAllCountry();
     setIsEditing(true);
   };
 
@@ -78,6 +108,7 @@ function ListEmployeeComponent() {
     roleID: roleDept.roleID,
     departmentID: roleDept.departmentID,
   }));
+
   const UpdateEditEmployee = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -97,6 +128,8 @@ function ListEmployeeComponent() {
           originalImage)
           .then((data) => {
             resolve(data);
+            handlelDetail(id)
+            fetchData()
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -109,26 +142,43 @@ function ListEmployeeComponent() {
       }
     );
   };
-  const jsonString = JSON.stringify(updatedRoleDepartments);
-  
-  const handleSave = () => {
-    console.log('id',id);
-    console.log('LastName',originalLastName);
-    console.log('FirstName',originalFirstName);
-    console.log('PhoneNumber',originalPhoneNumber);
-    console.log('Gender',originalGender);
-    console.log('NationalityID',originalNationality);
-    console.log('Address',originalAddress);
-    console.log('CIC',originalCIC);
-    console.log('TaxId',originalTaxId);
-    console.log('DOB',originalDOB);
-    console.log('TaxStatus',originalStatus);
+
+  const fetchAllCountry = () => {
+    GetAllCountry()
+      .then((data) => {
+        setCountries(data)
+        console.log(data);
+
+      })
+      .catch((error) => {
+      });
+  };
+
+  const log = () => {
+    console.log('id', id);
+    console.log('LastName', originalLastName);
+    console.log('FirstName', originalFirstName);
+    console.log('PhoneNumber', originalPhoneNumber);
+    console.log('Gender', originalGender);
+    console.log('NationalityID', originalNationality);
+    console.log('Address', originalAddress);
+    console.log('CIC', originalCIC);
+    console.log('TaxId', originalTaxId);
+    console.log('DOB', originalDOB);
+    console.log('TaxStatus', originalStatus);
+    console.log('avt',avt);
+    console.log('Email', originalEmail);
     console.log("Roles:", updatedRoleDepartments);
+    console.log("Roles:", updatedRoleDepartmentsAdd);
+
+  }
+  log();
+
+  const handleSave = () => {
+    resetOriginalDetail()
     setIsEditing(false);
     UpdateEditEmployee();
   };
-
-  
 
   const [isEditingRole, setIsEditingRole] = useState(false);
   const handleEditRole = () => {
@@ -146,9 +196,27 @@ function ListEmployeeComponent() {
     setIsEditingContract(false);
   };
 
+  const resetOriginalDetail = () => {
+    setIsModalOpen(false);
+    setOriginalLastName("")
+    setOriginalFirstName("")
+    setOriginalPhoneNumber("")
+    setOriginalGender("")
+    setOriginalNationality("")
+    setOriginalAddress("")
+    setOriginalCIC("")
+    setOriginalTaxId("")
+    setOriginalDOB("")
+    setOriginalStatus("")
+    setOriginalEmail("")
+    setOriginalImage("")
+  }
+
   const handleCancelView = () => {
     setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
     setIsModalOpen(true);
+    setIsModalOpen(false);
+    resetOriginalDetail()
   };
   const handleCancelView1 = () => {
     setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
@@ -303,6 +371,7 @@ function ListEmployeeComponent() {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    resetOriginalDetail()
   };
 
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
@@ -692,29 +761,41 @@ function ListEmployeeComponent() {
                   <div className="div-modal-child2 div-detail div1-modal-child2">
                     <div className="div1-modal-cn">
                       <p>Họ:</p>
-                      <Input placeholder="Nhập họ" />
+                      <Input
+                        value={originalLastName}
+                        onChange={(e) => setOriginalLastName(e.target.value)}
+                        placeholder="Nhập họ, tên đệm"
+                      />
                     </div>
                     <div className="div1-modal-cn div2-fix">
                       <p>Tên:</p>
-                      <Input placeholder="Nhập tên" />
+                      <Input
+                        value={originalFirstName}
+                        onChange={(e) => setOriginalFirstName(e.target.value)}
+                        placeholder="Nhập tên"
+                      />
                     </div>
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Số điện thoại:</p>
-                    <Input placeholder="Nhập số điện thoại" />
+                    <Input
+                      value={originalPhoneNumber}
+                      onChange={(e) => setOriginalPhoneNumber(e.target.value)}
+                      placeholder="Nhập số điện thoại"
+                    />
                   </div>
 
                   <div className="div-modal-child2">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
                       <Radio.Group
-                        onChange={(e) => setGender(e.target.value)}
-                        value={gender}
+                        onChange={(e) => setOriginalGender(e.target.value)}
+                        value={originalGender}
                       >
-                        <Radio value={1} className="gender">
+                        <Radio value={true} className="gender">
                           Nam
                         </Radio>
-                        <Radio value={2} className="gender">
+                        <Radio value={false} className="gender">
                           Nữ
                         </Radio>
                       </Radio.Group>
@@ -724,38 +805,33 @@ function ListEmployeeComponent() {
                     <p>Quốc tịch:</p>
                     <Select
                       className="select-input"
-                      defaultValue="Chọn quốc tịch"
+                      value={originalNationality}
+                      placeholder="Chọn quốc tịch"
+                      onChange={(value) => setOriginalNationality(value)}
                       style={{
                         width: "100%",
                       }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "Chọn quốc tịch",
-                          label: "Chọn quốc tịch",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
+                      options={countries.map((country) => ({
+                        value: country.countryId,
+                        label: country.countryName,
+                      }))}
                     />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Địa chỉ: </p>
-                    <Input placeholder="Nhập địa chỉ" />
+                    <Input
+                      value={originalAddress}
+                      onChange={(e) => setOriginalAddress(e.target.value)}
+                      placeholder="Nhập địa chỉ"
+                    />
                   </div>
                   <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
-                    <Input placeholder="Nhập mã định danh" />
+                    <Input
+                      value={originalCIC}
+                      onChange={(e) => setOriginalCIC(e.target.value)}
+                      placeholder="Ví dụ: CMND, CCCD"
+                    />
                   </div>
                 </div>
               </div>
@@ -764,27 +840,36 @@ function ListEmployeeComponent() {
                   <div className="box2-child-cn ">
                     <div className="box-child-employee1 div-detail">
                       <p>Mã số thuế:</p>
-                      <Input placeholder="Nhập mã số thuế" />
+                      <Input
+                        value={originalTaxId}
+                        onChange={(e) => setOriginalTaxId(e.target.value)}
+                        placeholder="Nhập mã số thuế"
+                      />
                     </div>
-                    <div className="box-child-employee1">
-                      <p>Lương cơ bản:</p>
-                      <p className="fix-input">99999999998</p>
+                    <div className="box-child-employee1 div-detail">
+                      <p>Email:</p>
+                      <Input
+                        value={originalEmail}
+                        onChange={(e) => setOriginalEmail(e.target.value)}
+                        placeholder="Nhập email"
+                      />
                     </div>
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
                       <p>Ngày sinh:</p>
-                      <input type="date" placeholder="Chọn ngày sinh" />
+                      <input
+                        type="date"
+                        value={convertDobToISO(originalDOB)}
+                        onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
                       <Form.Item valuePropName="checked" className="action">
                         <Switch
-                          checked={
-                            idDetail && idDetail.status
-                              ? idDetail.status
-                              : "Chưa có thông tin"
-                          }
+                          checked={originalStatus}
+                          onChange={(checked) => setOriginalStatus(checked)}
                         />
                       </Form.Item>
                     </div>
@@ -942,169 +1027,57 @@ function ListEmployeeComponent() {
                   <td>Phòng ban</td>
                 </thead>
                 <div className="body-table">
-                  <tr>
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </tr>
-                  <tr>
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </tr>
-                  <tr>
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                    <Select
-                      className="select-input"
-                      value={originalNationality}
-                      onChange={(value) => setOriginalNationality(value)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </tr>
+                  {[1, 2, 3].map((index) => (
+                    <tr key={index}>
+                      <Select
+                        className="select-input"
+                        value={roleDepartmentValues[index]?.roleID}
+                        onChange={(value) => {
+                          const newRoleDepartmentValues = [...roleDepartmentValues];
+                          newRoleDepartmentValues[index] = {
+                            roleID: value,
+                            departmentID: roleDepartmentValues[index]?.departmentID || null,
+                          };
+                          setRoleDepartmentValues(newRoleDepartmentValues);
+                        }}
+                        style={{
+                          width: "100%",
+                        }}
+                        options={[
+                          { value: null, label: "Bỏ chức vụ" },
+                          ...(roles || []).map((role) => ({
+                            value: role.roleID,
+                            label: role.roleName,
+                          })),
+                        ]}
+                      />
+
+                      <Select
+                        className="select-input"
+                        value={roleDepartmentValues[index]?.departmentID}
+                        onChange={(value) => {
+                          const newRoleDepartmentValues = [...roleDepartmentValues];
+                          newRoleDepartmentValues[index] = {
+                            roleID: roleDepartmentValues[index]?.roleID || null,
+                            departmentID: value,
+                          };
+                          setRoleDepartmentValues(newRoleDepartmentValues);
+                        }}
+                        style={{
+                          width: "100%",
+                        }}
+                        options={[
+                          { value: null, label: "Bỏ phòng - ban" },
+                          ...(departments || []).map((department) => ({
+                            value: department.departmentId,
+                            label: department.departmentName,
+                          })),
+                        ]}
+                      />
+                    </tr>
+                  ))}
                 </div>
+
                 <thead className="thead-last"></thead>
               </table>
             </div>
@@ -1582,10 +1555,10 @@ function ListEmployeeComponent() {
                         onChange={(e) => setOriginalGender(e.target.value)}
                         value={originalGender}
                       >
-                        <Radio value={1} className="gender">
+                        <Radio value={true} className="gender">
                           Nam
                         </Radio>
-                        <Radio value={2} className="gender">
+                        <Radio value={false} className="gender">
                           Nữ
                         </Radio>
                       </Radio.Group>
@@ -1600,24 +1573,10 @@ function ListEmployeeComponent() {
                       style={{
                         width: "100%",
                       }}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
+                      options={countries.map((country) => ({
+                        value: country.countryId,
+                        label: country.countryName,
+                      }))}
                     />
                   </div>
                   <div className="div-modal-child2 div-detail">
@@ -1855,7 +1814,7 @@ function ListEmployeeComponent() {
 
               <div className="modal-footer modal-footer2">
                 <button className="btn-cancel" onClick={handleCancel}>
-                  Hủy bỏ
+                  Thoát
                 </button>
                 <button className="btn-edit" onClick={handleEdit}>
                   Chỉnh sửa
