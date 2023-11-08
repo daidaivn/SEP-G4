@@ -12,6 +12,8 @@ import Role from "./view/component/Role";
 import GroupComponent from "./view/component/GroupComponent";
 import Decentralization from "./view/component/Decentralization";
 import TimekeepingComponent from "./view/component/TimekeepingComponent";
+import MenuResponsive from "./view/component/componentUI/MenuResponsive";
+
 
 function App() {
   let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
@@ -21,6 +23,8 @@ function App() {
   return (
     <div className="screen">
       <Menucomponent />
+      <MenuResponsive />
+
       <div className="col-right">
         <Routes>
           <Route path="/" element={<Home />} />

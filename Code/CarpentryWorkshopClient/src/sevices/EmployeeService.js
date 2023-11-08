@@ -35,7 +35,9 @@ const UpdateEmployee = (
   originalTaxId,
   originalDOB,
   originalStatus,
-  updatedRoleDepartments
+  updatedRoleDepartments,
+  Email,
+  Image
 ) => {
   const requestBody = {
     employeeId: id,
@@ -44,15 +46,24 @@ const UpdateEmployee = (
     phoneNumber: originalPhoneNumber,
     gender: originalGender,
     countryId: originalNationality,
-    gender: originalAddress,
+    address: originalAddress,
     cic: originalCIC,
     taxId: originalTaxId,
     dobstring: originalDOB,
     status: originalStatus,
     rDs: updatedRoleDepartments,
+    email: Email,
+    image: Image,
   };
   console.log(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 
   return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 };
-export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee};
+
+
+const GetAllCountry = () => {
+  return axios.get(
+    `/CCMSapi/Country/GetAllCountry`
+  );
+};
+export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry};
