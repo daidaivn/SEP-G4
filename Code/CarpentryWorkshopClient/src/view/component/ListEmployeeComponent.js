@@ -19,7 +19,7 @@ import {
   SearchEmployees,
   DetailID,
   UpdateEmployee,
-  GetAllCountry
+  GetAllCountry,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
@@ -62,8 +62,6 @@ function ListEmployeeComponent() {
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
 
-
-
   const [gender, setGender] = useState();
 
   const [filterGender, setFilterGender] = useState(null);
@@ -74,15 +72,17 @@ function ListEmployeeComponent() {
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
 
-  const addDependent = () =>{
+  const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
-      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map((roleDept) => ({
-        roleID: roleDept.roleID,
-        departmentID: roleDept.departmentID,
-      }));
+      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map(
+        (roleDept) => ({
+          roleID: roleDept.roleID,
+          departmentID: roleDept.departmentID,
+        })
+      );
       setRoleDepartmentValues(newRoleDepartmentValues);
     }
-  }
+  };
 
   const updatedRoleDepartmentsAdd = roleDepartmentValues.map((value) => {
     const updatedValue = {};
@@ -95,24 +95,24 @@ function ListEmployeeComponent() {
     }
     return updatedValue;
   });
-  
-
-
 
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
   };
 
-  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map((roleDept) => ({
-    roleID: roleDept.roleID,
-    departmentID: roleDept.departmentID,
-  }));
+  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
+    (roleDept) => ({
+      roleID: roleDept.roleID,
+      departmentID: roleDept.departmentID,
+    })
+  );
 
   const UpdateEditEmployee = () => {
     toast.promise(
       new Promise((resolve) => {
-        UpdateEmployee(id,
+        UpdateEmployee(
+          id,
           originalLastName,
           originalFirstName,
           originalPhoneNumber,
@@ -125,20 +125,21 @@ function ListEmployeeComponent() {
           originalStatus,
           updatedRoleDepartments,
           originalEmail,
-          originalImage)
+          originalImage
+        )
           .then((data) => {
             resolve(data);
-            handlelDetail(id)
-            fetchData()
+            handlelDetail(id);
+            fetchData();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -146,36 +147,33 @@ function ListEmployeeComponent() {
   const fetchAllCountry = () => {
     GetAllCountry()
       .then((data) => {
-        setCountries(data)
+        setCountries(data);
         console.log(data);
-
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const log = () => {
-    console.log('id', id);
-    console.log('LastName', originalLastName);
-    console.log('FirstName', originalFirstName);
-    console.log('PhoneNumber', originalPhoneNumber);
-    console.log('Gender', originalGender);
-    console.log('NationalityID', originalNationality);
-    console.log('Address', originalAddress);
-    console.log('CIC', originalCIC);
-    console.log('TaxId', originalTaxId);
-    console.log('DOB', originalDOB);
-    console.log('TaxStatus', originalStatus);
-    console.log('avt',avt);
-    console.log('Email', originalEmail);
+    console.log("id", id);
+    console.log("LastName", originalLastName);
+    console.log("FirstName", originalFirstName);
+    console.log("PhoneNumber", originalPhoneNumber);
+    console.log("Gender", originalGender);
+    console.log("NationalityID", originalNationality);
+    console.log("Address", originalAddress);
+    console.log("CIC", originalCIC);
+    console.log("TaxId", originalTaxId);
+    console.log("DOB", originalDOB);
+    console.log("TaxStatus", originalStatus);
+    console.log("avt", avt);
+    console.log("Email", originalEmail);
     console.log("Roles:", updatedRoleDepartments);
     console.log("Roles:", updatedRoleDepartmentsAdd);
-
-  }
+  };
   log();
 
   const handleSave = () => {
-    resetOriginalDetail()
+    resetOriginalDetail();
     setIsEditing(false);
     UpdateEditEmployee();
   };
@@ -198,25 +196,25 @@ function ListEmployeeComponent() {
 
   const resetOriginalDetail = () => {
     setIsModalOpen(false);
-    setOriginalLastName("")
-    setOriginalFirstName("")
-    setOriginalPhoneNumber("")
-    setOriginalGender("")
-    setOriginalNationality("")
-    setOriginalAddress("")
-    setOriginalCIC("")
-    setOriginalTaxId("")
-    setOriginalDOB("")
-    setOriginalStatus("")
-    setOriginalEmail("")
-    setOriginalImage("")
-  }
+    setOriginalLastName("");
+    setOriginalFirstName("");
+    setOriginalPhoneNumber("");
+    setOriginalGender("");
+    setOriginalNationality("");
+    setOriginalAddress("");
+    setOriginalCIC("");
+    setOriginalTaxId("");
+    setOriginalDOB("");
+    setOriginalStatus("");
+    setOriginalEmail("");
+    setOriginalImage("");
+  };
 
   const handleCancelView = () => {
     setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
     setIsModalOpen(true);
     setIsModalOpen(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
   const handleCancelView1 = () => {
     setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
@@ -231,7 +229,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -257,8 +255,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const fetchData = () => {
@@ -326,11 +323,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-        {
-          value: null,
-          label: "Bỏ chọn",
-        },
-      ]
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -371,7 +368,7 @@ function ListEmployeeComponent() {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
 
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
@@ -569,9 +566,9 @@ function ListEmployeeComponent() {
               },
               filterGender !== null
                 ? {
-                  value: null,
-                  label: "Bỏ chọn",
-                }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn giới tính"
@@ -670,9 +667,9 @@ function ListEmployeeComponent() {
               },
               filterStatus !== null
                 ? {
-                  value: null,
-                  label: "Bỏ chọn",
-                }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                 : null,
             ].filter(Boolean)}
             placeholder="Chọn trạng thái"
@@ -861,7 +858,9 @@ function ListEmployeeComponent() {
                       <input
                         type="date"
                         value={convertDobToISO(originalDOB)}
-                        onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
+                        onChange={(e) =>
+                          setOriginalDOB(convertDobToISO(e.target.value))
+                        }
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
@@ -1033,10 +1032,13 @@ function ListEmployeeComponent() {
                         className="select-input"
                         value={roleDepartmentValues[index]?.roleID}
                         onChange={(value) => {
-                          const newRoleDepartmentValues = [...roleDepartmentValues];
+                          const newRoleDepartmentValues = [
+                            ...roleDepartmentValues,
+                          ];
                           newRoleDepartmentValues[index] = {
                             roleID: value,
-                            departmentID: roleDepartmentValues[index]?.departmentID || null,
+                            departmentID:
+                              roleDepartmentValues[index]?.departmentID || null,
                           };
                           setRoleDepartmentValues(newRoleDepartmentValues);
                         }}
@@ -1056,7 +1058,9 @@ function ListEmployeeComponent() {
                         className="select-input"
                         value={roleDepartmentValues[index]?.departmentID}
                         onChange={(value) => {
-                          const newRoleDepartmentValues = [...roleDepartmentValues];
+                          const newRoleDepartmentValues = [
+                            ...roleDepartmentValues,
+                          ];
                           newRoleDepartmentValues[index] = {
                             roleID: roleDepartmentValues[index]?.roleID || null,
                             departmentID: value,
@@ -1402,7 +1406,9 @@ function ListEmployeeComponent() {
                         className="select-input"
                         value={roleDept.departmentID}
                         onChange={(value) => {
-                          updatedIdDetail.roleDepartments[index].departmentID = value;
+                          updatedIdDetail.roleDepartments[
+                            index
+                          ].departmentID = value;
                           setIdDetail(updatedIdDetail);
                         }}
                         style={{
@@ -1419,8 +1425,6 @@ function ListEmployeeComponent() {
                     </tr>
                   ))}
                 </div>
-
-
 
                 <thead className="thead-last"></thead>
               </table>
@@ -1457,17 +1461,25 @@ function ListEmployeeComponent() {
                   {idDetail && idDetail.roleDepartments && (
                     <div className="show-role">
                       <div className="show-item-role">
-                        <tr >
+                        <tr>
                           <p>Chức vụ chính:</p>
                         </tr>
                         {idDetail.roleDepartments.length > 0 && (
                           <tr>
                             <div className="tr-child">
-                              <Input type="text" value={idDetail.roleDepartments[0].roleName} ></Input>
+                              <Input
+                                type="text"
+                                value={idDetail.roleDepartments[0].roleName}
+                              ></Input>
                             </div>
 
                             <div className="tr-child">
-                              <Input type="text" value={idDetail.roleDepartments[0].departmentName}></Input>
+                              <Input
+                                type="text"
+                                value={
+                                  idDetail.roleDepartments[0].departmentName
+                                }
+                              ></Input>
                             </div>
                           </tr>
                         )}
@@ -1476,16 +1488,24 @@ function ListEmployeeComponent() {
                         <tr>
                           <p>Kiêm chức vụ:</p>
                         </tr>
-                        {idDetail.roleDepartments.slice(1).map((roleDept, index) => (
-                          <tr key={index}>
-                            <div className="tr-child">
-                              <Input type="text" value={roleDept.roleName}></Input>
-                            </div>
-                            <div className="tr-child">
-                              <Input type="text" value={roleDept.departmentName}></Input>
-                            </div>
-                          </tr>
-                        ))}
+                        {idDetail.roleDepartments
+                          .slice(1)
+                          .map((roleDept, index) => (
+                            <tr key={index}>
+                              <div className="tr-child">
+                                <Input
+                                  type="text"
+                                  value={roleDept.roleName}
+                                ></Input>
+                              </div>
+                              <div className="tr-child">
+                                <Input
+                                  type="text"
+                                  value={roleDept.departmentName}
+                                ></Input>
+                              </div>
+                            </tr>
+                          ))}
                       </div>
                     </div>
                   )}
@@ -1622,7 +1642,9 @@ function ListEmployeeComponent() {
                       <input
                         type="date"
                         value={convertDobToISO(originalDOB)}
-                        onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
+                        onChange={(e) =>
+                          setOriginalDOB(convertDobToISO(e.target.value))
+                        }
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">

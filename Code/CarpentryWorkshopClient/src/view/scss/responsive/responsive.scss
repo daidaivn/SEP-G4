@@ -41,6 +41,9 @@
   }
   .icon-responsive {
     display: block;
+    .ant-input {
+      font-size: 12px !important;
+    }
   }
   .icon-filter {
     padding: 5px 10px;

@@ -793,3 +793,28 @@
   border: unset !important;
   padding: unset !important;
 }
+.fix-color {
+  span {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-weight: 400;
+  }
+}
+.btn-user-profile {
+  display: flex;
+  padding: 14px 43px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  background: #fc1e1e;
+  width: 33%;
+  margin: 0 auto;
+  span {
+    color: #fff;
+    font-family: Noto Sans;
+    font-size: 21px;
+    font-weight: 400;
+  }
+}
