@@ -314,9 +314,6 @@ function ListUserHeader() {
           <div className="modal-head">
             {" "}
             <h3>Bảng lương</h3>
-          </div>
-          <div className="body-payroll1">
-            <p>Lương tháng:</p>
             <Select
               className="select-input"
               defaultValue="lucy"
@@ -344,8 +341,105 @@ function ListUserHeader() {
               ]}
             />
           </div>
-          <div className="body-payroll2">
-            <div className="body-child"></div>
+
+          <div className="body-payroll-all">
+            <div className="body-payroll1 scrollbar" id="style-15">
+              <div className="div1">
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">1. </p>
+                    <p>Lương chính</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="div1 div2">
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">2. </p>
+                    <p>Phụ cấp</p>
+                    <div className="money"></div>
+                  </div>
+                </div>
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">- </p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">- </p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">- </p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">- </p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="div1 div2">
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">3. </p>
+                    <p>Thưởng</p>
+                    <div className="money"></div>
+                  </div>
+                </div>
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">- </p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="div1-child">
+                  <div className="div1-child-cn">
+                    <p className="p1">- </p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="body-payroll">
+              <div className="body-child">
+                <div className="body-child-cn">
+                  <div className="body-child-cn-1">
+                    <p>Tổng số tiền nhận được</p>
+                    <div className="child-pay">
+                      <p>13.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Modal>
