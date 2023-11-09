@@ -105,20 +105,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string sm = "Trưởng ca";
-                string sa = "Phó ca";
                 var employeerole = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
                     .Where(x => x.EmployeeId == employeeid).FirstOrDefault();
-                if (employeerole != null && employeerole.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
-                {
-                    return Ok("Your employee has been provided can not delete");
-                }
-                if (employeerole != null && employeerole.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
-                {
-                    return Ok("Your employee has been provided can not delete");
-                }
                 var dtm = _context.EmployeeTeams
                     .Where(x => x.EmployeeId == employeeid && x.TeamId == teamid)
                     .OrderByDescending(x => x.StartDate)
@@ -183,23 +173,34 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult GetLeaderForTeam()
+        [HttpPost]
+        public IActionResult GetLeaderForTeam(int leadId)
         {
             try
             {
+                string leade = "Nhóm trưởng";
+                var leader = _context.RolesEmployees
+                    .Include(x => x.Role)
+                    .Include(x => x.Department)
+                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Equals(leade.ToLower()))
+                    .FirstOrDefault();
+
                 string lead = "Trưởng ca";
                 var leaderlist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())))
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(re => re.Department)
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())) 
+                    && emp.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
                     .ToList();
                 var exleader = _context.EmployeeTeams
                     .Where(x => x.EndDate == null)
                     .Include(x => x.Employee)
                     .ThenInclude(e => e.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())))
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())) 
+                    && et.Employee.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
                     .Select(et => et.Employee)
                     .ToList();
                 var newlead = leaderlist.Except(exleader).ToList();
@@ -211,23 +212,31 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult GetSubLeaderForTeam()
+        [HttpPost]
+        public IActionResult GetSubLeaderForTeam(int leadId)
         {
             try
             {
+                string leade = "Nhóm trưởng";
+                var leader = _context.RolesEmployees
+                    .Include(x => x.Role)
+                    .Include(x => x.Department)
+                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Equals(leade.ToLower()))
+                    .FirstOrDefault();
                 string sublead = "Phó ca";
                 var subleaderlist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower())))
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower()))
+                    && emp.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
                     .ToList();
                 var subexleader = _context.EmployeeTeams
                     .Where(x => x.EndDate == null)
                     .Include(x => x.Employee)
                     .ThenInclude(e => e.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower())))
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower()))
+                    && et.Employee.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
                     .Select(et => et.Employee)
                     .ToList();
                 var newsublead = subleaderlist.Except(subexleader).ToList();
@@ -309,10 +318,17 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetStaffs()
+        public IActionResult GetStaffs(int leadId)
         {
             try
             {
+                string leade = "Nhóm trưởng";
+                var leader = _context.RolesEmployees
+                    .Include(x => x.Role)
+                    .Include(x => x.Department)
+                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Equals(leade.ToLower()))
+                    .FirstOrDefault();
+
                 string rolename = "Nhân viên";
                 var elist = _context.Employees
                     .Include(x => x.RolesEmployees)
@@ -323,9 +339,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 var sm = elist.Where(employee =>
-                            employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(rolename.ToLower())) &&
-                            !_context.EmployeeTeams.Any(et => et.EmployeeId == employee.EmployeeId && et.EndDate == null)
-                        )
+                                employee.RolesEmployees != null && employee.RolesEmployees.Any(re =>
+                                    re.Role != null &&
+                                    re.Role.RoleName.ToLower().Equals(rolename.ToLower())
+                                ) &&
+                                employee.RolesEmployees.Any(re =>
+                                    re.Department != null && re.Department.DepartmentId == leader?.DepartmentId
+                                ) &&
+                                !_context.EmployeeTeams.Any(et => et.EmployeeId == employee.EmployeeId && et.EndDate == null)
+                            )
                         .Select(emp => new EmployeeListDTO
                         {
                             EmployeeID = emp.EmployeeId,
@@ -657,6 +679,46 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+       
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetTeamForSchedule()
+        {
+            var currentDateTime = DateTime.Now;
+            var result = new List<Object>();
+            var teams = await _context.Teams
+                .Include(t => t.TeamWorks)
+                .ThenInclude(tw => tw.Work)
+                .Include(t => t.EmployeeTeams)
+                .ThenInclude(et => et.Employee)
+                .Include(t => t.WorkSchedules)
+                .ThenInclude(wc => wc.ShiftType)
+                .AsQueryable()
+                .ToListAsync();
+            foreach (var team in teams)
+            {
+                var wId = team.TeamWorks.Where(tw => tw.Work.StartDate <= currentDateTime && currentDateTime <= tw.Work.EndDate)
+                            .Select(tw => tw.Work.WorkId)
+                            .FirstOrDefault();
+                var work = await _context.Works.Where(w => w.WorkId == wId).Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).AsQueryable().FirstOrDefaultAsync();
+                var teamProduct = work.TeamWorks.Sum(tw => tw.TotalProduct);
+                result.Add(new TeamForScheduleDTO
+                {
+                    TeamId = team.TeamId,
+                    TeamName = team.TeamName,
+                    ShiftTypeName = team.WorkSchedules.Select(x => x.ShiftType.TypeName).FirstOrDefault(),
+                    TeamLeaderName = _context.Employees.Where(x => x.EmployeeId == team.TeamLeaderId)
+                                    .Select(x => x.FirstName + " " + x.LastName)
+                                    .FirstOrDefault() ?? string.Empty,
+                    NumberOfMember = team.EmployeeTeams
+                                        .Where(et => et.EndDate == null)
+                                        .GroupBy(et => new { et.EmployeeId, et.TeamId })
+                                        .Count(),
+                    WorkStatus = teamProduct > work.TotalProduct ? "Đã có" : "Chưa có",
+                   
+                });
+            }
+            return Ok(result);
         }
     }
     }

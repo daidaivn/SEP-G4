@@ -78,12 +78,17 @@ namespace CarpentryWorkshopAPI.Controllers
                        Address = emp.Address,
                        Cic = emp.Cic,
                        Country = emp.Country.CountryName,
-                       Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+
+                       CountryId= emp.CountryId,
+
+                       Genderstring = (bool)emp.Gender ? "Nam" : "Nữ",
+                       Gender = emp.Gender,
                        PhoneNumber = emp.PhoneNumber,
                        TaxId = emp.TaxId,
                        Email = emp.Email,
                        Status = emp.Status,
                        RoleDepartments = emp.RolesEmployees
+                            .Where(e => e.EndDate == null)
                             .OrderByDescending(e => e.Role.RoleLevel)
                             .Select(roleemp => new EmployeeDetailBasicDTO.RoleDepartment
                             {
@@ -210,6 +215,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleId = rd.RoleID,
                         EmployeeId = newemp.EmployeeId,
                         StartDate = DateTime.Now,
+                        EndDate = null,
                         DepartmentId = rd.DepartmentID,
                         Status = true,
                     };
@@ -246,10 +252,7 @@ namespace CarpentryWorkshopAPI.Controllers
                       .ThenInclude(role => role.RolesEmployees)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
-                      .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
-                      && x.PhoneNumber == createEmployeeDTO.PhoneNumber
-                      && x.Email == createEmployeeDTO.Email
-                      && x.Cic == createEmployeeDTO.Cic);
+                      .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId);
                 if (employee == null)
                 {
                     return NotFound();
@@ -257,28 +260,29 @@ namespace CarpentryWorkshopAPI.Controllers
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
                     var roleemployees = _context.RolesEmployees
-                .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId
-                && x.RoleId == rd.RoleID
-                && x.DepartmentId == rd.DepartmentID);
-
-                    if (roleemployees != null)
+                    .Where(x => x.EmployeeId == createEmployeeDTO.EmployeeId)
+                    .ToList();
+                    foreach (var role in roleemployees)
                     {
-                        roleemployees.Status = createEmployeeDTO.Status;
-                        roleemployees.EndDate = DateTime.Now;
-                        _context.RolesEmployees.Update(roleemployees);
+                        if (role != null)
+                        {
+                            role.Status = createEmployeeDTO.Status;
+                            role.EndDate = DateTime.Now;
+                            _context.RolesEmployees.Update(role);
+                        }
                     }
-                    else
-                    {
+                  
                         RolesEmployee newremp = new RolesEmployee
                         {
                             RoleId = rd.RoleID,
                             EmployeeId = employee.EmployeeId,
                             StartDate = DateTime.Now,
+                            EndDate = null,
                             DepartmentId = rd.DepartmentID,
                             Status = true,
                         };
                         _context.RolesEmployees.Add(newremp);
-                    }
+                    
                 }
                 employee.Image = createEmployeeDTO.Image;
                 employee.FirstName = createEmployeeDTO.FirstName;
@@ -431,6 +435,56 @@ namespace CarpentryWorkshopAPI.Controllers
                 return Ok(employeesDTO);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult ChangeRoleInDepartment(int oldemployeeid, int oldroleid, int newemployeeid,
+            int newroleid, int departmentid)
+        {
+            try
+            {
+                var old = _context.RolesEmployees
+                    .Where(x => x.EmployeeId == oldemployeeid && x.RoleId == oldroleid && x.DepartmentId == departmentid)
+                    .ToList();
+                foreach (var ol in old)
+                {
+                    ol.EndDate = DateTime.Now;
+                    _context.RolesEmployees.Update(ol);
+                }
+                var newemp = _context.RolesEmployees
+                    .Where(x => x.EmployeeId == newemployeeid && x.RoleId == newroleid && x.DepartmentId == departmentid)
+                    .ToList();
+                foreach (var newe in newemp)
+                {
+                    newe.EndDate = DateTime.Now;
+                    _context.RolesEmployees.Update(newe);
+                }
+                RolesEmployee newforold = new RolesEmployee()
+                {
+                    EmployeeId = newemployeeid,
+                    RoleId = oldroleid,
+                    DepartmentId = departmentid,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                    Status = true,
+                };
+                _context.RolesEmployees.Add(newforold);
+                RolesEmployee oldfornew = new RolesEmployee()
+                {
+                    EmployeeId = oldemployeeid,
+                    RoleId = newroleid,
+                    DepartmentId = departmentid,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
+                    Status = true,
+                };
+                _context.RolesEmployees.Add(oldfornew);
+                _context.SaveChanges();
+                return Ok("Change role in department successful");
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
