@@ -1082,6 +1082,7 @@ i .logo-responsive {
       border-radius: 30px;
       border: 1px solid #000;
       background: #fff;
+
       .div1 {
         display: flex;
         padding: 10px;
@@ -1208,6 +1209,14 @@ i .logo-responsive {
       }
     }
   }
+}
+.body-payroll1::-webkit-scrollbar-thumb {
+  background-color: unset !important;
+  background-image: unset !important;
+}
+.body-payroll1::-webkit-scrollbar-track {
+  background-color: unset !important;
+  -webkit-box-shadow: unset !important;
 }
 .list-input-search .ant-input {
   background: none !important;
