@@ -319,3 +319,44 @@ td {
     background: #1967ff;
   }
 }
+.body-edit {
+  display: flex;
+  padding: 0px 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 26px;
+  align-self: stretch;
+  .item-modal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    Input,
+    .ant-select {
+      border-radius: 60px;
+      border: 1px solid #e6e5ea;
+      display: flex;
+      height: 58px;
+      padding: 14px 24px;
+      align-items: center;
+      gap: 10px;
+      flex: 1 0 0;
+      .ant-select-selector {
+        background-color: unset !important;
+        color: #000;
+        font-family: Noto Sans;
+        font-size: 22px;
+        font-weight: 400;
+        flex: 1 0 0;
+      }
+    }
+  }
+  p {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-weight: 400;
+    flex: 1 0 0;
+  }
+}

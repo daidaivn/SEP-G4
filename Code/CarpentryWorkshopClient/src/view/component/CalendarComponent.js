@@ -4,10 +4,13 @@ import "../scss/fonts.scss";
 import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Input } from "antd";
+import { Input, Select } from "antd";
 import React, { useState } from "react";
 import { Modal } from "antd";
 const CalendarComponent = () => {
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
   // Modal danh sach cong viec
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
   const showModalListShift = () => {
@@ -1341,48 +1344,74 @@ const CalendarComponent = () => {
                 <div className="head-modal">
                   <p>Sửa công việc</p>
                 </div>
-                <div className="body-modal">
+                <div className="body-edit">
                   <div className="item-modal">
                     <p>Tên công việc</p>
-                    <div className="item-right">
-                      <p>Lắp ghép sản phẩm</p>
-                    </div>
+                    <Input type="text"></Input>
                   </div>
                   <div className="item-modal">
                     <p>Loại sản phẩm:</p>
-                    <div className="item-right">
-                      <p>Ghế</p>
-                    </div>
+                    <Select
+                      defaultValue="lucy"
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                      ]}
+                    />
                   </div>
                   <div className="item-modal">
                     <p>Đơn giá 1 sản phẩm</p>
-                    <div className="item-right">
-                      <p>20000</p>
-                    </div>
+                    <Input type="text" placeholder="ví dụ: 20.000"></Input>
                   </div>
                   <div className="item-modal">
                     <p>Số sản phẩm cần sản xuất</p>
-                    <div className="item-right">
-                      <p>500.000</p>
-                    </div>
+                    <Input type="text" placeholder="ví dụ: 500.000"></Input>
                   </div>
                   <div className="item-modal">
                     <p>Khu vục sản xuất</p>
-                    <div className="item-right">
-                      <p>Nhà A</p>
-                    </div>
+                    <Select
+                      defaultValue="lucy"
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                      ]}
+                    />
                   </div>
                   <div className="item-modal">
                     <p>Thời gian bắt đầu:</p>
-                    <div className="item-right">
-                      <p>20-11-2023 :00:00:00</p>
-                    </div>
+                    <Input type="date"></Input>
                   </div>
                   <div className="item-modal">
                     <p>Thời gian kết thúc</p>
-                    <div className="item-right">
-                      <p>21-11-2023 :00:00:00</p>
-                    </div>
+                    <Input type="date"></Input>
                   </div>
                   <div className="footer-modal">
                     <span className="back" onClick={handleCancel}>
