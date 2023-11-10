@@ -1,0 +1,41 @@
+.ListWork {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 56px;
+  background: #386641;
+}
+.buttonAdd {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 56px;
+  background: #ff8f19;
+}
+.time-shift {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  p {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .item-time-shift {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+td {
+  text-align: center;
+}
