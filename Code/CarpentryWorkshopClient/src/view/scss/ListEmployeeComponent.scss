@@ -12,14 +12,14 @@
 }
 
 .ant-modal .ant-modal-content {
-  position: absolute !important;
-  right: -250px !important;
-  top: -79px !important;
-  padding: 0 !important;
-  border-radius: 60px !important;
-  overflow: hidden !important;
-  background: #f9faf5 !important;
-  margin-left: 40px !important;
+  position: absolute;
+  right: -250px;
+  top: -79px;
+  padding: 0;
+  border-radius: 60px;
+  overflow: hidden;
+  background: #f9faf5;
+  margin-left: 40px;
 }
 .ant-modal-close,
 .ant-modal-footer {
