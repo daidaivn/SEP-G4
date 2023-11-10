@@ -58,7 +58,7 @@ const CalendarComponent = () => {
     setIsModalOpenDetailShift(false);
   };
 
-  //Thay doi trang thai chinh sua
+  //Thay doi trang thai chinh sua chi tiet cong viec
   const [isEditing, setIsEditing] = useState(false);
   const handleEdit = () => {
     setIsEditing(true);
@@ -68,6 +68,18 @@ const CalendarComponent = () => {
   };
   const handleCancel = () => {
     setIsEditing(false);
+  };
+
+  //Thay doi trang thai chinh sua chi tiet phan cong viec
+  const [isEditingDetailShift, setIsEditingDetailShift] = useState(false);
+  const handleEditDetailShift = () => {
+    setIsEditingDetailShift(true);
+  };
+  const handleSaveDetailShift = () => {
+    setIsEditingDetailShift(false);
+  };
+  const handleBackDetailShift = () => {
+    setIsEditingDetailShift(false);
   };
   return (
     <>
@@ -1616,70 +1628,186 @@ const CalendarComponent = () => {
             </div>
           </Modal>
         </div>
-        {/* modal Chi tiết phân công việc */}
-        <div className="modal-detail ">
-          <Modal
-            className="modal"
-            open={isModalOpenDetailShift}
-            onOk={handleOkDetailShift}
-            onCancel={handleCancelDetailShift}
-          >
-            <div className="modal-detail-all">
-              <div className="head-modal">
-                <p>Chi tiết phân công việc</p>
-              </div>
-              <div className="body-modal">
-                <div className="item-modal">
-                  <p>Công việc</p>
-                  <div className="item-right">
-                    <p>Nhóm 1</p>
-                  </div>
+        {isEditingDetailShift ? (
+          // modal chỉnh sửa phân công việc
+          <div className="modal-detail ">
+            <Modal
+              className="modal"
+              open={isModalOpenDetailShift}
+              onOk={handleSaveDetailShift}
+              onCancel={handleCancelDetailShift}
+            >
+              <div className="modal-detail-all">
+                <div className="head-modal">
+                  <p>Chi tiết phân công việc</p>
                 </div>
-                <div className="item-modal">
-                  <p>Ca làm việc</p>
-                  <div className="item-right">
-                    <p>Chọn ca làm</p>
+                <div className="body-modal">
+                  <div className="item-modal">
+                    <p>Tên công việc</p>
+                    <Select
+                      defaultValue="lucy"
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                      ]}
+                    />
                   </div>
-                </div>
-                <div className="item-modal">
-                  <p>Thời gian làm</p>
-                  <div className="item-right">
-                    <p>Tuần</p>
+                  <div className="item-modal">
+                    <p>Loại sản phẩm:</p>
+                    <Select
+                      defaultValue="lucy"
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                      ]}
+                    />
                   </div>
-                </div>
-                <div className="item-modal">
-                  <p>Số sản phẩm hoàn thành</p>
-                  <div className="item-right">
-                    <p>80</p>
+                  <div className="item-modal">
+                    <p>Loại sản phẩm:</p>
+                    <Select
+                      defaultValue="lucy"
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "jack",
+                          label: "Jack",
+                        },
+                        {
+                          value: "lucy",
+                          label: "Lucy",
+                        },
+                        {
+                          value: "Yiminghe",
+                          label: "yiminghe",
+                        },
+                      ]}
+                    />
                   </div>
-                </div>
-                <div className="item-modal-last">
-                  <p>Trạng thái:</p>
-                  <div className="item-right">
-                    <p className="switch">
-                      <Form.Item valuePropName="checked">
-                        <Switch checked="true" />
-                      </Form.Item>
-                    </p>
-                    <p>Làm việc</p>
+                  <div className="item-modal">
+                    <p>Loại sản phẩm:</p>
+                    <Input type="date"></Input>
                   </div>
-                </div>
+                  <div className="item-modal-last">
+                    <p>Trạng thái:</p>
+                    <div className="item-right">
+                      <p className="switch">
+                        <Form.Item valuePropName="checked">
+                          <Switch checked="true" />
+                        </Form.Item>
+                      </p>
+                      <p>Làm việc</p>
+                    </div>
+                  </div>
 
-                <div className="footer-modal">
-                  <span className="back" onClick={handleCancelDetailShift}>
-                    Hủy bỏ
-                  </span>
-                  <span className="edit" onClick={handleEdit}>
-                    Sửa
-                  </span>
-                  <span className="green" onClick={showModalDetail}>
-                    Chi tiết công việc
-                  </span>
+                  <div className="footer-modal">
+                    <span className="back" onClick={handleBackDetailShift}>
+                      Hủy bỏ
+                    </span>
+                    <span className="edit save" onClick={handleSaveDetailShift}>
+                      Lưu
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Modal>
-        </div>
+            </Modal>
+          </div>
+        ) : (
+          // modal chi tiêt phân công việc
+          <div className="modal-detail ">
+            <Modal
+              className="modal"
+              open={isModalOpenDetailShift}
+              onOk={handleOkDetailShift}
+              onCancel={handleCancelDetailShift}
+            >
+              <div className="modal-detail-all">
+                <div className="head-modal">
+                  <p>Chi tiết phân công việc</p>
+                </div>
+                <div className="body-modal">
+                  <div className="item-modal">
+                    <p>Công việc</p>
+                    <div className="item-right">
+                      <p>Nhóm 1</p>
+                    </div>
+                  </div>
+                  <div className="item-modal">
+                    <p>Ca làm việc</p>
+                    <div className="item-right">
+                      <p>Chọn ca làm</p>
+                    </div>
+                  </div>
+                  <div className="item-modal">
+                    <p>Thời gian làm</p>
+                    <div className="item-right">
+                      <p>Tuần</p>
+                    </div>
+                  </div>
+                  <div className="item-modal">
+                    <p>Số sản phẩm hoàn thành</p>
+                    <div className="item-right">
+                      <p>80</p>
+                    </div>
+                  </div>
+                  <div className="item-modal-last">
+                    <p>Trạng thái:</p>
+                    <div className="item-right">
+                      <p className="switch">
+                        <Form.Item valuePropName="checked">
+                          <Switch checked="true" />
+                        </Form.Item>
+                      </p>
+                      <p>Làm việc</p>
+                    </div>
+                  </div>
+
+                  <div className="footer-modal">
+                    <span className="back" onClick={handleCancelDetailShift}>
+                      Hủy bỏ
+                    </span>
+                    <span className="edit" onClick={handleEditDetailShift}>
+                      Sửa
+                    </span>
+                    <span className="green" onClick={showModalDetail}>
+                      Chi tiết công việc
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+          </div>
+        )}
       </div>
     </>
   );
