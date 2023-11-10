@@ -40,15 +40,15 @@ function ListUserHeader() {
     setIsModalOpenUser(false);
   };
 
-  const [isModalOpenUserContract, setIsModalOpenUserContract] = useState(false);
-  const showModalUserContract = () => {
-    setIsModalOpenUserContract(true);
+  const [isModalOpenUserRole, setIsModalOpenUserRole] = useState(false);
+  const showModalUserRole = () => {
+    setIsModalOpenUserRole(true);
   };
-  const handleOkUserContract = () => {
-    setIsModalOpenUserContract(false);
+  const handleOkUserRole = () => {
+    setIsModalOpenUserRole(false);
   };
-  const handleCancelUserContract = () => {
-    setIsModalOpenUserContract(false);
+  const handleCancelUserRole = () => {
+    setIsModalOpenUserRole(false);
   };
 
   const [isModalOpenPayroll, setIsModalOpenPayroll] = useState(false);
@@ -177,39 +177,31 @@ function ListUserHeader() {
                 </div>
               </div>
               <div className="modal-child-body2">
-                <div className="div-modal-child2 div-detail">
+                <div className="div-modal-child2 fix-color">
                   <p>Họ và tên:</p>
-                  <Input value="Nguyễn Văn An" />
-                </div>
-                <div className="div-modal-child2 div-detail">
-                  <p>Số điện thoại:</p>
-                  <Input value="0192568746" />
+                  <p className="fix-input">Nguyễn Văn An</p>
                 </div>
 
-                <div className="div-modal-child2">
+                <div className="div-modal-child2 fix-color">
+                  <p>Số điện thoại:</p>
+                  <p className="fix-input">0192568746</p>
+                </div>
+
+                <div className="div-modal-child2 fix-color">
                   <p>Giới tính: </p>
-                  <div className="radio-employee">
-                    <Radio.Group
-                      onChange={(e) => setGender(e.target.value)}
-                      value={gender}
-                    >
-                      <Radio value={1} className="gender">
-                        Nam
-                      </Radio>
-                    </Radio.Group>
-                  </div>
+                  <p className="fix-input">Nam</p>
                 </div>
                 <div className="div-modal-child2 fix-color">
                   <p>Quốc tịch:</p>
-                  <p className="fix-input">abc</p>
+                  <p className="fix-input">Việt Nam</p>
                 </div>
-                <div className="div-modal-child2 div-detail">
+                <div className="div-modal-child2 fix-color">
                   <p>Địa chỉ: </p>
-                  <Input value="Hà Nội" />
+                  <p className="fix-input">Hà Nội</p>
                 </div>
                 <div className="div-modal-child2 div-detail fix-color">
-                  <p>Mã định danh: </p>
-                  <p className="fix-input">000125558995</p>
+                  <p>Email: </p>
+                  <p className="fix-input">okri@gmail.com</p>
                 </div>
               </div>
             </div>
@@ -222,48 +214,189 @@ function ListUserHeader() {
                   </div>
                   <div className="box-child-employee1 fix-color">
                     <p>Lương cơ bản:</p>
-                    <p className="fix-input">000125558995</p>
+                    <p className="fix-input">4000000</p>
                   </div>
-                  <div className="box-child-employee1">
-                    <p>Hợp đồng:</p>
-                    <div className="edit-ct1">
-                      <div className="edit-ct2">
-                        <span onClick={showModalUserContract}>
-                          Xem chi tiết
-                        </span>
-                      </div>
-                    </div>
+                  <div className="box-child-employee1 fix-color">
+                    <p>Mã định danh:</p>
+                    <p className="fix-input">000125558995</p>
                   </div>
                 </div>
                 <div className="box2-child-cn">
-                  <div className="div1-child-employee">
-                    <p>Chức vụ</p>
-                    <p>Phòng / Ban</p>
+                  <div className="box-child-employee1 fix-color">
+                    <p>Ngày sinh:</p>
+                    <Input type="date" className="fix-input"></Input>
                   </div>
-                  <div className="div2-child-employee">
-                    <div className="div2-child">
-                      <div className="div2-child-cn">
-                        <p>Trường phòng</p>
-                      </div>
-                      <div className="div2-child-cn">
-                        <p>Hành chính</p>
-                      </div>
+                  <div className="box-child-employee1 fix-color">
+                    <p>Trạng thái:</p>
+                    <Form.Item valuePropName="checked">
+                      <Switch checked="true" />
+                    </Form.Item>
+                    <span>Còn thời hạn</span>
+                  </div>
+                  <div className="box-child-employee1 fix-color">
+                    <button
+                      className="btn-role-user"
+                      onClick={showModalUserRole}
+                    >
+                      Xem chức vụ
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        className="modal"
+        open={isModalOpenPayroll}
+        on
+        Ok={handleOkPayroll}
+        onCancel={handleCancelPayroll}
+      >
+        <div className="modal-payroll">
+          <div className="modal-head">
+            <div className="body-payroll1">
+              <p>Bảng lương</p>
+              <Select
+                className="select-input"
+                defaultValue="lucy"
+                style={{
+                  width: "236",
+                }}
+                onChange={handleChange}
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "Yiminghe",
+                    label: "yiminghe",
+                  },
+                  {
+                    value: "disabled",
+                    label: "Disabled",
+                  },
+                ]}
+              />
+            </div>
+            <div className="close">
+              <svg
+                onClick={handleCancelPayroll}
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="body-payroll">
+            <div className="body-child1 scrollbar" id="style-15">
+              <div className="body-child1-cn">
+                <div className="item-chil1">
+                  <div className="item-chil1-cn">
+                    <p className="text1">1.</p>
+                    <p>Lương chính</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
                     </div>
-                    <div className="div2-child">
-                      <div className="div2-child-cn">
-                        <p>Phó phòng</p>
-                      </div>
-                      <div className="div2-child-cn">
-                        <p>Kế toán</p>
-                      </div>
+                  </div>
+                </div>
+              </div>
+              <div className="item-child1-col">
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">2.</p>
+                    <p>Phụ cấp</p>
+                    <div className="money"></div>
+                  </div>
+                </div>
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">-</p>
+                    <p>Trách nhiệm</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
                     </div>
-                    <div className="div2-child">
-                      <div className="div2-child-cn">
-                        <p>Nhân viên</p>
-                      </div>
-                      <div className="div2-child-cn">
-                        <p>Tài vụ</p>
-                      </div>
+                  </div>
+                </div>
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">-</p>
+                    <p>Ăn trưa</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">-</p>
+                    <p>Điện thoại</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">-</p>
+                    <p>Xăng xe</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="item-child1-col">
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">3.</p>
+                    <p>Thưởng</p>
+                    <div className="money"></div>
+                  </div>
+                </div>
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">-</p>
+                    <p>Tết dương lịch</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="child1-col">
+                  <div className="child1-text">
+                    <p className="text1">-</p>
+                    <p>Tết âm lịch</p>
+                    <div className="money">
+                      <p>9.000.000 VND</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="body-child2">
+              <div className="body-child1-cn">
+                <div className="item-chil1">
+                  <div className="item-chil1-cn">
+                    <p>Tổng số tiền nhận được</p>
+                    <div className="money">
+                      <p>19.000.000 VND</p>
                     </div>
                   </div>
                 </div>
@@ -274,151 +407,61 @@ function ListUserHeader() {
       </Modal>
       <Modal
         className="modal"
-        open={isModalOpenUserContract}
-        on
-        Ok={handleOkUserContract}
-        onCancel={handleCancelUserContract}
+        open={isModalOpenUserRole}
+        onOk={handleOkUserRole}
+        onCancel={handleCancelUserRole}
       >
-        <div className="modal-add-roleyee-employee modal-contract">
-          <div className="modal-head">
-            {" "}
-            <h3>Thêm / sửa hợp đồng</h3>
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head-employee">
+            <h3>Chức vụ / phòng ban</h3>
           </div>
           <div className="body-add-role-employee">
             <table>
-              <thead className="thead-first"></thead>
-              <div className="body-table body-table-contract">
-                <tr className="fix-color">
-                  <Input
-                    className="select-input"
-                    placeholder="Mã hợp đồng"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                  />
-                </tr>
-                <tr>
-                  <div className="input-date fix-color">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian bắt đầu"
-                      type="date"
-                      style={{
-                        width: "100%",
-                      }}
-                    />
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                <div className="show-role">
+                  <div className="show-item-role">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                    </tr>
                   </div>
-                  <div className="input-date fix-color">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian bắt đầu"
-                      type="date"
-                      style={{
-                        width: "100%",
-                      }}
-                    />
+                  <div className="show-item-role role-fix">
+                    <tr>
+                      <p>Kiêm chức vụ:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                    </tr>
                   </div>
-                  <div className="input-date fix-color">
-                    <Select
-                      className="select-input"
-                      defaultValue="lucy"
-                      style={{
-                        width: "100%",
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                        {
-                          value: "disabled",
-                          label: "Disabled",
-                        },
-                      ]}
-                    />
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date fix-color">
-                    <Input
-                      className="select-input"
-                      placeholder="Đường dẫn hợp đồng"
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                    <div className="input-date-cn">
-                      <p>Trạng thái: </p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked="true" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                </tr>
+                </div>
               </div>
               <thead className="thead-last"></thead>
             </table>
-          </div>
-          <div className="modal-footer modal-footer-add-employee add">
-            <button className="btn-cancel" onClick={handleCancelUserContract}>
-              Thoát
-            </button>
-          </div>
-        </div>
-      </Modal>
-      <Modal
-        className="modal"
-        open={isModalOpenPayroll}
-        on
-        Ok={handleOkPayroll}
-        onCancel={handleCancelPayroll}
-      >
-        <div className="modal-payroll">
-          <div className="modal-head">
-            {" "}
-            <h3>Bảng lương</h3>
-          </div>
-          <div className="body-payroll1">
-            <p>Lương tháng:</p>
-            <Select
-              className="select-input"
-              defaultValue="lucy"
-              style={{
-                width: "236",
-              }}
-              onChange={handleChange}
-              options={[
-                {
-                  value: "jack",
-                  label: "Jack",
-                },
-                {
-                  value: "lucy",
-                  label: "Lucy",
-                },
-                {
-                  value: "Yiminghe",
-                  label: "yiminghe",
-                },
-                {
-                  value: "disabled",
-                  label: "Disabled",
-                },
-              ]}
-            />
-          </div>
-          <div className="body-payroll2">
-            <div className="body-child"></div>
           </div>
         </div>
       </Modal>
