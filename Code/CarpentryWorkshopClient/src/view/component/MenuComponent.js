@@ -69,7 +69,55 @@ const Menucomponent = () => {
             >
               <i className="icon-activity"></i>
 
-              <span className="text">Dashboard</span>
+              <span className="text">Biểu đồ</span>
+            </NavLink>
+          </div>
+          <div className="item-link">
+            <NavLink
+              to={"/calendar"}
+              id="item-menu"
+              onClick={() => handleDivClick("div10")}
+              activeClassName={activeDiv === "div10" ? "active" : ""}
+            >
+              <i className="icon-activity"></i>
+
+              <span className="text">Lên lịch làm việc</span>
+            </NavLink>
+          </div>
+          <div className="item-link">
+            <NavLink
+              to={"/seeWork"}
+              id="item-menu"
+              onClick={() => handleDivClick("div11")}
+              activeClassName={activeDiv === "div11" ? "active" : ""}
+            >
+              <i className="icon-activity"></i>
+
+              <span className="text">Xem công việc</span>
+            </NavLink>
+          </div>
+          <div className="item-link">
+            <NavLink
+              to={"/shift"}
+              id="item-menu"
+              onClick={() => handleDivClick("div12")}
+              activeClassName={activeDiv === "div12" ? "active" : ""}
+            >
+              <i className="icon-activity"></i>
+
+              <span className="text">Ca làm việc</span>
+            </NavLink>
+          </div>
+          <div className="item-link">
+            <NavLink
+              to={"/payroll"}
+              id="item-menu"
+              onClick={() => handleDivClick("div13")}
+              activeClassName={activeDiv === "div13" ? "active" : ""}
+            >
+              <i className="icon-activity"></i>
+
+              <span className="text">Bảng lương công ty</span>
             </NavLink>
           </div>
           <div className="item-link">
