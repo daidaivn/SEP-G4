@@ -23,6 +23,18 @@ const CalendarComponent = () => {
     setIsModalOpenListShift(false);
   };
 
+  // Modal them cong viec
+  const [isModalOpeAdd, setIsModalOpenAdd] = useState(false);
+  const showModalAdd = () => {
+    setIsModalOpenAdd(true);
+  };
+  const handleOkAdd = () => {
+    setIsModalOpenAdd(false);
+  };
+  const handleCancelAdd = () => {
+    setIsModalOpenAdd(false);
+  };
+
   // Modal chi tiet cong viec
   const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
   const showModalDetail = () => {
@@ -135,7 +147,7 @@ const CalendarComponent = () => {
               />
             </svg>
           </div>
-          <div className="buttonAdd">
+          <div className="buttonAdd" onClick={showModalAdd}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="36"
@@ -1266,7 +1278,7 @@ const CalendarComponent = () => {
             </div>
           </Modal>
         </div>
-        {/*  */}
+
         <div className="modal-detail">
           <Modal
             className="modal"
@@ -1332,8 +1344,8 @@ const CalendarComponent = () => {
           </Modal>
         </div>
         {isEditing ? (
-          // modal chi tiet cong viec
-          <div className="modal-detail">
+          // modal chinh sua cong viec
+          <div className="modal-edit">
             <Modal
               className="modal"
               open={isModalOpenDetail}
@@ -1426,8 +1438,8 @@ const CalendarComponent = () => {
             </Modal>
           </div>
         ) : (
-          // modal chinh sua cong viec
-          <div className="modal-detail">
+          // modal chi tiet cong viec
+          <div className="modal-detail ">
             <Modal
               className="modal"
               open={isModalOpenDetail}
@@ -1494,6 +1506,99 @@ const CalendarComponent = () => {
             </Modal>
           </div>
         )}
+        {/* modal them cong viec */}
+        <div className="modal-edit">
+          <Modal
+            className="modal"
+            open={isModalOpeAdd}
+            onOk={handleOkAdd}
+            onCancel={handleCancelAdd}
+          >
+            <div className="modal-detail-all">
+              <div className="head-modal">
+                <p>Thêm công việc</p>
+              </div>
+              <div className="body-edit">
+                <div className="item-modal">
+                  <p>Tên công việc</p>
+                  <Input type="text"></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Loại sản phẩm:</p>
+                  <Select
+                    defaultValue="lucy"
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                    ]}
+                  />
+                </div>
+                <div className="item-modal">
+                  <p>Đơn giá 1 sản phẩm</p>
+                  <Input type="text" placeholder="ví dụ: 20.000"></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Số sản phẩm cần sản xuất</p>
+                  <Input type="text" placeholder="ví dụ: 500.000"></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Khu vục sản xuất</p>
+                  <Select
+                    defaultValue="lucy"
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={handleChange}
+                    options={[
+                      {
+                        value: "jack",
+                        label: "Jack",
+                      },
+                      {
+                        value: "lucy",
+                        label: "Lucy",
+                      },
+                      {
+                        value: "Yiminghe",
+                        label: "yiminghe",
+                      },
+                    ]}
+                  />
+                </div>
+                <div className="item-modal">
+                  <p>Thời gian bắt đầu:</p>
+                  <Input type="date"></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Thời gian kết thúc</p>
+                  <Input type="date"></Input>
+                </div>
+                <div className="footer-modal">
+                  <span className="back" onClick={handleCancelAdd}>
+                    Hủy bỏ
+                  </span>
+                  <span className="edit save" onClick={handleOkAdd}>
+                    Lưu
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Modal>
+        </div>
       </div>
     </>
   );
