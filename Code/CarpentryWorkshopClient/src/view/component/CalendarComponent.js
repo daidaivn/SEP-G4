@@ -74,9 +74,11 @@ const CalendarComponent = () => {
   const [isEditingDetailShift, setIsEditingDetailShift] = useState(false);
   const handleEditDetailShift = () => {
     setIsEditingDetailShift(true);
+    setIsModalOpenDetailShift(true); // Mở modal khi bắt đầu chỉnh sửa
   };
   const handleSaveDetailShift = () => {
     setIsEditingDetailShift(false);
+    setIsModalOpenDetailShift(false); // Đóng modal khi lưu
   };
   const handleBackDetailShift = () => {
     setIsEditingDetailShift(false);
@@ -314,6 +316,7 @@ const CalendarComponent = () => {
               <td>Nguyễn Văn C</td>
               <td>
                 <svg
+                  onClick={handleEditDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -1639,7 +1642,7 @@ const CalendarComponent = () => {
             >
               <div className="modal-detail-all">
                 <div className="head-modal">
-                  <p>Chi tiết phân công việc</p>
+                  <p>Phân công công việc nhóm 1</p>
                 </div>
                 <div className="body-modal">
                   <div className="item-modal">
