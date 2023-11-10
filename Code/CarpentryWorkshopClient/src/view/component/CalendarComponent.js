@@ -4,7 +4,7 @@ import "../scss/fonts.scss";
 import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Input, Select } from "antd";
+import { Form, Input, Select, Switch } from "antd";
 import React, { useState } from "react";
 import { Modal } from "antd";
 const CalendarComponent = () => {
@@ -45,6 +45,17 @@ const CalendarComponent = () => {
   };
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
+  };
+  // Modal Chi tiết phân công việc
+  const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
+  const showModalDetailShift = () => {
+    setIsModalOpenDetailShift(true);
+  };
+  const handleOkDetailShift = () => {
+    setIsModalOpenDetailShift(false);
+  };
+  const handleCancelDetailShift = () => {
+    setIsModalOpenDetailShift(false);
   };
 
   //Thay doi trang thai chinh sua
@@ -315,6 +326,7 @@ const CalendarComponent = () => {
                   </defs>
                 </svg>
                 <svg
+                  onClick={showModalDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -391,6 +403,7 @@ const CalendarComponent = () => {
                   </defs>
                 </svg>
                 <svg
+                  onClick={showModalDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -467,6 +480,7 @@ const CalendarComponent = () => {
                   </defs>
                 </svg>
                 <svg
+                  onClick={showModalDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -543,6 +557,7 @@ const CalendarComponent = () => {
                   </defs>
                 </svg>
                 <svg
+                  onClick={showModalDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -619,6 +634,7 @@ const CalendarComponent = () => {
                   </defs>
                 </svg>
                 <svg
+                  onClick={showModalDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -695,6 +711,7 @@ const CalendarComponent = () => {
                   </defs>
                 </svg>
                 <svg
+                  onClick={showModalDetailShift}
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
                   height="31"
@@ -1507,7 +1524,7 @@ const CalendarComponent = () => {
           </div>
         )}
         {/* modal them cong viec */}
-        <div className="modal-edit">
+        <div className="modal-add">
           <Modal
             className="modal"
             open={isModalOpeAdd}
@@ -1593,6 +1610,70 @@ const CalendarComponent = () => {
                   </span>
                   <span className="edit save" onClick={handleOkAdd}>
                     Lưu
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Modal>
+        </div>
+        {/* modal Chi tiết phân công việc */}
+        <div className="modal-detail ">
+          <Modal
+            className="modal"
+            open={isModalOpenDetailShift}
+            onOk={handleOkDetailShift}
+            onCancel={handleCancelDetailShift}
+          >
+            <div className="modal-detail-all">
+              <div className="head-modal">
+                <p>Chi tiết phân công việc</p>
+              </div>
+              <div className="body-modal">
+                <div className="item-modal">
+                  <p>Công việc</p>
+                  <div className="item-right">
+                    <p>Nhóm 1</p>
+                  </div>
+                </div>
+                <div className="item-modal">
+                  <p>Ca làm việc</p>
+                  <div className="item-right">
+                    <p>Chọn ca làm</p>
+                  </div>
+                </div>
+                <div className="item-modal">
+                  <p>Thời gian làm</p>
+                  <div className="item-right">
+                    <p>Tuần</p>
+                  </div>
+                </div>
+                <div className="item-modal">
+                  <p>Số sản phẩm hoàn thành</p>
+                  <div className="item-right">
+                    <p>80</p>
+                  </div>
+                </div>
+                <div className="item-modal-last">
+                  <p>Trạng thái:</p>
+                  <div className="item-right">
+                    <p className="switch">
+                      <Form.Item valuePropName="checked">
+                        <Switch checked="true" />
+                      </Form.Item>
+                    </p>
+                    <p>Làm việc</p>
+                  </div>
+                </div>
+
+                <div className="footer-modal">
+                  <span className="back" onClick={handleCancelDetailShift}>
+                    Hủy bỏ
+                  </span>
+                  <span className="edit" onClick={handleEdit}>
+                    Sửa
+                  </span>
+                  <span className="green" onClick={showModalDetail}>
+                    Chi tiết công việc
                   </span>
                 </div>
               </div>

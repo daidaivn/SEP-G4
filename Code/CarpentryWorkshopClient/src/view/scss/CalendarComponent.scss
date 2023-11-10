@@ -318,6 +318,19 @@ td {
     border-radius: 20px;
     background: #1967ff;
   }
+  .green {
+    display: flex;
+    border-radius: 20px;
+    padding: 15px 15px 16px 16px;
+    justify-content: center;
+    align-items: center;
+    background: #3a5a40;
+    color: #fff;
+    text-align: center;
+    font-family: Noto Sans;
+    font-size: 21px;
+    font-weight: 400;
+  }
 }
 .body-edit {
   display: flex;
@@ -358,5 +371,26 @@ td {
     font-size: 22px;
     font-weight: 400;
     flex: 1 0 0;
+  }
+}
+.item-modal-last {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+  .item-right {
+    display: flex;
+    .switch {
+      width: 59px;
+    }
+  }
+  p {
+    color: #000;
+    font-family: Noto Sans;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 155px;
   }
 }
