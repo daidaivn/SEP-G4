@@ -234,7 +234,12 @@ function ListUserHeader() {
                     <span>Còn thời hạn</span>
                   </div>
                   <div className="box-child-employee1 fix-color">
-                    <button className="btn-role-user">Xem chức vụ</button>
+                    <button
+                      className="btn-role-user"
+                      onClick={showModalUserRole}
+                    >
+                      Xem chức vụ
+                    </button>
                   </div>
                 </div>
               </div>
@@ -286,6 +291,66 @@ function ListUserHeader() {
           </div>
           <div className="body-payroll2">
             <div className="body-child"></div>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenUserRole}
+        onOk={handleOkUserRole}
+        onCancel={handleCancelUserRole}
+      >
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head-employee">
+            <h3>Chức vụ / phòng ban</h3>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                <div className="show-role">
+                  <div className="show-item-role">
+                    <tr>
+                      <p>Chức vụ chính:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                    </tr>
+                  </div>
+                  <div className="show-item-role role-fix">
+                    <tr>
+                      <p>Kiêm chức vụ:</p>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                    </tr>
+                    <tr>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                      <div className="tr-child">
+                        <Input type="text" value="aaaaaaaaaaa"></Input>
+                      </div>
+                    </tr>
+                  </div>
+                </div>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
           </div>
         </div>
       </Modal>
