@@ -3,6 +3,7 @@ using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -17,6 +18,57 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             _context = context;
             _mapper = mapper;
+        }
+        [HttpPost]
+        public IActionResult GetWorkDetaiForShiftManage(int id)
+        {
+            try
+            {
+                var details = _context.TeamWorks
+                    .Include(x => x.Work)
+                    .Include(x => x.Team)
+                    .Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id && de.Date.Value.Date == DateTime.Now.Date)
+                    .Select(d => new DetailForSmDTO
+                    {
+                        TeamWorkId = d.TeamWorkId,
+                        TeamId = d.TeamId,
+                        TeamName = d.Team.TeamName,
+                        WorkId = d.WorkId,
+                        WorkName = d.Work.WorkName,
+                        NumberOFProductToday = d.TotalProduct,
+                        Date = DateTime.Now.ToShortDateString(),
+                    }).FirstOrDefault();                
+                if (details == null)
+                {
+                    return NotFound();
+                }
+                details.NumberOfProduct = _context.TeamWorks.Include(de=>de.Team).Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id).Sum(de => de.TotalProduct);
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult UpdateTeamWork([FromBody] TeamWorkUpdateDTO teamWorkUpdateDTO)
+        {
+            try
+            {
+                var teamWork = _context.TeamWorks.Where(tw => tw.TeamWorkId == teamWorkUpdateDTO.teamWorkId).FirstOrDefault();
+                if (teamWork == null)
+                {
+                    return NotFound();
+                }
+                teamWork.TotalProduct = teamWorkUpdateDTO.numberProduct;
+                _context.TeamWorks.Update(teamWork);
+                _context.SaveChanges();
+                return Ok("Update success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost]
         public IActionResult AddWorkForTeam([FromBody] TeamWorkDTO teamWorkDTO)
