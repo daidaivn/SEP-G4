@@ -3,6 +3,7 @@ using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -65,6 +66,41 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+        [HttpPost]
+        public IActionResult GetWorkDetaiForShiftManage(int teamleaderid)
+        {
+            try
+            {
+               
+                var details = _context.TeamWorks
+                    .Include(x => x.Work)
+                    .Include(x => x.Team)
+                    .Where(de => de.Team.TeamLeaderId == teamleaderid)
+                    .Select(d => new DetailForSmDTO
+                    {
+                        
+                        TeamId= d.TeamId,
+                        TeamName = d.Team.TeamName,
+                        WorkId = d.WorkId,
+                        WorkName = d.Work.WorkName,
+                        NumberOfProduct = _context.TeamWorks
+                            .Where(tw => tw.TeamId == d.TeamId && tw.Date.Value.Date <= DateTime.Now.Date)
+                            .Sum(tw => tw.TotalProduct),
+                        NumberOFProductToday = (_context.TeamWorks
+                            .Where(tw => tw.TeamId == d.TeamId && tw.Date.Value.Date == DateTime.Now.Date)
+                            .FirstOrDefault().TotalProduct) ?? 0,
+                        Date = DateTime.Now.ToString("dd-mm-yyyy"),
+                    });
+                if (details == null)
+                {
+                    return NotFound();
+                }
+                return Ok(details);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
