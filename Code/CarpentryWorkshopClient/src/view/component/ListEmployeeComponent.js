@@ -19,7 +19,7 @@ import {
   SearchEmployees,
   DetailID,
   UpdateEmployee,
-  GetAllCountry
+  GetAllCountry,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
@@ -35,7 +35,7 @@ import {
   DetailEmployeeModal,
   ListSearchAndFilter,
   EditRoleDepartmentModule,
-  ViewRoleDepartmentModule
+  ViewRoleDepartmentModule,
 } from "./componentEmployee";
 import avt from "../assets/images/Frame 1649.svg";
 import { a } from "react-spring";
@@ -65,8 +65,6 @@ function ListEmployeeComponent() {
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
 
-
-
   const [gender, setGender] = useState();
 
   const [filterGender, setFilterGender] = useState(null);
@@ -79,13 +77,15 @@ function ListEmployeeComponent() {
 
   const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
-      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map((roleDept) => ({
-        roleID: roleDept.roleID,
-        departmentID: roleDept.departmentID,
-      }));
+      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map(
+        (roleDept) => ({
+          roleID: roleDept.roleID,
+          departmentID: roleDept.departmentID,
+        })
+      );
       setRoleDepartmentValues(newRoleDepartmentValues);
     }
-  }
+  };
 
   const updatedRoleDepartmentsAdd = roleDepartmentValues.map((value) => {
     const updatedValue = {};
@@ -99,23 +99,23 @@ function ListEmployeeComponent() {
     return updatedValue;
   });
 
-
-
-
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
   };
 
-  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map((roleDept) => ({
-    roleID: roleDept.roleID,
-    departmentID: roleDept.departmentID,
-  }));
+  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
+    (roleDept) => ({
+      roleID: roleDept.roleID,
+      departmentID: roleDept.departmentID,
+    })
+  );
 
   const UpdateEditEmployee = () => {
     toast.promise(
       new Promise((resolve) => {
-        UpdateEmployee(id,
+        UpdateEmployee(
+          id,
           originalLastName,
           originalFirstName,
           originalPhoneNumber,
@@ -128,20 +128,21 @@ function ListEmployeeComponent() {
           originalStatus,
           updatedRoleDepartments,
           originalEmail,
-          originalImage)
+          originalImage
+        )
           .then((data) => {
             resolve(data);
-            handlelDetail(id)
-            fetchData()
+            handlelDetail(id);
+            fetchData();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -149,36 +150,33 @@ function ListEmployeeComponent() {
   const fetchAllCountry = () => {
     GetAllCountry()
       .then((data) => {
-        setCountries(data)
+        setCountries(data);
         console.log(data);
-
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const log = () => {
-    console.log('id', id);
-    console.log('LastName', originalLastName);
-    console.log('FirstName', originalFirstName);
-    console.log('PhoneNumber', originalPhoneNumber);
-    console.log('Gender', originalGender);
-    console.log('NationalityID', originalNationality);
-    console.log('Address', originalAddress);
-    console.log('CIC', originalCIC);
-    console.log('TaxId', originalTaxId);
-    console.log('DOB', originalDOB);
-    console.log('TaxStatus', originalStatus);
-    console.log('avt', avt);
-    console.log('Email', originalEmail);
+    console.log("id", id);
+    console.log("LastName", originalLastName);
+    console.log("FirstName", originalFirstName);
+    console.log("PhoneNumber", originalPhoneNumber);
+    console.log("Gender", originalGender);
+    console.log("NationalityID", originalNationality);
+    console.log("Address", originalAddress);
+    console.log("CIC", originalCIC);
+    console.log("TaxId", originalTaxId);
+    console.log("DOB", originalDOB);
+    console.log("TaxStatus", originalStatus);
+    console.log("avt", avt);
+    console.log("Email", originalEmail);
     console.log("Roles:", updatedRoleDepartments);
     console.log("Roles:", updatedRoleDepartmentsAdd);
-
-  }
+  };
   log();
 
   const handleSave = () => {
-    resetOriginalDetail()
+    resetOriginalDetail();
     setIsEditing(false);
     UpdateEditEmployee();
   };
@@ -201,25 +199,25 @@ function ListEmployeeComponent() {
 
   const resetOriginalDetail = () => {
     setIsModalOpen(false);
-    setOriginalLastName("")
-    setOriginalFirstName("")
-    setOriginalPhoneNumber("")
-    setOriginalGender("")
-    setOriginalNationality("")
-    setOriginalAddress("")
-    setOriginalCIC("")
-    setOriginalTaxId("")
-    setOriginalDOB("")
-    setOriginalStatus("")
-    setOriginalEmail("")
-    setOriginalImage("")
-  }
+    setOriginalLastName("");
+    setOriginalFirstName("");
+    setOriginalPhoneNumber("");
+    setOriginalGender("");
+    setOriginalNationality("");
+    setOriginalAddress("");
+    setOriginalCIC("");
+    setOriginalTaxId("");
+    setOriginalDOB("");
+    setOriginalStatus("");
+    setOriginalEmail("");
+    setOriginalImage("");
+  };
 
   const handleCancelView = () => {
     setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
     setIsModalOpen(true);
     setIsModalOpen(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
   const handleCancelView1 = () => {
     setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
@@ -234,7 +232,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -260,8 +258,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const fetchData = () => {
@@ -329,11 +326,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-        {
-          value: null,
-          label: "Bỏ chọn",
-        },
-      ]
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -374,7 +371,7 @@ function ListEmployeeComponent() {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
 
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
@@ -669,7 +666,9 @@ function ListEmployeeComponent() {
                       <input
                         type="date"
                         value={convertDobToISO(originalDOB)}
-                        onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
+                        onChange={(e) =>
+                          setOriginalDOB(convertDobToISO(e.target.value))
+                        }
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
