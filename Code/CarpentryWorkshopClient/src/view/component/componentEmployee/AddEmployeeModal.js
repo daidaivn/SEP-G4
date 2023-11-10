@@ -1,53 +1,49 @@
-// EmployeeModal.js
+import React from 'react';
+import { Select, Input, Modal, Radio, Form, Switch } from "antd";
 
-import React from "react";
-import {
-  Modal,
-  Input,
-  Radio,
-  Select,
-  Space,
-  Form,
-  Switch,
-  Row,
-  Col,
-} from "antd";
-import userDetail from "../../assets/images/Ellipse 73.svg";
-
-function AddEmployeeModal({
-  isModalOpen,
-  handleOk,
-  handleCancel,
-  address,
-  setAddress,
-  gender,
-  setGender,
-  phone,
-  setPhone,
-  idCard,
-  setIdCard,
-  fax,
-  setFax,
-  handleChange,
-  Option,
+const AddEmployeeModal = ({
   avt,
-  handleEdit,
-  handleCancelAdd,
-  handleOkAdd,
   isModalOpenAdd,
-}) {
+  handleOkAdd,
+  handleCancelAdd,
+  originalLastName,
+  setOriginalLastName,
+  originalFirstName,
+  setOriginalFirstName,
+  originalPhoneNumber,
+  setOriginalPhoneNumber,
+  originalGender,
+  setOriginalGender,
+  originalNationality,
+  setOriginalNationality,
+  originalAddress,
+  setOriginalAddress,
+  originalCIC,
+  setOriginalCIC,
+  originalTaxId,
+  setOriginalTaxId,
+  originalEmail,
+  setOriginalEmail,
+  originalDOB,
+  setOriginalDOB,
+  originalStatus,
+  setOriginalStatus,
+  convertDobToISO,
+  showModalAddContract,
+  showModalAddRole,
+  countries,
+}) => {
   return (
     <Modal
       className="modal"
       open={isModalOpenAdd}
-      on
-      Ok={handleOkAdd}
+      onOk={handleOkAdd}
       onCancel={handleCancelAdd}
       width={1252}
     >
       <div className="modal-add-employee">
         <div className="modal-head-employee">
-          <h3>Thông tin cá nhân</h3>
+          <h3>Thêm nhân viên</h3>
         </div>
         <div className="modal-add-employee-all">
           <div className="modal-employee-box1">
@@ -57,26 +53,44 @@ function AddEmployeeModal({
               </div>
             </div>
             <div className="modal-child-body2">
-              <div className="div-modal-child2">
-                <p>Họ:</p>
-                <Input placeholder="Nhập họ kèm tên đệm" />
+              <div className="div-modal-child2 div-detail div1-modal-child2">
+                <div className="div1-modal-cn">
+                  <p>Họ:</p>
+                  <Input
+                    value={originalLastName}
+                    onChange={(e) => setOriginalLastName(e.target.value)}
+                    placeholder="Nhập họ, tên đệm"
+                  />
+                </div>
+                <div className="div1-modal-cn div2-fix">
+                  <p>Tên:</p>
+                  <Input
+                    value={originalFirstName}
+                    onChange={(e) => setOriginalFirstName(e.target.value)}
+                    placeholder="Nhập tên"
+                  />
+                </div>
               </div>
-              <div className="div-modal-child2">
-                <p>Tên:</p>
-                <Input placeholder="Nhập tên" />
+              <div className="div-modal-child2 div-detail">
+                <p>Số điện thoại:</p>
+                <Input
+                  value={originalPhoneNumber}
+                  onChange={(e) => setOriginalPhoneNumber(e.target.value)}
+                  placeholder="Nhập số điện thoại"
+                />
               </div>
 
               <div className="div-modal-child2">
                 <p>Giới tính: </p>
                 <div className="radio-employee">
                   <Radio.Group
-                    onChange={(e) => setGender(e.target.value)}
-                    value={gender}
+                    onChange={(e) => setOriginalGender(e.target.value)}
+                    value={originalGender}
                   >
-                    <Radio value={1} className="gender">
+                    <Radio value={true} className="gender">
                       Nam
                     </Radio>
-                    <Radio value={2} className="gender">
+                    <Radio value={false} className="gender">
                       Nữ
                     </Radio>
                   </Radio.Group>
@@ -86,128 +100,106 @@ function AddEmployeeModal({
                 <p>Quốc tịch:</p>
                 <Select
                   className="select-input"
-                  mode="multiple"
+                  value={originalNationality}
+                  placeholder="Chọn quốc tịch"
+                  onChange={(value) => setOriginalNationality(value)}
                   style={{
                     width: "100%",
                   }}
-                  defaultValue={["china"]}
-                  onChange={handleChange}
-                  optionLabelProp="label"
-                >
-                  <Option value="china" label="China">
-                    <Space>China</Space>
-                  </Option>
-                  <Option value="usa" label="USA">
-                    <Space>USA</Space>
-                  </Option>
-                  <Option value="japan" label="Japan">
-                    <Space>Japan</Space>
-                  </Option>
-                  <Option value="korea" label="Korea">
-                    <Space>Korea</Space>
-                  </Option>
-                </Select>
+                  options={countries.map((country) => ({
+                    value: country.countryId,
+                    label: country.countryName,
+                  }))}
+                />
               </div>
-              <div className="div-modal-child2">
+              <div className="div-modal-child2 div-detail">
                 <p>Địa chỉ: </p>
-                <Input placeholder="Nhập địa chỉ" />
+                <Input
+                  value={originalAddress}
+                  onChange={(e) => setOriginalAddress(e.target.value)}
+                  placeholder="Nhập địa chỉ"
+                />
               </div>
-              <div className="div-modal-child2">
+              <div className="div-modal-child2 div-detail">
                 <p>Mã định danh: </p>
-                <Input placeholder="Nhập mã định danh" />
+                <Input
+                  value={originalCIC}
+                  onChange={(e) => setOriginalCIC(e.target.value)}
+                  placeholder="Ví dụ: CMND, CCCD"
+                />
               </div>
             </div>
           </div>
           <div className="modal-employee-box2">
             <div className="modal-box2-child">
-              <div className="box2-child-cn">
-                <div className="box-child-employee1">
+              <div className="box2-child-cn ">
+                <div className="box-child-employee1 div-detail">
                   <p>Mã số thuế:</p>
-                  <Input placeholder="Nhập mã số thuế" />
+                  <Input
+                    value={originalTaxId}
+                    onChange={(e) => setOriginalTaxId(e.target.value)}
+                    placeholder="Nhập mã số thuế"
+                  />
                 </div>
-                <div className="box-child-employee1">
-                  <p>Lương cơ bản:</p>
-                  <Input value="4000000" className="salary" />
-                </div>
-                <div className="box-child-employee1">
-                  <p>Trạng thái hợp đồng:</p>
-                  <Form.Item valuePropName="checked" className="action">
-                    <Switch checked="true" />
-                  </Form.Item>
+                <div className="box-child-employee1 div-detail">
+                  <p>Email:</p>
+                  <Input
+                    value={originalEmail}
+                    onChange={(e) => setOriginalEmail(e.target.value)}
+                    placeholder="Nhập email"
+                  />
                 </div>
               </div>
               <div className="box2-child-cn">
-                <div className="box-child-employee1">
-                  <p>Số điện thoại:</p>
-                  <Input placeholder="Nhập số điện thoại" />
+                <div className="box-child-employee1 div-detail">
+                  <p>Ngày sinh:</p>
+                  <input
+                    type="date"
+                    value={convertDobToISO(originalDOB)}
+                    onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
+                  />
                 </div>
-                <div className="box-child-employee1">
-                  <p>Chức vụ</p>
-                  <Select
-                    className="select-input"
-                    mode="multiple"
-                    style={{
-                      width: "100%",
-                    }}
-                    defaultValue={["china"]}
-                    onChange={handleChange}
-                    optionLabelProp="label"
-                  >
-                    <Option value="china" label="China">
-                      <Space>China</Space>
-                    </Option>
-                    <Option value="usa" label="USA">
-                      <Space>USA</Space>
-                    </Option>
-                    <Option value="japan" label="Japan">
-                      <Space>Japan</Space>
-                    </Option>
-                    <Option value="korea" label="Korea">
-                      <Space>Korea</Space>
-                    </Option>
-                  </Select>
-                </div>
-                <div className="box-child-employee1">
-                  <p>phòng ban</p>
-                  <Select
-                    className="select-input"
-                    mode="multiple"
-                    style={{
-                      width: "100%",
-                    }}
-                    defaultValue={["china"]}
-                    onChange={handleChange}
-                    optionLabelProp="label"
-                  >
-                    <Option value="china" label="China">
-                      <Space>China</Space>
-                    </Option>
-                    <Option value="usa" label="USA">
-                      <Space>USA</Space>
-                    </Option>
-                    <Option value="japan" label="Japan">
-                      <Space>Japan</Space>
-                    </Option>
-                    <Option value="korea" label="Korea">
-                      <Space>Korea</Space>
-                    </Option>
-                  </Select>
+                <div className="box-child-employee1 div-detail">
+                  <p>Trạng thái:</p>
+                  <Form.Item valuePropName="checked" className="action">
+                    <Switch
+                      checked={originalStatus}
+                      onChange={(checked) => setOriginalStatus(checked)}
+                    />
+                  </Form.Item>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="modal-footer modal-footer-add">
-          <button className="btn-cancel" onClick={handleCancelAdd}>
-            Hủy bỏ
-          </button>
-          <button className="btn-edit btn-save" onClick={handleOkAdd}>
-            Lưu
-          </button>
+          <div className="btn-left">
+            <div
+              className="modal-footer1 add-green"
+              onClick={showModalAddContract}
+            >
+              Thêm hợp đồng
+            </div>
+            <div
+              className="modal-footer1 add-green"
+              onClick={showModalAddRole}
+            >
+              Thêm chức vụ
+            </div>
+          </div>
+
+          <div className="modal-footer modal-footer2">
+            <button className="btn-cancel" onClick={handleOkAdd}>
+              Thoát
+            </button>
+            <button className="btn-edit btn-save" onClick={handleCancelAdd}>
+              Lưu
+            </button>
+          </div>
         </div>
       </div>
     </Modal>
   );
-}
+};
 
 export default AddEmployeeModal;
