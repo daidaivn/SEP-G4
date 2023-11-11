@@ -236,7 +236,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.EmployeesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("EmployeeID :" + newemp.EmployeeId);
+                return Ok(newemp.EmployeeId);
             }
             catch (Exception ex)
             {
