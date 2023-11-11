@@ -328,17 +328,21 @@ function ListEmployeeComponent() {
   const [isEditingRole, setIsEditingRole] = useState(false);
   const handleEditRole = () => {
     setIsEditingRole(true);
+    setIsModalOpenEditRole(true);
   };
   const handleSaveRole = () => {
     setIsEditingRole(false);
+    setIsModalOpenEditRole(false);
   };
 
   const [isEditingContract, setIsEditingContract] = useState(false);
   const handleEditContract = () => {
     setIsEditingContract(true);
+    setIsModalOpenEditContract(true);
   };
   const handleSaveContract = () => {
     setIsEditingContract(false);
+    setIsModalOpenEditContract(false);
   };
 
   const resetOriginalDetail = () => {
@@ -878,13 +882,13 @@ function ListEmployeeComponent() {
               <div className="btn-left">
                 <div
                   className="modal-footer1 add-origin"
-                  onClick={showModalEditContract}
+                  onClick={handleEditContract}
                 >
                   Sửa hợp đồng
                 </div>
                 <div
                   className="modal-footer1 add-origin"
-                  onClick={showModalEditRole}
+                  onClick={handleEditRole}
                 >
                   Sửa chức vụ
                 </div>
