@@ -259,12 +259,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
+
                 employee.Image = updateEmployeeDTO.Image;
                 employee.FirstName = updateEmployeeDTO.FirstName;
                 employee.LastName = updateEmployeeDTO.LastName;
                 employee.Email = updateEmployeeDTO.Email;
                 employee.Address = updateEmployeeDTO.Address;
-                employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",
+                employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",            
                                System.Globalization.CultureInfo.InvariantCulture);
                 employee.Gender = updateEmployeeDTO.Gender;
                 employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
