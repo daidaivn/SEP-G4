@@ -307,7 +307,10 @@ namespace CarpentryWorkshopAPI.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TaxId).HasColumnName("TaxID");
+                entity.Property(e => e.TaxId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("TaxID");
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Employees)
@@ -711,7 +714,6 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Employee)
                     .WithOne(p => p.UserAccount)
                     .HasForeignKey<UserAccount>(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__UserAccou__Emplo__47A6A41B");
             });
 
