@@ -15,11 +15,14 @@ import {
   DetailID,
   UpdateEmployee,
   GetAllCountry,
-  CreateEmployee
+  CreateEmployee,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
-import { GetEmployeeContract, GetAllContractType } from "../../sevices/contracts";
+import {
+  GetEmployeeContract,
+  GetAllContractType,
+} from "../../sevices/contracts";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
@@ -37,7 +40,6 @@ function ListEmployeeComponent() {
   const [countries, setCountries] = useState([]);
   const [contract, setContract] = useState([]);
   const [contractTypes, setContractTypes] = useState([]);
-
 
   const [roles, setRoles] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -63,14 +65,13 @@ function ListEmployeeComponent() {
 
   //contract
   const [contractCode, setContractCode] = useState("");
-  const [contractStartDate, setContractStartDate] = useState("");  // Tên state đã được sửa
-  const [contractEndDate, setContractEndDate] = useState("");  // Tên state đã được sửa
+  const [contractStartDate, setContractStartDate] = useState(""); // Tên state đã được sửa
+  const [contractEndDate, setContractEndDate] = useState(""); // Tên state đã được sửa
   const [contractType, setContractType] = useState("");
   const [contractLink, setContractLink] = useState("");
   const [contractStatus, setContractStatus] = useState("");
 
-console.log('contractCode',contractCode);
-
+  console.log("contractCode", contractCode);
 
   const [gender, setGender] = useState();
 
@@ -114,11 +115,11 @@ console.log('contractCode',contractCode);
   };
 
   const handlePhoneNumberChange = (e) => {
-    const formattedValue = e.target.value.replace(/\D/g, '');
+    const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalPhoneNumber(formattedValue);
   };
   const handleCICChange = (e) => {
-    const formattedValue = e.target.value.replace(/\D/g, '');
+    const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalCIC(formattedValue);
   };
 
@@ -139,6 +140,9 @@ console.log('contractCode',contractCode);
     setIsEditing(true);
   };
 
+  const handleBack = () => {
+    setIsEditing(false);
+  };
   const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
     (roleDept) => ({
       roleID: roleDept.roleID,
@@ -149,7 +153,7 @@ console.log('contractCode',contractCode);
   const featchAllContract = () => {
     GetAllContractType()
       .then((data) => {
-        console.log('', data);
+        console.log("", data);
         setContractTypes(data);
       })
       .catch((error) => {
@@ -166,13 +170,12 @@ console.log('contractCode',contractCode);
         setContractCode(data.contractCode);
         setContractStatus(data.status);
         setContractType(data.contractTypeId);
-        setContractStartDate(data.startDate);  // Tên state đã được sửa
-        setContractEndDate(data.endDate);  // Tên state đã được sửa
+        setContractStartDate(data.startDate); // Tên state đã được sửa
+        setContractEndDate(data.endDate); // Tên state đã được sửa
         setContractLink(data.linkDoc);
       })
       .catch((error) => {
-        console.log('error', error);
-
+        console.log("error", error);
       });
   };
 
@@ -199,7 +202,10 @@ console.log('contractCode',contractCode);
       errors.push("Vui lòng nhập địa chỉ.");
     }
 
-    if (originalCIC && !(originalCIC.length === 9 || originalCIC.length === 12)) {
+    if (
+      originalCIC &&
+      !(originalCIC.length === 9 || originalCIC.length === 12)
+    ) {
       errors.push("Mã định danh phải có 9 hoặc 12 số.");
     }
 
@@ -249,7 +255,7 @@ console.log('contractCode',contractCode);
           .then((data) => {
             resolve(data);
             handlelDetail(id);
-            handleSave()
+            handleSave();
             fetchData();
           })
           .catch((error) => {
@@ -262,6 +268,7 @@ console.log('contractCode',contractCode);
         error: "Lỗi cập nhật nhân viên",
       }
     );
+    setIsEditing(false);
   };
 
   const AddEmployee = () => {
@@ -304,17 +311,14 @@ console.log('contractCode',contractCode);
     );
   };
 
-
   const fetchAllCountry = () => {
     GetAllCountry()
       .then((data) => {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
-
-
 
   const handleSave = () => {
     resetOriginalDetail();
@@ -372,7 +376,7 @@ console.log('contractCode',contractCode);
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -401,7 +405,7 @@ console.log('contractCode',contractCode);
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const fetchData = () => {
@@ -441,7 +445,7 @@ console.log('contractCode',contractCode);
             setOriginalDOB(data.dobstring);
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
-            setOriginalEmail(data.email)
+            setOriginalEmail(data.email);
             resolve(data);
           })
           .catch((error) => {
@@ -471,11 +475,11 @@ console.log('contractCode',contractCode);
   const selectOptions = [
     ...(filterRole
       ? [
-        {
-          value: null,
-          label: "Bỏ chọn",
-        },
-      ]
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -525,7 +529,7 @@ console.log('contractCode',contractCode);
   };
   const handleOkAdd = () => {
     setIsModalOpenAdd(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
   const handleCancelAdd = () => {
     setIsModalOpenAdd(false);
@@ -564,6 +568,29 @@ console.log('contractCode',contractCode);
     setIsModalOpenEditContract(false);
   };
 
+  const [isModalOpenViewContract1, setIsModalOpenViewContract1] = useState(
+    false
+  );
+  const showModalViewContract1 = () => {
+    setIsModalOpenViewContract1(true);
+  };
+  const handleOkViewContract1 = () => {
+    setIsModalOpenViewContract1(false);
+  };
+  const handleCancelViewContract1 = () => {
+    setIsModalOpenViewContract1(false);
+  };
+
+  const [isModalOpenViewRole1, setIsModalOpenViewRole1] = useState(false);
+  const showModalViewRole1 = () => {
+    setIsModalOpenViewRole1(true);
+  };
+  const handleOkViewRole1 = () => {
+    setIsModalOpenViewContract1(false);
+  };
+  const handleCancelViewRole1 = () => {
+    setIsModalOpenViewRole1(false);
+  };
   const [isModalOpenAddContract, setIsModalOpenAddContract] = useState(false);
   const showModalAddContract = () => {
     setIsModalOpenAddContract(true);
@@ -716,7 +743,7 @@ console.log('contractCode',contractCode);
         <Modal
           className="modal"
           visible={isModalOpen}
-          onOk={handleSave}
+          onOk={UpdateEditEmployee}
           onCancel={handleCancel}
           width={1252}
         >
@@ -864,10 +891,13 @@ console.log('contractCode',contractCode);
               </div>
 
               <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancelView}>
+                <button className="btn-cancel" onClick={handleBack}>
                   Hủy bỏ
                 </button>
-                <button className="btn-edit btn-save" onClick={UpdateEditEmployee}>
+                <button
+                  className="btn-edit btn-save"
+                  onClick={UpdateEditEmployee}
+                >
                   Lưu
                 </button>
               </div>
@@ -1013,10 +1043,10 @@ console.log('contractCode',contractCode);
             </div>
             <div className="modal-footer modal-footer-add">
               <div className="btn-left">
-                <div className="modal-footer1" onClick={showModalEditContract}>
+                <div className="modal-footer1" onClick={showModalViewContract1}>
                   Xem hợp đồng
                 </div>
-                <div className="modal-footer1" onClick={showModalEditRole}>
+                <div className="modal-footer1" onClick={showModalViewRole1}>
                   Xem chức vụ
                 </div>
               </div>
@@ -1033,6 +1063,213 @@ console.log('contractCode',contractCode);
           </div>
         </Modal>
       )}
+
+      <Modal
+        className="modal"
+        open={isModalOpenViewContract1}
+        onOk={handleOkViewContract1}
+        onCancel={handleCancelViewContract1}
+      >
+        <div className="modal-add-roleyee-employee modal-contract fix-close">
+          <div className="modal-head">
+            <h3>Hợp đồng</h3>
+            <div className="close" onClick={handleCancelViewContract1}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M35 7.30769L22.3077 20L35 32.6923L32.6923 35L20 22.3077L7.30769 35L5 32.6923L17.6923 20L5 7.30769L7.30769 5L20 17.6923L32.6923 5L35 7.30769Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead className="thead-first"></thead>
+              <div className="body-table body-table-contract">
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract?.employeeName}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract?.contractCode}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                    <div className="input-date-cn">
+                      <p>Trạng thái: </p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked={contract?.status} />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      value={convertDobToISO(contract?.startDate)}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian kết thúc"
+                      type="date"
+                      value={convertDobToISO(contract?.endDate)}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Select
+                      className="select-input"
+                      value={contract?.contractTypeId}
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={
+                        contractTypes
+                          ? contractTypes.map((contractType) => ({
+                              value: contractType.contractTypeId,
+                              label: contractType.contractName,
+                            }))
+                          : []
+                      }
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract?.linkDoc}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                </tr>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenViewRole1}
+        onOk={handleOkViewRole1}
+        onCancel={handleCancelViewRole1}
+      >
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head-employee">
+            <h3>Chức vụ / phòng ban</h3>
+            <div className="close" onClick={handleCancelViewRole1}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M35 7.30769L22.3077 20L35 32.6923L32.6923 35L20 22.3077L7.30769 35L5 32.6923L17.6923 20L5 7.30769L7.30769 5L20 17.6923L32.6923 5L35 7.30769Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                {idDetail && idDetail.roleDepartments && (
+                  <div className="show-role">
+                    <div className="show-item-role">
+                      <tr>
+                        <p>Chức vụ chính:</p>
+                      </tr>
+                      {idDetail.roleDepartments.length > 0 && (
+                        <tr>
+                          <div className="tr-child">
+                            <Input
+                              type="text"
+                              value={idDetail.roleDepartments[0].roleName}
+                            ></Input>
+                          </div>
+
+                          <div className="tr-child">
+                            <Input
+                              type="text"
+                              value={idDetail.roleDepartments[0].departmentName}
+                            ></Input>
+                          </div>
+                        </tr>
+                      )}
+                    </div>
+                    <div className="show-item-role role-fix">
+                      <tr>
+                        <p>Kiêm chức vụ:</p>
+                      </tr>
+                      {idDetail.roleDepartments
+                        .slice(1)
+                        .map((roleDept, index) => (
+                          <tr key={index}>
+                            <div className="tr-child">
+                              <Input
+                                type="text"
+                                value={roleDept.roleName}
+                              ></Input>
+                            </div>
+                            <div className="tr-child">
+                              <Input
+                                type="text"
+                                value={roleDept.departmentName}
+                              ></Input>
+                            </div>
+                          </tr>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
