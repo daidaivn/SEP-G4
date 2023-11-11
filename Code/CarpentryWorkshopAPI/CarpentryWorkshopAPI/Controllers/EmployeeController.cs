@@ -183,6 +183,24 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
+        public IActionResult DeleteEmployee(int employeeid)
+        {
+            try
+            {
+                var delete = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
+                if (delete == null)
+                {
+                    return NotFound();
+                }
+                _context.Employees.Remove(delete);  
+                _context.SaveChanges();
+                return Ok("success");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
         public IActionResult CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
