@@ -268,7 +268,7 @@ const CalendarComponent = () => {
             <p>- Ca 2: 6h30 đến15h30 </p>
           </div>
         </div>
-        <table className="list-table">
+        <table className="list-table ">
           <thead>
             <tr>
               <td>STT</td>
@@ -1375,6 +1375,7 @@ const CalendarComponent = () => {
             </div>
           </Modal>
         </div>
+
         {isEditing ? (
           // modal chinh sua cong viec
           <div className="modal-edit">
@@ -1538,6 +1539,7 @@ const CalendarComponent = () => {
             </Modal>
           </div>
         )}
+
         {/* modal them cong viec */}
         <div className="modal-add">
           <Modal
