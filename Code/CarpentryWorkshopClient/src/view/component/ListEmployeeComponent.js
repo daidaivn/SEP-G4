@@ -6,10 +6,6 @@ import "../scss/responsive/ListEmployee.scss";
 import "../scss/fonts.scss";
 import { Input, Switch, Form, Space } from "antd";
 import { toast } from "react-toastify";
-import { Col, Row } from "antd";
-import user from "../assets/images/Ellipse 69.svg";
-import notification from "../assets/images/icons/notification.svg";
-import userDetail from "../assets/images/Ellipse 73.svg";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import React, { useState, useEffect } from "react";
@@ -23,6 +19,7 @@ import {
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
+import { GetEmployeeContract, GetAllContractType } from "../../sevices/contracts";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
@@ -30,16 +27,17 @@ import ListUserHeader from "./componentUI/ListUserHeader";
 import { Select } from "antd";
 import {
   TableEmployee,
-  TableEmployeeRes,
   ListSearchAndFilter,
   EditRoleDepartmentModule,
   ViewRoleDepartmentModule,
 } from "./componentEmployee";
 import avt from "../assets/images/Frame 1649.svg";
-import { a } from "react-spring";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [contract, setContract] = useState([]);
+  const [contractTypes, setContractTypes] = useState([]);
+
 
   const [roles, setRoles] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -63,6 +61,17 @@ function ListEmployeeComponent() {
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
 
+  //contract
+  const [contractCode, setContractCode] = useState("");
+  const [contractStartDate, setContractStartDate] = useState("");  // Tên state đã được sửa
+  const [contractEndDate, setContractEndDate] = useState("");  // Tên state đã được sửa
+  const [contractType, setContractType] = useState("");
+  const [contractLink, setContractLink] = useState("");
+  const [contractStatus, setContractStatus] = useState("");
+
+console.log('contractCode',contractCode);
+
+
   const [gender, setGender] = useState();
 
   const [filterGender, setFilterGender] = useState(null);
@@ -72,6 +81,25 @@ function ListEmployeeComponent() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
+
+  const log = () => {
+    console.log("id", id);
+    console.log("LastName", originalLastName);
+    console.log("FirstName", originalFirstName);
+    console.log("PhoneNumber", originalPhoneNumber);
+    console.log("Gender", originalGender);
+    console.log("NationalityID", originalNationality);
+    console.log("Address", originalAddress);
+    console.log("CIC", originalCIC);
+    console.log("TaxId", originalTaxId);
+    console.log("DOB", originalDOB);
+    console.log("TaxStatus", originalStatus);
+    console.log("avt", avt);
+    console.log("Email", originalEmail);
+    console.log("Roles:", updatedRoleDepartments);
+    console.log("Roles:", updatedRoleDepartmentsAdd);
+  };
+  // log();
 
   const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
@@ -118,6 +146,36 @@ function ListEmployeeComponent() {
     })
   );
 
+  const featchAllContract = () => {
+    GetAllContractType()
+      .then((data) => {
+        console.log('', data);
+        setContractTypes(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const featchEmployeeContract = (value) => {
+    console.log(value);
+
+    GetEmployeeContract(value)
+      .then((data) => {
+        setContract(data);
+        setContractCode(data.contractCode);
+        setContractStatus(data.status);
+        setContractType(data.contractTypeId);
+        setContractStartDate(data.startDate);  // Tên state đã được sửa
+        setContractEndDate(data.endDate);  // Tên state đã được sửa
+        setContractLink(data.linkDoc);
+      })
+      .catch((error) => {
+        console.log('error', error);
+
+      });
+  };
+
   const validateData = () => {
     const errors = [];
 
@@ -157,7 +215,7 @@ function ListEmployeeComponent() {
 
     if (errors.length > 0) {
       errors.forEach((error) => {
-        toast.error(error);
+        toast.warning(error);
       });
       return false;
     }
@@ -256,24 +314,7 @@ function ListEmployeeComponent() {
       .catch((error) => { });
   };
 
-  const log = () => {
-    console.log("id", id);
-    console.log("LastName", originalLastName);
-    console.log("FirstName", originalFirstName);
-    console.log("PhoneNumber", originalPhoneNumber);
-    console.log("Gender", originalGender);
-    console.log("NationalityID", originalNationality);
-    console.log("Address", originalAddress);
-    console.log("CIC", originalCIC);
-    console.log("TaxId", originalTaxId);
-    console.log("DOB", originalDOB);
-    console.log("TaxStatus", originalStatus);
-    console.log("avt", avt);
-    console.log("Email", originalEmail);
-    console.log("Roles:", updatedRoleDepartments);
-    console.log("Roles:", updatedRoleDepartmentsAdd);
-  };
-  log();
+
 
   const handleSave = () => {
     resetOriginalDetail();
@@ -343,12 +384,15 @@ function ListEmployeeComponent() {
       });
   };
   const convertDobToISO = (dobstring) => {
-    const parts = dobstring.split("-");
-    if (parts.length === 3) {
-      const day = parts[0];
-      const month = parts[1];
-      const year = parts[2];
-      return `${year}-${month}-${day}`;
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
     }
     return dobstring;
   };
@@ -614,6 +658,20 @@ function ListEmployeeComponent() {
         AddEmployee={AddEmployee}
         handlePhoneNumberChange={handlePhoneNumberChange}
         handleCICChange={handleCICChange}
+        contract={contract}
+        contractTypes={contractTypes}
+        contractCode={contractCode}
+        setContractCode={setContractCode}
+        contractStartDate={contractStartDate}
+        setContractStartDate={setContractStartDate}
+        contractEndDate={contractEndDate}
+        setContractEndDate={setContractEndDate}
+        contractType={contractType}
+        setContractType={setContractType}
+        contractLink={contractLink}
+        setContractLink={setContractLink}
+        contractStatus={contractStatus}
+        setContractStatus={setContractStatus}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -622,13 +680,14 @@ function ListEmployeeComponent() {
         </span>
       </div>
 
-      <TableEmployeeRes employees={employees} />
       <TableEmployee
         employees={employees}
         showModal={showModalDetail}
         setId={setId}
         handlelDetail={handlelDetail}
         setIsModalOpen={setIsModalOpen}
+        featchEmployeeContract={featchEmployeeContract}
+        featchAllContract={featchAllContract}
       />
       {isEditingRole ? (
         <EditRoleDepartmentModule

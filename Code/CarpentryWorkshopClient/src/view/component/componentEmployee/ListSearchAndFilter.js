@@ -66,7 +66,21 @@ const ListSearchAndFilter = ({
   handleSaveContract,
   AddEmployee,
   handlePhoneNumberChange,
-  handleCICChange
+  handleCICChange,
+  contract,
+  contractTypes,
+  contractCode,
+  setContractCode,
+  contractStartDate,
+  setContractStartDate,
+  contractEndDate,
+  setContractEndDate,
+  contractType,
+  setContractType,
+  contractLink,
+  setContractLink,
+  contractStatus,
+  setContractStatus
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -415,6 +429,20 @@ const ListSearchAndFilter = ({
           handleChange={handleChange}
           handleCancelViewContract={handleCancelViewContract}
           handleSaveContract={handleSaveContract}
+          contractCode={contractCode}
+          setContractCode={setContractCode}
+          contractStartDate={contractStartDate}
+          setContractStartDate={setContractStartDate}
+          contractEndDate={contractEndDate}
+          setContractEndDate={setContractEndDate}
+          contractType={contractType}
+          setContractType={setContractType}
+          contractLink={contractLink}
+          setContractLink={setContractLink}
+          contractStatus={contractStatus}
+          setContractStatus={setContractStatus}
+          convertDobToISO={convertDobToISO}
+          contractTypes={contractTypes}
         />
       ) : (
         <ViewContractModal
@@ -423,6 +451,9 @@ const ListSearchAndFilter = ({
           handleCancelEditContract={handleCancelEditContract}
           handleChange={handleChange}
           handleEditContract={handleEditContract}
+          contract={contract}
+          contractTypes={contractTypes}
+          convertDobToISO={convertDobToISO}
         />
       )}
       <i className="icon-responsive icon-filter icon-add">
