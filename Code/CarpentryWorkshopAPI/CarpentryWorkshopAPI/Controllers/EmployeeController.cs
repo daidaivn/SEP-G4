@@ -204,7 +204,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     return Ok("Nhân viên này đã tồn tại");
                 }
                 var newemp = _mapper.Map<Employee>(createEmployeeDTO);
-                newemp.Status = false;
+                if (!newemp.Status.HasValue)
+                {
+                    newemp.Status = true;
+                }
                 _context.Employees.Add(newemp);
                 _context.SaveChanges();
                 foreach (var rd in createEmployeeDTO.rDs)
