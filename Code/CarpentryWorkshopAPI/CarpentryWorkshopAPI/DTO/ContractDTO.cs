@@ -9,6 +9,7 @@
         public string? LinkDoc { get; set; }
         public bool? Status { get; set; }
         public string? ContractTypeName { get; set; }
+        public int? ContractTypeId { get; set; }
         public string? ContractCode { get; set; }
         public string? Image { get; set; }
     }

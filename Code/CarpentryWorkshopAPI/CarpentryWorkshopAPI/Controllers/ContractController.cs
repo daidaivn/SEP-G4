@@ -36,6 +36,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Select(c => new ContractDTO
                     {
                         ContractId = c.ContractId,
+                        ContractTypeId = c.ContractTypeId,
                         ContractTypeName = c.ContractType.ContractName,
                         EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
                         StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
@@ -70,6 +71,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Select(c => new ContractDTO
                     {
                         ContractId = c.ContractId,
+                        ContractTypeId = c.ContractTypeId,
                         ContractTypeName = c.ContractType.ContractName,
                         EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
                         StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
