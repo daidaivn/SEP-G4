@@ -191,6 +191,7 @@ function ListEmployeeComponent() {
           .then((data) => {
             resolve(data);
             handlelDetail(id);
+            handleSave()
             fetchData();
           })
           .catch((error) => {
@@ -277,7 +278,6 @@ function ListEmployeeComponent() {
   const handleSave = () => {
     resetOriginalDetail();
     setIsEditing(false);
-    UpdateEditEmployee();
   };
 
   const [isEditingRole, setIsEditingRole] = useState(false);
@@ -808,7 +808,7 @@ function ListEmployeeComponent() {
                 <button className="btn-cancel" onClick={handleCancelView}>
                   Hủy bỏ
                 </button>
-                <button className="btn-edit btn-save" onClick={handleSave}>
+                <button className="btn-edit btn-save" onClick={UpdateEditEmployee}>
                   Lưu
                 </button>
               </div>
