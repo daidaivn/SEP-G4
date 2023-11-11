@@ -1375,6 +1375,7 @@ const CalendarComponent = () => {
             </div>
           </Modal>
         </div>
+
         {isEditing ? (
           // modal chinh sua cong viec
           <div className="modal-edit">
@@ -1538,6 +1539,7 @@ const CalendarComponent = () => {
             </Modal>
           </div>
         )}
+
         {/* modal them cong viec */}
         <div className="modal-add">
           <Modal
