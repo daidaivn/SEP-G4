@@ -6,10 +6,6 @@ import "../scss/responsive/ListEmployee.scss";
 import "../scss/fonts.scss";
 import { Input, Switch, Form, Space } from "antd";
 import { toast } from "react-toastify";
-import { Col, Row } from "antd";
-import user from "../assets/images/Ellipse 69.svg";
-import notification from "../assets/images/icons/notification.svg";
-import userDetail from "../assets/images/Ellipse 73.svg";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import React, { useState, useEffect } from "react";
@@ -19,10 +15,14 @@ import {
   DetailID,
   UpdateEmployee,
   GetAllCountry,
-  CreateEmployee
+  CreateEmployee,
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
+import {
+  GetEmployeeContract,
+  GetAllContractType,
+} from "../../sevices/contracts";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import Filter from "./componentUI/Filter";
@@ -30,16 +30,16 @@ import ListUserHeader from "./componentUI/ListUserHeader";
 import { Select } from "antd";
 import {
   TableEmployee,
-  TableEmployeeRes,
   ListSearchAndFilter,
   EditRoleDepartmentModule,
   ViewRoleDepartmentModule,
 } from "./componentEmployee";
 import avt from "../assets/images/Frame 1649.svg";
-import { a } from "react-spring";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [contract, setContract] = useState([]);
+  const [contractTypes, setContractTypes] = useState([]);
 
   const [roles, setRoles] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -63,6 +63,16 @@ function ListEmployeeComponent() {
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
 
+  //contract
+  const [contractCode, setContractCode] = useState("");
+  const [contractStartDate, setContractStartDate] = useState(""); // Tên state đã được sửa
+  const [contractEndDate, setContractEndDate] = useState(""); // Tên state đã được sửa
+  const [contractType, setContractType] = useState("");
+  const [contractLink, setContractLink] = useState("");
+  const [contractStatus, setContractStatus] = useState("");
+
+  console.log("contractCode", contractCode);
+
   const [gender, setGender] = useState();
 
   const [filterGender, setFilterGender] = useState(null);
@@ -72,6 +82,24 @@ function ListEmployeeComponent() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
+
+  const log = () => {
+    console.log("id", id);
+    console.log("LastName", originalLastName);
+    console.log("FirstName", originalFirstName);
+    console.log("PhoneNumber", originalPhoneNumber);
+    console.log("Gender", originalGender);
+    console.log("NationalityID", originalNationality);
+    console.log("Address", originalAddress);
+    console.log("CIC", originalCIC);
+    console.log("TaxId", originalTaxId);
+    console.log("DOB", originalDOB);
+    console.log("TaxStatus", originalStatus);
+    console.log("avt", avt);
+    console.log("Email", originalEmail);
+    console.log("Roles:", updatedRoleDepartments);
+    console.log("Roles:", updatedRoleDepartmentsAdd);
+  };
 
   const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
@@ -86,37 +114,73 @@ function ListEmployeeComponent() {
   };
 
   const handlePhoneNumberChange = (e) => {
-    const formattedValue = e.target.value.replace(/\D/g, '');
+    const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalPhoneNumber(formattedValue);
   };
   const handleCICChange = (e) => {
-    const formattedValue = e.target.value.replace(/\D/g, '');
+    const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalCIC(formattedValue);
   };
 
-  const updatedRoleDepartmentsAdd = roleDepartmentValues.map((value) => {
-    const updatedValue = {};
-    if (value) {
-      updatedValue.roleID = value.roleID;
-      updatedValue.departmentID = value.departmentID;
-    } else {
-      updatedValue.roleID = null;
-      updatedValue.departmentID = null;
-    }
-    return updatedValue;
-  });
+  const updatedRoleDepartmentsAdd = roleDepartmentValues
+    ? roleDepartmentValues.map((value) => {
+      const updatedValue = {};
+      if (value) {
+        updatedValue.roleID = value.roleID;
+        updatedValue.departmentID = value.departmentID;
+      } else {
+        updatedValue.roleID = null;
+        updatedValue.departmentID = null;
+      }
+      return updatedValue;
+    })
+    : [];
+
 
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
   };
 
+  const handleBack = () => {
+    setIsEditing(false);
+  };
   const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
     (roleDept) => ({
       roleID: roleDept.roleID,
       departmentID: roleDept.departmentID,
     })
   );
+
+  const featchAllContract = () => {
+    GetAllContractType()
+      .then((data) => {
+        console.log("", data);
+        setContractTypes(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  log();
+
+  const featchEmployeeContract = (value) => {
+    console.log(value);
+
+    GetEmployeeContract(value)
+      .then((data) => {
+        setContract(data);
+        setContractCode(data.contractCode);
+        setContractStatus(data.status);
+        setContractType(data.contractTypeId);
+        setContractStartDate(data.startDate); // Tên state đã được sửa
+        setContractEndDate(data.endDate); // Tên state đã được sửa
+        setContractLink(data.linkDoc);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
 
   const validateData = () => {
     const errors = [];
@@ -141,7 +205,10 @@ function ListEmployeeComponent() {
       errors.push("Vui lòng nhập địa chỉ.");
     }
 
-    if (originalCIC && !(originalCIC.length === 9 || originalCIC.length === 12)) {
+    if (
+      originalCIC &&
+      !(originalCIC.length === 9 || originalCIC.length === 12)
+    ) {
       errors.push("Mã định danh phải có 9 hoặc 12 số.");
     }
 
@@ -157,11 +224,35 @@ function ListEmployeeComponent() {
 
     if (errors.length > 0) {
       errors.forEach((error) => {
-        toast.error(error);
+        toast.warning(error);
       });
       return false;
     }
+    return true;
+  };
 
+  const validateDataAdd = () => {
+    const errors = [];
+
+    if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
+      errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
+    } else {
+      const isValid = roleDepartmentValues.every(
+        (value) => (value.roleID === null && value.departmentID === null) || (value.roleID !== null && value.departmentID !== null)
+      );
+
+      if (!isValid) {
+        errors.push("Mỗi cặp chức vụ phòng ban cần có Chức vụ ứng với phòng ban hợp lệ.");
+      }
+    }
+
+
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
+    }
     return true;
   };
 
@@ -191,7 +282,7 @@ function ListEmployeeComponent() {
           .then((data) => {
             resolve(data);
             handlelDetail(id);
-            handleSave()
+            handleSave();
             fetchData();
           })
           .catch((error) => {
@@ -204,12 +295,17 @@ function ListEmployeeComponent() {
         error: "Lỗi cập nhật nhân viên",
       }
     );
+    setIsEditing(false);
   };
 
   const AddEmployee = () => {
-    if (!validateData()) {
+    const isDataValid = validateData();
+    const isRoleDataValid = validateDataAdd();
+
+    if (!isDataValid || !isRoleDataValid) {
       return;
     }
+
 
     toast.promise(
       new Promise((resolve) => {
@@ -246,7 +342,6 @@ function ListEmployeeComponent() {
     );
   };
 
-
   const fetchAllCountry = () => {
     GetAllCountry()
       .then((data) => {
@@ -256,25 +351,6 @@ function ListEmployeeComponent() {
       .catch((error) => { });
   };
 
-  const log = () => {
-    console.log("id", id);
-    console.log("LastName", originalLastName);
-    console.log("FirstName", originalFirstName);
-    console.log("PhoneNumber", originalPhoneNumber);
-    console.log("Gender", originalGender);
-    console.log("NationalityID", originalNationality);
-    console.log("Address", originalAddress);
-    console.log("CIC", originalCIC);
-    console.log("TaxId", originalTaxId);
-    console.log("DOB", originalDOB);
-    console.log("TaxStatus", originalStatus);
-    console.log("avt", avt);
-    console.log("Email", originalEmail);
-    console.log("Roles:", updatedRoleDepartments);
-    console.log("Roles:", updatedRoleDepartmentsAdd);
-  };
-  log();
-
   const handleSave = () => {
     resetOriginalDetail();
     setIsEditing(false);
@@ -283,17 +359,21 @@ function ListEmployeeComponent() {
   const [isEditingRole, setIsEditingRole] = useState(false);
   const handleEditRole = () => {
     setIsEditingRole(true);
+    setIsModalOpenEditRole(true);
   };
   const handleSaveRole = () => {
     setIsEditingRole(false);
+    setIsModalOpenEditRole(false);
   };
 
   const [isEditingContract, setIsEditingContract] = useState(false);
   const handleEditContract = () => {
     setIsEditingContract(true);
+    setIsModalOpenEditContract(true);
   };
   const handleSaveContract = () => {
     setIsEditingContract(false);
+    setIsModalOpenEditContract(false);
   };
 
   const resetOriginalDetail = () => {
@@ -310,6 +390,8 @@ function ListEmployeeComponent() {
     setOriginalStatus(true);
     setOriginalEmail("");
     setOriginalImage("");
+    setIdDetail()
+    setRoleDepartmentValues([]);
   };
 
   const handleCancelView = () => {
@@ -343,12 +425,15 @@ function ListEmployeeComponent() {
       });
   };
   const convertDobToISO = (dobstring) => {
-    const parts = dobstring.split("-");
-    if (parts.length === 3) {
-      const day = parts[0];
-      const month = parts[1];
-      const year = parts[2];
-      return `${year}-${month}-${day}`;
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
     }
     return dobstring;
   };
@@ -397,7 +482,7 @@ function ListEmployeeComponent() {
             setOriginalDOB(data.dobstring);
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
-            setOriginalEmail(data.email)
+            setOriginalEmail(data.email);
             resolve(data);
           })
           .catch((error) => {
@@ -481,7 +566,7 @@ function ListEmployeeComponent() {
   };
   const handleOkAdd = () => {
     setIsModalOpenAdd(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
   const handleCancelAdd = () => {
     setIsModalOpenAdd(false);
@@ -520,6 +605,29 @@ function ListEmployeeComponent() {
     setIsModalOpenEditContract(false);
   };
 
+  const [isModalOpenViewContract1, setIsModalOpenViewContract1] = useState(
+    false
+  );
+  const showModalViewContract1 = () => {
+    setIsModalOpenViewContract1(true);
+  };
+  const handleOkViewContract1 = () => {
+    setIsModalOpenViewContract1(false);
+  };
+  const handleCancelViewContract1 = () => {
+    setIsModalOpenViewContract1(false);
+  };
+
+  const [isModalOpenViewRole1, setIsModalOpenViewRole1] = useState(false);
+  const showModalViewRole1 = () => {
+    setIsModalOpenViewRole1(true);
+  };
+  const handleOkViewRole1 = () => {
+    setIsModalOpenViewContract1(false);
+  };
+  const handleCancelViewRole1 = () => {
+    setIsModalOpenViewRole1(false);
+  };
   const [isModalOpenAddContract, setIsModalOpenAddContract] = useState(false);
   const showModalAddContract = () => {
     setIsModalOpenAddContract(true);
@@ -614,6 +722,20 @@ function ListEmployeeComponent() {
         AddEmployee={AddEmployee}
         handlePhoneNumberChange={handlePhoneNumberChange}
         handleCICChange={handleCICChange}
+        contract={contract}
+        contractTypes={contractTypes}
+        contractCode={contractCode}
+        setContractCode={setContractCode}
+        contractStartDate={contractStartDate}
+        setContractStartDate={setContractStartDate}
+        contractEndDate={contractEndDate}
+        setContractEndDate={setContractEndDate}
+        contractType={contractType}
+        setContractType={setContractType}
+        contractLink={contractLink}
+        setContractLink={setContractLink}
+        contractStatus={contractStatus}
+        setContractStatus={setContractStatus}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -622,13 +744,14 @@ function ListEmployeeComponent() {
         </span>
       </div>
 
-      <TableEmployeeRes employees={employees} />
       <TableEmployee
         employees={employees}
         showModal={showModalDetail}
         setId={setId}
         handlelDetail={handlelDetail}
         setIsModalOpen={setIsModalOpen}
+        featchEmployeeContract={featchEmployeeContract}
+        featchAllContract={featchAllContract}
       />
       {isEditingRole ? (
         <EditRoleDepartmentModule
@@ -657,7 +780,7 @@ function ListEmployeeComponent() {
         <Modal
           className="modal"
           visible={isModalOpen}
-          onOk={handleSave}
+          onOk={UpdateEditEmployee}
           onCancel={handleCancel}
           width={1252}
         >
@@ -792,23 +915,26 @@ function ListEmployeeComponent() {
               <div className="btn-left">
                 <div
                   className="modal-footer1 add-origin"
-                  onClick={showModalEditContract}
+                  onClick={handleEditContract}
                 >
                   Sửa hợp đồng
                 </div>
                 <div
                   className="modal-footer1 add-origin"
-                  onClick={showModalEditRole}
+                  onClick={handleEditRole}
                 >
                   Sửa chức vụ
                 </div>
               </div>
 
               <div className="modal-footer modal-footer2">
-                <button className="btn-cancel" onClick={handleCancelView}>
+                <button className="btn-cancel" onClick={handleBack}>
                   Hủy bỏ
                 </button>
-                <button className="btn-edit btn-save" onClick={UpdateEditEmployee}>
+                <button
+                  className="btn-edit btn-save"
+                  onClick={UpdateEditEmployee}
+                >
                   Lưu
                 </button>
               </div>
@@ -954,10 +1080,10 @@ function ListEmployeeComponent() {
             </div>
             <div className="modal-footer modal-footer-add">
               <div className="btn-left">
-                <div className="modal-footer1" onClick={showModalEditContract}>
+                <div className="modal-footer1" onClick={showModalViewContract1}>
                   Xem hợp đồng
                 </div>
-                <div className="modal-footer1" onClick={showModalEditRole}>
+                <div className="modal-footer1" onClick={showModalViewRole1}>
                   Xem chức vụ
                 </div>
               </div>
@@ -974,6 +1100,213 @@ function ListEmployeeComponent() {
           </div>
         </Modal>
       )}
+
+      <Modal
+        className="modal"
+        open={isModalOpenViewContract1}
+        onOk={handleOkViewContract1}
+        onCancel={handleCancelViewContract1}
+      >
+        <div className="modal-add-roleyee-employee modal-contract fix-close">
+          <div className="modal-head">
+            <h3>Hợp đồng</h3>
+            <div className="close" onClick={handleCancelViewContract1}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M35 7.30769L22.3077 20L35 32.6923L32.6923 35L20 22.3077L7.30769 35L5 32.6923L17.6923 20L5 7.30769L7.30769 5L20 17.6923L32.6923 5L35 7.30769Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead className="thead-first"></thead>
+              <div className="body-table body-table-contract">
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract?.employeeName}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract?.contractCode}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                    <div className="input-date-cn">
+                      <p>Trạng thái: </p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked={contract?.status} />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      value={convertDobToISO(contract?.startDate)}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian kết thúc"
+                      type="date"
+                      value={convertDobToISO(contract?.endDate)}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Select
+                      className="select-input"
+                      value={contract?.contractTypeId}
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleChange}
+                      options={
+                        contractTypes
+                          ? contractTypes.map((contractType) => ({
+                            value: contractType.contractTypeId,
+                            label: contractType.contractName,
+                          }))
+                          : []
+                      }
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract?.linkDoc}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </div>
+                </tr>
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        open={isModalOpenViewRole1}
+        onOk={handleOkViewRole1}
+        onCancel={handleCancelViewRole1}
+      >
+        <div className="modal-add-roleyee-employee">
+          <div className="modal-head-employee">
+            <h3>Chức vụ / phòng ban</h3>
+            <div className="close" onClick={handleCancelViewRole1}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M35 7.30769L22.3077 20L35 32.6923L32.6923 35L20 22.3077L7.30769 35L5 32.6923L17.6923 20L5 7.30769L7.30769 5L20 17.6923L32.6923 5L35 7.30769Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="body-add-role-employee">
+            <table>
+              <thead>
+                <td>Chức vụ</td>
+                <td>Phòng ban</td>
+              </thead>
+              <div className="body-table">
+                {idDetail && idDetail.roleDepartments && (
+                  <div className="show-role">
+                    <div className="show-item-role">
+                      <tr>
+                        <p>Chức vụ chính:</p>
+                      </tr>
+                      {idDetail.roleDepartments.length > 0 && (
+                        <tr>
+                          <div className="tr-child">
+                            <Input
+                              type="text"
+                              value={idDetail.roleDepartments[0].roleName}
+                            ></Input>
+                          </div>
+
+                          <div className="tr-child">
+                            <Input
+                              type="text"
+                              value={idDetail.roleDepartments[0].departmentName}
+                            ></Input>
+                          </div>
+                        </tr>
+                      )}
+                    </div>
+                    <div className="show-item-role role-fix">
+                      <tr>
+                        <p>Kiêm chức vụ:</p>
+                      </tr>
+                      {idDetail.roleDepartments
+                        .slice(1)
+                        .map((roleDept, index) => (
+                          <tr key={index}>
+                            <div className="tr-child">
+                              <Input
+                                type="text"
+                                value={roleDept.roleName}
+                              ></Input>
+                            </div>
+                            <div className="tr-child">
+                              <Input
+                                type="text"
+                                value={roleDept.departmentName}
+                              ></Input>
+                            </div>
+                          </tr>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <thead className="thead-last"></thead>
+            </table>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

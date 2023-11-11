@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Form } from "antd";
 
-function TableEmployee({ employees, showModal, setId, setIsModalOpen, handlelDetail }) {
+function TableEmployee({ employees, showModal, setId, handlelDetail, featchEmployeeContract }) {
   return (
     <table className="list-table" onClick={showModal}>
       <thead>
@@ -24,6 +24,8 @@ function TableEmployee({ employees, showModal, setId, setIsModalOpen, handlelDet
             onClick={() => {
               setId(employee.employeeID);
               handlelDetail(employee.employeeID);
+              featchEmployeeContract(employee.employeeID);
+              
             }}
           >
             <td>{employee.image}</td>

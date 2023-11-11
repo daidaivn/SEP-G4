@@ -28,7 +28,7 @@ const NewRoleDepartmentModal = ({
                 <td>Phòng ban</td>
               </thead>
               <div className="body-table">
-                {[1, 2, 3].map((index) => (
+                {[0, 1, 2].map((index) => (
                   <tr key={index}>
                     <Select
                       className="select-input"

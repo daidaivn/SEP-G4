@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Modal, Select, Input, Form, Switch } from "antd";
 
 const ViewContractModal = ({
@@ -6,7 +6,10 @@ const ViewContractModal = ({
   handleOkEditContract,
   handleCancelEditContract,
   handleChange,
-  handleEditContract
+  handleEditContract,
+  contract,
+  contractTypes,
+  convertDobToISO,
 }) => {
   return (
     <Modal
@@ -24,20 +27,41 @@ const ViewContractModal = ({
             <thead className="thead-first"></thead>
             <div className="body-table body-table-contract">
               <tr>
-                <Input
-                  className="select-input"
-                  value={"abc"}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                  }}
-                />
+                <div className="input-date">
+                  <Input
+                    className="select-input"
+                    value={contract?.employeeName}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  />
+                </div>
               </tr>
               <tr>
                 <div className="input-date">
                   <Input
                     className="select-input"
+                    value={contract?.contractCode}
+                    style={{
+                      width: "100%",
+                    }}
+                  />
+                  <div className="input-date-cn">
+                    <p>Trạng thái: </p>
+                    <Form.Item valuePropName="checked" className="action">
+                      <Switch checked={contract?.status} />
+                    </Form.Item>
+                  </div>
+                </div>
+              </tr>
+              <tr>
+                <div className="input-date">
+                  <Input
+                    className="select-input"
+                    placeholder="Thời gian bắt đầu"
                     type="date"
+                    value={convertDobToISO(contract?.startDate)}
                     style={{
                       width: "100%",
                     }}
@@ -46,8 +70,9 @@ const ViewContractModal = ({
                 <div className="input-date">
                   <Input
                     className="select-input"
-                    placeholder="Thời gian bắt đầu"
+                    placeholder="Thời gian kết thúc"
                     type="date"
+                    value={convertDobToISO(contract?.endDate)}
                     style={{
                       width: "100%",
                     }}
@@ -56,29 +81,19 @@ const ViewContractModal = ({
                 <div className="input-date">
                   <Select
                     className="select-input"
-                    defaultValue="lucy"
+                    value={contract?.contractTypeId}
                     style={{
                       width: "100%",
                     }}
                     onChange={handleChange}
-                    options={[
-                      {
-                        value: "jack",
-                        label: "Jack",
-                      },
-                      {
-                        value: "lucy",
-                        label: "Lucy",
-                      },
-                      {
-                        value: "Yiminghe",
-                        label: "yiminghe",
-                      },
-                      {
-                        value: "disabled",
-                        label: "Disabled",
-                      },
-                    ]}
+                    options={
+                      contractTypes
+                        ? contractTypes.map((contractType) => ({
+                            value: contractType.contractTypeId,
+                            label: contractType.contractName,
+                          }))
+                        : []
+                    }
                   />
                 </div>
               </tr>
@@ -86,17 +101,11 @@ const ViewContractModal = ({
                 <div className="input-date">
                   <Input
                     className="select-input"
-                    value={"abc"}
+                    value={contract?.linkDoc}
                     style={{
                       width: "100%",
                     }}
                   />
-                  <div className="input-date-cn">
-                    <p>Trạng thái: </p>
-                    <Form.Item valuePropName="checked" className="action">
-                      <Switch checked="true" />
-                    </Form.Item>
-                  </div>
                 </div>
               </tr>
             </div>
@@ -106,11 +115,11 @@ const ViewContractModal = ({
         <div className="modal-footer modal-footer-add-employee add">
           <button
             className="btn-cancel"
-            onClick={handleCancelEditContract}
+            onClick={() => handleCancelEditContract()}
           >
             Hủy bỏ
           </button>
-          <button className="btn-edit" onClick={handleEditContract}>
+          <button className="btn-edit" onClick={() => handleEditContract()}>
             Chỉnh sửa
           </button>
         </div>
