@@ -36,6 +36,19 @@ const AddEmployeeModal = ({
   AddEmployee,
   handlePhoneNumberChange,
   handleCICChange,
+  contractCode,
+  setContractCode,
+  contractStartDate,
+  setContractStartDate,
+  contractEndDate,
+  setContractEndDate,
+  contractType,
+  setContractType,
+  contractLink,
+  setContractLink,
+  contractStatus,
+  setContractStatus,
+  contractTypes,
 }) => {
   
   return (
