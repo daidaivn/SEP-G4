@@ -115,7 +115,7 @@ const DetailEmployeeModal = ({
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Lương cơ bản:</p>
+                      <p>Email:</p>
                       <Input
                         value={
                           idDetail && idDetail.wageNumber

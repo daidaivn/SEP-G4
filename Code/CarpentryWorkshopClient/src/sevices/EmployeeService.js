@@ -60,10 +60,45 @@ const UpdateEmployee = (
   return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 };
 
+const CreateEmployee = (
+  originalLastName,
+  originalFirstName,
+  originalPhoneNumber,
+  originalGender,
+  originalNationality,
+  originalAddress,
+  originalCIC,
+  originalTaxId,
+  originalDOB,
+  originalStatus,
+  updatedRoleDepartments,
+  Email,
+  Image
+) => {
+  const requestBody = {
+    lastName: originalLastName,
+    firstName: originalFirstName,
+    phoneNumber: originalPhoneNumber,
+    gender: originalGender,
+    countryId: originalNationality,
+    address: originalAddress,
+    cic: originalCIC,
+    taxId: originalTaxId,
+    dobstring: originalDOB,
+    status: originalStatus,
+    rDs: updatedRoleDepartments,
+    email: Email,
+    image: Image,
+  };
+  console.log(`requestBody`, requestBody);
+
+  return axios.post(`/CCMSapi/Employee/CreateEmployee`, requestBody);
+};
+
 
 const GetAllCountry = () => {
   return axios.get(
     `/CCMSapi/Country/GetAllCountry`
   );
 };
-export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry};
+export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry, CreateEmployee};

@@ -30,14 +30,18 @@ const EditRoleDepartmentModule = ({
                             <td>Phòng ban</td>
                         </thead>
                         <div className="body-table">
-                            {idDetail.roleDepartments.map((roleDept, index) => (
+                            {[...Array(3)].map((_, index) => (
                                 <tr key={index}>
                                     <Select
                                         className="select-input"
-                                        value={roleDept.roleID}
+                                        value={idDetail.roleDepartments[index]?.roleID || null}
                                         onChange={(value) => {
-                                            updatedIdDetail.roleDepartments[index].roleID = value;
-                                            setIdDetail(updatedIdDetail);
+                                            const newRoleDepartments = [...idDetail.roleDepartments];
+                                            newRoleDepartments[index] = {
+                                                ...newRoleDepartments[index],
+                                                roleID: value,
+                                            };
+                                            setIdDetail({ ...idDetail, roleDepartments: newRoleDepartments });
                                         }}
                                         style={{
                                             width: "100%",
@@ -52,10 +56,14 @@ const EditRoleDepartmentModule = ({
                                     />
                                     <Select
                                         className="select-input"
-                                        value={roleDept.departmentID}
+                                        value={idDetail.roleDepartments[index]?.departmentID || null}
                                         onChange={(value) => {
-                                            updatedIdDetail.roleDepartments[index].departmentID = value;
-                                            setIdDetail(updatedIdDetail);
+                                            const newRoleDepartments = [...idDetail.roleDepartments];
+                                            newRoleDepartments[index] = {
+                                                ...newRoleDepartments[index],
+                                                departmentID: value,
+                                            };
+                                            setIdDetail({ ...idDetail, roleDepartments: newRoleDepartments });
                                         }}
                                         style={{
                                             width: "100%",
@@ -71,6 +79,7 @@ const EditRoleDepartmentModule = ({
                                 </tr>
                             ))}
                         </div>
+
 
 
 

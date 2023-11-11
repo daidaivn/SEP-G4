@@ -1,5 +1,6 @@
 import React from 'react';
 import { Select, Input, Modal, Radio, Form, Switch } from "antd";
+import { useState } from 'react';
 
 const AddEmployeeModal = ({
   avt,
@@ -32,7 +33,11 @@ const AddEmployeeModal = ({
   showModalAddContract,
   showModalAddRole,
   countries,
+  AddEmployee,
+  handlePhoneNumberChange,
+  handleCICChange,
 }) => {
+  
   return (
     <Modal
       className="modal"
@@ -75,7 +80,7 @@ const AddEmployeeModal = ({
                 <p>Số điện thoại:</p>
                 <Input
                   value={originalPhoneNumber}
-                  onChange={(e) => setOriginalPhoneNumber(e.target.value)}
+                  onChange={handlePhoneNumberChange}
                   placeholder="Nhập số điện thoại"
                 />
               </div>
@@ -101,7 +106,6 @@ const AddEmployeeModal = ({
                 <Select
                   className="select-input"
                   value={originalNationality}
-                  placeholder="Chọn quốc tịch"
                   onChange={(value) => setOriginalNationality(value)}
                   style={{
                     width: "100%",
@@ -124,7 +128,7 @@ const AddEmployeeModal = ({
                 <p>Mã định danh: </p>
                 <Input
                   value={originalCIC}
-                  onChange={(e) => setOriginalCIC(e.target.value)}
+                  onChange={handleCICChange}
                   placeholder="Ví dụ: CMND, CCCD"
                 />
               </div>
@@ -192,7 +196,7 @@ const AddEmployeeModal = ({
             <button className="btn-cancel" onClick={handleOkAdd}>
               Thoát
             </button>
-            <button className="btn-edit btn-save" onClick={handleCancelAdd}>
+            <button className="btn-edit btn-save" onClick={AddEmployee}>
               Lưu
             </button>
           </div>

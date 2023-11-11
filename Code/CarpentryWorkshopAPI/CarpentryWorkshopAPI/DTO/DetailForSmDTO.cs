@@ -1,7 +1,10 @@
-﻿namespace CarpentryWorkshopAPI.DTO
+﻿using System.Drawing.Printing;
+
+namespace CarpentryWorkshopAPI.DTO
 {
     public class DetailForSmDTO
     {
+        public int? TeamWorkId { get; set; }
         public int? TeamId { get; set; }
         public string? TeamName { get; set; }
         public int? WorkId { get; set; }

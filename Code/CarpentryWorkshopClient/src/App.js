@@ -13,8 +13,10 @@ import GroupComponent from "./view/component/GroupComponent";
 import Decentralization from "./view/component/Decentralization";
 import TimekeepingComponent from "./view/component/TimekeepingComponent";
 import MenuResponsive from "./view/component/componentUI/MenuResponsive";
-
-
+import CalendarComponent from "./view/component/CalendarComponent";
+import PayrollComponent from "./view/component/PayrollComponent";
+import SeeWorkComponent from "./view/component/SeeWorkComponent";
+import ShiftComponent from "./view/component/ShiftComponent";
 function App() {
   let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
   if (!userPages.length) {
@@ -54,6 +56,18 @@ function App() {
           )}
           {userPages.includes("TimeKeeping") && (
             <Route path="/timekeeping" element={<TimekeepingComponent />} />
+          )}
+          {userPages.includes("Calendar") && (
+            <Route path="/calendar" element={<CalendarComponent />} />
+          )}
+          {userPages.includes("Payroll") && (
+            <Route path="/payroll" element={<PayrollComponent />} />
+          )}
+          {userPages.includes("SeeWork") && (
+            <Route path="/seeWork" element={<SeeWorkComponent />} />
+          )}
+          {userPages.includes("Shift") && (
+            <Route path="/shift" element={<ShiftComponent />} />
           )}
           <Route
             path="*"

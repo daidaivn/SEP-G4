@@ -15,11 +15,11 @@ import { Radio } from "antd";
 import React, { useState, useEffect } from "react";
 import {
   fetchAllEmplyee,
-  fetchEmplyeebyid,
   SearchEmployees,
   DetailID,
   UpdateEmployee,
-  GetAllCountry
+  GetAllCountry,
+  CreateEmployee
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
@@ -31,11 +31,9 @@ import { Select } from "antd";
 import {
   TableEmployee,
   TableEmployeeRes,
-  AddEmployeeModal,
-  DetailEmployeeModal,
   ListSearchAndFilter,
   EditRoleDepartmentModule,
-  ViewRoleDepartmentModule
+  ViewRoleDepartmentModule,
 } from "./componentEmployee";
 import avt from "../assets/images/Frame 1649.svg";
 import { a } from "react-spring";
@@ -59,13 +57,11 @@ function ListEmployeeComponent() {
   const [originalCIC, setOriginalCIC] = useState("");
   const [originalTaxId, setOriginalTaxId] = useState("");
   const [originalDOB, setOriginalDOB] = useState("");
-  const [originalStatus, setOriginalStatus] = useState("");
+  const [originalStatus, setOriginalStatus] = useState(true);
   const [originalEmail, setOriginalEmail] = useState("");
   const [originalImage, setOriginalImage] = useState("");
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
-
-
 
   const [gender, setGender] = useState();
 
@@ -79,13 +75,24 @@ function ListEmployeeComponent() {
 
   const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
-      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map((roleDept) => ({
-        roleID: roleDept.roleID,
-        departmentID: roleDept.departmentID,
-      }));
+      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map(
+        (roleDept) => ({
+          roleID: roleDept.roleID,
+          departmentID: roleDept.departmentID,
+        })
+      );
       setRoleDepartmentValues(newRoleDepartmentValues);
     }
-  }
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const formattedValue = e.target.value.replace(/\D/g, '');
+    setOriginalPhoneNumber(formattedValue);
+  };
+  const handleCICChange = (e) => {
+    const formattedValue = e.target.value.replace(/\D/g, '');
+    setOriginalCIC(formattedValue);
+  };
 
   const updatedRoleDepartmentsAdd = roleDepartmentValues.map((value) => {
     const updatedValue = {};
@@ -99,23 +106,74 @@ function ListEmployeeComponent() {
     return updatedValue;
   });
 
-
-
-
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
   };
 
-  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map((roleDept) => ({
-    roleID: roleDept.roleID,
-    departmentID: roleDept.departmentID,
-  }));
+  const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
+    (roleDept) => ({
+      roleID: roleDept.roleID,
+      departmentID: roleDept.departmentID,
+    })
+  );
+
+  const validateData = () => {
+    const errors = [];
+
+    if (!originalLastName) {
+      errors.push("Vui lòng nhập họ và tên đệm.");
+    }
+
+    if (!originalFirstName) {
+      errors.push("Vui lòng nhập tên.");
+    }
+
+    if (!originalPhoneNumber || originalPhoneNumber.length !== 10) {
+      errors.push("Vui lòng nhập số điện thoại có 10 số.");
+    }
+
+    if (!originalNationality) {
+      errors.push("Vui lòng chọn quốc tịch.");
+    }
+
+    if (!originalAddress) {
+      errors.push("Vui lòng nhập địa chỉ.");
+    }
+
+    if (originalCIC && !(originalCIC.length === 9 || originalCIC.length === 12)) {
+      errors.push("Mã định danh phải có 9 hoặc 12 số.");
+    }
+
+    const taxIdRegex = /^[0-9A-Za-z]{10}$|^[0-9A-Za-z]{13}$/;
+    if (originalTaxId && !taxIdRegex.test(originalTaxId)) {
+      errors.push("Mã số thuế phải có 10 hoặc 13 và kí tự khác.");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (originalEmail && !emailRegex.test(originalEmail)) {
+      errors.push("Email không hợp lệ.");
+    }
+
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.error(error);
+      });
+      return false;
+    }
+
+    return true;
+  };
 
   const UpdateEditEmployee = () => {
+    if (!validateData()) {
+      return;
+    }
+
     toast.promise(
       new Promise((resolve) => {
-        UpdateEmployee(id,
+        UpdateEmployee(
+          id,
           originalLastName,
           originalFirstName,
           originalPhoneNumber,
@@ -128,59 +186,98 @@ function ListEmployeeComponent() {
           originalStatus,
           updatedRoleDepartments,
           originalEmail,
-          originalImage)
+          originalImage
+        )
           .then((data) => {
             resolve(data);
-            handlelDetail(id)
-            fetchData()
+            handlelDetail(id);
+            handleSave()
+            fetchData();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Cập nhật nhân viên thành công",
+        error: "Lỗi cập nhật nhân viên",
       }
     );
   };
 
+  const AddEmployee = () => {
+    if (!validateData()) {
+      return;
+    }
+
+    toast.promise(
+      new Promise((resolve) => {
+        CreateEmployee(
+          originalLastName,
+          originalFirstName,
+          originalPhoneNumber,
+          originalGender,
+          originalNationality,
+          originalAddress,
+          originalCIC,
+          originalTaxId,
+          originalDOB,
+          originalStatus,
+          updatedRoleDepartments,
+          originalEmail,
+          originalImage
+        )
+          .then((data) => {
+            resolve(data);
+            fetchData();
+            handleCancelAdd();
+            resetOriginalDetail();
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm nhân viên",
+      }
+    );
+  };
+
+
   const fetchAllCountry = () => {
     GetAllCountry()
       .then((data) => {
-        setCountries(data)
+        setCountries(data);
         console.log(data);
-
       })
-      .catch((error) => {
-      });
+      .catch((error) => { });
   };
 
   const log = () => {
-    console.log('id', id);
-    console.log('LastName', originalLastName);
-    console.log('FirstName', originalFirstName);
-    console.log('PhoneNumber', originalPhoneNumber);
-    console.log('Gender', originalGender);
-    console.log('NationalityID', originalNationality);
-    console.log('Address', originalAddress);
-    console.log('CIC', originalCIC);
-    console.log('TaxId', originalTaxId);
-    console.log('DOB', originalDOB);
-    console.log('TaxStatus', originalStatus);
-    console.log('avt', avt);
-    console.log('Email', originalEmail);
+    console.log("id", id);
+    console.log("LastName", originalLastName);
+    console.log("FirstName", originalFirstName);
+    console.log("PhoneNumber", originalPhoneNumber);
+    console.log("Gender", originalGender);
+    console.log("NationalityID", originalNationality);
+    console.log("Address", originalAddress);
+    console.log("CIC", originalCIC);
+    console.log("TaxId", originalTaxId);
+    console.log("DOB", originalDOB);
+    console.log("TaxStatus", originalStatus);
+    console.log("avt", avt);
+    console.log("Email", originalEmail);
     console.log("Roles:", updatedRoleDepartments);
     console.log("Roles:", updatedRoleDepartmentsAdd);
-
-  }
+  };
   log();
 
   const handleSave = () => {
-    resetOriginalDetail()
+    resetOriginalDetail();
     setIsEditing(false);
-    UpdateEditEmployee();
   };
 
   const [isEditingRole, setIsEditingRole] = useState(false);
@@ -201,25 +298,25 @@ function ListEmployeeComponent() {
 
   const resetOriginalDetail = () => {
     setIsModalOpen(false);
-    setOriginalLastName("")
-    setOriginalFirstName("")
-    setOriginalPhoneNumber("")
-    setOriginalGender("")
-    setOriginalNationality("")
-    setOriginalAddress("")
-    setOriginalCIC("")
-    setOriginalTaxId("")
-    setOriginalDOB("")
-    setOriginalStatus("")
-    setOriginalEmail("")
-    setOriginalImage("")
-  }
+    setOriginalLastName("");
+    setOriginalFirstName("");
+    setOriginalPhoneNumber("");
+    setOriginalGender(true);
+    setOriginalNationality("");
+    setOriginalAddress("");
+    setOriginalCIC("");
+    setOriginalTaxId("");
+    setOriginalDOB("");
+    setOriginalStatus(true);
+    setOriginalEmail("");
+    setOriginalImage("");
+  };
 
   const handleCancelView = () => {
     setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
     setIsModalOpen(true);
     setIsModalOpen(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
   const handleCancelView1 = () => {
     setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
@@ -260,8 +357,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {
-      });
+      .catch((error) => { });
   };
 
   const fetchData = () => {
@@ -301,6 +397,7 @@ function ListEmployeeComponent() {
             setOriginalDOB(data.dobstring);
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
+            setOriginalEmail(data.email)
             resolve(data);
           })
           .catch((error) => {
@@ -315,6 +412,7 @@ function ListEmployeeComponent() {
   };
 
   useEffect(() => {
+    fetchAllCountry();
     fetchData();
     allRole();
     fetDataDepartment();
@@ -374,7 +472,7 @@ function ListEmployeeComponent() {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    resetOriginalDetail()
+    resetOriginalDetail();
   };
 
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
@@ -383,6 +481,7 @@ function ListEmployeeComponent() {
   };
   const handleOkAdd = () => {
     setIsModalOpenAdd(false);
+    resetOriginalDetail()
   };
   const handleCancelAdd = () => {
     setIsModalOpenAdd(false);
@@ -512,6 +611,9 @@ function ListEmployeeComponent() {
         departments={departments}
         handleCancelViewContract={handleCancelViewContract}
         handleSaveContract={handleSaveContract}
+        AddEmployee={AddEmployee}
+        handlePhoneNumberChange={handlePhoneNumberChange}
+        handleCICChange={handleCICChange}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -591,10 +693,10 @@ function ListEmployeeComponent() {
                     <p>Số điện thoại:</p>
                     <Input
                       value={originalPhoneNumber}
-                      onChange={(e) => setOriginalPhoneNumber(e.target.value)}
+                      onChange={handlePhoneNumberChange}
+                      placeholder="Nhập số điện thoại"
                     />
                   </div>
-
                   <div className="div-modal-child2">
                     <p>Giới tính: </p>
                     <div className="radio-employee">
@@ -637,7 +739,8 @@ function ListEmployeeComponent() {
                     <p>Mã định danh: </p>
                     <Input
                       value={originalCIC}
-                      onChange={(e) => setOriginalCIC(e.target.value)}
+                      onChange={handleCICChange}
+                      placeholder="Ví dụ: CMND, CCCD"
                     />
                   </div>
                 </div>
@@ -653,13 +756,11 @@ function ListEmployeeComponent() {
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Lương cơ bản:</p>
+                      <p>Email:</p>
                       <Input
-                        value={
-                          idDetail && idDetail.wageNumber
-                            ? idDetail.wageNumber
-                            : "Chưa có thông tin"
-                        }
+                        value={originalEmail}
+                        onChange={(e) => setOriginalEmail(e.target.value)}
+                        placeholder="Nhập email"
                       />
                     </div>
                   </div>
@@ -669,7 +770,9 @@ function ListEmployeeComponent() {
                       <input
                         type="date"
                         value={convertDobToISO(originalDOB)}
-                        onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
+                        onChange={(e) =>
+                          setOriginalDOB(convertDobToISO(e.target.value))
+                        }
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
@@ -705,7 +808,7 @@ function ListEmployeeComponent() {
                 <button className="btn-cancel" onClick={handleCancelView}>
                   Hủy bỏ
                 </button>
-                <button className="btn-edit btn-save" onClick={handleSave}>
+                <button className="btn-edit btn-save" onClick={UpdateEditEmployee}>
                   Lưu
                 </button>
               </div>
@@ -815,11 +918,11 @@ function ListEmployeeComponent() {
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Lương cơ bản:</p>
+                      <p>Email:</p>
                       <Input
                         value={
-                          idDetail && idDetail.wageNumber
-                            ? idDetail.wageNumber
+                          idDetail && idDetail.email
+                            ? idDetail.email
                             : "Chưa có thông tin"
                         }
                       />
