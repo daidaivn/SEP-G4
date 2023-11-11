@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Modal, Select, Input, Form, Switch } from "antd";
 
 const ViewContractModal = ({
@@ -9,7 +9,7 @@ const ViewContractModal = ({
   handleEditContract,
   contract,
   contractTypes,
-  convertDobToISO
+  convertDobToISO,
 }) => {
   return (
     <Modal
@@ -86,10 +86,14 @@ const ViewContractModal = ({
                       width: "100%",
                     }}
                     onChange={handleChange}
-                    options={contractTypes ? contractTypes.map((contractType) => ({
-                      value: contractType.contractTypeId,
-                      label: contractType.contractName,
-                    })) : []}
+                    options={
+                      contractTypes
+                        ? contractTypes.map((contractType) => ({
+                            value: contractType.contractTypeId,
+                            label: contractType.contractName,
+                          }))
+                        : []
+                    }
                   />
                 </div>
               </tr>

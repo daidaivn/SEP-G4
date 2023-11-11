@@ -674,6 +674,7 @@
           background: unset !important;
           box-shadow: unset !important;
           .ant-select {
+            height: 60px;
             padding: 20px 20px;
             background-color: #fff;
             border-radius: 60px;
@@ -821,4 +822,20 @@
   background: unset !important;
   border: unset !important;
   padding: unset !important;
+}
+.fix-close {
+  .modal-head {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    h3 {
+      width: 90%;
+    }
+    .close {
+      display: flex;
+      align-items: center;
+      float: right;
+      flex: 1 0 0;
+    }
+  }
 }
