@@ -100,7 +100,6 @@ function ListEmployeeComponent() {
     console.log("Roles:", updatedRoleDepartments);
     console.log("Roles:", updatedRoleDepartmentsAdd);
   };
-  // log();
 
   const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
@@ -123,17 +122,20 @@ function ListEmployeeComponent() {
     setOriginalCIC(formattedValue);
   };
 
-  const updatedRoleDepartmentsAdd = roleDepartmentValues.map((value) => {
-    const updatedValue = {};
-    if (value) {
-      updatedValue.roleID = value.roleID;
-      updatedValue.departmentID = value.departmentID;
-    } else {
-      updatedValue.roleID = null;
-      updatedValue.departmentID = null;
-    }
-    return updatedValue;
-  });
+  const updatedRoleDepartmentsAdd = roleDepartmentValues
+    ? roleDepartmentValues.map((value) => {
+      const updatedValue = {};
+      if (value) {
+        updatedValue.roleID = value.roleID;
+        updatedValue.departmentID = value.departmentID;
+      } else {
+        updatedValue.roleID = null;
+        updatedValue.departmentID = null;
+      }
+      return updatedValue;
+    })
+    : [];
+
 
   const handleEdit = () => {
     fetchAllCountry();
@@ -160,6 +162,7 @@ function ListEmployeeComponent() {
         console.log(error);
       });
   };
+  log();
 
   const featchEmployeeContract = (value) => {
     console.log(value);
@@ -225,7 +228,31 @@ function ListEmployeeComponent() {
       });
       return false;
     }
+    return true;
+  };
 
+  const validateDataAdd = () => {
+    const errors = [];
+
+    if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
+      errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
+    } else {
+      const isValid = roleDepartmentValues.every(
+        (value) => (value.roleID === null && value.departmentID === null) || (value.roleID !== null && value.departmentID !== null)
+      );
+
+      if (!isValid) {
+        errors.push("Mỗi cặp chức vụ phòng ban cần có Chức vụ ứng với phòng ban hợp lệ.");
+      }
+    }
+
+
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
+    }
     return true;
   };
 
@@ -272,9 +299,13 @@ function ListEmployeeComponent() {
   };
 
   const AddEmployee = () => {
-    if (!validateData()) {
+    const isDataValid = validateData();
+    const isRoleDataValid = validateDataAdd();
+
+    if (!isDataValid || !isRoleDataValid) {
       return;
     }
+
 
     toast.promise(
       new Promise((resolve) => {
@@ -317,7 +348,7 @@ function ListEmployeeComponent() {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleSave = () => {
@@ -355,6 +386,8 @@ function ListEmployeeComponent() {
     setOriginalStatus(true);
     setOriginalEmail("");
     setOriginalImage("");
+    setIdDetail()
+    setRoleDepartmentValues([]);
   };
 
   const handleCancelView = () => {
@@ -376,7 +409,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -405,7 +438,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchData = () => {
@@ -475,11 +508,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -1157,9 +1190,9 @@ function ListEmployeeComponent() {
                       options={
                         contractTypes
                           ? contractTypes.map((contractType) => ({
-                              value: contractType.contractTypeId,
-                              label: contractType.contractName,
-                            }))
+                            value: contractType.contractTypeId,
+                            label: contractType.contractName,
+                          }))
                           : []
                       }
                     />
