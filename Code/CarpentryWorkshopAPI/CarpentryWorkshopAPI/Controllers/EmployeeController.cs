@@ -40,10 +40,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         EmployeeID = emp.EmployeeId,
                         Image = emp.Image,
-                        FullName = $"{emp.FirstName} {emp.LastName}",
+                        FullName = $"{emp.LastName} {emp.FirstName}",
                         Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                         PhoneNumber = emp.PhoneNumber,
                         Roles = emp.RolesEmployees
+                        .Where(re=>re.EndDate == null)
                         .OrderByDescending(re => re.Role.RoleLevel)
                         .Select(re => re.Role.RoleName)
                         .FirstOrDefault(),
@@ -73,14 +74,12 @@ namespace CarpentryWorkshopAPI.Controllers
                    {
                        EmployeeId = emp.EmployeeId,
                        Image = emp.Image,
-                       FullName = emp.FirstName + " " + emp.LastName,
+                       FullName = emp.LastName + " " + emp.FirstName,
                        Dobstring = emp.Dob.Value.ToString("dd'-'MM'-'yyyy"),
                        Address = emp.Address,
                        Cic = emp.Cic,
                        Country = emp.Country.CountryName,
-
                        CountryId= emp.CountryId,
-
                        Genderstring = (bool)emp.Gender ? "Nam" : "Nữ",
                        Gender = emp.Gender,
                        PhoneNumber = emp.PhoneNumber,
