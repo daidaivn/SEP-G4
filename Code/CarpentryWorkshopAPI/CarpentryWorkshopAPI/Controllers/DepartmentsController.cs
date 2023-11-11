@@ -186,22 +186,19 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var employeeList = from re in _context.RolesEmployees.Where(re => re.DepartmentId == id)
-                                   from emp in _context.Employees.Where(e => e.EmployeeId == re.EmployeeId).ToList()
-                                   select new EmployeeListDTO
+                
+                var employeesList = _context.RolesEmployees.Include(re => re.Employee).Where(re => re.DepartmentId == id && re.EndDate == null)
+                                   .Select(re => new EmployeeListDTO
                                    {
-                                       EmployeeID = emp.EmployeeId,
-                                       Image = emp.Image,
-                                       FullName = $"{emp.FirstName} {emp.LastName}",
-                                       Gender = (bool)emp.Gender ? "Nam" : "Nữ",
-                                       PhoneNumber = emp.PhoneNumber,
-                                       Roles = emp.RolesEmployees
-                                       .OrderByDescending(re => re.Role.RoleLevel)
-                                        .Select(re => re.Role.RoleName)
-                                        .FirstOrDefault(),
-                                       Status = emp.Status,
-                                   };
-                return Ok(employeeList);
+                                       EmployeeID = re.EmployeeId,
+                                       Image = re.Employee.Image,
+                                       FullName = $"{re.Employee.LastName} {re.Employee.FirstName}",
+                                       Gender = re.Employee.Gender.Value == true ? "Nam" : "Nữ",
+                                       PhoneNumber = re.Employee.PhoneNumber,
+                                       Roles = re.Role.RoleName,
+                                       Status = re.Employee.Status,
+                                   }).ToList();
+                return Ok(employeesList);
             }
             catch (Exception ex)
             {
