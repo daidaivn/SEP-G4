@@ -194,10 +194,9 @@ namespace CarpentryWorkshopAPI.Controllers
                        .ThenInclude(role => role.RolesEmployees)
                    .Include(emp => emp.RolesEmployees)
                        .ThenInclude(roleemp => roleemp.Department)
-                       .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId 
-                       && x.PhoneNumber == createEmployeeDTO.PhoneNumber 
-                       && x.Email == createEmployeeDTO.Email
-                       && x.Cic == createEmployeeDTO.Cic);
+                       .FirstOrDefault(x => x.PhoneNumber == createEmployeeDTO.PhoneNumber 
+                       || x.Email == createEmployeeDTO.Email
+                       || x.Cic == createEmployeeDTO.Cic);
 
                 if (employee != null)
                 {
