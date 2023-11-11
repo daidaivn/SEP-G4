@@ -229,5 +229,53 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
+        public IActionResult EditRole(int employeeid, int roleid, int departmentid)
+        {
+            try
+            {
+                var exdata = _context.RolesEmployees
+                    .Where(x => x.EmployeeId == employeeid && x.RoleId == roleid && x.DepartmentId == departmentid)
+                    .ToList();
+                if (exdata.Count == 0)
+                {
+                    RolesEmployee newrd = new RolesEmployee()
+                    {
+                        EmployeeId = employeeid,
+                        RoleId = roleid,
+                        DepartmentId = departmentid,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                        Status = true
+                    };
+                    _context.RolesEmployees.Add(newrd);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    foreach (var item in exdata)
+                    {
+                        item.EndDate = DateTime.Now;
+                        _context.RolesEmployees.Update(item);
+                    }
+                    RolesEmployee newrd = new RolesEmployee()
+                    {
+                        EmployeeId = employeeid,
+                        RoleId = roleid,
+                        DepartmentId = departmentid,
+                        StartDate = DateTime.Now,
+                        EndDate = null,
+                        Status = true
+                    };
+                    _context.RolesEmployees.Add(newrd);
+                    _context.SaveChanges();
+                }
+                _context.SaveChanges();
+                return Ok("Update successful");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

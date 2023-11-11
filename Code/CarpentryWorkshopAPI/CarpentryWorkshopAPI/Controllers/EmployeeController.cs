@@ -244,7 +244,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult UpdateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
+        public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
         {
             try
             {
@@ -254,52 +254,26 @@ namespace CarpentryWorkshopAPI.Controllers
                       .ThenInclude(role => role.RolesEmployees)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
-                      .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId);
+                      .FirstOrDefault(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
                 if (employee == null)
                 {
                     return NotFound();
                 }
-                foreach (var rd in createEmployeeDTO.rDs)
-                {
-                    var roleemployees = _context.RolesEmployees
-                    .Where(x => x.EmployeeId == createEmployeeDTO.EmployeeId)
-                    .ToList();
-                    foreach (var role in roleemployees)
-                    {
-                        if (role != null)
-                        {
-                            role.Status = createEmployeeDTO.Status;
-                            role.EndDate = DateTime.Now;
-                            _context.RolesEmployees.Update(role);
-                        }
-                    }
-                  
-                        RolesEmployee newremp = new RolesEmployee
-                        {
-                            RoleId = rd.RoleID,
-                            EmployeeId = employee.EmployeeId,
-                            StartDate = DateTime.Now,
-                            EndDate = null,
-                            DepartmentId = rd.DepartmentID,
-                            Status = true,
-                        };
-                        _context.RolesEmployees.Add(newremp);
-                    
-                }
-                employee.Image = createEmployeeDTO.Image;
-                employee.FirstName = createEmployeeDTO.FirstName;
-                employee.LastName = createEmployeeDTO.LastName;
-                employee.Email = createEmployeeDTO.Email;
-                employee.Address = createEmployeeDTO.Address;
-                employee.Dob = DateTime.ParseExact(createEmployeeDTO.Dobstring, "dd-MM-yyyy",
+
+                employee.Image = updateEmployeeDTO.Image;
+                employee.FirstName = updateEmployeeDTO.FirstName;
+                employee.LastName = updateEmployeeDTO.LastName;
+                employee.Email = updateEmployeeDTO.Email;
+                employee.Address = updateEmployeeDTO.Address;
+                employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",            
                                System.Globalization.CultureInfo.InvariantCulture);
-                employee.Gender = createEmployeeDTO.Gender;
-                employee.PhoneNumber = createEmployeeDTO.PhoneNumber;
-                employee.TaxId = createEmployeeDTO.TaxId;
-                employee.Status = createEmployeeDTO.Status;
-                employee.Cic = createEmployeeDTO.Cic;
-                employee.CountryId = createEmployeeDTO.CountryId;
-                employee.Status = createEmployeeDTO.Status;
+                employee.Gender = updateEmployeeDTO.Gender;
+                employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
+                employee.TaxId = updateEmployeeDTO.TaxId;
+                employee.Status = updateEmployeeDTO.Status;
+                employee.Cic = updateEmployeeDTO.Cic;
+                employee.CountryId = updateEmployeeDTO.CountryId;
+                employee.Status = updateEmployeeDTO.Status;
                 _context.Employees.Update(employee);
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
