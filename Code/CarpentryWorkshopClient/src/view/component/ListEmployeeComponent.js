@@ -145,7 +145,7 @@ function ListEmployeeComponent() {
       errors.push("Mã định danh phải có 9 hoặc 12 số.");
     }
 
-    const taxIdRegex = /^[0-9A-Za-z]{5}$|^[0-9A-Za-z]{10}$/;
+    const taxIdRegex = /^[0-9A-Za-z]{10}$|^[0-9A-Za-z]{13}$/;
     if (originalTaxId && !taxIdRegex.test(originalTaxId)) {
       errors.push("Mã số thuế phải có 10 hoặc 13 và kí tự khác.");
     }
