@@ -17,7 +17,13 @@ namespace CarpentryWorkshopAPI.DTO
         public int? CountryId { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
-        
+        public List<RD> rDs { get; set; }
+
+        public class RD
+        {
+            public int RoleID { get; set; }
+            public int DepartmentID { get; set; }
+        }
       
     }
 }
