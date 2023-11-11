@@ -15,7 +15,6 @@ import { Radio } from "antd";
 import React, { useState, useEffect } from "react";
 import {
   fetchAllEmplyee,
-  fetchEmplyeebyid,
   SearchEmployees,
   DetailID,
   UpdateEmployee,
@@ -32,8 +31,6 @@ import { Select } from "antd";
 import {
   TableEmployee,
   TableEmployeeRes,
-  AddEmployeeModal,
-  DetailEmployeeModal,
   ListSearchAndFilter,
   EditRoleDepartmentModule,
   ViewRoleDepartmentModule,
@@ -332,6 +329,7 @@ function ListEmployeeComponent() {
             setOriginalDOB(data.dobstring);
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
+            setOriginalEmail(data.email)
             resolve(data);
           })
           .catch((error) => {
@@ -686,15 +684,13 @@ function ListEmployeeComponent() {
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Lương cơ bản:</p>
-                      <Input
-                        value={
-                          idDetail && idDetail.wageNumber
-                            ? idDetail.wageNumber
-                            : "Chưa có thông tin"
-                        }
-                      />
-                    </div>
+                  <p>Email:</p>
+                  <Input
+                    value={originalEmail}
+                    onChange={(e) => setOriginalEmail(e.target.value)}
+                    placeholder="Nhập email"
+                  />
+                </div>
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
@@ -850,11 +846,11 @@ function ListEmployeeComponent() {
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Lương cơ bản:</p>
+                      <p>Email:</p>
                       <Input
                         value={
-                          idDetail && idDetail.wageNumber
-                            ? idDetail.wageNumber
+                          idDetail && idDetail.email
+                            ? idDetail.email
                             : "Chưa có thông tin"
                         }
                       />
