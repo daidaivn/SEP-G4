@@ -66,6 +66,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(x => x.EmployeeId == eid && x.Status == true)
                     .Include(ctt => ctt.ContractType)
                     .Include(emp => emp.Employee)
+                    .OrderByDescending(c => c.StartDate)
                     .Select(c => new ContractDTO
                     {
                         ContractId = c.ContractId,
@@ -77,7 +78,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Status = c.Status,
                         ContractCode = c.ContractCode,
                         Image = c.Image,
-                    }).ToList();
+                    }).FirstOrDefault();
                 if (employeecontract == null)
                 {
                     return Ok("Nhân viên này chưa có hợp đồng nào");
