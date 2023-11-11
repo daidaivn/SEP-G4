@@ -32,6 +32,7 @@ const AddEmployeeModal = ({
   showModalAddContract,
   showModalAddRole,
   countries,
+  AddEmployee
 }) => {
   return (
     <Modal
@@ -101,7 +102,6 @@ const AddEmployeeModal = ({
                 <Select
                   className="select-input"
                   value={originalNationality}
-                  placeholder="Chọn quốc tịch"
                   onChange={(value) => setOriginalNationality(value)}
                   style={{
                     width: "100%",
@@ -192,7 +192,7 @@ const AddEmployeeModal = ({
             <button className="btn-cancel" onClick={handleOkAdd}>
               Thoát
             </button>
-            <button className="btn-edit btn-save" onClick={handleCancelAdd}>
+            <button className="btn-edit btn-save" onClick={AddEmployee}>
               Lưu
             </button>
           </div>

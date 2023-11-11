@@ -19,7 +19,8 @@ import {
   SearchEmployees,
   DetailID,
   UpdateEmployee,
-  GetAllCountry
+  GetAllCountry,
+  CreateEmployee
 } from "../../sevices/EmployeeService";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllDepadment } from "../../sevices/DepartmentService";
@@ -133,6 +134,39 @@ function ListEmployeeComponent() {
             resolve(data);
             handlelDetail(id)
             fetchData()
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
+  };
+  const AddEmployee = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        CreateEmployee(
+          originalLastName,
+          originalFirstName,
+          originalPhoneNumber,
+          originalGender,
+          originalNationality,
+          originalAddress,
+          originalCIC,
+          originalTaxId,
+          originalDOB,
+          originalStatus,
+          updatedRoleDepartments,
+          originalEmail,
+          originalImage)
+          .then((data) => {
+            resolve(data);
+            fetchData()
+            handleCancelAdd()
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -315,6 +349,7 @@ function ListEmployeeComponent() {
   };
 
   useEffect(() => {
+    fetchAllCountry();
     fetchData();
     allRole();
     fetDataDepartment();
@@ -512,6 +547,7 @@ function ListEmployeeComponent() {
         departments={departments}
         handleCancelViewContract={handleCancelViewContract}
         handleSaveContract={handleSaveContract}
+        AddEmployee={AddEmployee}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>

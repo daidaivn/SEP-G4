@@ -64,6 +64,7 @@ const ListSearchAndFilter = ({
   departments,
   handleCancelViewContract,
   handleSaveContract,
+  AddEmployee
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -384,6 +385,7 @@ const ListSearchAndFilter = ({
         showModalAddContract={showModalAddContract}
         showModalAddRole={showModalAddRole}
         countries={countries}
+        AddEmployee={AddEmployee}
       />
 
       <NewContractModal
