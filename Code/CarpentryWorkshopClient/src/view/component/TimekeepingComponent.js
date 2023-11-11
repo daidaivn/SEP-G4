@@ -228,7 +228,7 @@ const TimekeepingComponent = () => {
             </tr>
           </thead>
           {checksInOut.length === 0 ? (
-            <p>Thông tin điểm danh theo nhóm chưa sẵn sàng hoặc không tồn tại.</p>
+            <p>Thông tin điểm danh ca làm việc theo nhóm chưa sẵn sàng hoặc không tồn tại.</p>
           ) : (
             <tbody>
               {checksInOut.length > 0 && checksInOut[0].result.map((employee, index) => (
