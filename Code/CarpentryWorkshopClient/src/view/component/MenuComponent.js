@@ -117,7 +117,7 @@ const Menucomponent = () => {
             >
               <i className="icon-activity"></i>
 
-              <span className="text">Bảng lương công ty</span>
+              <span className="text">Lương | Thưởng</span>
             </NavLink>
           </div>
           <div className="item-link">
