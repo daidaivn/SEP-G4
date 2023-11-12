@@ -28,7 +28,7 @@ function TableEmployee({ employees, showModal, setId, handlelDetail, featchEmplo
               
             }}
           >
-            <td>{employee.image}</td>
+            <td><img src={employee.image} alt="avt" /></td>
             <td>{employee.fullName}</td>
             <td>{employee.gender}</td>
             <td>{employee.phoneNumber}</td>
