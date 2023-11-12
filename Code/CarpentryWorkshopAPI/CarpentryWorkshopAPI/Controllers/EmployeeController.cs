@@ -183,6 +183,24 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
+        public IActionResult DeleteEmployee(int employeeid)
+        {
+            try
+            {
+                var delete = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
+                if (delete == null)
+                {
+                    return NotFound();
+                }
+                _context.Employees.Remove(delete);  
+                _context.SaveChanges();
+                return Ok("success");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
         public IActionResult CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
@@ -194,10 +212,9 @@ namespace CarpentryWorkshopAPI.Controllers
                        .ThenInclude(role => role.RolesEmployees)
                    .Include(emp => emp.RolesEmployees)
                        .ThenInclude(roleemp => roleemp.Department)
-                       .FirstOrDefault(x => x.EmployeeId == createEmployeeDTO.EmployeeId 
-                       && x.PhoneNumber == createEmployeeDTO.PhoneNumber 
-                       && x.Email == createEmployeeDTO.Email
-                       && x.Cic == createEmployeeDTO.Cic);
+                       .FirstOrDefault(x => x.PhoneNumber == createEmployeeDTO.PhoneNumber 
+                       || x.Email == createEmployeeDTO.Email
+                       || x.Cic == createEmployeeDTO.Cic);
 
                 if (employee != null)
                 {
