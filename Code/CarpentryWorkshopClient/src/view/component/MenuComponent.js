@@ -141,7 +141,7 @@ const Menucomponent = () => {
             >
               <i className="icon-activity"></i>
 
-              <span className="text">Điểm danh</span>
+              <span className="text">Công việc | Điểm danh</span>
             </NavLink>
           </div>
           <div className="dropdown-item">
