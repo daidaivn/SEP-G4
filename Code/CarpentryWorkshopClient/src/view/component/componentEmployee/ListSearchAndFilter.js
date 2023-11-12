@@ -80,7 +80,8 @@ const ListSearchAndFilter = ({
   contractLink,
   setContractLink,
   contractStatus,
-  setContractStatus
+  setContractStatus,
+  EditName
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -440,6 +441,7 @@ const ListSearchAndFilter = ({
           setContractStatus={setContractStatus}
           convertDobToISO={convertDobToISO}
           contractTypes={contractTypes}
+          EditName={EditName}
         />
       ) : (
         <ViewContractModal

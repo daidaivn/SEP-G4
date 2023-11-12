@@ -22,7 +22,8 @@ import { fetchAllDepadment } from "../../sevices/DepartmentService";
 import {
   GetEmployeeContract,
   GetAllContractType,
-  CreateContract
+  CreateContract,
+  UpdateContract,
 } from "../../sevices/contracts";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -35,6 +36,7 @@ import {
   EditRoleDepartmentModule,
   ViewRoleDepartmentModule,
 } from "./componentEmployee";
+import { EditRole } from "../../sevices/RoleService";
 import avt from "../assets/images/Frame 1649.svg";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
@@ -65,16 +67,14 @@ function ListEmployeeComponent() {
   const [originalDepartment, setOriginalDepartment] = useState("");
 
   //contract
+  const [contractId, setContractID] = useState("");
   const [contractCode, setContractCode] = useState("");
   const [contractStartDate, setContractStartDate] = useState(""); // Tên state đã được sửa
   const [contractEndDate, setContractEndDate] = useState(""); // Tên state đã được sửa
   const [contractType, setContractType] = useState("");
   const [contractLink, setContractLink] = useState("");
   const [contractStatus, setContractStatus] = useState(true);
-
-  console.log("contractCode", contractCode);
-
-  const [gender, setGender] = useState();
+  const [contractImage, setContractImage] = useState("");
 
   const [filterGender, setFilterGender] = useState(null);
   const [filterStatus, setFilterStatus] = useState(null);
@@ -98,14 +98,19 @@ function ListEmployeeComponent() {
     console.log("TaxStatus", originalStatus);
     console.log("avt", avt);
     console.log("Email", originalEmail);
+    console.log("================Department====================");
     console.log("Roles:", updatedRoleDepartments);
     console.log("Roles:", updatedRoleDepartmentsAdd);
+    console.log("================Contrasct====================");
+    console.log("contractID:", contractId);
     console.log("contractCode:", contractCode);
     console.log("contractStartDate:", contractStartDate);
     console.log("contractEndDate:", contractEndDate);
     console.log("contractType:", contractType);
     console.log("contractLink:", contractLink);
     console.log("contractStatus:", contractStatus);
+    console.log('contractImage', contractImage);
+
   };
 
   const addDependent = () => {
@@ -143,7 +148,6 @@ function ListEmployeeComponent() {
     })
     : [];
 
-
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
@@ -152,7 +156,6 @@ function ListEmployeeComponent() {
   const handleBack = () => {
     setIsEditing(false);
   };
-
   const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
     (roleDept) => ({
       roleID: roleDept.roleID,
@@ -170,7 +173,6 @@ function ListEmployeeComponent() {
         console.log(error);
       });
   };
-  // log();
 
   const featchEmployeeContract = (value) => {
     console.log(value);
@@ -178,12 +180,14 @@ function ListEmployeeComponent() {
     GetEmployeeContract(value)
       .then((data) => {
         setContract(data);
+        setContractID(data.contractId);
         setContractCode(data.contractCode);
         setContractStatus(data.status);
         setContractType(data.contractTypeId);
         setContractStartDate(data.startDate); // Tên state đã được sửa
         setContractEndDate(data.endDate); // Tên state đã được sửa
         setContractLink(data.linkDoc);
+        setContractImage(data.image);
       })
       .catch((error) => {
         console.log("error", error);
@@ -234,6 +238,123 @@ function ListEmployeeComponent() {
       errors.push("Email không hợp lệ.");
     }
 
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
+    }
+    return true;
+  };
+  log();
+
+  const validateDataDepartment = () => {
+    const errors = [];
+    const departmentIdCount = {};
+    let isValidPairFound = false;
+  
+    if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
+      errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
+    } else {
+      roleDepartmentValues.forEach((value) => {
+        // Kiểm tra tính hợp lệ của mỗi cặp
+        if ((value.roleID && !value.departmentID) || (!value.roleID && value.departmentID)) {
+          errors.push('Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.');
+        } else if (value.roleID && value.departmentID) {
+          isValidPairFound = true;
+  
+          // Đếm số lần xuất hiện của mỗi departmentID
+          if (departmentIdCount[value.departmentID]) {
+            departmentIdCount[value.departmentID] += 1;
+          } else {
+            departmentIdCount[value.departmentID] = 1;
+          }
+        }
+      });
+  
+      // Kiểm tra nếu có ít nhất một cặp hợp lệ
+      if (!isValidPairFound) {
+        errors.push('Phải có ít nhất một cặp có dữ liệu hợp lệ.');
+      }
+  
+      // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
+      for (const [departmentID, count] of Object.entries(departmentIdCount)) {
+        if (count > 1) {
+          errors.push(`Phòng ban không được trùng nhau.`);
+        }
+      }
+  
+      // Kiểm tra số lượng phần tử trong mảng là số chẵn
+      if (roleDepartmentValues.length % 2 !== 0) {
+        errors.push('Số lượng phần tử trong danh sách phải là số chẵn.');
+      }
+    }
+  
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
+    }
+    return true;
+  };
+  
+
+  const validateDataDepartmentEdit = () => {
+    const errors = [];
+    const departmentIdCount = {};
+    let isValidPairFound = false;
+  
+    updatedRoleDepartments.forEach((roleDept) => {
+      // Kiểm tra tính hợp lệ của mỗi cặp
+      if ((roleDept.roleID && !roleDept.departmentID) || (!roleDept.roleID && roleDept.departmentID)) {
+        errors.push('Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.');
+      }
+  
+      // Kiểm tra có ít nhất một cặp hợp lệ
+      if (roleDept.roleID && roleDept.departmentID) {
+        isValidPairFound = true;
+  
+        if (departmentIdCount[roleDept.departmentID]) {
+          departmentIdCount[roleDept.departmentID] += 1;
+        } else {
+          departmentIdCount[roleDept.departmentID] = 1;
+        }
+      }
+    });
+  
+    // Nếu không tìm thấy cặp hợp lệ nào
+    if (!isValidPairFound) {
+      errors.push('Phải có ít nhất một cặp có dữ liệu hợp lệ.');
+    }
+  
+    // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
+    for (const [departmentID, count] of Object.entries(departmentIdCount)) {
+      if (count > 1) {
+        errors.push(`Phòng ban không được trùng nhau.`);
+      }
+    }
+  
+    // Kiểm tra số lượng phần tử trong mảng là số chẵn
+    if (updatedRoleDepartments.length % 2 !== 0) {
+      errors.push('Số lượng phần tử trong danh sách phải là số chẵn.');
+    }
+  
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
+    }
+    return true;
+  };
+  
+  
+  
+
+
+  const validateDataContract = () => {
+    const errors = [];
     if (!contractCode) {
       errors.push("Vui lòng nhập mã hợp đồng.");
     }
@@ -248,8 +369,6 @@ function ListEmployeeComponent() {
     if (!contractType) {
       errors.push("Vui lòng chọn loại hợp đồng.");
     }
-
-
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -259,33 +378,71 @@ function ListEmployeeComponent() {
     return true;
   };
 
-  const validateDataAdd = () => {
-    const errors = [];
+  const EditName = () => {
+    const isDataContract = validateDataContract();
 
-    if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
-      errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
-    } else {
-      const isValid = roleDepartmentValues.every(
-        (value) => (value.roleID === null && value.departmentID === null) || (value.roleID !== null && value.departmentID !== null)
-      );
-
-      if (!isValid) {
-        errors.push("Mỗi cặp chức vụ phòng ban cần có chức vụ ứng với phòng ban.");
+    if (!isDataContract) {
+      return;
+    }
+    toast.promise(
+      new Promise((resolve) => {
+        UpdateContract(
+          contractId,
+          id,
+          contractStartDate,
+          contractEndDate,
+          contractLink,
+          contractStatus,
+          contractType,
+          contractCode,
+          contractImage
+        )
+          .then((data) => {
+            resolve(data);
+            handleSaveContract();
+            handlelDetail(id)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Cập nhật hợp đồng thành công",
+        error: "Lỗi cập nhật hợp đồng",
       }
-    }
+    );
+  };
 
+  const HandelEditRole = () => {
+    const isDataDepartment = validateDataDepartmentEdit();
 
-    if (errors.length > 0) {
-      errors.forEach((error) => {
-        toast.warning(error);
-      });
-      return false;
+    if (!isDataDepartment) {
+      return;
     }
-    return true;
+    toast.promise(
+      new Promise((resolve) => {
+        EditRole(id, updatedRoleDepartments)
+          .then((data) => {
+            resolve(data);
+            handleSaveRole()
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
   };
 
   const UpdateEditEmployee = () => {
-    if (!validateData()) {
+    const isDataValid = validateData();
+
+    if (!isDataValid) {
       return;
     }
 
@@ -303,7 +460,6 @@ function ListEmployeeComponent() {
           originalTaxId,
           originalDOB,
           originalStatus,
-          updatedRoleDepartments,
           originalEmail,
           originalImage
         )
@@ -328,9 +484,10 @@ function ListEmployeeComponent() {
 
   const AddEmployee = () => {
     const isDataValid = validateData();
-    const isRoleDataValid = validateDataAdd();
+    const isDataDepartment = validateDataDepartment();
+    const isDataContract = validateDataContract();
 
-    if (!isDataValid || !isRoleDataValid) {
+    if (!isDataValid || !isDataDepartment || !isDataContract) {
       return;
     }
 
@@ -352,21 +509,28 @@ function ListEmployeeComponent() {
       .then((data) => {
         fetchData();
         handleCancelAdd();
-        AddContract(data)
+        AddContract(data);
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
-
       });
   };
 
   const AddContract = (eid) => {
     toast.promise(
       new Promise((resolve) => {
-        CreateContract(eid, contractStartDate, contractEndDate, contractLink, contractStatus, contractType, contractCode)
+        CreateContract(
+          eid,
+          contractStartDate,
+          contractEndDate,
+          contractLink,
+          contractStatus,
+          contractType,
+          contractCode
+        )
           .then((data) => {
-            console.log('data',data);
+            console.log("data", data);
             resolve(data);
             resetOriginalDetail();
           })
@@ -375,9 +539,9 @@ function ListEmployeeComponent() {
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm mới nhân viên thành công',
-        error: 'Lỗi thêm nhân viên',
+        pending: "Đang xử lý",
+        success: "Thêm mới nhân viên thành công",
+        error: "Lỗi thêm nhân viên",
       }
     );
   };
@@ -431,12 +595,13 @@ function ListEmployeeComponent() {
     setOriginalEmail("");
     setOriginalImage("");
     setRoleDepartmentValues([]);
-    setContractCode("")
-    setContractStartDate("")
-    setContractEndDate("")
-    setContractType("")
-    setContractLink("")
-    setContractStatus("")
+    setContractCode("");
+    setContractStartDate("");
+    setContractEndDate("");
+    setContractType("");
+    setContractLink("");
+    setContractStatus("");
+    setContractImage("")
   };
 
   const handleCancelView = () => {
@@ -546,7 +711,7 @@ function ListEmployeeComponent() {
     fetchData();
     allRole();
     fetDataDepartment();
-    featchAllContract()
+    featchAllContract();
   }, [id]);
 
   function handleSelectChange(value) {
@@ -651,9 +816,8 @@ function ListEmployeeComponent() {
     setIsModalOpenEditContract(false);
   };
 
-  const [isModalOpenViewContract1, setIsModalOpenViewContract1] = useState(
-    false
-  );
+  const [isModalOpenViewContract1, setIsModalOpenViewContract1] =
+    useState(false);
   const showModalViewContract1 = () => {
     setIsModalOpenViewContract1(true);
   };
@@ -782,6 +946,7 @@ function ListEmployeeComponent() {
         setContractLink={setContractLink}
         contractStatus={contractStatus}
         setContractStatus={setContractStatus}
+        EditName={EditName}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -811,6 +976,7 @@ function ListEmployeeComponent() {
           departments={departments}
           handleCancelView1={handleCancelView1}
           handleSaveRole={handleSaveRole}
+          HandelEditRole={HandelEditRole}
         />
       ) : (
         // view chức vụ

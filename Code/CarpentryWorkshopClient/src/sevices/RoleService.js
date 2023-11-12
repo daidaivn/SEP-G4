@@ -30,7 +30,18 @@ const UpdateRole = (id, name, status) => {
   };
   console.log(`/CCMSapi/Role/UpdateRole`, requestBody);
   return axios.put(
-    `/CCMSapi/Role/UpdateRole`, requestBody
+    `CCMSapi/Role/EditRole`, requestBody
   );
 };
-export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole};
+
+const EditRole = (eId, updatedRoleDepartments) => {
+  const requestBody = {
+    employeeId: eId,
+    rds: updatedRoleDepartments
+  };
+  console.log(`/CCMSapi/Role/EditRole`, requestBody);
+  
+  return axios.post(`/CCMSapi/Role/EditRole`, requestBody);
+
+};
+export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole , EditRole};
