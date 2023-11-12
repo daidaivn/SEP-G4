@@ -6,4 +6,7 @@ const fetchAllCheckInOut = (EmployeeID) => {
 const addAllCheckInOut = (EmployeeID) => {
   return axios.post(`/CCMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
 };
+const fetchAllDataWorks = (EmployeeID) => {
+  return axios.post(`/CCMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
+};
 export { fetchAllCheckInOut, addAllCheckInOut };
