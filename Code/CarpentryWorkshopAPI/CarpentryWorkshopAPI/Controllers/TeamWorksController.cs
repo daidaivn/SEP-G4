@@ -30,18 +30,19 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Include(x => x.Work)
                     .ThenInclude(x => x.WorkArea)
                     .Include(x => x.Team)
-                    .Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id && de.Date.Value.Date == DateTime.Now.Date)
+                    .Where(de => (de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id) && de.Date.Value.Date == DateTime.Now.Date)
                     .Select(d => new DetailForSmDTO
                     {
                         TeamWorkId = d.TeamWorkId,
                         TeamId = d.TeamId,
                         TeamName = d.Team.TeamName,
                         ProductName = d.Work.UniCost.UnitName,
+                        Cost = d.Work.Cost,
                         WorkAreaName =d.Work.WorkArea.WorkAreaName,
                         WorkId = d.WorkId,
                         WorkName = d.Work.WorkName,
                         NumberOFProductToday = d.TotalProduct,
-                        Date = DateTime.Now.ToShortDateString(),
+                        Date = d.Date.Value.ToString("dd'-'MM'-'yyyy"),
                     }).FirstOrDefault();                
                 if (details == null)
                 {
