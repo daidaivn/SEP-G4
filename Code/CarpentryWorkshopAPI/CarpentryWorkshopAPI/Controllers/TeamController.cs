@@ -29,7 +29,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var teams = _context.Teams
-                    .Include(t => t.TeamWorks) 
+                    .Include(t => t.TeamWorks)
                     .ThenInclude(tw => tw.Work)
                     .ThenInclude(w => w.WorkArea)
                     .Include(t => t.EmployeeTeams)
@@ -47,9 +47,9 @@ namespace CarpentryWorkshopAPI.Controllers
                             .Select(e => e.FirstName + " " + e.LastName)
                             .FirstOrDefault() ?? string.Empty
                     })
-                    .ToList(); 
+                    .ToList();
 
-                if (!teams.Any()) 
+                if (!teams.Any())
                 {
                     return NotFound();
                 }
@@ -69,7 +69,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                
+
                 foreach (var item in addTeamMemberDTO.MemberIds.Distinct())
                 {
                     var existingEmployeeTeam = _context.EmployeeTeams
@@ -90,7 +90,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         EndDate = null,
                     };
                     _context.EmployeeTeams.Add(newtm);
-                  
+
                 }
                 _context.SaveChanges();
                 return Ok("Add new team member successful");
@@ -191,7 +191,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ThenInclude(re => re.Role)
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Department)
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())) 
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower()))
                     && emp.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
                     .ToList();
                 var exleader = _context.EmployeeTeams
@@ -199,7 +199,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Include(x => x.Employee)
                     .ThenInclude(e => e.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower())) 
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower()))
                     && et.Employee.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
                     .Select(et => et.Employee)
                     .ToList();
@@ -276,8 +276,9 @@ namespace CarpentryWorkshopAPI.Controllers
                             .FirstOrDefault(),
                             Status = emp.Status,
                         });
-                return Ok(sm);          
-            }catch(Exception ex)
+                return Ok(sm);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -375,9 +376,9 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var availableTeams = _context.Teams
                     .Where(x => x.TeamId != teamid)
-                    .Include(x => x.TeamWorks) 
-                        .ThenInclude(tw => tw.Work) 
-                        .ThenInclude(w => w.WorkArea) 
+                    .Include(x => x.TeamWorks)
+                        .ThenInclude(tw => tw.Work)
+                        .ThenInclude(w => w.WorkArea)
                     .Include(x => x.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
                     .Select(t => new TeamListDTO
@@ -423,33 +424,34 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 foreach (var item in oldteam)
                 {
-                    if (item.EndDate == null) 
+                    if (item.EndDate == null)
                     {
                         item.EndDate = DateTime.Now;
                         _context.EmployeeTeams.Update(item);
-                    } 
+                    }
                 }
                 EmployeeTeam changeteam = new EmployeeTeam()
                 {
-                    EmployeeId= emp.EmployeeId,
-                    TeamId= team.TeamId,
-                    StartDate= DateTime.Now,
-                    EndDate= null,
+                    EmployeeId = emp.EmployeeId,
+                    TeamId = team.TeamId,
+                    StartDate = DateTime.Now,
+                    EndDate = null,
                 };
-                
-               
+
+
                 _context.EmployeeTeams.Add(changeteam);
                 HistoryChangeTeam history = new HistoryChangeTeam()
                 {
-                    TeamId= team.TeamId,
+                    TeamId = team.TeamId,
                     Action = "Add new member",
-                    ActionDate= DateTime.Now,
+                    ActionDate = DateTime.Now,
                     CurrentEmployeeId = null,
                 };
                 _context.HistoryChangeTeams.Add(history);
                 _context.SaveChanges();
                 return Ok("Change member for team successful");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -507,7 +509,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     Staff = _mapper.Map<List<TeamMemberDTO>>(staff)
                 };
                 return Ok(teammem);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -530,7 +533,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     query = query.Where(x =>
                         x.TeamName.ToLower().Contains(input) ||
                         x.EmployeeTeams.Any(et =>
-                            (et.Employee.FirstName + et.Employee.LastName).ToLower().Contains(input)                         
+                            (et.Employee.FirstName + et.Employee.LastName).ToLower().Contains(input)
                         )
                     );
                 }
@@ -549,7 +552,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-                   
+
         [HttpPut]
         public IActionResult ChangeLeaderTwoTeam(int oldTeamId, int newTeamId)
         {
@@ -654,9 +657,9 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("err");
                 }
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -675,50 +678,68 @@ namespace CarpentryWorkshopAPI.Controllers
                 exteam.TeamName = newName;
                 _context.SaveChanges();
                 return Ok("Change team name successful");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-       
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetTeamForSchedule()
         {
-            var currentDateTime = DateTime.Now;
-            var result = new List<Object>();
-            var teams = await _context.Teams
-                .Include(t => t.TeamWorks)
-                .ThenInclude(tw => tw.Work)
-                .Include(t => t.EmployeeTeams)
-                .ThenInclude(et => et.Employee)
-                .Include(t => t.WorkSchedules)
-                .ThenInclude(wc => wc.ShiftType)
-                .AsQueryable()
-                .ToListAsync();
-            foreach (var team in teams)
+            try
             {
-                var wId = team.TeamWorks.Where(tw => tw.Work.StartDate <= currentDateTime && currentDateTime <= tw.Work.EndDate)
-                            .Select(tw => tw.Work.WorkId)
-                            .FirstOrDefault();
-                var work = await _context.Works.Where(w => w.WorkId == wId).Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).AsQueryable().FirstOrDefaultAsync();
-                var teamProduct = work.TeamWorks.Sum(tw => tw.TotalProduct);
-                result.Add(new TeamForScheduleDTO
+                var currentDateTime = DateTime.Now;
+                var result = new List<Object>();
+                var teams = await _context.Teams
+                    .Include(t => t.TeamWorks)
+                        .ThenInclude(tw => tw.Work)
+                    .Include(t => t.EmployeeTeams)
+                        .ThenInclude(et => et.Employee)
+                    .Include(t => t.WorkSchedules)
+                        .ThenInclude(wc => wc.ShiftType)
+                    .ToListAsync();
+
+                foreach (var team in teams)
                 {
-                    TeamId = team.TeamId,
-                    TeamName = team.TeamName,
-                    ShiftTypeName = team.WorkSchedules.Select(x => x.ShiftType.TypeName).FirstOrDefault(),
-                    TeamLeaderName = _context.Employees.Where(x => x.EmployeeId == team.TeamLeaderId)
+                    var wId = team.TeamWorks.FirstOrDefault(tw => tw.Work != null && tw.Work.StartDate <= currentDateTime && currentDateTime <= tw.Work.EndDate)?.Work.WorkId;
+                    if (wId != null)
+                    {
+                        var work = await _context.Works.Where(w => w.WorkId == wId)
+                            .Include(w => w.UniCost)
+                            .Include(w => w.WorkArea)
+                            .Include(w => w.TeamWorks)
+                            .FirstOrDefaultAsync();
+
+                        if (work != null)
+                        {
+                            var teamProduct = work.TeamWorks.Sum(tw => tw.TotalProduct ?? 0);
+                            var teamLeaderName = team.TeamLeaderId.HasValue ?
+                                _context.Employees.Where(x => x.EmployeeId == team.TeamLeaderId.Value)
                                     .Select(x => x.FirstName + " " + x.LastName)
-                                    .FirstOrDefault() ?? string.Empty,
-                    NumberOfMember = team.EmployeeTeams
-                                        .Where(et => et.EndDate == null)
-                                        .GroupBy(et => new { et.EmployeeId, et.TeamId })
-                                        .Count(),
-                    WorkStatus = teamProduct > work.TotalProduct ? "Đã có" : "Chưa có",
-                   
-                });
+                                    .FirstOrDefault() : string.Empty;
+
+                            result.Add(new TeamForScheduleDTO
+                            {
+                                TeamId = team.TeamId,
+                                TeamName = team.TeamName,
+                                ShiftTypeName = team.WorkSchedules.FirstOrDefault()?.ShiftType?.TypeName ?? string.Empty,
+                                TeamLeaderName = teamLeaderName,
+                                NumberOfMember = team.EmployeeTeams.Count(et => et.EndDate == null),
+                                WorkStatus = teamProduct > work.TotalProduct ? "Đã có" : "Chưa có",
+                            });
+                        }
+                    }
+                }
+
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
         }
+
     }
-    }
+}
