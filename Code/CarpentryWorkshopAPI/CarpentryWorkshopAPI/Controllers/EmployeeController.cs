@@ -14,7 +14,7 @@ using System.Diagnostics.Contracts;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    //[Authorize(Roles = "ListEmployee")]
+    [Authorize(Roles = "ListEmployee")]
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller

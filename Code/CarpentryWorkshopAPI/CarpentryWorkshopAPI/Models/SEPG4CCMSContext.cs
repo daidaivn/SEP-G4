@@ -42,7 +42,6 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<RolesEmployee> RolesEmployees { get; set; } = null!;
         public virtual DbSet<RolesStatusHistory> RolesStatusHistories { get; set; } = null!;
-        public virtual DbSet<Salary> Salaries { get; set; } = null!;
         public virtual DbSet<SalaryDetail> SalaryDetails { get; set; } = null!;
         public virtual DbSet<SalaryGroupType> SalaryGroupTypes { get; set; } = null!;
         public virtual DbSet<SalaryType> SalaryTypes { get; set; } = null!;
@@ -582,26 +581,6 @@ namespace CarpentryWorkshopAPI.Models
                     .HasConstraintName("FK__RolesStat__RoleI__114A936A");
             });
 
-            modelBuilder.Entity<Salary>(entity =>
-            {
-                entity.ToTable("Salary");
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Emloyee)
-                    .WithMany(p => p.Salaries)
-                    .HasForeignKey(d => d.EmloyeeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Salary_Employees");
-
-                entity.HasOne(d => d.SalaryDetail)
-                    .WithMany(p => p.Salaries)
-                    .HasForeignKey(d => d.SalaryDetailId)
-                    .HasConstraintName("FK_Salary_SalaryDetail");
-            });
-
             modelBuilder.Entity<SalaryDetail>(entity =>
             {
                 entity.ToTable("SalaryDetail");
@@ -609,6 +588,12 @@ namespace CarpentryWorkshopAPI.Models
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.SalaryDetails)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_SalaryDetail_Employees");
 
                 entity.HasOne(d => d.SalaryType)
                     .WithMany(p => p.SalaryDetails)
