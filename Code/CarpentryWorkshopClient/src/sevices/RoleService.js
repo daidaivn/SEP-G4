@@ -3,6 +3,7 @@ import axios from "./customize-axios";
 const fetchAllRole = () => {
   return axios.get("/CCMSapi/Role/GetAllRoles");
 };
+
 const SearchRoles = (inputName, filterStatus) => {
   const requestBody = {
     inputText: inputName,

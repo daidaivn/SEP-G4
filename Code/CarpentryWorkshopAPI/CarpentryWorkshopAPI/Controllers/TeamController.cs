@@ -12,7 +12,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    //[Authorize(Roles = "ListGroup")]
+    [Authorize(Roles = "ListGroup")]
     public class TeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
