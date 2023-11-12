@@ -5,6 +5,7 @@ namespace CarpentryWorkshopAPI.DTO
     public class EmployeeListDTO
     {
         public int? EmployeeID { get; set; }
+        public string? EmployeeIdstring { get; set; }
         public string? Image { get; set; }
         public string? FullName { get; set; }
         public string? Gender { get; set; }

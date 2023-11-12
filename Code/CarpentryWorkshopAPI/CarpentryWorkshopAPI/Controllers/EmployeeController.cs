@@ -14,7 +14,7 @@ using System.Diagnostics.Contracts;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Authorize(Roles = "ListEmployee")]
+    //[Authorize(Roles = "ListEmployee")]
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
@@ -32,6 +32,8 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
+                var employeeIdLength = maxEmployeeId.ToString().Length;
                 var employeelist = _context.Employees
                     .Include(x => x.Country)
                     .Include(emp => emp.RolesEmployees)
@@ -39,12 +41,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Select(emp => new EmployeeListDTO
                     {
                         EmployeeID = emp.EmployeeId,
+                        EmployeeIdstring = emp.EmployeeId.ToString($"D{employeeIdLength}"),
                         Image = emp.Image,
                         FullName = $"{emp.LastName} {emp.FirstName}",
                         Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                         PhoneNumber = emp.PhoneNumber,
                         Roles = emp.RolesEmployees
-                        .Where(re=>re.EndDate == null)
+                        .Where(re => re.EndDate == null)
                         .OrderByDescending(re => re.Role.RoleLevel)
                         .Select(re => re.Role.RoleName)
                         .FirstOrDefault(),
