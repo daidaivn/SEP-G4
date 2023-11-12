@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Input, Modal, Radio, Form, Switch } from "antd";
+import { Select, Input} from "antd";
 import AddEmployeeModal from './AddEmployeeModal';
 import NewContractModal from './NewContracModal';
 import NewRoleDepartmentModal from './NewRoleDepartmentModule';
@@ -310,36 +310,6 @@ const ListSearchAndFilter = ({
           placeholder="Chọn trạng thái"
         />
       </div>
-      <i className="icon-responsive icon-filter">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-        >
-          <path
-            d="M7.15979 9.53513C7.15979 9.84013 6.95977 10.2401 6.70477 10.3951L5.99979 10.8501C5.34479 11.2551 4.43478 10.8001 4.43478 9.99013V7.31512C4.43478 6.96012 4.23479 6.50513 4.02979 6.25513L2.10977 4.23512C1.85477 3.98012 1.65479 3.53013 1.65479 3.22513V2.06512C1.65479 1.46012 2.10979 1.00513 2.66479 1.00513H9.33478C9.88978 1.00513 10.3448 1.46012 10.3448 2.01512V3.12512C10.3448 3.53012 10.0898 4.03513 9.83978 4.28513"
-            stroke="white"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M8.03506 8.26006C8.91872 8.26006 9.63507 7.54372 9.63507 6.66006C9.63507 5.77641 8.91872 5.06006 8.03506 5.06006C7.15141 5.06006 6.43506 5.77641 6.43506 6.66006C6.43506 7.54372 7.15141 8.26006 8.03506 8.26006Z"
-            stroke="white"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M9.93506 8.56006L9.43506 8.06006"
-            stroke="white"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </i>
-
       <div className="list-add" onClick={showModalAdd}>
         <i className="icon-web">
           <svg
@@ -404,6 +374,19 @@ const ListSearchAndFilter = ({
         AddEmployee={AddEmployee}
         handlePhoneNumberChange={handlePhoneNumberChange}
         handleCICChange={handleCICChange}
+        contractCode={contractCode}
+        setContractCode={setContractCode}
+        contractStartDate={contractStartDate}
+        setContractStartDate={setContractStartDate}
+        contractEndDate={contractEndDate}
+        setContractEndDate={setContractEndDate}
+        contractType={contractType}
+        setContractType={setContractType}
+        contractLink={contractLink}
+        setContractLink={setContractLink}
+        contractStatus={contractStatus}
+        setContractStatus={setContractStatus}
+        contractTypes={contractTypes}
       />
 
       <NewContractModal
@@ -411,6 +394,20 @@ const ListSearchAndFilter = ({
         handleOkAddContract={handleOkAddContract}
         handleCancelAddContract={handleCancelAddContract}
         handleChange={handleChange}
+        contractCode={contractCode}
+        setContractCode={setContractCode}
+        contractStartDate={contractStartDate}
+        setContractStartDate={setContractStartDate}
+        contractEndDate={contractEndDate}
+        setContractEndDate={setContractEndDate}
+        contractType={contractType}
+        setContractType={setContractType}
+        contractLink={contractLink}
+        setContractLink={setContractLink}
+        contractStatus={contractStatus}
+        setContractStatus={setContractStatus}
+        convertDobToISO={convertDobToISO}
+        contractTypes={contractTypes}
       />
       <NewRoleDepartmentModal
         isModalOpenAddRole={isModalOpenAddRole}

@@ -1,11 +1,25 @@
 import React from 'react';
-import { Select, Input, Modal} from "antd";
+import { Select, Input, Modal, Form, Switch} from "antd";
 
 const NewContractModal = ({
   isModalOpenAddContract,
   handleOkAddContract,
   handleCancelAddContract,
   handleChange,
+  contractCode,
+  setContractCode,
+  contractStartDate,
+  setContractStartDate,
+  contractEndDate,
+  setContractEndDate,
+  contractType,
+  setContractType,
+  contractLink,
+  setContractLink,
+  contractStatus,
+  setContractStatus,
+  convertDobToISO,
+  contractTypes,
 }) => {
   return (
     <Modal
@@ -32,35 +46,10 @@ const NewContractModal = ({
                     width: "100%",
                     height: "auto",
                   }}
-                />
-                <Select
-                  className="select-input"
-                  defaultValue="lucy"
-                  style={{
-                    width: "100%",
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                    {
-                      value: "disabled",
-                      label: "Disabled",
-                    },
-                  ]}
+                  value={contractCode} // Thêm dòng này để hiển thị giá trị từ state
+                  onChange={(e) => setContractCode(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
                 />
               </tr>
-
               <tr>
                 <div className="input-date">
                   <Input
@@ -70,16 +59,42 @@ const NewContractModal = ({
                     style={{
                       width: "100%",
                     }}
+                    value={convertDobToISO(contractStartDate)} // Thêm dòng này để hiển thị giá trị từ state
+                    onChange={(e) =>
+                      setContractStartDate(convertDobToISO(e.target.value))
+                    } // Thêm dòng này để cập nhật giá trị vào state
                   />
                 </div>
                 <div className="input-date">
                   <Input
                     className="select-input"
-                    placeholder="Thời gian bắt đầu"
+                    placeholder="Thời gian kết thúc" // Đã sửa đổi nội dung placeholder
                     type="date"
                     style={{
                       width: "100%",
                     }}
+                    value={convertDobToISO(contractEndDate)} // Thêm dòng này để hiển thị giá trị từ state
+                    onChange={(e) =>
+                      setContractEndDate(convertDobToISO(e.target.value))
+                    } // Thêm dòng này để cập nhật giá trị vào state
+                  />
+                </div>
+                <div className="input-date">
+                  <Select
+                    className="select-input"
+                    value={contractType} // Thêm dòng này để hiển thị giá trị từ state
+                    style={{
+                      width: "100%",
+                    }}
+                    onChange={(value) => setContractType(value)} // Thêm dòng này để cập nhật giá trị vào state
+                    options={
+                      contractTypes
+                        ? contractTypes.map((contractType) => ({
+                            value: contractType.contractTypeId,
+                            label: contractType.contractName,
+                          }))
+                        : []
+                    }
                   />
                 </div>
               </tr>
@@ -91,7 +106,18 @@ const NewContractModal = ({
                     style={{
                       width: "100%",
                     }}
+                    value={contractLink} // Thêm dòng này để hiển thị giá trị từ state
+                    onChange={(e) => setContractLink(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
                   />
+                </div>
+                <div className="input-date-cn">
+                  <p>Trạng thái: </p>
+                  <Form.Item valuePropName="checked" className="action">
+                    <Switch
+                      checked={contractStatus} // Thêm dòng này để hiển thị giá trị từ state
+                      onChange={(checked) => setContractStatus(checked)} // Thêm dòng này để cập nhật giá trị vào state
+                    />
+                  </Form.Item>
                 </div>
               </tr>
             </div>

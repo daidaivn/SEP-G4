@@ -22,6 +22,7 @@ import { fetchAllDepadment } from "../../sevices/DepartmentService";
 import {
   GetEmployeeContract,
   GetAllContractType,
+  CreateContract
 } from "../../sevices/contracts";
 import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -69,7 +70,7 @@ function ListEmployeeComponent() {
   const [contractEndDate, setContractEndDate] = useState(""); // Tên state đã được sửa
   const [contractType, setContractType] = useState("");
   const [contractLink, setContractLink] = useState("");
-  const [contractStatus, setContractStatus] = useState("");
+  const [contractStatus, setContractStatus] = useState(true);
 
   console.log("contractCode", contractCode);
 
@@ -99,6 +100,12 @@ function ListEmployeeComponent() {
     console.log("Email", originalEmail);
     console.log("Roles:", updatedRoleDepartments);
     console.log("Roles:", updatedRoleDepartmentsAdd);
+    console.log("contractCode:", contractCode);
+    console.log("contractStartDate:", contractStartDate);
+    console.log("contractEndDate:", contractEndDate);
+    console.log("contractType:", contractType);
+    console.log("contractLink:", contractLink);
+    console.log("contractStatus:", contractStatus);
   };
 
   const addDependent = () => {
@@ -145,6 +152,7 @@ function ListEmployeeComponent() {
   const handleBack = () => {
     setIsEditing(false);
   };
+
   const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
     (roleDept) => ({
       roleID: roleDept.roleID,
@@ -162,7 +170,7 @@ function ListEmployeeComponent() {
         console.log(error);
       });
   };
-  log();
+  // log();
 
   const featchEmployeeContract = (value) => {
     console.log(value);
@@ -205,6 +213,10 @@ function ListEmployeeComponent() {
       errors.push("Vui lòng nhập địa chỉ.");
     }
 
+    if (!originalDOB) {
+      errors.push("Vui lòng chọn ngày sinh của nhân viên.");
+    }
+
     if (
       originalCIC &&
       !(originalCIC.length === 9 || originalCIC.length === 12)
@@ -221,6 +233,22 @@ function ListEmployeeComponent() {
     if (originalEmail && !emailRegex.test(originalEmail)) {
       errors.push("Email không hợp lệ.");
     }
+
+    if (!contractCode) {
+      errors.push("Vui lòng nhập mã hợp đồng.");
+    }
+
+    if (!contractStartDate) {
+      errors.push("Vui lòng chọn thời gian bắt đầu hợp đồng không được phép.");
+    }
+
+    if (!contractEndDate) {
+      errors.push("Vui lòng chọn thời gian kết thúc hợp đồng không được phép.");
+    }
+    if (!contractType) {
+      errors.push("Vui lòng chọn loại hợp đồng.");
+    }
+
 
     if (errors.length > 0) {
       errors.forEach((error) => {
@@ -242,7 +270,7 @@ function ListEmployeeComponent() {
       );
 
       if (!isValid) {
-        errors.push("Mỗi cặp chức vụ phòng ban cần có Chức vụ ứng với phòng ban hợp lệ.");
+        errors.push("Mỗi cặp chức vụ phòng ban cần có chức vụ ứng với phòng ban.");
       }
     }
 
@@ -306,28 +334,40 @@ function ListEmployeeComponent() {
       return;
     }
 
+    CreateEmployee(
+      originalLastName,
+      originalFirstName,
+      originalPhoneNumber,
+      originalGender,
+      originalNationality,
+      originalAddress,
+      originalCIC,
+      originalTaxId,
+      originalDOB,
+      originalStatus,
+      updatedRoleDepartmentsAdd,
+      originalEmail,
+      originalImage
+    )
+      .then((data) => {
+        fetchData();
+        handleCancelAdd();
+        AddContract(data)
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
 
+      });
+  };
+
+  const AddContract = (eid) => {
     toast.promise(
       new Promise((resolve) => {
-        CreateEmployee(
-          originalLastName,
-          originalFirstName,
-          originalPhoneNumber,
-          originalGender,
-          originalNationality,
-          originalAddress,
-          originalCIC,
-          originalTaxId,
-          originalDOB,
-          originalStatus,
-          updatedRoleDepartments,
-          originalEmail,
-          originalImage
-        )
+        CreateContract(eid, contractStartDate, contractEndDate, contractLink, contractStatus, contractType, contractCode)
           .then((data) => {
+            console.log('data',data);
             resolve(data);
-            fetchData();
-            handleCancelAdd();
             resetOriginalDetail();
           })
           .catch((error) => {
@@ -335,9 +375,9 @@ function ListEmployeeComponent() {
           });
       }),
       {
-        pending: "Đang xử lý",
-        success: "Thêm nhân viên thành công",
-        error: "Lỗi thêm nhân viên",
+        pending: 'Đang xử lý',
+        success: 'Thêm mới nhân viên thành công',
+        error: 'Lỗi thêm nhân viên',
       }
     );
   };
@@ -390,8 +430,13 @@ function ListEmployeeComponent() {
     setOriginalStatus(true);
     setOriginalEmail("");
     setOriginalImage("");
-    setIdDetail()
     setRoleDepartmentValues([]);
+    setContractCode("")
+    setContractStartDate("")
+    setContractEndDate("")
+    setContractType("")
+    setContractLink("")
+    setContractStatus("")
   };
 
   const handleCancelView = () => {
@@ -501,6 +546,7 @@ function ListEmployeeComponent() {
     fetchData();
     allRole();
     fetDataDepartment();
+    featchAllContract()
   }, [id]);
 
   function handleSelectChange(value) {

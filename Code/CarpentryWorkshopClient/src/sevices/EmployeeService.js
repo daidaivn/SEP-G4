@@ -90,7 +90,6 @@ const CreateEmployee = (
     email: Email,
     image: Image,
   };
-  console.log(`requestBody`, requestBody);
 
   return axios.post(`/CCMSapi/Employee/CreateEmployee`, requestBody);
 };
