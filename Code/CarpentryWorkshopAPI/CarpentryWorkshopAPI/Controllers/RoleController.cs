@@ -230,47 +230,50 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult EditRole(int employeeid, int roleid, int departmentid)
+        public IActionResult EditRole([FromBody] EditRoleDTO editRoleDTO)
         {
             try
             {
-                var exdata = _context.RolesEmployees
-                    .Where(x => x.EmployeeId == employeeid && x.RoleId == roleid && x.DepartmentId == departmentid)
-                    .ToList();
-                if (exdata.Count == 0)
-                {
-                    RolesEmployee newrd = new RolesEmployee()
+                foreach (var item in editRoleDTO.rds) {
+                    var exdata = _context.RolesEmployees
+                        .Where(x => x.EmployeeId == editRoleDTO.EmployeeId && x.RoleId == item.RoleId && x.DepartmentId == item.DepartmentId)
+                        .ToList();
+
+                    if (exdata.Count == 0)
                     {
-                        EmployeeId = employeeid,
-                        RoleId = roleid,
-                        DepartmentId = departmentid,
-                        StartDate = DateTime.Now,
-                        EndDate = null,
-                        Status = true
-                    };
-                    _context.RolesEmployees.Add(newrd);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    foreach (var item in exdata)
-                    {
-                        item.EndDate = DateTime.Now;
-                        _context.RolesEmployees.Update(item);
+                        RolesEmployee newrd = new RolesEmployee()
+                        {
+                            EmployeeId = editRoleDTO.EmployeeId,
+                            RoleId = item.RoleId,
+                            DepartmentId = item.DepartmentId,
+                            StartDate = DateTime.Now,
+                            EndDate = null,
+                            Status = true
+                        };
+                        _context.RolesEmployees.Add(newrd);
+                        _context.SaveChanges();
                     }
-                    RolesEmployee newrd = new RolesEmployee()
+                    else
                     {
-                        EmployeeId = employeeid,
-                        RoleId = roleid,
-                        DepartmentId = departmentid,
-                        StartDate = DateTime.Now,
-                        EndDate = null,
-                        Status = true
-                    };
-                    _context.RolesEmployees.Add(newrd);
+                        foreach (var items in exdata)
+                        {
+                            items.EndDate = DateTime.Now;
+                            _context.RolesEmployees.Update(items);
+                        }
+                        RolesEmployee newrd = new RolesEmployee()
+                        {
+                            EmployeeId = editRoleDTO.EmployeeId,
+                            RoleId = item.RoleId,
+                            DepartmentId = item.DepartmentId,
+                            StartDate = DateTime.Now,
+                            EndDate = null,
+                            Status = true
+                        };
+                        _context.RolesEmployees.Add(newrd);
+                        _context.SaveChanges();
+                    }
                     _context.SaveChanges();
                 }
-                _context.SaveChanges();
                 return Ok("Update successful");
             }catch(Exception ex)
             {

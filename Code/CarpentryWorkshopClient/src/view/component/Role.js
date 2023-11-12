@@ -6,7 +6,12 @@ import "../scss/fonts.scss";
 import { Switch, Form, Modal, Space } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import { fetchAllRole, SearchRoles, GetRoleById, UpdateRole } from "../../sevices/RoleService";
+import {
+  fetchAllRole,
+  SearchRoles,
+  GetRoleById,
+  UpdateRole,
+} from "../../sevices/RoleService";
 import { Input } from "antd";
 import { Select } from "antd";
 import { Option } from "antd/es/mentions";
@@ -20,12 +25,11 @@ function Role() {
   const [isModalOpenChange, setIsModalOpenChange] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const [filterStatus, setFilterStatus] = useState(null);
-  const [inputSearch, setInputSearch] = useState('');
-  const [roleId, setRoleId] = useState('');
-  const [roleName, setRoleName] = useState('');
+  const [inputSearch, setInputSearch] = useState("");
+  const [roleId, setRoleId] = useState("");
+  const [roleName, setRoleName] = useState("");
   const [roleDetail, setroleDetail] = useState([]);
   const [switchChecked, setSwitchChecked] = useState(true);
-
 
   const handleChange1 = (value) => {
     console.log(`selected ${value}`);
@@ -85,7 +89,7 @@ function Role() {
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu phòng ban:", error);
       });
-  }
+  };
   const ferchRoleDetail = (RoleID, RoleName) => {
     toast.promise(
       new Promise((resolve) => {
@@ -95,14 +99,14 @@ function Role() {
             setRoleName(RoleName);
             showModalDetail();
             setroleDetail(data);
-            resolve()
+            resolve();
           })
           .catch((error) => {
-            resolve(error)
+            resolve(error);
           });
       }),
       {
-        pending: 'Đang xử lý',
+        pending: "Đang xử lý",
       }
     );
   };
@@ -113,16 +117,16 @@ function Role() {
         UpdateRole(roleId, inputSearch, switchChecked)
           .then((data) => {
             resolve(data);
-            ferchRoleDetail(roleId)
+            ferchRoleDetail(roleId);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -140,11 +144,11 @@ function Role() {
           });
       }),
       {
-        pending: 'Đang tải dữ liệu',
-        error: 'Lỗi tải dữ liệu',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
       }
     );
-  }
+  };
   useEffect(() => {
     fetchData();
   }, []);
@@ -222,7 +226,10 @@ function Role() {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm" onChange={handleChangeInnputSearch}></Input>
+            <Input
+              placeholder="Tìm kiếm"
+              onChange={handleChangeInnputSearch}
+            ></Input>
           </div>
           <div className="list-filter">
             <i className="list-filter-icon1">
@@ -275,9 +282,9 @@ function Role() {
                 },
                 filterStatus !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -389,7 +396,10 @@ function Role() {
           ) : (
             <tbody class="scrollbar" id="style-15">
               {role.map((role, index) => (
-                <tr key={role.roleID} onClick={() => ferchRoleDetail(role.roleID, role.roleName)}>
+                <tr
+                  key={role.roleID}
+                  onClick={() => ferchRoleDetail(role.roleID, role.roleName)}
+                >
                   <td>{index + 1}</td>
                   <td>{role.roleName}</td>
                   <td>{role.employees.length}</td>
@@ -458,27 +468,36 @@ function Role() {
                     </div>
                   </div>
                   <div className="box2-modal-group"></div>
-                  {roleDetail && roleDetail.employees && roleDetail.employees.length > 0 ? (
-                    roleDetail.employees.map((employee, index) => (
-                      <div className="box1-modal-group box3-group" key={employee.employeeId}>
-                        <div className="box1-child">
-                          <p className="child1-group">{index + 1}</p>
-                        </div>
-                        <div className="box3-child">
-                          <div className="child3-group">
-                            <p>{employee.employeeName}</p>
+                  <div className="department-scroll scrollbar" id="style-15">
+                    {roleDetail &&
+                    roleDetail.employees &&
+                    roleDetail.employees.length > 0 ? (
+                      roleDetail.employees.map((employee, index) => (
+                        <div
+                          className="box1-modal-group box3-group"
+                          key={employee.employeeId}
+                        >
+                          <div className="box1-child">
+                            <p className="child1-group">{index + 1}</p>
+                          </div>
+                          <div className="box3-child">
+                            <div className="child3-group">
+                              <p>{employee.employeeName}</p>
+                            </div>
+                          </div>
+                          <div className="box3-child">
+                            <div className="child3-group">
+                              <p>{employee.employeeName}</p>
+                            </div>
                           </div>
                         </div>
-                        <div className="box3-child">
-                          <div className="child3-group">
-                            <p>{employee.employeeName}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p>Không có nhân viên trong chức vụ {roleDetail.roleName}.</p>
-                  )}
+                      ))
+                    ) : (
+                      <p>
+                        Không có nhân viên trong chức vụ {roleDetail.roleName}.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -513,7 +532,10 @@ function Role() {
               <div className="info-add-department info-add-department-fix">
                 <div className="text-department">Trạng thái:</div>
                 <Form.Item valuePropName="checked">
-                  <Switch checked={switchChecked} onChange={(checked) => setSwitchChecked(checked)} />
+                  <Switch
+                    checked={switchChecked}
+                    onChange={(checked) => setSwitchChecked(checked)}
+                  />
                 </Form.Item>
               </div>
             </div>
