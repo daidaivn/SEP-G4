@@ -61,6 +61,32 @@ const PayrollComponent = () => {
     setIsModalOpenRewardCompany(false);
   };
 
+  //modal Thưởng cá nhân
+  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
+    false
+  );
+  const showModalRewardPersonal = () => {
+    setIsModalOpenRewardPersonal(true);
+  };
+  const handleOkRewardPersonal = () => {
+    setIsModalOpenRewardPersonal(false);
+  };
+  const handleCancelRewardPersonal = () => {
+    setIsModalOpenRewardPersonal(false);
+  };
+
+  //modal Thưởng toàn thể công ty
+  const [isModalOpenRewardAll, setIsModalOpenRewardAll] = useState(false);
+  const showModalRewardAll = () => {
+    setIsModalOpenRewardAll(true);
+  };
+  const handleOkRewardAll = () => {
+    setIsModalOpenRewardAll(false);
+  };
+  const handleCancelRewardAll = () => {
+    setIsModalOpenRewardAll(false);
+  };
+
   return (
     <>
       <div className="col-right-container">
@@ -1292,12 +1318,99 @@ const PayrollComponent = () => {
                 </div>
               </div>
               <div className="div2">
-                <span className="btn-reward">Thưởng cá nhân</span>
-                <span className="btn-reward">Thưởng toàn thể công ty</span>
+                {/*show Modal Thưởng cá nhân */}
+                <span className="btn-reward" onClick={showModalRewardPersonal}>
+                  Thưởng cá nhân
+                </span>
+                {/* show modal Thưởng toàn thể công ty */}
+                <span className="btn-reward" onClick={showModalRewardAll}>
+                  Thưởng toàn thể công ty
+                </span>
               </div>
             </div>
           </div>
         </Modal>
+
+        {/* Modal Thưởng cá nhân */}
+        <Modal
+          className="modal"
+          open={isModalOpenRewardPersonal}
+          onOk={handleOkRewardPersonal}
+          onCancel={handleCancelRewardPersonal}
+        >
+          <div className="modal-detail-all">
+            <div className="head-modal">
+              <p>Thưởng cá nhân</p>
+            </div>
+            <div className="body-modal">
+              <div className="item-modal">
+                <p>Loại thưởng</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Số tiền thưởng:</p>
+                <Input type="text"></Input>
+              </div>
+              <div className="item-modal">
+                <p>Chọn nhân viên</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+
+              <div className="footer-modal">
+                <span className="back" onClick={handleOkRewardPersonal}>
+                  Hủy bỏ
+                </span>
+                <span
+                  className="edit save"
+                  onClick={handleCancelRewardPersonal}
+                >
+                  Lưu
+                </span>
+              </div>
+            </div>
+          </div>
+        </Modal>
+        {/* Modal Thưởng toàn thể công ty */}
       </div>
     </>
   );
