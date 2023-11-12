@@ -17,6 +17,7 @@ const TimekeepingComponent = () => {
     console.log(`selected ${value}`);
   };
   const [checksInOut, setChecksInOut] = useState([]);
+  const [work, setWork] = useState([]);
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -93,7 +94,25 @@ const TimekeepingComponent = () => {
   const handleCancelDetailShift = () => {
     setIsModalOpenDetailShift(false);
   };
-
+  const fetchDataWorks = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        fetchDataWorks(userEmployeeID)
+          .then((data) => {
+            setWork(data);
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        error: "Lỗi dữ liệu",
+      }
+    );
+  };
+  console.log("userEmployeeID:", userEmployeeID);
   //Thay doi trang thai công việc trong ngày
 
   const [isEditing, setIsEditing] = useState(false);
@@ -579,7 +598,7 @@ const TimekeepingComponent = () => {
               <div className="body-edit">
                 <div className="item-modal">
                   <p>Tên công việc</p>
-                  <Input type="text"></Input>
+                  <Input type="text" ></Input>
                 </div>
                 <div className="item-modal">
                   <p>Loại sản phẩm:</p>
@@ -638,31 +657,31 @@ const TimekeepingComponent = () => {
               <div className="body-edit">
                 <div className="item-modal">
                   <p>Tên công việc</p>
-                  <Input type="text" value={"Sản xuất chân ghế"}></Input>
+                  <Input type="text" value={work.workName}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Tên nhóm</p>
-                  <Input type="text" value={"Nhóm 21"}></Input>
+                  <Input type="text" value={work.teamName}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Loại sản phẩm:</p>
-                  <Input type="text" value={"Chân ghế"}></Input>
+                  <Input type="text" value={work.productName}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Đơn giá 1 sản phẩm</p>
-                  <Input type="text" value={"20.000"}></Input>
+                  <Input type="text" value={work.cost}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Số sản phẩm đã hoàn thành</p>
-                  <Input type="text" value={"0"}></Input>
+                  <Input type="text" value={work.numberOFProductToday}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Số sản phẩm cần sản xuất</p>
-                  <Input type="text" value={"200.000"}></Input>
+                  <Input type="text" value={work.numberOfProduct}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Khu vục sản xuất</p>
-                  <Input type="text" value={"Khu nhà A"}></Input>
+                  <Input type="text" value={work.workAreaName}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Ngày làm việc</p>
