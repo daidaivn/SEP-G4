@@ -22,6 +22,7 @@ const EditContractModal = ({
   setContractStatus,
   convertDobToISO,
   contractTypes,
+  EditName
 }) => {
   return (
     <Modal
@@ -124,12 +125,11 @@ const EditContractModal = ({
             <thead className="thead-last"></thead>
           </table>
         </div>
-
         <div className="modal-footer modal-footer-add-employee add">
           <button className="btn-cancel" onClick={handleCancelEditContract}>
             Hủy bỏ
           </button>
-          <button className="btn-edit btn-save" onClick={handleSaveContract}>
+          <button className="btn-edit btn-save" onClick={EditName}>
             Lưu
           </button>
         </div>

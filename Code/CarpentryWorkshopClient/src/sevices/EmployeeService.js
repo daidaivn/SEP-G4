@@ -35,7 +35,6 @@ const UpdateEmployee = (
   originalTaxId,
   originalDOB,
   originalStatus,
-  updatedRoleDepartments,
   Email,
   Image
 ) => {
@@ -51,7 +50,6 @@ const UpdateEmployee = (
     taxId: originalTaxId,
     dobstring: originalDOB,
     status: originalStatus,
-    rDs: updatedRoleDepartments,
     email: Email,
     image: Image,
   };

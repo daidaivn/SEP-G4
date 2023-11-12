@@ -210,7 +210,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
                             Status = 2,// dang co mat
-                            CheckStatus = "EndCheck",
+                            CheckStatus = "CheckOut",
                             TimeIn = latestCheckOutTime.TimeCheckIn,
                             Timeout = "",
                            

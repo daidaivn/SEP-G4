@@ -11,6 +11,7 @@ const EditRoleDepartmentModule = ({
   departments,
   handleCancelView1,
   handleSaveRole,
+  HandelEditRole,
 }) => {
   return (
     <Modal
@@ -95,7 +96,7 @@ const EditRoleDepartmentModule = ({
           <button className="btn-cancel" onClick={handleCancelEditRole}>
             Hủy bỏ
           </button>
-          <button className="btn-edit btn-save" onClick={handleSaveRole}>
+          <button className="btn-edit btn-save" onClick={HandelEditRole}>
             Lưu
           </button>
         </div>

@@ -28,10 +28,40 @@ const CreateContract = (
     contractCode: cCode,
     image: "",
   };
-  
+
   return axios.post(
-    `CCMSapi/Contract/CreateContract?employeeid=${eid}`,requestBody);
+    `CCMSapi/Contract/CreateContract?employeeid=${eid}`,
+    requestBody
+  );
 };
 
+const UpdateContract = (
+  cId,
+  eid,
+  sDatestring,
+  eDatestring,
+  lDoc,
+  stt,
+  cTypeID,
+  cCode,
+  img
+) => {
+  const requestBody = {
+    contractId: cId,
+    employeeId: eid,
+    startDatestring: sDatestring,
+    endDatestring: eDatestring,
+    linkDoc: lDoc,
+    status: stt,
+    contractTypeID: cTypeID,
+    contractCode: cCode,
+    image:img
+  };
 
-export { GetEmployeeContract, GetAllContractType, CreateContract };
+  return axios.put(
+    `CCMSapi/Contract/UpdateContract`,
+    requestBody
+  );
+};
+
+export { GetEmployeeContract, GetAllContractType, CreateContract, UpdateContract };

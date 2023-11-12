@@ -214,6 +214,7 @@ const ShiftComponent = () => {
             </svg>
           </i>
         </div>
+
         <table className="list-table table-shift">
           <thead>
             <tr>
