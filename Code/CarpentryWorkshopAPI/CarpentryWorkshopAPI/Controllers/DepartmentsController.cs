@@ -37,6 +37,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return NotFound();
             }
             var list = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).ToList();
+            var number = _context.Departments.Include(de => de.RolesEmployees).Select(de => de.RolesEmployees.Where(re => re.EndDate == null).Select(de=>de.EmployeeId).Distinct().Count());
             List<DepartmentListDTO> listDTO = _mapper.Map<List<DepartmentListDTO>>(list);
 
             return Ok(listDTO);
@@ -186,19 +187,27 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                
-                var employeesList = _context.RolesEmployees.Include(re => re.Employee).Where(re => re.DepartmentId == id && re.EndDate == null)
-                                   .Select(re => new EmployeeListDTO
-                                   {
-                                       EmployeeID = re.EmployeeId,
-                                       Image = re.Employee.Image,
-                                       FullName = $"{re.Employee.LastName} {re.Employee.FirstName}",
-                                       Gender = re.Employee.Gender.Value == true ? "Nam" : "Nữ",
-                                       PhoneNumber = re.Employee.PhoneNumber,
-                                       Roles = re.Role.RoleName,
-                                       Status = re.Employee.Status,
-                                   }).ToList();
-                return Ok(employeesList);
+
+                var employeelist = _context.Employees
+                    .Include(x => x.Country)
+                    .Include(emp => emp.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .Where(re=>re.RolesEmployees.Any(re=>re.DepartmentId == id && re.EndDate == null))
+                    .Select(emp => new EmployeeListDTO
+                    {
+                        EmployeeID = emp.EmployeeId,
+                        Image = emp.Image,
+                        FullName = $"{emp.LastName} {emp.FirstName}",
+                        Gender = (bool)emp.Gender ? "Nam" : "Nữ",
+                        PhoneNumber = emp.PhoneNumber,
+                        Roles = emp.RolesEmployees
+                        .Where(re => re.EndDate == null)
+                        .OrderByDescending(re => re.Role.RoleLevel)
+                        .Select(re => re.Role.RoleName)
+                        .FirstOrDefault(),
+                        Status = emp.Status,
+                    });
+                return Ok(employeelist);
             }
             catch (Exception ex)
             {

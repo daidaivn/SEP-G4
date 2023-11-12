@@ -106,7 +106,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }                       
         }
         [HttpPost]
-        public IActionResult UpdateWorkForTeam([FromBody] TeamWorkDTO teamWorkDTO)
+        public IActionResult RemoveWorkForTeam([FromBody] TeamWorkDTO teamWorkDTO)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("can not find workid");
                 }
-                var teamWorkRemove = _context.TeamWorks.Where(tw => tw.TeamId == teamWorkDTO.TeamId && tw.Date < tw.Work.EndDate && tw.Date > DateTime.Now);
+                var teamWorkRemove = _context.TeamWorks.Where(tw => tw.WorkId == teamWorkDTO.WorkId && tw.TeamId == teamWorkDTO.TeamId && tw.Date < tw.Work.EndDate && tw.Date > DateTime.Now);
                 if (teamWorkRemove.Any())
                 {
                     _context.TeamWorks.RemoveRange(teamWorkRemove);
