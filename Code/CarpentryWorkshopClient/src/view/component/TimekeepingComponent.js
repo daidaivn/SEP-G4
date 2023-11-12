@@ -562,74 +562,121 @@ const TimekeepingComponent = () => {
             </tbody>
           )}
         </table>
-        <Modal
-          className="modal-detail-shift-all"
-          open={isModalOpenDetailShift}
-          onOk={handleOkDetailShift}
-          onCancel={handleCancelDetailShift}
-        >
-          <div className="modal-detail-shift">
-            <div className="modal-head">
-              <div className="text-head">
-                <p>Chi tiết công việc trong ngày</p>
+        {isEditing ? (
+          //chinh sua cong viec trong ngay
+          <Modal
+            className="modal-detail-shift-all"
+            open={isModalOpenDetailShift}
+            onOk={handleSave}
+            onCancel={handleCancelDetailShift}
+          >
+            <div className="modal-detail-shift">
+              <div className="modal-head">
+                <div className="text-head">
+                  <p>Chi tiết công việc trong ngày</p>
+                </div>
               </div>
-              <svg
-                onClick={handleCancelDetailShift}
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 30 30"
-                fill="none"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-            <div className="body-edit">
-              <div className="item-modal">
-                <p>Tên công việc</p>
-                <Input type="text" value={"Sản xuất chân ghế"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Tên nhóm</p>
-                <Input type="text" value={"Nhóm 21"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Input type="text" value={"Chân ghế"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Đơn giá 1 sản phẩm</p>
-                <Input type="text" value={"20.000"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Số sản phẩm đã hoàn thành</p>
-                <Input type="text" value={"0"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Số sản phẩm cần sản xuất</p>
-                <Input type="text" value={"200.000"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Khu vục sản xuất</p>
-                <Input type="text" value={"Khu nhà A"}></Input>
-              </div>
-              <div className="item-modal">
-                <p>Ngày làm việc</p>
-                <Input type="date"></Input>
-              </div>
-              <div className="footer-modal fix-modal-shift">
-                <span className="edit" onClick={handleEdit}>
-                  Cập nhật số sản phẩm hoàn thành
-                </span>
+              <div className="body-edit">
+                <div className="item-modal">
+                  <p>Tên công việc</p>
+                  <Input type="text"></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Loại sản phẩm:</p>
+                  <Input type="text"></Input>
+                </div>
+
+                <div className="item-modal">
+                  <p>Số sản phẩm đã hoàn thành</p>
+                  <Input type="text"></Input>
+                </div>
+
+                <div className="item-modal">
+                  <p>Ngày làm việc</p>
+                  <Input type="date"></Input>
+                </div>
+                <div className="footer-modal">
+                  <span className="back" onClick={handleCancel}>
+                    Hủy bỏ
+                  </span>
+                  <span className="edit save" onClick={handleSave}>
+                    Lưu
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </Modal>
+          </Modal>
+        ) : (
+          // chi tieet cong viec trong ngay
+          <Modal
+            className="modal-detail-shift-all"
+            open={isModalOpenDetailShift}
+            onOk={handleOkDetailShift}
+            onCancel={handleCancelDetailShift}
+          >
+            <div className="modal-detail-shift">
+              <div className="modal-head">
+                <div className="text-head">
+                  <p>Chi tiết công việc trong ngày</p>
+                </div>
+                <svg
+                  onClick={handleCancelDetailShift}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
+                    fill="white"
+                  />
+                </svg>
+              </div>
+              <div className="body-edit">
+                <div className="item-modal">
+                  <p>Tên công việc</p>
+                  <Input type="text" value={"Sản xuất chân ghế"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Tên nhóm</p>
+                  <Input type="text" value={"Nhóm 21"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Loại sản phẩm:</p>
+                  <Input type="text" value={"Chân ghế"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Đơn giá 1 sản phẩm</p>
+                  <Input type="text" value={"20.000"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Số sản phẩm đã hoàn thành</p>
+                  <Input type="text" value={"0"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Số sản phẩm cần sản xuất</p>
+                  <Input type="text" value={"200.000"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Khu vục sản xuất</p>
+                  <Input type="text" value={"Khu nhà A"}></Input>
+                </div>
+                <div className="item-modal">
+                  <p>Ngày làm việc</p>
+                  <Input type="date"></Input>
+                </div>
+                <div className="footer-modal fix-modal-shift">
+                  <span className="edit" onClick={handleEdit}>
+                    Cập nhật số sản phẩm hoàn thành
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Modal>
+        )}
       </div>
     </>
   );
