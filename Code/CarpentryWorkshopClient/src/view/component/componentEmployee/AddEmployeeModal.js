@@ -49,8 +49,11 @@ const AddEmployeeModal = ({
   contractStatus,
   setContractStatus,
   contractTypes,
+  handleImageUpload,
+  previewImage,
+  setPreviewImage
 }) => {
-  
+
   return (
     <Modal
       className="modal"
@@ -67,7 +70,8 @@ const AddEmployeeModal = ({
           <div className="modal-employee-box1">
             <div className="modal-child-body1">
               <div className="img-body1">
-                <img src={avt} alt="" />
+                <input type="file" accept="image/*" onChange={handleImageUpload} />
+                {previewImage && <img src={previewImage} alt="Xem trước ảnh" />}
               </div>
             </div>
             <div className="modal-child-body2">

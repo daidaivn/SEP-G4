@@ -65,6 +65,7 @@ function ListEmployeeComponent() {
   const [originalImage, setOriginalImage] = useState("");
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
 
   //contract
   const [contractId, setContractID] = useState("");
@@ -133,7 +134,13 @@ function ListEmployeeComponent() {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalCIC(formattedValue);
   };
-
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewImage(previewUrl);
+    }
+  }
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
       const updatedValue = {};
@@ -252,7 +259,7 @@ function ListEmployeeComponent() {
     const errors = [];
     const departmentIdCount = {};
     let isValidPairFound = false;
-  
+
     if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
       errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
     } else {
@@ -262,7 +269,7 @@ function ListEmployeeComponent() {
           errors.push('Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.');
         } else if (value.roleID && value.departmentID) {
           isValidPairFound = true;
-  
+
           // Đếm số lần xuất hiện của mỗi departmentID
           if (departmentIdCount[value.departmentID]) {
             departmentIdCount[value.departmentID] += 1;
@@ -271,25 +278,25 @@ function ListEmployeeComponent() {
           }
         }
       });
-  
+
       // Kiểm tra nếu có ít nhất một cặp hợp lệ
       if (!isValidPairFound) {
         errors.push('Phải có ít nhất một cặp có dữ liệu hợp lệ.');
       }
-  
+
       // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
       for (const [departmentID, count] of Object.entries(departmentIdCount)) {
         if (count > 1) {
           errors.push(`Phòng ban không được trùng nhau.`);
         }
       }
-  
+
       // Kiểm tra số lượng phần tử trong mảng là số chẵn
       if (roleDepartmentValues.length % 2 !== 0) {
         errors.push('Số lượng phần tử trong danh sách phải là số chẵn.');
       }
     }
-  
+
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -298,23 +305,23 @@ function ListEmployeeComponent() {
     }
     return true;
   };
-  
+
 
   const validateDataDepartmentEdit = () => {
     const errors = [];
     const departmentIdCount = {};
     let isValidPairFound = false;
-  
+
     updatedRoleDepartments.forEach((roleDept) => {
       // Kiểm tra tính hợp lệ của mỗi cặp
       if ((roleDept.roleID && !roleDept.departmentID) || (!roleDept.roleID && roleDept.departmentID)) {
         errors.push('Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.');
       }
-  
+
       // Kiểm tra có ít nhất một cặp hợp lệ
       if (roleDept.roleID && roleDept.departmentID) {
         isValidPairFound = true;
-  
+
         if (departmentIdCount[roleDept.departmentID]) {
           departmentIdCount[roleDept.departmentID] += 1;
         } else {
@@ -322,24 +329,24 @@ function ListEmployeeComponent() {
         }
       }
     });
-  
+
     // Nếu không tìm thấy cặp hợp lệ nào
     if (!isValidPairFound) {
       errors.push('Phải có ít nhất một cặp có dữ liệu hợp lệ.');
     }
-  
+
     // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
     for (const [departmentID, count] of Object.entries(departmentIdCount)) {
       if (count > 1) {
         errors.push(`Phòng ban không được trùng nhau.`);
       }
     }
-  
+
     // Kiểm tra số lượng phần tử trong mảng là số chẵn
     if (updatedRoleDepartments.length % 2 !== 0) {
       errors.push('Số lượng phần tử trong danh sách phải là số chẵn.');
     }
-  
+
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -348,9 +355,9 @@ function ListEmployeeComponent() {
     }
     return true;
   };
-  
-  
-  
+
+
+
 
 
   const validateDataContract = () => {
@@ -947,6 +954,9 @@ function ListEmployeeComponent() {
         contractStatus={contractStatus}
         setContractStatus={setContractStatus}
         EditName={EditName}
+        handleImageUpload={handleImageUpload}
+        previewImage={previewImage}
+        setPreviewImage={setPreviewImage}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -1172,7 +1182,7 @@ function ListEmployeeComponent() {
                   <div className="img-body1">
                     <img
                       src={idDetail && idDetail.image ? idDetail.image : avt}
-                      alt=""
+                      alt="avt"
                     />
                   </div>
                 </div>

@@ -81,7 +81,8 @@ const ListSearchAndFilter = ({
   setContractLink,
   contractStatus,
   setContractStatus,
-  EditName
+  EditName,
+  handleImageUpload
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -388,6 +389,7 @@ const ListSearchAndFilter = ({
         contractStatus={contractStatus}
         setContractStatus={setContractStatus}
         contractTypes={contractTypes}
+        handleImageUpload={handleImageUpload}
       />
 
       <NewContractModal
