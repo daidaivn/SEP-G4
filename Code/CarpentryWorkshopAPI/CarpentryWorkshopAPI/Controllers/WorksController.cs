@@ -33,7 +33,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     TotalProduct = w.TotalProduct,
                     UniCostName = w.UniCost.UnitName,
                     WorkArea = w.WorkArea.WorkAreaName,
-                    Status = (w.EndDate < DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Chưa hoàn thành" : "Hoàn thành"
+                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate > DateTime.Now ? "WorkEnd" : ((w.EndDate < DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "NotDone" : "Done")),
                 }).ToList();
             return Ok(work);
         }
