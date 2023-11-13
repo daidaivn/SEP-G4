@@ -1,5 +1,6 @@
 import axios from "./customize-axios";
 
+    
 const fetchAllTeam = () => {
   return axios.get("/CCMSapi/Team/GetAllTeams");
 };
@@ -14,14 +15,17 @@ const createTeam = (teamName, teamleaderId, teamsubleaderId) => {
 const detailTeamByID = (teamID) => {
   return axios.get(`/CCMSapi/Team/GetTeamMembers/${teamID}/members`);
 };
-const fetchAllLeader = () => {
-  return axios.get("/CCMSapi/Team/GetLeaderForTeam");
+const fetchAllLeader = (id) => {
+  const userEmployeeID= id;
+  return axios.post(`/CCMSapi/Team/GetLeaderForTeam?leadId=${userEmployeeID}`);
 };
-const fetchAllSubLeader = () => {
-  return axios.get("/CCMSapi/Team/GetSubLeaderForTeam");
+const fetchAllSubLeader = (id) => {
+  const userEmployeeID= id;
+  return axios.post(`/CCMSapi/Team/GetSubLeaderForTeam?leadId=${userEmployeeID}`);
 };
-const fetchAllStaffs = () => {
-  return axios.get("/CCMSapi/Team/GetStaffs");
+const fetchAllStaffs = id => {
+  const userEmployeeID= id;
+  return axios.get(`/CCMSapi/Team/GetStaffs?leadId=${userEmployeeID}`);
 };
 const changeLeaderId = (teamOld, teamNew) => {
   const oldTeam = teamOld;

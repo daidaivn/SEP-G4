@@ -13,9 +13,7 @@ const ListTableGroup = ({ roles, handleDetailGroup }) => {
       </thead>
       <tbody className="scrollbar" id="style-15">
         {roles.length === 0 ? (
-          <tr>
-            <td colSpan="4">Thông tin nhóm chưa sẵn sàng hoặc không tồn tại.</td>
-          </tr>
+          <p>Thông tin nhóm chưa sẵn sàng hoặc không tồn tại.</p>
         ) : (
           roles.map((role, index) => (
             <tr key={role.teamId} onClick={() => handleDetailGroup(role.teamId, role.teamName)}>
