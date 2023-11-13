@@ -17,4 +17,16 @@ const addDepartment = (Name) => {
     `/CCMSapi/Departments/CreateDepartment?departmentName=${name}`
   );
 };
-export { fetchAllDepadment, searchAndFilterDepartment,addDepartment};
+const updateDepartment = (id,name) =>{
+  const requestBody = {
+    departmentId: id,
+    departmentName: name,
+    status: null
+  };
+  return axios.put(`/CCMSapi/Departments/UpdateDepartment`);
+};
+const detailOfDepartment = (ID)=>{
+  const id = ID;
+  return axios.get(`/CCMSapi/Departments/GetEmployeeInDepartment/DepartmentDetail/${id}`);
+};
+export { fetchAllDepadment, searchAndFilterDepartment,addDepartment,detailOfDepartment,updateDepartment};

@@ -11,6 +11,8 @@ import "../scss/DepartmentComponent.scss";
 import {
   fetchAllCheckInOut,
   addAllCheckInOut,
+  fetchAllDataWorks,
+  updateDataWorks,
 } from "../../sevices/TimekeepingService";
 const TimekeepingComponent = () => {
   const handleChange = (value) => {
@@ -18,10 +20,11 @@ const TimekeepingComponent = () => {
   };
   const [checksInOut, setChecksInOut] = useState([]);
   const [work, setWork] = useState([]);
+  const [number, setNumber] = useState(null);
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
-
+  
   const handleCheckInOut = (employeeID, action) => {
     console.log("employeeID", employeeID);
     const actionText = action === "start" ? "Bắt đầu" : "Ngưng";
@@ -48,7 +51,34 @@ const TimekeepingComponent = () => {
       }
     );
   };
-
+  //Convert number 
+  const convertDobToISO = (dobstring) => {
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
+    }
+    return dobstring;
+  };
+  //validate data number
+  const validateData = () => {
+    const errors = [];
+    if(!number || isNaN(number)) {
+        errors.push("Please enter a valid number");
+    }
+    if (errors.length > 0) {
+        errors.forEach((error) => {
+            toast.warning(error);
+        });
+        return false;
+    }
+    return true;
+  };
   // Sử dụng hàm handleCheckInOut để bắt đầu hoặc kết thúc
   const handleCheckStart = (employeeID) => {
     handleCheckInOut(employeeID, "start");
@@ -81,6 +111,7 @@ const TimekeepingComponent = () => {
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
+    fetchDataWorkPerDay();
   }, []);
 
   // Modal Chi tiết công việc trong ngày
@@ -94,10 +125,11 @@ const TimekeepingComponent = () => {
   const handleCancelDetailShift = () => {
     setIsModalOpenDetailShift(false);
   };
-  const fetchDataWorks = () => {
+  //Load data for work day
+  const fetchDataWorkPerDay = () => {
     toast.promise(
       new Promise((resolve) => {
-        fetchDataWorks(userEmployeeID)
+        fetchAllDataWorks(userEmployeeID)
           .then((data) => {
             setWork(data);
             resolve(data);
@@ -112,7 +144,7 @@ const TimekeepingComponent = () => {
       }
     );
   };
-  console.log("userEmployeeID:", userEmployeeID);
+  console.log("data:", work);
   //Thay doi trang thai công việc trong ngày
 
   const [isEditing, setIsEditing] = useState(false);
@@ -120,6 +152,28 @@ const TimekeepingComponent = () => {
     setIsEditing(true);
   };
   const handleSave = () => {
+    const check = validateData();
+    if(!check){
+      return;
+    }     
+      toast.promise(
+        new Promise((resolve) => {
+          updateDataWorks(work.teamWorkId,number)
+            .then((data) => {
+              resolve(data);
+              fetchDataWorkPerDay();
+            })
+            .catch((error) => {
+              resolve(Promise.reject(error));
+            });
+        }),
+        {
+          pending: "Đang xử lý",
+          success: "Update success",
+          error: "Lỗi",
+        }
+      );
+    
     setIsEditing(false);
   };
   const handleCancel = () => {
@@ -598,21 +652,21 @@ const TimekeepingComponent = () => {
               <div className="body-edit">
                 <div className="item-modal">
                   <p>Tên công việc</p>
-                  <Input type="text" ></Input>
+                  <Input type="text" value={work.workName}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Loại sản phẩm:</p>
-                  <Input type="text"></Input>
+                  <Input type="text" value={work.productName}></Input>
                 </div>
 
                 <div className="item-modal">
                   <p>Số sản phẩm đã hoàn thành</p>
-                  <Input type="text"></Input>
+                  <Input type="text" value={number!= null ? number : work.numberOFProductToday} onChange={(e) => setNumber(e.target.value)}></Input>
                 </div>
 
                 <div className="item-modal">
                   <p>Ngày làm việc</p>
-                  <Input type="date"></Input>
+                  <Input type="date" value={convertDobToISO(work.date)}></Input>
                 </div>
                 <div className="footer-modal">
                   <span className="back" onClick={handleCancel}>
@@ -669,7 +723,7 @@ const TimekeepingComponent = () => {
                 </div>
                 <div className="item-modal">
                   <p>Đơn giá 1 sản phẩm</p>
-                  <Input type="text" value={work.cost}></Input>
+                  <Input type="text" value={work.cost} ></Input>
                 </div>
                 <div className="item-modal">
                   <p>Số sản phẩm đã hoàn thành</p>
@@ -685,7 +739,7 @@ const TimekeepingComponent = () => {
                 </div>
                 <div className="item-modal">
                   <p>Ngày làm việc</p>
-                  <Input type="date"></Input>
+                  <Input type="date" value={convertDobToISO(work.date)}></Input>
                 </div>
                 <div className="footer-modal fix-modal-shift">
                   <span className="edit" onClick={handleEdit}>

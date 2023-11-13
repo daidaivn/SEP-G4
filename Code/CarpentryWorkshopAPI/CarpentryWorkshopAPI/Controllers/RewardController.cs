@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -17,9 +21,91 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult PersonalReward()
+        public IActionResult PersonalReward([FromBody] PersonalRewardDTO personalRewardDTO)
         {
-            return View();
+            try
+            {
+                SalaryDetail newdetail = new SalaryDetail()
+                {
+                    Amount= personalRewardDTO.Amount,
+                    StartDate = DateTime.Now,
+                    EndDate= DateTime.Now,
+                    SalaryTypeId= personalRewardDTO.SalaryTypeId,
+                    EmployeeId= personalRewardDTO.EmployeeId,
+                };
+                if (newdetail == null)
+                {
+                    return NotFound();
+                }
+                _context.SalaryDetails.Add(newdetail);
+                _context.SaveChanges();
+                return Ok("Add personal reward successful");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult CompanyReward([FromBody] CompanyRewardDTO companyRewardDTO)
+        {
+            try
+            {
+                var allemployees = _context.Employees
+                    .Include(x => x.RolesEmployees)
+                    .Where(e => e.RolesEmployees.Any(re => re.EndDate == null))
+                    .ToList();
+                if (allemployees.Count == 0)
+                {
+                    return NotFound();
+                }
+                foreach (var item in allemployees)
+                {
+                    SalaryDetail newdetail = new SalaryDetail()
+                    {
+                        Amount = companyRewardDTO.Amount,
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now,
+                        SalaryTypeId = companyRewardDTO.SalaryTypeId,
+                        EmployeeId = item.EmployeeId,
+                    };
+                    _context.SalaryDetails.Add(newdetail);
+                    _context.SaveChanges();
+                }
+                return Ok("Add company reward successful");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetAllReward(string time)
+        {
+            try
+            {
+                List<AllRewardDTO> dto = new List<AllRewardDTO>();
+                if (DateTime.TryParseExact(time, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                {
+                    var startDateOfMonth = new DateTime(parsedDate.Year, parsedDate.Month, 1);
+                    var endDateOfMonth = startDateOfMonth.AddMonths(1).AddDays(-1);
+
+                    var allreward = _context.SalaryDetails
+                        .Include(x => x.SalaryType)
+                        .Include(x => x.Employee)
+                        .Where(sd => sd.StartDate >= startDateOfMonth && sd.StartDate <= endDateOfMonth)
+                        .ToList();
+                    if (allreward == null)
+                    {
+                        return NotFound();
+                    }
+                    dto = _mapper.Map<List<AllRewardDTO>>(allreward);
+                }
+                    return Ok(dto);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
