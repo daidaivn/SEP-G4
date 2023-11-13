@@ -739,7 +739,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                 ShiftTypeName = team.WorkSchedules.FirstOrDefault()?.ShiftType?.TypeName ?? string.Empty,
                                 TeamLeaderName = teamLeaderName,
                                 NumberOfMember = team.EmployeeTeams.Count(et => et.EndDate == null),
-                                WorkStatus = teamProduct < work.TotalProduct ? "Đã có" : "Chưa có",
+                                WorkStatus = teamProduct < work.TotalProduct ? true : false,
                             });
                         }
                     }
