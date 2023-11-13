@@ -6,7 +6,7 @@
         public List<DR>? rds { get; set; }
         public class DR
         {
-            public int? RoleId { get; set; } // Đổi từ string sang int?
+            public int? RoleId { get; set; } 
             public int? DepartmentId { get; set; }
         } 
     }
