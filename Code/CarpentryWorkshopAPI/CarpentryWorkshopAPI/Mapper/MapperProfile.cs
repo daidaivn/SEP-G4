@@ -132,6 +132,12 @@ namespace CarpentryWorkshopAPI.Mapper
             //Work
             CreateMap<WorkDTO, Work>()
                 .ReverseMap();
+            CreateMap<SalaryDetail, AllRewardDTO>()
+              .ForMember(de => de.StartDatestring, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
+              .ForMember(de => de.EndDatestring, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
+              .ForMember(de => de.SalaryTypeName, option => option.MapFrom(d => d.SalaryType.Name))
+              .ForMember(de => de.EmployeeName, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
+              .ReverseMap();
         }
     }
 }

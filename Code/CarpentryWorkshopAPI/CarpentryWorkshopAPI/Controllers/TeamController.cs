@@ -693,10 +693,13 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetTeamForSchedule()
+        public async Task<ActionResult<IEnumerable<object>>> GetTeamForSchedule(int teamleaderid)
         {
             try
             {
+                var employeeDepartment = _context.RolesEmployees
+                   .Where(e => e.EmployeeId == teamleaderid && e.EndDate == null)
+                   .FirstOrDefault();
                 var currentDateTime = DateTime.Now;
                 var result = new List<Object>();
                 var teams = await _context.Teams
@@ -704,8 +707,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(tw => tw.Work)
                     .Include(t => t.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
+                        .ThenInclude(e => e.RolesEmployees)
                     .Include(t => t.WorkSchedules)
                         .ThenInclude(wc => wc.ShiftType)
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == employeeDepartment.DepartmentId)))
                     .ToListAsync();
 
                 foreach (var team in teams)
@@ -734,9 +739,25 @@ namespace CarpentryWorkshopAPI.Controllers
                                 ShiftTypeName = team.WorkSchedules.FirstOrDefault()?.ShiftType?.TypeName ?? string.Empty,
                                 TeamLeaderName = teamLeaderName,
                                 NumberOfMember = team.EmployeeTeams.Count(et => et.EndDate == null),
-                                WorkStatus = teamProduct > work.TotalProduct ? "Đã có" : "Chưa có",
+                                WorkStatus = teamProduct < work.TotalProduct ? "Đã có" : "Chưa có",
                             });
                         }
+                    }
+                    else
+                    {
+                        var teamLeader = team.TeamLeaderId.HasValue ?
+                                _context.Employees.Where(x => x.EmployeeId == team.TeamLeaderId.Value)
+                                    .Select(x => x.FirstName + " " + x.LastName)
+                                    .FirstOrDefault() : string.Empty;
+                        result.Add(new TeamForScheduleDTO
+                        {
+                            TeamId = team.TeamId,
+                            TeamName = team.TeamName,
+                            ShiftTypeName = team.WorkSchedules.FirstOrDefault()?.ShiftType?.TypeName ?? string.Empty,
+                            TeamLeaderName = teamLeader,
+                            NumberOfMember = team.EmployeeTeams.Count(et => et.EndDate == null),
+                            WorkStatus = "Chưa có",
+                        });
                     }
                 }
 
