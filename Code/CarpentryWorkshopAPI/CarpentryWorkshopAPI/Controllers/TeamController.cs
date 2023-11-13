@@ -4,6 +4,7 @@ using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.ProjectModel;
 using System.Data;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -23,17 +24,23 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public IActionResult GetAllTeams()
+        [HttpPost]
+        public IActionResult GetAllTeams(int employeeid)
         {
             try
             {
+                var employeeDepartment = _context.RolesEmployees
+                   .Where(e => e.EmployeeId == employeeid && e.EndDate == null)
+                   .FirstOrDefault();
+
                 var teams = _context.Teams
                     .Include(t => t.TeamWorks)
-                    .ThenInclude(tw => tw.Work)
-                    .ThenInclude(w => w.WorkArea)
+                        .ThenInclude(tw => tw.Work)
+                            .ThenInclude(w => w.WorkArea)
                     .Include(t => t.EmployeeTeams)
-                    .ThenInclude(et => et.Employee)
+                        .ThenInclude(et => et.Employee)
+                            .ThenInclude(e => e.RolesEmployees)
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == employeeDepartment.DepartmentId)))
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
