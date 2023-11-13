@@ -127,6 +127,7 @@ const CalendarComponent = () => {
           handleCancelListShift={handleCancelListShift}
           showModalDetail={showModalDetail}
         />
+
         <ListModuleDetail
           isModalOpenListShift={isModalOpenListShift}
           handleOkListShift={handleOkListShift}
