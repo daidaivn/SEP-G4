@@ -290,11 +290,6 @@ function ListEmployeeComponent() {
           errors.push(`Phòng ban không được trùng nhau.`);
         }
       }
-
-      // Kiểm tra số lượng phần tử trong mảng là số chẵn
-      if (roleDepartmentValues.length % 2 !== 0) {
-        errors.push('Số lượng phần tử trong danh sách phải là số chẵn.');
-      }
     }
 
     if (errors.length > 0) {
@@ -340,11 +335,6 @@ function ListEmployeeComponent() {
       if (count > 1) {
         errors.push(`Phòng ban không được trùng nhau.`);
       }
-    }
-
-    // Kiểm tra số lượng phần tử trong mảng là số chẵn
-    if (updatedRoleDepartments.length % 2 !== 0) {
-      errors.push('Số lượng phần tử trong danh sách phải là số chẵn.');
     }
 
     if (errors.length > 0) {

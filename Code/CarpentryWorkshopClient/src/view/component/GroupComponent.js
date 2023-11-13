@@ -411,6 +411,8 @@ const GroupComponent = () => {
       };
     }
   });
+  console.log('getStaffsNoTeam',getStaffsNoTeam);
+  
   useEffect(() => {
     fetchData();
   }, []);

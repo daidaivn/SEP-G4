@@ -234,37 +234,43 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-
                 var exdata = _context.RolesEmployees
                     .Where(x => x.EmployeeId == editRoleDTO.EmployeeId)
                     .ToList();
                 foreach (var items in exdata)
                 {
                     items.EndDate = DateTime.Now;
-                    _context.RolesEmployees.Update(items);                
+                    _context.RolesEmployees.Update(items);
                 }
                 _context.SaveChanges();
+
                 foreach (var item in editRoleDTO.rds)
                 {
+                    if (item.RoleId == null || item.DepartmentId == null)
+                    {
+                        continue;
+                    }
 
                     RolesEmployee newrd = new RolesEmployee()
                     {
                         EmployeeId = editRoleDTO.EmployeeId,
-                        RoleId = item.RoleId,
-                        DepartmentId = item.DepartmentId,
+                        RoleId = item.RoleId, 
+                        DepartmentId = item.DepartmentId, 
                         StartDate = DateTime.Now,
                         EndDate = null,
                         Status = true
                     };
                     _context.RolesEmployees.Add(newrd);
                     _context.SaveChanges();
+                }
 
-                }                                         
                 return Ok("Update successful");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }
