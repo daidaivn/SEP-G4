@@ -45,6 +45,7 @@ function ListDepartmentComponent() {
   };
   const [isModalEditDepartment, setIsModalEditDepartment] = useState(false);
   const showModalEditDepartment = () => {
+    setDepartmentNameUpdate(departmentName);
     setIsModalEditDepartment(true);
   };
   const handleOkEditDepartment = () => {
@@ -54,6 +55,7 @@ function ListDepartmentComponent() {
           .then((data) => {
             setDepartmentName(departmentNameUpdate);
             showModalDetail(departmentIdUpdate);
+            fetData();
             resolve(data);
           })
           .catch((error) => {
@@ -403,6 +405,7 @@ function ListDepartmentComponent() {
                     showModalDetail(department.departmentId);
                     setDepartmentName(department.departmentName);
                     setDepartmentIdUpdate(department.departmentId);
+                    setDepartmentNameUpdate(department.departmentName);
                   }}
                 >
                   <td>{index + 1}</td>
@@ -523,8 +526,8 @@ function ListDepartmentComponent() {
             <div className="info-add-department">
               <div className="text-department">Tên phòng - ban</div>
               <Input
-                value={departmentNameUpdate}
-                onChange={(e) => setDepartmentNameUpdate(e.target.value)}
+                value={departmentName}
+                onChange={(e) => setDepartmentName(e.target.value)}
               />
             </div>
           </div>
@@ -551,8 +554,11 @@ function ListDepartmentComponent() {
           </div>
           <div className="modal-body modal-body-department">
             <div className="info-add-department">
-              <div className="text-department" >Tên phòng - ban</div>
-              <Input value={departmentName} onChange={(e)=>setDepartmentIdUpdate(e.target.value)}/>
+              <div className="text-department">Tên phòng - ban</div>
+              <Input
+                value={departmentNameUpdate}
+                onChange={(e) => (e.target.value)}
+              />
             </div>
           </div>
           <div className="modal-footer modal-footer-deparment footer-deparment-fix">
