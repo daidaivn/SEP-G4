@@ -7,6 +7,18 @@ const addAllCheckInOut = (EmployeeID) => {
   return axios.post(`/CCMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
 };
 const fetchAllDataWorks = (EmployeeID) => {
-  return axios.post(`/CCMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
+  return axios.post(`/CCMSapi/TeamWorks/GetWorkDetaiForShiftManage?id=${EmployeeID}`);
 };
-export { fetchAllCheckInOut, addAllCheckInOut };
+const updateDataWorks = (
+  id,
+  number
+) => {
+  const requestBody = {
+    teamWorkId: id,
+    numberProduct: number,
+  };
+  console.log(`/CCMSapi/TeamWorks/UpdateTeamWork`, requestBody);
+
+  return axios.post(`/CCMSapi/TeamWorks/UpdateTeamWork`, requestBody);
+};
+export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks};

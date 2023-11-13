@@ -68,7 +68,13 @@ namespace CarpentryWorkshopAPI.Controllers
             
             try
             {
-                var department = _mapper.Map<Department>(departmentDTO);
+                var department = _context.Departments.FirstOrDefault(de => de.DepartmentId == departmentDTO.DepartmentId);
+                if(department == null)
+                {
+                    return NotFound();
+                }
+                department.DepartmentName = !string.IsNullOrEmpty(departmentDTO.DepartmentName) ? departmentDTO.DepartmentName : department.DepartmentName;
+                department.Status = departmentDTO.Status.HasValue ? departmentDTO.Status : department.Status;
                 _context.Entry(department).State = EntityState.Modified;
                 _context.SaveChanges();
                 DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory()
