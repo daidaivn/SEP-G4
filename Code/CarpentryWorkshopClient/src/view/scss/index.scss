@@ -1081,11 +1081,11 @@ i .logo-responsive {
       font-size: 21px;
       font-weight: 400;
     }
-    .select-input {
+    Input {
       height: 100%;
       display: flex;
       width: 236px;
-      padding: 25px 20px;
+      padding: 25px 20px !important;
       align-items: center;
       gap: 10px;
       border-radius: 60px;
