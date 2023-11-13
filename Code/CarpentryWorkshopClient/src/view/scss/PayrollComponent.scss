@@ -284,3 +284,16 @@
   background-color: unset !important;
   -webkit-box-shadow: unset !important;
 }
+.modal-edit-reward {
+  display: flex;
+  width: 659px;
+  height: 351px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  .body-modal {
+    .item-modal p {
+      width: 153px;
+    }
+  }
+}

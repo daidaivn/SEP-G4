@@ -98,6 +98,18 @@ const PayrollComponent = () => {
   const handleCancelTypeReward = () => {
     setIsModalOpenTypeReward(false);
   };
+
+  //modal Sửa tên thưởng
+  const [isModalOpenEditReward, setIsModalOpenEditReward] = useState(false);
+  const showModalEditReward = () => {
+    setIsModalOpenEditReward(true);
+  };
+  const handleOkEditReward = () => {
+    setIsModalOpenEditReward(false);
+  };
+  const handleCancelEditReward = () => {
+    setIsModalOpenEditReward(false);
+  };
   return (
     <>
       <div className="col-right-container">
@@ -1522,6 +1534,7 @@ const PayrollComponent = () => {
                     </div>
                     <div className="edit">
                       <svg
+                        onClick={showModalEditReward}
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
@@ -1542,6 +1555,7 @@ const PayrollComponent = () => {
                     </div>
                     <div className="edit">
                       <svg
+                        onClick={showModalEditReward}
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
@@ -1562,6 +1576,7 @@ const PayrollComponent = () => {
                     </div>
                     <div className="edit">
                       <svg
+                        onClick={showModalEditReward}
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
@@ -1582,6 +1597,7 @@ const PayrollComponent = () => {
                     </div>
                     <div className="edit">
                       <svg
+                        onClick={showModalEditReward}
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
@@ -1602,6 +1618,7 @@ const PayrollComponent = () => {
                     </div>
                     <div className="edit">
                       <svg
+                        onClick={showModalEditReward}
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
@@ -1622,87 +1639,7 @@ const PayrollComponent = () => {
                     </div>
                     <div className="edit">
                       <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="30"
-                        height="30"
-                        viewBox="0 0 30 30"
-                        fill="none"
-                      >
-                        <path
-                          d="M21 0H9C3 0 0 3 0 9V28.5C0 29.325 0.675 30 1.5 30H21C27 30 30 27 30 21V9C30 3 27 0 21 0ZM13.665 21.99C13.29 22.365 12.6 22.71 12.09 22.785L8.97 23.22C8.85 23.235 8.73 23.25 8.625 23.25C8.1 23.25 7.62 23.07 7.275 22.725C6.855 22.305 6.675 21.69 6.78 21.03L7.215 17.91C7.29 17.4 7.635 16.695 8.01 16.335L13.665 10.68C13.755 10.95 13.875 11.22 14.01 11.52C14.145 11.79 14.28 12.06 14.43 12.315C14.55 12.525 14.685 12.735 14.805 12.885C14.955 13.11 15.105 13.305 15.21 13.41C15.27 13.5 15.33 13.56 15.345 13.59C15.675 13.965 16.02 14.325 16.35 14.595C16.44 14.685 16.5 14.73 16.515 14.745C16.71 14.895 16.89 15.06 17.07 15.165C17.265 15.315 17.475 15.45 17.685 15.57C17.94 15.72 18.21 15.87 18.495 16.005C18.78 16.14 19.05 16.245 19.32 16.335L13.665 21.99ZM21.825 13.845L20.655 15.015C20.58 15.09 20.475 15.135 20.37 15.135C20.34 15.135 20.28 15.135 20.25 15.12C17.67 14.385 15.615 12.33 14.88 9.75C14.835 9.615 14.88 9.465 14.985 9.36L16.17 8.175C18.105 6.24 19.935 6.285 21.825 8.175C22.785 9.135 23.265 10.065 23.25 11.025C23.25 11.97 22.785 12.885 21.825 13.845Z"
-                          fill="#FF8F19"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <p className="stt">1</p>
-                    <div className="type">
-                      <p>Thưởng Tết</p>
-                    </div>
-                    <div className="edit">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="30"
-                        height="30"
-                        viewBox="0 0 30 30"
-                        fill="none"
-                      >
-                        <path
-                          d="M21 0H9C3 0 0 3 0 9V28.5C0 29.325 0.675 30 1.5 30H21C27 30 30 27 30 21V9C30 3 27 0 21 0ZM13.665 21.99C13.29 22.365 12.6 22.71 12.09 22.785L8.97 23.22C8.85 23.235 8.73 23.25 8.625 23.25C8.1 23.25 7.62 23.07 7.275 22.725C6.855 22.305 6.675 21.69 6.78 21.03L7.215 17.91C7.29 17.4 7.635 16.695 8.01 16.335L13.665 10.68C13.755 10.95 13.875 11.22 14.01 11.52C14.145 11.79 14.28 12.06 14.43 12.315C14.55 12.525 14.685 12.735 14.805 12.885C14.955 13.11 15.105 13.305 15.21 13.41C15.27 13.5 15.33 13.56 15.345 13.59C15.675 13.965 16.02 14.325 16.35 14.595C16.44 14.685 16.5 14.73 16.515 14.745C16.71 14.895 16.89 15.06 17.07 15.165C17.265 15.315 17.475 15.45 17.685 15.57C17.94 15.72 18.21 15.87 18.495 16.005C18.78 16.14 19.05 16.245 19.32 16.335L13.665 21.99ZM21.825 13.845L20.655 15.015C20.58 15.09 20.475 15.135 20.37 15.135C20.34 15.135 20.28 15.135 20.25 15.12C17.67 14.385 15.615 12.33 14.88 9.75C14.835 9.615 14.88 9.465 14.985 9.36L16.17 8.175C18.105 6.24 19.935 6.285 21.825 8.175C22.785 9.135 23.265 10.065 23.25 11.025C23.25 11.97 22.785 12.885 21.825 13.845Z"
-                          fill="#FF8F19"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <p className="stt">1</p>
-                    <div className="type">
-                      <p>Thưởng Tết</p>
-                    </div>
-                    <div className="edit">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="30"
-                        height="30"
-                        viewBox="0 0 30 30"
-                        fill="none"
-                      >
-                        <path
-                          d="M21 0H9C3 0 0 3 0 9V28.5C0 29.325 0.675 30 1.5 30H21C27 30 30 27 30 21V9C30 3 27 0 21 0ZM13.665 21.99C13.29 22.365 12.6 22.71 12.09 22.785L8.97 23.22C8.85 23.235 8.73 23.25 8.625 23.25C8.1 23.25 7.62 23.07 7.275 22.725C6.855 22.305 6.675 21.69 6.78 21.03L7.215 17.91C7.29 17.4 7.635 16.695 8.01 16.335L13.665 10.68C13.755 10.95 13.875 11.22 14.01 11.52C14.145 11.79 14.28 12.06 14.43 12.315C14.55 12.525 14.685 12.735 14.805 12.885C14.955 13.11 15.105 13.305 15.21 13.41C15.27 13.5 15.33 13.56 15.345 13.59C15.675 13.965 16.02 14.325 16.35 14.595C16.44 14.685 16.5 14.73 16.515 14.745C16.71 14.895 16.89 15.06 17.07 15.165C17.265 15.315 17.475 15.45 17.685 15.57C17.94 15.72 18.21 15.87 18.495 16.005C18.78 16.14 19.05 16.245 19.32 16.335L13.665 21.99ZM21.825 13.845L20.655 15.015C20.58 15.09 20.475 15.135 20.37 15.135C20.34 15.135 20.28 15.135 20.25 15.12C17.67 14.385 15.615 12.33 14.88 9.75C14.835 9.615 14.88 9.465 14.985 9.36L16.17 8.175C18.105 6.24 19.935 6.285 21.825 8.175C22.785 9.135 23.265 10.065 23.25 11.025C23.25 11.97 22.785 12.885 21.825 13.845Z"
-                          fill="#FF8F19"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <div className="item">
-                    <p className="stt">1</p>
-                    <div className="type">
-                      <p>Thưởng Tết</p>
-                    </div>
-                    <div className="edit">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="30"
-                        height="30"
-                        viewBox="0 0 30 30"
-                        fill="none"
-                      >
-                        <path
-                          d="M21 0H9C3 0 0 3 0 9V28.5C0 29.325 0.675 30 1.5 30H21C27 30 30 27 30 21V9C30 3 27 0 21 0ZM13.665 21.99C13.29 22.365 12.6 22.71 12.09 22.785L8.97 23.22C8.85 23.235 8.73 23.25 8.625 23.25C8.1 23.25 7.62 23.07 7.275 22.725C6.855 22.305 6.675 21.69 6.78 21.03L7.215 17.91C7.29 17.4 7.635 16.695 8.01 16.335L13.665 10.68C13.755 10.95 13.875 11.22 14.01 11.52C14.145 11.79 14.28 12.06 14.43 12.315C14.55 12.525 14.685 12.735 14.805 12.885C14.955 13.11 15.105 13.305 15.21 13.41C15.27 13.5 15.33 13.56 15.345 13.59C15.675 13.965 16.02 14.325 16.35 14.595C16.44 14.685 16.5 14.73 16.515 14.745C16.71 14.895 16.89 15.06 17.07 15.165C17.265 15.315 17.475 15.45 17.685 15.57C17.94 15.72 18.21 15.87 18.495 16.005C18.78 16.14 19.05 16.245 19.32 16.335L13.665 21.99ZM21.825 13.845L20.655 15.015C20.58 15.09 20.475 15.135 20.37 15.135C20.34 15.135 20.28 15.135 20.25 15.12C17.67 14.385 15.615 12.33 14.88 9.75C14.835 9.615 14.88 9.465 14.985 9.36L16.17 8.175C18.105 6.24 19.935 6.285 21.825 8.175C22.785 9.135 23.265 10.065 23.25 11.025C23.25 11.97 22.785 12.885 21.825 13.845Z"
-                          fill="#FF8F19"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <p className="stt">1</p>
-                    <div className="type">
-                      <p>Thưởng Tết</p>
-                    </div>
-                    <div className="edit">
-                      <svg
+                        onClick={showModalEditReward}
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
@@ -1717,6 +1654,35 @@ const PayrollComponent = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Modal Sửa tên thưởng */}
+        <Modal
+          className="modal"
+          open={isModalOpenEditReward}
+          onOk={handleOkEditReward}
+          onCancel={handleCancelEditReward}
+        >
+          <div className="modal-detail-all modal-edit-reward">
+            <div className="head-modal">
+              <p>Sửa tên thưởng</p>
+            </div>
+            <div className="body-modal">
+              <div className="item-modal">
+                <p>Loại thưởng</p>
+                <Input type="text" placeholder="Thưởng tết"></Input>
+              </div>
+
+              <div className="footer-modal">
+                <span className="back" onClick={handleOkEditReward}>
+                  Hủy bỏ
+                </span>
+                <span className="edit save" onClick={handleCancelEditReward}>
+                  Lưu
+                </span>
               </div>
             </div>
           </div>
