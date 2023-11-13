@@ -220,7 +220,7 @@ const GroupComponent = () => {
   const fetchData = () => {
     toast.promise(
       new Promise((resolve) => {
-        fetchAllTeam()
+        fetchAllTeam(userEmployeeID)
           .then((data) => {
             setRoles(data);
             resolve(data);
