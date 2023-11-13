@@ -55,7 +55,17 @@ const GroupComponent = () => {
   const [getStaffsNoTeam, setGetStaffsNoTeam] = useState([]);
   const [inputSearch, setInputSearch] = useState([]);
   const [teamName, setTeamName] = useState("");
+  const userEmployeeID =
+  localStorage.getItem("userEmployeeID") ||
+  sessionStorage.getItem("userEmployeeID");
 
+  console.log('userEmployeeID',userEmployeeID);
+  const log = () =>{
+    console.log('leader',selectedChangeid);
+    console.log('Subleader',selectedChangeid1);
+    console.log('TeamName',newTeamName);
+    
+  }
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
   };
@@ -74,14 +84,14 @@ const GroupComponent = () => {
   };
 
   const showModalGroup = () => {
-    fetchAllLeader()
+    fetchAllLeader(userEmployeeID)
       .then((data) => {
         setAllLeader(data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu Leader:", error);
       });
-    fetchAllSubLeader()
+    fetchAllSubLeader(userEmployeeID)
       .then((data) => {
         setAllSubLeader(data);
       })
@@ -135,7 +145,7 @@ const GroupComponent = () => {
       }
     );
   };
-
+  log();
   const ChangeNameTeam = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -210,7 +220,7 @@ const GroupComponent = () => {
   const fetchData = () => {
     toast.promise(
       new Promise((resolve) => {
-        fetchAllTeam()
+        fetchAllTeam(userEmployeeID)
           .then((data) => {
             setRoles(data);
             resolve(data);
@@ -326,7 +336,7 @@ const GroupComponent = () => {
 
   const handleGetAllMember = () => {
     console.log(selectedChangeid1);
-    fetchAllStaffs()
+    fetchAllStaffs(userEmployeeID)
       .then((data) => {
         setGetStaffsNoTeam(data);
         showModalAdd();

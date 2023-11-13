@@ -190,12 +190,17 @@
   align-self: stretch;
 }
 .modal-child-body1 {
-  display: flex;
   width: 340px;
   justify-content: center;
   align-items: center;
   align-self: stretch;
   background: #3a5a40;
+  Input {
+    font-size: 15px !important;
+    background: #3a5a40 !important;
+    border: none !important;
+    color: white !important;
+  }
 }
 .modal-child-body2 {
   display: flex;
@@ -291,7 +296,9 @@
   }
 }
 .img-body1 {
+  margin-top: 35px;
   display: flex;
+  justify-content: center;
   align-items: flex-start;
   gap: 10px;
 }

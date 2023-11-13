@@ -110,8 +110,7 @@ function ListEmployeeComponent() {
     console.log("contractType:", contractType);
     console.log("contractLink:", contractLink);
     console.log("contractStatus:", contractStatus);
-    console.log('contractImage', contractImage);
-
+    console.log("contractImage", contractImage);
   };
 
   const addDependent = () => {
@@ -140,19 +139,19 @@ function ListEmployeeComponent() {
       const previewUrl = URL.createObjectURL(file);
       setPreviewImage(previewUrl);
     }
-  }
+  };
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
-      const updatedValue = {};
-      if (value) {
-        updatedValue.roleID = value.roleID;
-        updatedValue.departmentID = value.departmentID;
-      } else {
-        updatedValue.roleID = null;
-        updatedValue.departmentID = null;
-      }
-      return updatedValue;
-    })
+        const updatedValue = {};
+        if (value) {
+          updatedValue.roleID = value.roleID;
+          updatedValue.departmentID = value.departmentID;
+        } else {
+          updatedValue.roleID = null;
+          updatedValue.departmentID = null;
+        }
+        return updatedValue;
+      })
     : [];
 
   const handleEdit = () => {
@@ -265,8 +264,13 @@ function ListEmployeeComponent() {
     } else {
       roleDepartmentValues.forEach((value) => {
         // Kiểm tra tính hợp lệ của mỗi cặp
-        if ((value.roleID && !value.departmentID) || (!value.roleID && value.departmentID)) {
-          errors.push('Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.');
+        if (
+          (value.roleID && !value.departmentID) ||
+          (!value.roleID && value.departmentID)
+        ) {
+          errors.push(
+            "Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null."
+          );
         } else if (value.roleID && value.departmentID) {
           isValidPairFound = true;
 
@@ -281,7 +285,7 @@ function ListEmployeeComponent() {
 
       // Kiểm tra nếu có ít nhất một cặp hợp lệ
       if (!isValidPairFound) {
-        errors.push('Phải có ít nhất một cặp có dữ liệu hợp lệ.');
+        errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
       }
 
       // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
@@ -301,7 +305,6 @@ function ListEmployeeComponent() {
     return true;
   };
 
-
   const validateDataDepartmentEdit = () => {
     const errors = [];
     const departmentIdCount = {};
@@ -309,8 +312,13 @@ function ListEmployeeComponent() {
 
     updatedRoleDepartments.forEach((roleDept) => {
       // Kiểm tra tính hợp lệ của mỗi cặp
-      if ((roleDept.roleID && !roleDept.departmentID) || (!roleDept.roleID && roleDept.departmentID)) {
-        errors.push('Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.');
+      if (
+        (roleDept.roleID && !roleDept.departmentID) ||
+        (!roleDept.roleID && roleDept.departmentID)
+      ) {
+        errors.push(
+          "Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null."
+        );
       }
 
       // Kiểm tra có ít nhất một cặp hợp lệ
@@ -327,7 +335,7 @@ function ListEmployeeComponent() {
 
     // Nếu không tìm thấy cặp hợp lệ nào
     if (!isValidPairFound) {
-      errors.push('Phải có ít nhất một cặp có dữ liệu hợp lệ.');
+      errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
     }
 
     // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
@@ -345,10 +353,6 @@ function ListEmployeeComponent() {
     }
     return true;
   };
-
-
-
-
 
   const validateDataContract = () => {
     const errors = [];
@@ -397,7 +401,7 @@ function ListEmployeeComponent() {
           .then((data) => {
             resolve(data);
             handleSaveContract();
-            handlelDetail(id)
+            handlelDetail(id);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -422,16 +426,16 @@ function ListEmployeeComponent() {
         EditRole(id, updatedRoleDepartments)
           .then((data) => {
             resolve(data);
-            handleSaveRole()
+            handleSaveRole();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -549,7 +553,7 @@ function ListEmployeeComponent() {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const handleSave = () => {
@@ -598,7 +602,7 @@ function ListEmployeeComponent() {
     setContractType("");
     setContractLink("");
     setContractStatus("");
-    setContractImage("")
+    setContractImage("");
   };
 
   const handleCancelView = () => {
@@ -620,7 +624,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -649,7 +653,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const fetchData = () => {
@@ -720,11 +724,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-        {
-          value: null,
-          label: "Bỏ chọn",
-        },
-      ]
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -813,8 +817,9 @@ function ListEmployeeComponent() {
     setIsModalOpenEditContract(false);
   };
 
-  const [isModalOpenViewContract1, setIsModalOpenViewContract1] =
-    useState(false);
+  const [isModalOpenViewContract1, setIsModalOpenViewContract1] = useState(
+    false
+  );
   const showModalViewContract1 = () => {
     setIsModalOpenViewContract1(true);
   };
@@ -846,16 +851,12 @@ function ListEmployeeComponent() {
     setIsModalOpenAddContract(false);
   };
 
-  const [isModalOpenContract, setIsModalOpenContract] = useState(false);
-  const showModalContract = () => {
-    setIsModalOpenContract(true);
-  };
-  const handleOkContract = () => {
-    setIsModalOpenContract(false);
-  };
-  const handleCancelContract = () => {
-    setIsModalOpenContract(false);
-  };
+  // upload file img
+  const [image, setImage] = useState("");
+  function handleImage(e) {
+    setImage(e.target.files[0]);
+  }
+
   return (
     <div className="col-right-container">
       <div className="list-container-header">
@@ -988,6 +989,8 @@ function ListEmployeeComponent() {
           handleEditRole={handleEditRole}
         />
       )}
+
+      {/* upload file img */}
       {isEditing ? (
         <Modal
           className="modal"
@@ -1006,7 +1009,10 @@ function ListEmployeeComponent() {
                   <div className="img-body1">
                     <img src={avt} alt="" />
                   </div>
+
+                  <Input type="file" onChange={handleImage} name="up"></Input>
                 </div>
+
                 <div className="modal-child-body2">
                   <div className="div-modal-child2 div-detail div1-modal-child2">
                     <div className="div1-modal-cn">
@@ -1406,9 +1412,9 @@ function ListEmployeeComponent() {
                       options={
                         contractTypes
                           ? contractTypes.map((contractType) => ({
-                            value: contractType.contractTypeId,
-                            label: contractType.contractName,
-                          }))
+                              value: contractType.contractTypeId,
+                              label: contractType.contractName,
+                            }))
                           : []
                       }
                     />
