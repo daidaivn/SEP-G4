@@ -753,10 +753,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             TeamId = team.TeamId,
                             TeamName = team.TeamName,
-                            ShiftTypeName = team.WorkSchedules.FirstOrDefault()?.ShiftType?.TypeName ?? string.Empty,
+                            ShiftTypeName = "Chưa có ca làm việc",
                             TeamLeaderName = teamLeader,
                             NumberOfMember = team.EmployeeTeams.Count(et => et.EndDate == null),
-                            WorkStatus = "Chưa có",
+                            WorkStatus = false,
                         });
                     }
                 }
