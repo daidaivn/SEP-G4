@@ -1241,32 +1241,7 @@ const PayrollComponent = () => {
             <div className="modal-head">
               <div className="body-payroll1">
                 <p>Thưởng công ty</p>
-                <Select
-                  className="select-input"
-                  defaultValue="lucy"
-                  style={{
-                    width: "236",
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                    {
-                      value: "disabled",
-                      label: "Disabled",
-                    },
-                  ]}
-                />
+                <Input type="date"></Input>
               </div>
               <div className="close">
                 <svg
