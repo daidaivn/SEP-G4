@@ -753,7 +753,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             TeamId = team.TeamId,
                             TeamName = team.TeamName,
-                            ShiftTypeName = "Chưa có ca làm việc",
+                            ShiftTypeName = "Chưa có",
                             TeamLeaderName = teamLeader,
                             NumberOfMember = team.EmployeeTeams.Count(et => et.EndDate == null),
                             WorkStatus = false,
