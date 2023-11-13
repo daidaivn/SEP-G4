@@ -1,8 +1,9 @@
 import axios from "./customize-axios";
 
     
-const fetchAllTeam = () => {
-  return axios.get("/CCMSapi/Team/GetAllTeams");
+const fetchAllTeam = (id) => {
+  const userEmployeeID= id;
+  return axios.post(`/CCMSapi/Team/GetAllTeams?employeeid=${userEmployeeID}`);
 };
 const createTeam = (teamName, teamleaderId, teamsubleaderId) => {
   const name = teamName;
