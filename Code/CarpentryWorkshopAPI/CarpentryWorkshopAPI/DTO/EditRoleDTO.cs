@@ -6,8 +6,8 @@
         public List<DR>? rds { get; set; }
         public class DR
         {
-            public int RoleId { get; set; }
-            public int DepartmentId { get; set; }
+            public int? RoleId { get; set; } 
+            public int? DepartmentId { get; set; }
         } 
     }
 }
