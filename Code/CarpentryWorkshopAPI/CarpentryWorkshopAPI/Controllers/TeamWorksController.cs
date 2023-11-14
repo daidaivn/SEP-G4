@@ -81,28 +81,38 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                List<TeamWork> teamWorks = new List<TeamWork>();
                 var work = _context.Works.FirstOrDefault(w => w.WorkId == teamWorkDTO.WorkId);
                 if (work == null)
                 {
                     return NotFound("can not find workid");
                 }
-                var startDate = work.StartDate;
-                if (DateTime.Now < work.StartDate)
+                var startDate = DateTime.ParseExact(teamWorkDTO.StartDate, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                if(startDate < work.StartDate)
                 {
-                    startDate = DateTime.Now;
+                    return BadRequest("startdate err");
                 }
-                while (work.StartDate > work.EndDate)
+                int count = 0;
+                while (count > teamWorkDTO.time)
                 {
-                    TeamWork teamWork = new TeamWork()
+                    if(startDate < work.EndDate)
                     {
-                        WorkId = work.WorkId,
-                        TeamId = teamWorkDTO.TeamId,
-                        TotalProduct = 0,
-                        Date = startDate,
-                    };
-                    _context.TeamWorks.Add(teamWork);
-                    startDate.Value.AddDays(1);
+                        TeamWork teamWork = new TeamWork()
+                        {
+                            WorkId = work.WorkId,
+                            TeamId = teamWorkDTO.TeamId,
+                            TotalProduct = 0,
+                            Date = startDate,
+                        };
+                        teamWorks.Add(teamWork);
+                        
+                        startDate = startDate.AddDays(1);
+                        count++;
+                    }
+                    
                 }
+                _context.TeamWorks.AddRange(teamWorks);
                 _context.SaveChanges();
                 return Ok("Add suceess");
             }
@@ -116,6 +126,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                List<TeamWork> teamWorks= new List<TeamWork>();
                 var work = _context.Works.FirstOrDefault(w => w.WorkId == teamWorkDTO.WorkId);
                 if (work == null)
                 {
@@ -141,9 +152,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         TotalProduct = 0,
                         Date = startDate,
                     };
-                    _context.TeamWorks.Add(teamWork);
+                    teamWorks.Add(teamWork);
+                    
                     startDate.Value.AddDays(1);
                 }
+                _context.AddRange(teamWorks);
                 _context.SaveChanges();
                 return Ok("Add suceess");
             }

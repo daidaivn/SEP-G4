@@ -23,27 +23,28 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost]
         public IActionResult PersonalReward([FromBody] PersonalRewardDTO personalRewardDTO)
         {
-            try
-            {
-                SalaryDetail newdetail = new SalaryDetail()
-                {
-                    Amount= personalRewardDTO.Amount,
-                    StartDate = DateTime.Now,
-                    EndDate= DateTime.Now,
-                    SalaryTypeId= personalRewardDTO.SalaryTypeId,
-                    EmployeeId= personalRewardDTO.EmployeeId,
-                };
-                if (newdetail == null)
-                {
-                    return NotFound();
-                }
-                _context.SalaryDetails.Add(newdetail);
-                _context.SaveChanges();
-                return Ok("Add personal reward successful");
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            //try
+            //{
+            //    SalaryDetail newdetail = new SalaryDetail()
+            //    {
+            //        Amount= personalRewardDTO.Amount,
+            //        StartDate = DateTime.Now,
+            //        EndDate= DateTime.Now,
+            //        SalaryTypeId= personalRewardDTO.SalaryTypeId,
+            //        EmployeeId= personalRewardDTO.EmployeeId,
+            //    };
+            //    if (newdetail == null)
+            //    {
+            //        return NotFound();
+            //    }
+            //    _context.SalaryDetails.Add(newdetail);
+            //    _context.SaveChanges();
+            //    return Ok("Add personal reward successful");
+            //}catch(Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
+            return Ok();
         }
         [HttpPost]
         public IActionResult CompanyReward([FromBody] CompanyRewardDTO companyRewardDTO)
@@ -68,7 +69,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         SalaryTypeId = companyRewardDTO.SalaryTypeId,
                         EmployeeId = item.EmployeeId,
                     };
-                    _context.SalaryDetails.Add(newdetail);
+                    //_context.SalaryDetails.Add(newdetail);
                     _context.SaveChanges();
                 }
                 return Ok("Add company reward successful");
@@ -82,24 +83,8 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                List<AllRewardDTO> dto = new List<AllRewardDTO>();
-                if (DateTime.TryParseExact(time, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-                {
-                    var startDateOfMonth = new DateTime(parsedDate.Year, parsedDate.Month, 1);
-                    var endDateOfMonth = startDateOfMonth.AddMonths(1).AddDays(-1);
 
-                    var allreward = _context.SalaryDetails
-                        .Include(x => x.SalaryType)
-                        .Include(x => x.Employee)
-                        .Where(sd => sd.StartDate >= startDateOfMonth && sd.StartDate <= endDateOfMonth)
-                        .ToList();
-                    if (allreward == null)
-                    {
-                        return NotFound();
-                    }
-                    dto = _mapper.Map<List<AllRewardDTO>>(allreward);
-                }
-                    return Ok(dto);
+                return Ok();
 
             }
             catch (Exception ex)
