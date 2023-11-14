@@ -52,6 +52,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             var pages = user.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
             var roles = user.Employee.RolesEmployees.Where(re=>re.EndDate == null).Select(u=>u.Role.RoleName).ToArray();
+           
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.UserName),
