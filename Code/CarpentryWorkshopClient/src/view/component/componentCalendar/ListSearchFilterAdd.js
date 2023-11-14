@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from 'antd';
 
-const ListSearchFilterAdd = ({ showModalListShift, showModalAdd }) => {
+const ListSearchFilterAdd = ({ fetchAllWorks, showModalAdd }) => {
     return (
         <div className="list-search-filter-add">
             <div className="list-input-search">
@@ -67,7 +67,7 @@ const ListSearchFilterAdd = ({ showModalListShift, showModalAdd }) => {
                 </i>
                 <Input placeholder="Tìm kiếm"></Input>
             </div>
-            <div className="ListWork" onClick={showModalListShift}>
+            <div className="ListWork" onClick={fetchAllWorks}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="36"

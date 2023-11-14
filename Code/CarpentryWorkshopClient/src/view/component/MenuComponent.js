@@ -18,11 +18,16 @@ const Menucomponent = () => {
   const handleDivClick = (divId) => {
     setActiveDiv(divId);
   };
-
+  let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
+  if (!userPages.length) {
+    userPages = JSON.parse(sessionStorage.getItem("userPages")) || [];
+  }
+  const hasAccessiblePage = userPages.some(page => 
+    ["ListEmployee", "ListDepartment", "DependentPerson", "Role", "ListGroup"].includes(page)
+  );
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Xóa dữ liệu đăng nhập trong localStorage và sessionStorage
     localStorage.removeItem("userToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("userRoles");
@@ -60,18 +65,21 @@ const Menucomponent = () => {
               <span className="text">Trang chủ</span>
             </NavLink>
           </div>
-          <div className="item-link">
-            <NavLink
-              to={"/dashboard"}
-              id="item-menu"
-              onClick={() => handleDivClick("div2")}
-              activeClassName={activeDiv === "div2" ? "active" : ""}
-            >
-              <i className="icon-activity"></i>
+          {userPages.includes("Dashboard") && (
+            <div className="item-link">
+              <NavLink
+                to={"/dashboard"}
+                id="item-menu"
+                onClick={() => handleDivClick("div2")}
+                activeClassName={activeDiv === "div2" ? "active" : ""}
+              >
+                <i className="icon-activity"></i>
 
-              <span className="text">Biểu đồ</span>
-            </NavLink>
-          </div>
+                <span className="text">Biểu đồ</span>
+              </NavLink>
+            </div>
+          )}
+          {userPages.includes("Calendar") && (
           <div className="item-link">
             <NavLink
               to={"/calendar"}
@@ -84,6 +92,8 @@ const Menucomponent = () => {
               <span className="text">Lên lịch làm việc</span>
             </NavLink>
           </div>
+          )}
+          {userPages.includes("SeeWork") && (
           <div className="item-link">
             <NavLink
               to={"/seeWork"}
@@ -96,6 +106,8 @@ const Menucomponent = () => {
               <span className="text">Xem công việc</span>
             </NavLink>
           </div>
+          )}
+          {userPages.includes("Shift") && (
           <div className="item-link">
             <NavLink
               to={"/shift"}
@@ -108,6 +120,8 @@ const Menucomponent = () => {
               <span className="text">Ca làm việc</span>
             </NavLink>
           </div>
+          )}
+          {userPages.includes("Payroll") && (
           <div className="item-link">
             <NavLink
               to={"/payroll"}
@@ -120,30 +134,36 @@ const Menucomponent = () => {
               <span className="text">Lương | Thưởng</span>
             </NavLink>
           </div>
-          <div className="item-link">
-            <NavLink
-              to={"/decentralization"}
-              id="item-menu"
-              onClick={() => handleDivClick("div8")}
-              activeClassName={activeDiv === "div8" ? "active" : ""}
-            >
-              <i className="icon-activity"></i>
+          )}
+          {userPages.includes("Decentralization") && (
+            <div className="item-link">
+              <NavLink
+                to={"/decentralization"}
+                id="item-menu"
+                onClick={() => handleDivClick("div8")}
+                activeClassName={activeDiv === "div8" ? "active" : ""}
+              >
+                <i className="icon-activity"></i>
 
-              <span className="text">Phân quyền</span>
-            </NavLink>
-          </div>
-          <div className="item-link">
-            <NavLink
-              to={"/timekeeping"}
-              id="item-menu"
-              onClick={() => handleDivClick("div9")}
-              activeClassName={activeDiv === "div9" ? "active" : ""}
-            >
-              <i className="icon-activity"></i>
+                <span className="text">Phân quyền</span>
+              </NavLink>
+            </div>
+          )}
+          {userPages.includes("TimeKeeping") && (
+            <div className="item-link">
+              <NavLink
+                to={"/timekeeping"}
+                id="item-menu"
+                onClick={() => handleDivClick("div9")}
+                activeClassName={activeDiv === "div9" ? "active" : ""}
+              >
+                <i className="icon-activity"></i>
 
-              <span className="text">Công việc | Điểm danh</span>
-            </NavLink>
-          </div>
+                <span className="text">Công việc | Điểm danh</span>
+              </NavLink>
+            </div>
+          )}
+          {hasAccessiblePage && (
           <div className="dropdown-item">
             <div className="item-link item-link-all">
               <div id="item-menu" onClick={toggleDropdown}>
@@ -155,75 +175,86 @@ const Menucomponent = () => {
               </div>
               {isDropdownOpen && (
                 <div className="dropdown-content">
-                  <div className="item-link">
-                    <NavLink
-                      to={"/list-employee"}
-                      id="item-menu"
-                      onClick={() => handleDivClick("div3")}
-                      activeClassName={activeDiv === "div3" ? "active" : ""}
-                      className={"item-child"}
-                    >
-                      <i className="icon-list"></i>
+                  {userPages.includes("ListEmployee") && (
+                    <div className="item-link">
+                      <NavLink
+                        to={"/list-employee"}
+                        id="item-menu"
+                        onClick={() => handleDivClick("div3")}
+                        activeClassName={activeDiv === "div3" ? "active" : ""}
+                        className={"item-child"}
+                      >
+                        <i className="icon-list"></i>
 
-                      <span className="text">Người lao động </span>
-                    </NavLink>
-                  </div>
-                  <div className="item-link">
-                    <NavLink
-                      to={"/list-department"}
-                      id="item-menu"
-                      onClick={() => handleDivClick("div4")}
-                      activeClassName={activeDiv === "div4" ? "active" : ""}
-                      className={"item-child"}
-                    >
-                      <i className="icon-add1"></i>
+                        <span className="text">Người lao động </span>
+                      </NavLink>
+                    </div>
+                  )}
+                  {userPages.includes("ListDepartment") && (
+                    <div className="item-link">
+                      <NavLink
+                        to={"/list-department"}
+                        id="item-menu"
+                        onClick={() => handleDivClick("div4")}
+                        activeClassName={activeDiv === "div4" ? "active" : ""}
+                        className={"item-child"}
+                      >
+                        <i className="icon-add1"></i>
 
-                      <span className="text">Phòng - Ban </span>
-                    </NavLink>
-                  </div>
-                  <div className="item-link">
-                    <NavLink
-                      to={"/dependent-person"}
-                      id="item-menu"
-                      onClick={() => handleDivClick("div5")}
-                      activeClassName={activeDiv === "div5" ? "active" : ""}
-                      className={"item-child"}
-                    >
-                      <i className="icon-add1"></i>
+                        <span className="text">Phòng - Ban </span>
+                      </NavLink>
+                    </div>
+                  )}
+                  {userPages.includes("DependentPerson") && (
+                    <div className="item-link">
+                      <NavLink
+                        to={"/dependent-person"}
+                        id="item-menu"
+                        onClick={() => handleDivClick("div5")}
+                        activeClassName={activeDiv === "div5" ? "active" : ""}
+                        className={"item-child"}
+                      >
+                        <i className="icon-add1"></i>
 
-                      <span className="text">Người phụ thuộc </span>
-                    </NavLink>
-                  </div>
-                  <div className="item-link">
-                    <NavLink
-                      to={"/role"}
-                      id="item-menu"
-                      onClick={() => handleDivClick("div6")}
-                      activeClassName={activeDiv === "div6" ? "active" : ""}
-                      className={"item-child"}
-                    >
-                      <i className="icon-add1"></i>
+                        <span className="text">Người phụ thuộc </span>
+                      </NavLink>
+                    </div>
+                  )}
+                  {userPages.includes("Role") && (
+                    <div className="item-link">
+                      <NavLink
+                        to={"/role"}
+                        id="item-menu"
+                        onClick={() => handleDivClick("div6")}
+                        activeClassName={activeDiv === "div6" ? "active" : ""}
+                        className={"item-child"}
+                      >
+                        <i className="icon-add1"></i>
 
-                      <span className="text">Chức vụ </span>
-                    </NavLink>
-                  </div>
-                  <div className="item-link">
-                    <NavLink
-                      to={"/list-group"}
-                      id="item-menu"
-                      onClick={() => handleDivClick("div7")}
-                      activeClassName={activeDiv === "div7" ? "active" : ""}
-                      className={"item-child"}
-                    >
-                      <i className="icon-add1"></i>
+                        <span className="text">Chức vụ </span>
+                      </NavLink>
+                    </div>
+                  )}
+                  {userPages.includes("ListGroup") && (
+                    <div className="item-link">
+                      <NavLink
+                        to={"/list-group"}
+                        id="item-menu"
+                        onClick={() => handleDivClick("div7")}
+                        activeClassName={activeDiv === "div7" ? "active" : ""}
+                        className={"item-child"}
+                      >
+                        <i className="icon-add1"></i>
 
-                      <span className="text">Nhóm</span>
-                    </NavLink>
-                  </div>
+                        <span className="text">Nhóm</span>
+                      </NavLink>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </div>
+          )}
         </div>
         <div className="footer-body">
           <div className="item-menu" id="item-menu" onClick={handleLogout}>

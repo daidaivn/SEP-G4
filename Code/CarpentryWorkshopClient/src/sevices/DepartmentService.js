@@ -23,7 +23,8 @@ const updateDepartment = (id,name) =>{
     departmentName: name,
     status: null
   };
-  return axios.put(`/CCMSapi/Departments/UpdateDepartment`);
+  console.log(requestBody);
+  return axios.put(`/CCMSapi/Departments/UpdateDepartment`,requestBody);
 };
 const detailOfDepartment = (ID)=>{
   const id = ID;
