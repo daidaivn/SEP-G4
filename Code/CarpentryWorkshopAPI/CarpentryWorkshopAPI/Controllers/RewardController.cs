@@ -46,51 +46,51 @@ namespace CarpentryWorkshopAPI.Controllers
             //}
             return Ok();
         }
-        [HttpPost]
-        public IActionResult CompanyReward([FromBody] CompanyRewardDTO companyRewardDTO)
-        {
-            try
-            {
-                var allemployees = _context.Employees
-                    .Include(x => x.RolesEmployees)
-                    .Where(e => e.RolesEmployees.Any(re => re.EndDate == null))
-                    .ToList();
-                if (allemployees.Count == 0)
-                {
-                    return NotFound();
-                }
-                foreach (var item in allemployees)
-                {
-                    SalaryDetail newdetail = new SalaryDetail()
-                    {
-                        Amount = companyRewardDTO.Amount,
-                        StartDate = DateTime.Now,
-                        EndDate = DateTime.Now,
-                        SalaryTypeId = companyRewardDTO.SalaryTypeId,
-                        EmployeeId = item.EmployeeId,
-                    };
-                    //_context.SalaryDetails.Add(newdetail);
-                    _context.SaveChanges();
-                }
-                return Ok("Add company reward successful");
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet]
-        public IActionResult GetAllReward(string time)
-        {
-            try
-            {
+        //[HttpPost]
+        //public IActionResult CompanyReward([FromBody] CompanyRewardDTO companyRewardDTO)
+        //{
+        //    try
+        //    {
+        //        var allemployees = _context.Employees
+        //            .Include(x => x.RolesEmployees)
+        //            .Where(e => e.RolesEmployees.Any(re => re.EndDate == null))
+        //            .ToList();
+        //        if (allemployees.Count == 0)
+        //        {
+        //            return NotFound();
+        //        }
+        //        foreach (var item in allemployees)
+        //        {
+        //            SalaryDetail newdetail = new SalaryDetail()
+        //            {
+        //                Amount = companyRewardDTO.Amount,
+        //                StartDate = DateTime.Now,
+        //                EndDate = DateTime.Now,
+        //                SalaryTypeId = companyRewardDTO.SalaryTypeId,
+        //                EmployeeId = item.EmployeeId,
+        //            };
+        //            //_context.SalaryDetails.Add(newdetail);
+        //            _context.SaveChanges();
+        //        }
+        //        return Ok("Add company reward successful");
+        //    }catch(Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+        //[HttpGet]
+        //public IActionResult GetAllReward(string time)
+        //{
+        //    try
+        //    {
 
-                return Ok();
+        //        return Ok();
 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }
