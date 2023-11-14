@@ -38,7 +38,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     TotalProduct = w.TotalProduct,
                     UniCostName = w.UniCost.UnitName,
                     WorkArea = w.WorkArea.WorkAreaName,
-                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate > DateTime.Now ? "WorkEnd" : ((w.EndDate < DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "NotDone" : "Done")),
+                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
                 }).ToList();
             return Ok(work);
         }
@@ -55,7 +55,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     TotalProduct = w.TotalProduct,
                     UniCostName = w.UniCost.UnitName,
                     WorkArea = w.WorkArea.WorkAreaName,
-                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : ( w.EndDate > DateTime.Now ? "WorkEnd" : ((w.EndDate < DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "NotDone" : "Done")),
+                    TimeStart = w.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
+                    TimeEnd = w.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
+                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
+                    TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
                 }).FirstOrDefault();
             return Ok(work);
 
