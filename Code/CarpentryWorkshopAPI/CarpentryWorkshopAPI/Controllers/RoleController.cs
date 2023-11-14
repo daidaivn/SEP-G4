@@ -22,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-       // [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
+       [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
         [HttpGet]
         public IActionResult GetAllRoles()
         {
