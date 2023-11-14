@@ -19,6 +19,8 @@ import {
   ListModuleDetail3,
 } from "./componentCalendar";
 const CalendarComponent = () => {
+  const [start, setStart] = useState();
+
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -445,118 +447,6 @@ const CalendarComponent = () => {
             showModalDetail={showModalDetail}
           />
         )}
-
-        {/* / Modal phan cong cong viec */}
-        <Modal
-          className="modal"
-          open={isModalOpenAssignWork}
-          onOk={handleOkAssignWork}
-          onCancel={handleCancelAssignWork}
-        >
-          <div className="modal-detail-all">
-            <div className="head-modal">
-              <p>Phân công công việc nhóm 1</p>
-            </div>
-            <div className="body-modal">
-              <div className="item-modal">
-                <p>Tên công việc</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Input type="date"></Input>
-              </div>
-              <div className="item-modal-last">
-                <p>Trạng thái:</p>
-                <div className="item-right">
-                  <p className="switch">
-                    <Form.Item valuePropName="checked">
-                      <Switch checked="true" />
-                    </Form.Item>
-                  </p>
-                  <p>Làm việc</p>
-                </div>
-              </div>
-
-              <div className="footer-modal">
-                <span className="back" onClick={handleCancelAssignWork}>
-                  Hủy bỏ
-                </span>
-                <span className="edit save" onClick={handleOkAssignWork}>
-                  Lưu
-                </span>
-              </div>
-            </div>
-          </div>
-        </Modal>
       </div>
     </>
   );
