@@ -14,7 +14,7 @@ import {
   ListModuleDetail,
   ListModuleDetail2,
   ModalAdd,
-  ListModuleDetail3
+  ListModuleDetail3,
 } from "./componentCalendar";
 const CalendarComponent = () => {
   const handleChange = (value) => {
@@ -127,13 +127,13 @@ const CalendarComponent = () => {
           handleCancelListShift={handleCancelListShift}
           showModalDetail={showModalDetail}
         />
+
         <ListModuleDetail
           isModalOpenListShift={isModalOpenListShift}
           handleOkListShift={handleOkListShift}
           handleCancelListShift={handleCancelListShift}
           showModalDetail={showModalDetail}
         />
-
         {isEditing ? (
           // modal chinh sua cong viec
           <div className="modal-edit">
@@ -349,7 +349,7 @@ const CalendarComponent = () => {
                   </div>
 
                   <div className="footer-modal">
-                    <span className="back" onClick={handleBackDetailShift}>
+                    <span className="back" onClick={handleCancelDetailShift}>
                       Hủy bỏ
                     </span>
                     <span className="edit save" onClick={handleSaveDetailShift}>
