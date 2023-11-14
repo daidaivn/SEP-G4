@@ -21,9 +21,14 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAllWorks()
+        public IActionResult GetAllWorks(int employeeId)
         {
-            var work = _context.Works.Include(w=>w.UniCost).Include(w=>w.WorkArea).Include(w=>w.TeamWorks).ThenInclude(w=>w.Team)
+            var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => re.Department.DepartmentId).FirstOrDefault();
+            if(department <= 0)
+            {
+                return NotFound("notHaveDepartment");
+            }
+            var work = _context.Works.Include(w=>w.UniCost).Include(w=>w.WorkArea).Include(w=>w.TeamWorks).ThenInclude(w=>w.Team).Where(de=>de.DepartmentId == department)
                 .Select(w=> new
                 {
                     WorkId = w.WorkId,
