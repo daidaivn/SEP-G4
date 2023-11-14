@@ -8,7 +8,11 @@ import { Form, Input, Select, Switch } from "antd";
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import { toast } from "react-toastify";
-import { GetTeamForSchedule, GetAllWorks } from "../../sevices/CalendarSevice";
+import {
+  GetTeamForSchedule,
+  GetAllWorks,
+  GetWorkDetailById,
+} from "../../sevices/CalendarSevice";
 import {
   ListSearchFilterAdd,
   ModalListShift,
@@ -29,7 +33,7 @@ const CalendarComponent = () => {
   // Modal danh sach cong viec
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
   const [teamForSchedule, setTeamForSchedule] = useState(false);
-  const [allWorks, setAllWorks] = useState(false);
+  const [allWorks, setAllWorks] = useState([]);
 
   const showModalListShift = () => {
     setIsModalOpenListShift(true);
@@ -91,7 +95,6 @@ const CalendarComponent = () => {
   //Thay doi trang thai chinh sua chi tiet phan cong viec
   const [isEditingDetailShift, setIsEditingDetailShift] = useState(false);
 
-
   const handleEditDetailShift = () => {
     setIsEditingDetailShift(true);
     setIsModalOpenDetailShift(true);
@@ -105,28 +108,27 @@ const CalendarComponent = () => {
   };
 
   const log = () => {
-    console.log('');
+    console.log("");
   };
 
   const fetchAllWorks = () => {
     toast.promise(
       new Promise((resolve) => {
-        GetAllWorks()
+        GetAllWorks(userEmployeeID)
           .then((data) => {
             resolve(data);
-            showModalListShift()
-            setAllWorks(data)
-            console.log('GetAllWorks', data);
-
+            showModalListShift();
+            setAllWorks(data);
+            console.log("GetAllWorks", data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -137,9 +139,28 @@ const CalendarComponent = () => {
         GetTeamForSchedule(userEmployeeID)
           .then((data) => {
             resolve(data);
-            console.log('data', data);
+            console.log("data", data);
 
-            setTeamForSchedule(data)
+            setTeamForSchedule(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        error: "Lỗi dữ liệu",
+      }
+    );
+  };
+
+  const fetchWorkDetailById = (TeamID) => {
+    toast.promise(
+      new Promise((resolve) => {
+        GetWorkDetailById(TeamID)
+          .then((data) => {
+            resolve(data);
+            showModalDetail()
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -147,7 +168,8 @@ const CalendarComponent = () => {
       }),
       {
         pending: 'Đang xử lý',
-        error: 'Lỗi dữ liệu',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
       }
     );
   };
@@ -190,6 +212,8 @@ const CalendarComponent = () => {
           handleOkListShift={handleOkListShift}
           handleCancelListShift={handleCancelListShift}
           showModalDetail={showModalDetail}
+          allWorks={allWorks}
+          fetchWorkDetailById={fetchWorkDetailById}
         />
 
         <ListModuleDetail
