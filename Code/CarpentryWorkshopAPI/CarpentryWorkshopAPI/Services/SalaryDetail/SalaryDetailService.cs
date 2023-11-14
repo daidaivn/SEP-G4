@@ -18,23 +18,24 @@ namespace CarpentryWorkshopAPI.Services.SalaryDetail
 
         public dynamic GetAllSalaryDetail()
         {
-            var details = _context.SalaryDetails
-                .Include(x => x.SalaryType)
-                .ToList();
-            var dto = _mapper.Map<List<SalaryDetailDTO>>(details);
-            return dto;
+            //var details = _context.SalaryDetails
+            //    .Include(x => x.SalaryType)
+            //    .ToList();
+            //var dto = _mapper.Map<List<SalaryDetailDTO>>(details);
+            //return dto;
+            return "";
         }
         public dynamic AddSalaryDetail(CreateSalaryDetailDTO createSalaryDetailDTO)
         {
             var newDetail = _mapper.Map<Models.SalaryDetail>(createSalaryDetailDTO);
-            _context.SalaryDetails.Add(newDetail);
+            //_context.SalaryDetails.Add(newDetail);
             _context.SaveChanges();
             return "Create new salary detail successful";
         }
         public dynamic UpdateSalaryDetail(CreateSalaryDetailDTO createSalaryDetailDTO)
         {
             var exDetail = _mapper.Map<Models.SalaryDetail>(createSalaryDetailDTO);
-            _context.SalaryDetails.Update(exDetail);
+            //_context.SalaryDetails.Update(exDetail);
             _context.SaveChanges();
             return "Update salary detail successful";
         }

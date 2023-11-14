@@ -18,39 +18,41 @@ namespace CarpentryWorkshopAPI.Services.SalaryType
             _mapper = mapper;
         }
         public dynamic GetAllSalaryType()
-        {     
-            var types = _context.SalaryTypes
-                .ToList();
-            var dto = _mapper.Map<List<SalaryTypeDTO>>(types);
-            return dto;      
+        {
+            //var types = _context.SalaryTypes
+            //    .ToList();
+            //var dto = _mapper.Map<List<SalaryTypeDTO>>(types);
+            //return dto;      
+            return "";
         }
 
         public dynamic AddType(SalaryTypeDTO salaryType)
         {
-            var dto = _mapper.Map<Models.SalaryType>(salaryType);
-            _context.SalaryTypes.Add(dto);
-            _context.SaveChanges();
+            //var dto = _mapper.Map<Models.SalaryType>(salaryType);
+            //_context.SalaryTypes.Add(dto);
+            //_context.SaveChanges();
             return "Create new salary type successful";
         }
 
         public dynamic UpdateType(SalaryTypeDTO salaryType)
         {
-            var dto = _mapper.Map<Models.SalaryType>(salaryType);
-            _context.SalaryTypes.Update(dto);
-            _context.SaveChanges();
+            //var dto = _mapper.Map<Models.SalaryType>(salaryType);
+            //_context.SalaryTypes.Update(dto);
+            //_context.SaveChanges();
             return "Update salary type successful";
         }
         public dynamic SearchSalaryTypes(string input)
         {
-            var query = _context.SalaryTypes.ToList().AsQueryable();
-            string result = input.ToLower().Normalize(NormalizationForm.FormD);
-            query = query.Where(x => x.Name.ToLower().Normalize(NormalizationForm.FormD).Contains(result));
-            var types = query.Select(t => new SalaryTypeDTO
-            {
-                SalaryTypeId = t.SalaryTypeId,
-                Name= t.Name,
-            });
-            return types;
+            //var query = _context.SalaryTypes.ToList().AsQueryable();
+            //string result = input.ToLower().Normalize(NormalizationForm.FormD);
+            //query = query.Where(x => x.Name.ToLower().Normalize(NormalizationForm.FormD).Contains(result));
+            //var types = query.Select(t => new SalaryTypeDTO
+            //{
+            //    SalaryTypeId = t.SalaryTypeId,
+            //    Name= t.Name,
+            //});
+            //return types;
+            return "";
         }
     }
 }

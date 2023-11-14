@@ -16,7 +16,12 @@ namespace CarpentryWorkshopAPI.Models
         {
         }
 
+        public virtual DbSet<Allowance> Allowances { get; set; } = null!;
+        public virtual DbSet<AllowanceDetail> AllowanceDetails { get; set; } = null!;
+        public virtual DbSet<AllowanceType> AllowanceTypes { get; set; } = null!;
+        public virtual DbSet<BonusDetail> BonusDetails { get; set; } = null!;
         public virtual DbSet<CheckInOut> CheckInOuts { get; set; } = null!;
+        public virtual DbSet<CompanyWideBonu> CompanyWideBonus { get; set; } = null!;
         public virtual DbSet<Contract> Contracts { get; set; } = null!;
         public virtual DbSet<ContractType> ContractTypes { get; set; } = null!;
         public virtual DbSet<ContractTypeStatusHistory> ContractTypeStatusHistories { get; set; } = null!;
@@ -42,10 +47,9 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<RolesEmployee> RolesEmployees { get; set; } = null!;
         public virtual DbSet<RolesStatusHistory> RolesStatusHistories { get; set; } = null!;
-        public virtual DbSet<SalaryDetail> SalaryDetails { get; set; } = null!;
-        public virtual DbSet<SalaryGroupType> SalaryGroupTypes { get; set; } = null!;
-        public virtual DbSet<SalaryType> SalaryTypes { get; set; } = null!;
+        public virtual DbSet<Salary> Salaries { get; set; } = null!;
         public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
+        public virtual DbSet<SpecialOccasion> SpecialOccasions { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
         public virtual DbSet<TeamWork> TeamWorks { get; set; } = null!;
         public virtual DbSet<UnitCost> UnitCosts { get; set; } = null!;
@@ -68,6 +72,66 @@ namespace CarpentryWorkshopAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Allowance>(entity =>
+            {
+                entity.ToTable("Allowance");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<AllowanceDetail>(entity =>
+            {
+                entity.HasKey(e => e.SalaryDetailId)
+                    .HasName("PK_SalaryDetail");
+
+                entity.ToTable("AllowanceDetail");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.AllowanceType)
+                    .WithMany(p => p.AllowanceDetails)
+                    .HasForeignKey(d => d.AllowanceTypeId)
+                    .HasConstraintName("FK_AllowanceDetail_AllowanceType");
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.AllowanceDetails)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .HasConstraintName("FK_AllowanceDetail_Employees");
+            });
+
+            modelBuilder.Entity<AllowanceType>(entity =>
+            {
+                entity.ToTable("AllowanceType");
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.HasOne(d => d.Allowance)
+                    .WithMany(p => p.AllowanceTypes)
+                    .HasForeignKey(d => d.AllowanceId)
+                    .HasConstraintName("FK_SalaryType_SalaryGroupTypes");
+            });
+
+            modelBuilder.Entity<BonusDetail>(entity =>
+            {
+                entity.HasKey(e => e.BonusId);
+
+                entity.Property(e => e.BonusId).HasColumnName("BonusID");
+
+                entity.Property(e => e.BonusAmount).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.BonusDate).HasColumnType("datetime");
+
+                entity.Property(e => e.BonusName).HasMaxLength(50);
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.BonusDetails)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_BonusDetails_Employees");
+            });
+
             modelBuilder.Entity<CheckInOut>(entity =>
             {
                 entity.ToTable("CheckInOut");
@@ -81,6 +145,24 @@ namespace CarpentryWorkshopAPI.Models
                     .HasForeignKey(d => d.EmployeeId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_CheckInOut_Employees");
+            });
+
+            modelBuilder.Entity<CompanyWideBonu>(entity =>
+            {
+                entity.HasKey(e => e.CompanyBonusId);
+
+                entity.Property(e => e.CompanyBonusId).HasColumnName("CompanyBonusID");
+
+                entity.Property(e => e.BonusAmount).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.BonusDate).HasColumnType("datetime");
+
+                entity.Property(e => e.BonusName).HasMaxLength(50);
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.CompanyWideBonus)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .HasConstraintName("FK_CompanyWideBonus_Employees");
             });
 
             modelBuilder.Entity<Contract>(entity =>
@@ -458,6 +540,13 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasKey(e => e.HourWorkDayId);
 
                 entity.Property(e => e.Day).HasColumnType("datetime");
+
+                entity.Property(e => e.HourlyRate).HasColumnType("decimal(10, 2)");
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.HoursWorkDays)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .HasConstraintName("FK_HoursWorkDays_Employees");
             });
 
             modelBuilder.Entity<Page>(entity =>
@@ -581,42 +670,16 @@ namespace CarpentryWorkshopAPI.Models
                     .HasConstraintName("FK__RolesStat__RoleI__114A936A");
             });
 
-            modelBuilder.Entity<SalaryDetail>(entity =>
+            modelBuilder.Entity<Salary>(entity =>
             {
-                entity.ToTable("SalaryDetail");
+                entity.Property(e => e.PayDate).HasColumnType("date");
 
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
+                entity.Property(e => e.TotalSalary).HasColumnType("decimal(10, 2)");
 
                 entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.SalaryDetails)
+                    .WithMany(p => p.Salaries)
                     .HasForeignKey(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_SalaryDetail_Employees");
-
-                entity.HasOne(d => d.SalaryType)
-                    .WithMany(p => p.SalaryDetails)
-                    .HasForeignKey(d => d.SalaryTypeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_SalaryDetail_SalaryType");
-            });
-
-            modelBuilder.Entity<SalaryGroupType>(entity =>
-            {
-                entity.Property(e => e.Name).HasMaxLength(100);
-            });
-
-            modelBuilder.Entity<SalaryType>(entity =>
-            {
-                entity.ToTable("SalaryType");
-
-                entity.Property(e => e.Name).HasMaxLength(100);
-
-                entity.HasOne(d => d.SalaryGroupType)
-                    .WithMany(p => p.SalaryTypes)
-                    .HasForeignKey(d => d.SalaryGroupTypeId)
-                    .HasConstraintName("FK_SalaryType_SalaryGroupTypes");
+                    .HasConstraintName("FK_Salaries_Employees");
             });
 
             modelBuilder.Entity<ShiftType>(entity =>
@@ -626,6 +689,27 @@ namespace CarpentryWorkshopAPI.Models
                 entity.Property(e => e.ShiftTypeId).HasColumnName("ShiftTypeID");
 
                 entity.Property(e => e.TypeName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<SpecialOccasion>(entity =>
+            {
+                entity.HasKey(e => e.OccasionId);
+
+                entity.Property(e => e.OccasionId).HasColumnName("OccasionID");
+
+                entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
+
+                entity.Property(e => e.OccasionDate).HasColumnType("date");
+
+                entity.Property(e => e.OccasionType).HasMaxLength(50);
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.SpecialOccasions)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_SpecialOccasions_Employees");
             });
 
             modelBuilder.Entity<Team>(entity =>
