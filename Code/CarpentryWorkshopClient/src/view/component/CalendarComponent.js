@@ -17,15 +17,12 @@ import {
   ListSearchFilterAdd,
   ModalListShift,
   TableCalendar,
-  ListModuleDetail,
   ListModuleDetail2,
   ModalAdd,
   ListModuleDetail3,
   WorkModalTeam,
 } from "./componentCalendar";
 const CalendarComponent = () => {
-  const [start, setStart] = useState();
-
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -75,7 +72,6 @@ const CalendarComponent = () => {
   const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
   const showModalDetailShift = () => {
     setIsModalOpenDetailShift(true);
-    setIsEditingDetailShift(false);
   };
   const handleOkDetailShift = () => {
     setIsModalOpenDetailShift(false);
@@ -114,7 +110,6 @@ const CalendarComponent = () => {
   const handleEditDetailShift = () => {
     setIsEditingDetailShift(true);
     setIsModalOpenDetailShift(true);
-    console.log(1);
   };
   const handleSaveDetailShift = () => {
     setIsEditingDetailShift(false);
@@ -176,15 +171,15 @@ const CalendarComponent = () => {
         GetWorkDetailById(TeamID)
           .then((data) => {
             resolve(data);
-            showModalDetail();
+            showModalDetail()
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: "Đang xử lý",
-        error: "Lỗi thêm vào nhóm",
+        pending: 'Đang xử lý',
+        error: 'Lỗi thêm vào nhóm',
       }
     );
   };
@@ -232,12 +227,6 @@ const CalendarComponent = () => {
           fetchWorkDetailById={fetchWorkDetailById}
         />
 
-        <ListModuleDetail
-          isModalOpenListShift={isModalOpenListShift}
-          handleOkListShift={handleOkListShift}
-          handleCancelListShift={handleCancelListShift}
-          showModalDetail={showModalDetail}
-        />
         {isEditing ? (
           // modal chinh sua cong viec
           <div className="modal-edit">
@@ -352,12 +341,12 @@ const CalendarComponent = () => {
 
         {isEditingDetailShift ? (
           // modal chỉnh sửa phân công việc
-          <WorkModalTeam
-            isModalOpenDetailShift={isModalOpenDetailShift}
-            handleSaveDetailShift={handleSaveDetailShift}
-            handleCancelDetailShift={handleCancelDetailShift}
-            handleChange={handleChange}
-            handleBackDetailShift={handleBackDetailShift}
+          <WorkModalTeam 
+          isModalOpenDetailShift={isModalOpenDetailShift}
+          handleSaveDetailShift={handleSaveDetailShift}
+          handleCancelDetailShift={handleCancelDetailShift}
+          handleChange={handleChange}
+          handleBackDetailShift={handleBackDetailShift}
           />
         ) : (
           // modal chi tiêt phân công việc
@@ -369,6 +358,118 @@ const CalendarComponent = () => {
             showModalDetail={showModalDetail}
           />
         )}
+
+        {/* / Modal phan cong cong viec */}
+        <Modal
+          className="modal"
+          open={isModalOpenAssignWork}
+          onOk={handleOkAssignWork}
+          onCancel={handleCancelAssignWork}
+        >
+          <div className="modal-detail-all">
+            <div className="head-modal">
+              <p>Phân công công việc nhóm 1</p>
+            </div>
+            <div className="body-modal">
+              <div className="item-modal">
+                <p>Tên công việc</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Input type="date"></Input>
+              </div>
+              <div className="item-modal-last">
+                <p>Trạng thái:</p>
+                <div className="item-right">
+                  <p className="switch">
+                    <Form.Item valuePropName="checked">
+                      <Switch checked="true" />
+                    </Form.Item>
+                  </p>
+                  <p>Làm việc</p>
+                </div>
+              </div>
+
+              <div className="footer-modal">
+                <span className="back" onClick={handleCancelAssignWork}>
+                  Hủy bỏ
+                </span>
+                <span className="edit save" onClick={handleOkAssignWork}>
+                  Lưu
+                </span>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );
