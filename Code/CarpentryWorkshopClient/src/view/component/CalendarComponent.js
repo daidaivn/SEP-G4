@@ -76,6 +76,18 @@ const CalendarComponent = () => {
     setIsModalOpenDetailShift(false);
   };
 
+  // Modal phan cong cong viec
+  const [isModalOpenAssignWork, setIsModalOpenAssignWork] = useState(false);
+  const showModalAssignWork = () => {
+    setIsModalOpenAssignWork(true);
+  };
+  const handleOkAssignWork = () => {
+    setIsModalOpenAssignWork(false);
+  };
+  const handleCancelAssignWork = () => {
+    setIsModalOpenAssignWork(false);
+  };
+
   //Thay doi trang thai chinh sua chi tiet cong viec
   const [isEditing, setIsEditing] = useState(false);
   const handleEdit = () => {
@@ -91,7 +103,6 @@ const CalendarComponent = () => {
   //Thay doi trang thai chinh sua chi tiet phan cong viec
   const [isEditingDetailShift, setIsEditingDetailShift] = useState(false);
 
-
   const handleEditDetailShift = () => {
     setIsEditingDetailShift(true);
     setIsModalOpenDetailShift(true);
@@ -105,7 +116,7 @@ const CalendarComponent = () => {
   };
 
   const log = () => {
-    console.log('');
+    console.log("");
   };
 
   const fetchAllWorks = () => {
@@ -114,19 +125,18 @@ const CalendarComponent = () => {
         GetAllWorks()
           .then((data) => {
             resolve(data);
-            showModalListShift()
-            setAllWorks(data)
-            console.log('GetAllWorks', data);
-
+            showModalListShift();
+            setAllWorks(data);
+            console.log("GetAllWorks", data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        success: "Thêm nhân viên thành công",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -137,17 +147,17 @@ const CalendarComponent = () => {
         GetTeamForSchedule(userEmployeeID)
           .then((data) => {
             resolve(data);
-            console.log('data', data);
+            console.log("data", data);
 
-            setTeamForSchedule(data)
+            setTeamForSchedule(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        error: 'Lỗi dữ liệu',
+        pending: "Đang xử lý",
+        error: "Lỗi dữ liệu",
       }
     );
   };
@@ -183,6 +193,7 @@ const CalendarComponent = () => {
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
           teamForSchedule={teamForSchedule}
+          showModalAssignWork={showModalAssignWork}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -413,7 +424,7 @@ const CalendarComponent = () => {
                   </div>
 
                   <div className="footer-modal">
-                    <span className="back" onClick={handleCancelDetailShift}>
+                    <span className="back" onClick={handleBackDetailShift}>
                       Hủy bỏ
                     </span>
                     <span className="edit save" onClick={handleSaveDetailShift}>
@@ -434,6 +445,118 @@ const CalendarComponent = () => {
             showModalDetail={showModalDetail}
           />
         )}
+
+        {/* / Modal phan cong cong viec */}
+        <Modal
+          className="modal"
+          open={isModalOpenAssignWork}
+          onOk={handleOkAssignWork}
+          onCancel={handleCancelAssignWork}
+        >
+          <div className="modal-detail-all">
+            <div className="head-modal">
+              <p>Phân công công việc nhóm 1</p>
+            </div>
+            <div className="body-modal">
+              <div className="item-modal">
+                <p>Tên công việc</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Input type="date"></Input>
+              </div>
+              <div className="item-modal-last">
+                <p>Trạng thái:</p>
+                <div className="item-right">
+                  <p className="switch">
+                    <Form.Item valuePropName="checked">
+                      <Switch checked="true" />
+                    </Form.Item>
+                  </p>
+                  <p>Làm việc</p>
+                </div>
+              </div>
+
+              <div className="footer-modal">
+                <span className="back" onClick={handleCancelAssignWork}>
+                  Hủy bỏ
+                </span>
+                <span className="edit save" onClick={handleOkAssignWork}>
+                  Lưu
+                </span>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );
