@@ -21,6 +21,7 @@ import {
   ListModuleDetail2,
   ModalAdd,
   ListModuleDetail3,
+  WorkModalTeam,
 } from "./componentCalendar";
 const CalendarComponent = () => {
   const userEmployeeID =
@@ -80,6 +81,18 @@ const CalendarComponent = () => {
     setIsModalOpenDetailShift(false);
   };
 
+  // Modal phan cong cong viec
+  const [isModalOpenAssignWork, setIsModalOpenAssignWork] = useState(false);
+  const showModalAssignWork = () => {
+    setIsModalOpenAssignWork(true);
+  };
+  const handleOkAssignWork = () => {
+    setIsModalOpenAssignWork(false);
+  };
+  const handleCancelAssignWork = () => {
+    setIsModalOpenAssignWork(false);
+  };
+
   //Thay doi trang thai chinh sua chi tiet cong viec
   const [isEditing, setIsEditing] = useState(false);
   const handleEdit = () => {
@@ -127,7 +140,6 @@ const CalendarComponent = () => {
       }),
       {
         pending: "Đang xử lý",
-        success: "Thêm nhân viên thành công",
         error: "Lỗi thêm vào nhóm",
       }
     );
@@ -168,7 +180,6 @@ const CalendarComponent = () => {
       }),
       {
         pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
         error: 'Lỗi thêm vào nhóm',
       }
     );
@@ -205,6 +216,7 @@ const CalendarComponent = () => {
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
           teamForSchedule={teamForSchedule}
+          showModalAssignWork={showModalAssignWork}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -336,118 +348,13 @@ const CalendarComponent = () => {
 
         {isEditingDetailShift ? (
           // modal chỉnh sửa phân công việc
-          <div className="modal-detail ">
-            <Modal
-              className="modal"
-              open={isModalOpenDetailShift}
-              onOk={handleSaveDetailShift}
-              onCancel={handleCancelDetailShift}
-            >
-              <div className="modal-detail-all">
-                <div className="head-modal">
-                  <p>Phân công công việc nhóm 1</p>
-                </div>
-                <div className="body-modal">
-                  <div className="item-modal">
-                    <p>Tên công việc</p>
-                    <Select
-                      defaultValue="lucy"
-                      style={{
-                        width: 120,
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="item-modal">
-                    <p>Loại sản phẩm:</p>
-                    <Select
-                      defaultValue="lucy"
-                      style={{
-                        width: 120,
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="item-modal">
-                    <p>Loại sản phẩm:</p>
-                    <Select
-                      defaultValue="lucy"
-                      style={{
-                        width: 120,
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="item-modal">
-                    <p>Loại sản phẩm:</p>
-                    <Input type="date"></Input>
-                  </div>
-                  <div className="item-modal-last">
-                    <p>Trạng thái:</p>
-                    <div className="item-right">
-                      <p className="switch">
-                        <Form.Item valuePropName="checked">
-                          <Switch checked="true" />
-                        </Form.Item>
-                      </p>
-                      <p>Làm việc</p>
-                    </div>
-                  </div>
-
-                  <div className="footer-modal">
-                    <span className="back" onClick={handleCancelDetailShift}>
-                      Hủy bỏ
-                    </span>
-                    <span className="edit save" onClick={handleSaveDetailShift}>
-                      Lưu
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Modal>
-          </div>
+          <WorkModalTeam 
+          isModalOpenDetailShift={isModalOpenDetailShift}
+          handleSaveDetailShift={handleSaveDetailShift}
+          handleCancelDetailShift={handleCancelDetailShift}
+          handleChange={handleChange}
+          handleBackDetailShift={handleBackDetailShift}
+          />
         ) : (
           // modal chi tiêt phân công việc
           <ListModuleDetail3
@@ -458,6 +365,118 @@ const CalendarComponent = () => {
             showModalDetail={showModalDetail}
           />
         )}
+
+        {/* / Modal phan cong cong viec */}
+        <Modal
+          className="modal"
+          open={isModalOpenAssignWork}
+          onOk={handleOkAssignWork}
+          onCancel={handleCancelAssignWork}
+        >
+          <div className="modal-detail-all">
+            <div className="head-modal">
+              <p>Phân công công việc nhóm 1</p>
+            </div>
+            <div className="body-modal">
+              <div className="item-modal">
+                <p>Tên công việc</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Select
+                  defaultValue="lucy"
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="item-modal">
+                <p>Loại sản phẩm:</p>
+                <Input type="date"></Input>
+              </div>
+              <div className="item-modal-last">
+                <p>Trạng thái:</p>
+                <div className="item-right">
+                  <p className="switch">
+                    <Form.Item valuePropName="checked">
+                      <Switch checked="true" />
+                    </Form.Item>
+                  </p>
+                  <p>Làm việc</p>
+                </div>
+              </div>
+
+              <div className="footer-modal">
+                <span className="back" onClick={handleCancelAssignWork}>
+                  Hủy bỏ
+                </span>
+                <span className="edit save" onClick={handleOkAssignWork}>
+                  Lưu
+                </span>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );

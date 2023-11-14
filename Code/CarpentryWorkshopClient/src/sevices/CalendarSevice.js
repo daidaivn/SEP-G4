@@ -15,8 +15,10 @@ const GetAllWorks = (id) => {
 
 const GetWorkDetailById = (tId) => {
   const wid = tId;
-  return axios.put(
-    `/CCMSapi/Works/GetWorkDetailById/${tId}`
+  console.log(`/CCMSapi/Works/GetWorkDetailById/${wid}`);
+  
+  return axios.get(
+    `/CCMSapi/Works/GetWorkDetailById/${wid}`
   );
 };
 
