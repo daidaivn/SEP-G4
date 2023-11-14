@@ -22,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
+       [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
         [HttpGet]
         public IActionResult GetAllRoles()
         {
@@ -36,7 +36,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         RoleID = roled.RoleId,
                         RoleName = roled.RoleName,
                         Status = roled.Status,
-                        Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true)
+                        Employees = roled.RolesEmployees.Where(roleemp => roleemp.Employee.Status == true && roleemp.EndDate == null)
                         .Select(x => new RoleDetailDTO.EmployeeRole
                         {
                             EmployeeId = x.EmployeeId,
@@ -55,6 +55,44 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet]
+        public IActionResult GetRoleEmployeeById(int roleid)
+        {
+            try
+            {
+                var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
+                var employeeIdLength = maxEmployeeId.ToString().Length;
+                var rolelist = _context.Roles
+                    .Include(x => x.RolesEmployees)
+                    .ThenInclude(roleemp => roleemp.Role)
+                    .Where(x => x.RoleId == roleid)
+                    .Select(roled => new EmployeeRoleDTO
+                    {
+                        RoleID = roled.RoleId,
+                        RoleName = roled.RoleName,
+                        Employees = roled.RolesEmployees
+                        .Where(roleemp => roleemp.Employee.Status == true && roleemp.EndDate == null)
+                        .Select(x => new EmployeeRoleDTO.EmployeeRoles
+                        {
+                            EmployeeId = x.EmployeeId,
+                            EmployeeIdstring = x.EmployeeId.ToString().PadLeft(employeeIdLength, '0'),
+                            EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
+                        }
+                        ).ToList(),
+                        
+                    });
+                if (rolelist == null)
+                {
+                    return NotFound();
+                }
+                return Ok(rolelist);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
         [HttpGet]
         public IActionResult GetRoleById(int rid) 
         {
