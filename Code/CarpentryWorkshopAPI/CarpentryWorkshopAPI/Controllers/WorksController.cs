@@ -129,7 +129,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }                
                 DateTime? StartDate = string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.StartDate;
                 DateTime? EndDate = string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.EndDate;
-
+                work.DepartmentId = workDTO.DepartmentId > 0 ? workDTO.DepartmentId : work.DepartmentId;
                 work.WorkAreaId= workDTO.WorkAreaId > 0 ? workDTO.WorkAreaId : work.WorkAreaId;
                 work.WorkName = string.IsNullOrEmpty(workDTO.WorkName) ? workDTO.WorkName : work.WorkName;
                 work.StartDate = StartDate.HasValue ? StartDate : work.StartDate;
