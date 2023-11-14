@@ -1,12 +1,12 @@
 import React from "react";
-import { Input , Modal, Select, Form, Switch} from "antd";
+import { Input, Modal, Select, Form, Switch } from "antd";
 
 const WorkModalTeam = ({
   isModalOpenDetailShift,
   handleSaveDetailShift,
   handleCancelDetailShift,
   handleChange,
-  handleBackDetailShift
+  handleBackDetailShift,
 }) => {
   return (
     <div className="modal-detail ">
@@ -110,7 +110,7 @@ const WorkModalTeam = ({
             </div>
 
             <div className="footer-modal">
-              <span className="back" onClick={handleBackDetailShift}>
+              <span className="back" onClick={handleCancelDetailShift}>
                 Hủy bỏ
               </span>
               <span className="edit save" onClick={handleSaveDetailShift}>
