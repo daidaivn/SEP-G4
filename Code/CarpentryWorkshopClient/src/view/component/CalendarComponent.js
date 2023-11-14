@@ -75,6 +75,7 @@ const CalendarComponent = () => {
   const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
   const showModalDetailShift = () => {
     setIsModalOpenDetailShift(true);
+    setIsEditingDetailShift(false);
   };
   const handleOkDetailShift = () => {
     setIsModalOpenDetailShift(false);
@@ -113,6 +114,7 @@ const CalendarComponent = () => {
   const handleEditDetailShift = () => {
     setIsEditingDetailShift(true);
     setIsModalOpenDetailShift(true);
+    console.log(1);
   };
   const handleSaveDetailShift = () => {
     setIsEditingDetailShift(false);
@@ -174,15 +176,15 @@ const CalendarComponent = () => {
         GetWorkDetailById(TeamID)
           .then((data) => {
             resolve(data);
-            showModalDetail()
+            showModalDetail();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
       }),
       {
-        pending: 'Đang xử lý',
-        error: 'Lỗi thêm vào nhóm',
+        pending: "Đang xử lý",
+        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -350,12 +352,12 @@ const CalendarComponent = () => {
 
         {isEditingDetailShift ? (
           // modal chỉnh sửa phân công việc
-          <WorkModalTeam 
-          isModalOpenDetailShift={isModalOpenDetailShift}
-          handleSaveDetailShift={handleSaveDetailShift}
-          handleCancelDetailShift={handleCancelDetailShift}
-          handleChange={handleChange}
-          handleBackDetailShift={handleBackDetailShift}
+          <WorkModalTeam
+            isModalOpenDetailShift={isModalOpenDetailShift}
+            handleSaveDetailShift={handleSaveDetailShift}
+            handleCancelDetailShift={handleCancelDetailShift}
+            handleChange={handleChange}
+            handleBackDetailShift={handleBackDetailShift}
           />
         ) : (
           // modal chi tiêt phân công việc
