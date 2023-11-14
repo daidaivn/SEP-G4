@@ -7,14 +7,19 @@ namespace CarpentryWorkshopAPI.Models
     {
         public Employee()
         {
+            AllowanceDetails = new HashSet<AllowanceDetail>();
+            BonusDetails = new HashSet<BonusDetail>();
             CheckInOuts = new HashSet<CheckInOut>();
+            CompanyWideBonus = new HashSet<CompanyWideBonu>();
             Contracts = new HashSet<Contract>();
             Dependents = new HashSet<Dependent>();
             EmployeeDegrees = new HashSet<EmployeeDegree>();
             EmployeeTeams = new HashSet<EmployeeTeam>();
             EmployeesStatusHistories = new HashSet<EmployeesStatusHistory>();
+            HoursWorkDays = new HashSet<HoursWorkDay>();
             RolesEmployees = new HashSet<RolesEmployee>();
-            SalaryDetails = new HashSet<SalaryDetail>();
+            Salaries = new HashSet<Salary>();
+            SpecialOccasions = new HashSet<SpecialOccasion>();
         }
 
         public int EmployeeId { get; set; }
@@ -33,13 +38,18 @@ namespace CarpentryWorkshopAPI.Models
 
         public virtual Country? Country { get; set; }
         public virtual UserAccount? UserAccount { get; set; }
+        public virtual ICollection<AllowanceDetail> AllowanceDetails { get; set; }
+        public virtual ICollection<BonusDetail> BonusDetails { get; set; }
         public virtual ICollection<CheckInOut> CheckInOuts { get; set; }
+        public virtual ICollection<CompanyWideBonu> CompanyWideBonus { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<Dependent> Dependents { get; set; }
         public virtual ICollection<EmployeeDegree> EmployeeDegrees { get; set; }
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
         public virtual ICollection<EmployeesStatusHistory> EmployeesStatusHistories { get; set; }
+        public virtual ICollection<HoursWorkDay> HoursWorkDays { get; set; }
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
-        public virtual ICollection<SalaryDetail> SalaryDetails { get; set; }
+        public virtual ICollection<Salary> Salaries { get; set; }
+        public virtual ICollection<SpecialOccasion> SpecialOccasions { get; set; }
     }
 }
