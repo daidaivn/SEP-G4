@@ -1,9 +1,17 @@
 import axios from "./customize-axios";
 
-const GetTeamForSchedule = () => {
+const GetTeamForSchedule = (id) => {
+    const userEmployeeID = id
     return axios.get(
-        `/CCMSapi/Team/GetTeamForSchedule`
+        `/CCMSapi/Team/GetTeamForSchedule?teamleaderid=${userEmployeeID}`
     );
 };
+const GetAllWorks = () => {
+    // const userEmployeeID = id
+  return axios.get(
+    `/CCMSapi/Works/GetAllWorks`
+  );
+};
 
-export { GetTeamForSchedule };
+
+export { GetTeamForSchedule, GetAllWorks };

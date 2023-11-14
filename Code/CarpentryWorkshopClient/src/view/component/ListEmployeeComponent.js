@@ -257,102 +257,115 @@ function ListEmployeeComponent() {
   const validateDataDepartment = () => {
     const errors = [];
     const departmentIdCount = {};
+    const roleIdCount = {};
     let isValidPairFound = false;
 
     if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
-      errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
+        errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
     } else {
-      roleDepartmentValues.forEach((value) => {
-        // Kiểm tra tính hợp lệ của mỗi cặp
-        if (
-          (value.roleID && !value.departmentID) ||
-          (!value.roleID && value.departmentID)
-        ) {
-          errors.push(
-            "Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null."
-          );
-        } else if (value.roleID && value.departmentID) {
-          isValidPairFound = true;
+        roleDepartmentValues.forEach((value) => {
+            // Kiểm tra tính hợp lệ của mỗi cặp
+            if ((value.roleID && !value.departmentID) ||
+                (!value.roleID && value.departmentID)) {
+                errors.push("Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.");
+            } else if (value.roleID && value.departmentID) {
+                isValidPairFound = true;
 
-          // Đếm số lần xuất hiện của mỗi departmentID
-          if (departmentIdCount[value.departmentID]) {
-            departmentIdCount[value.departmentID] += 1;
-          } else {
-            departmentIdCount[value.departmentID] = 1;
-          }
+                // Đếm số lần xuất hiện của mỗi departmentID
+                departmentIdCount[value.departmentID] = (departmentIdCount[value.departmentID] || 0) + 1;
+
+                // Đếm số lần xuất hiện của mỗi roleID
+                roleIdCount[value.roleID] = (roleIdCount[value.roleID] || 0) + 1;
+            }
+        });
+
+        // Kiểm tra nếu có ít nhất một cặp hợp lệ
+        if (!isValidPairFound) {
+            errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
         }
-      });
 
-      // Kiểm tra nếu có ít nhất một cặp hợp lệ
-      if (!isValidPairFound) {
-        errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
-      }
-
-      // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
-      for (const [departmentID, count] of Object.entries(departmentIdCount)) {
-        if (count > 1) {
-          errors.push(`Phòng ban không được trùng nhau.`);
+        // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
+        for (const count of Object.values(departmentIdCount)) {
+            if (count > 1) {
+                errors.push(`Phòng ban không được trùng nhau.`);
+                break;
+            }
         }
-      }
+
+        // Kiểm tra nếu có roleID xuất hiện nhiều hơn 1 lần
+        for (const count of Object.values(roleIdCount)) {
+            if (count > 1) {
+                errors.push(`Chức vụ không được trùng nhau.`);
+                break;
+            }
+        }
     }
 
     if (errors.length > 0) {
-      errors.forEach((error) => {
-        toast.warning(error);
-      });
-      return false;
+        errors.forEach((error) => {
+            toast.warning(error);
+        });
+        return false;
     }
     return true;
-  };
+};
 
-  const validateDataDepartmentEdit = () => {
-    const errors = [];
-    const departmentIdCount = {};
-    let isValidPairFound = false;
 
-    updatedRoleDepartments.forEach((roleDept) => {
+const validateDataDepartmentEdit = () => {
+  const errors = [];
+  const departmentIdCount = {};
+  const roleIdCount = {};
+  let isValidPairFound = false;
+
+  updatedRoleDepartments.forEach((roleDept) => {
       // Kiểm tra tính hợp lệ của mỗi cặp
-      if (
-        (roleDept.roleID && !roleDept.departmentID) ||
-        (!roleDept.roleID && roleDept.departmentID)
-      ) {
-        errors.push(
-          "Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null."
-        );
+      if ((roleDept.roleID && !roleDept.departmentID) ||
+          (!roleDept.roleID && roleDept.departmentID)) {
+          errors.push("Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.");
       }
 
       // Kiểm tra có ít nhất một cặp hợp lệ
       if (roleDept.roleID && roleDept.departmentID) {
-        isValidPairFound = true;
+          isValidPairFound = true;
 
-        if (departmentIdCount[roleDept.departmentID]) {
-          departmentIdCount[roleDept.departmentID] += 1;
-        } else {
-          departmentIdCount[roleDept.departmentID] = 1;
-        }
+          // Đếm số lần xuất hiện của mỗi departmentID
+          departmentIdCount[roleDept.departmentID] = (departmentIdCount[roleDept.departmentID] || 0) + 1;
+
+          // Đếm số lần xuất hiện của mỗi roleID
+          roleIdCount[roleDept.roleID] = (roleIdCount[roleDept.roleID] || 0) + 1;
       }
-    });
+  });
 
-    // Nếu không tìm thấy cặp hợp lệ nào
-    if (!isValidPairFound) {
+  // Nếu không tìm thấy cặp hợp lệ nào
+  if (!isValidPairFound) {
       errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
-    }
+  }
 
-    // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
-    for (const [departmentID, count] of Object.entries(departmentIdCount)) {
+  // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
+  for (const count of Object.values(departmentIdCount)) {
       if (count > 1) {
-        errors.push(`Phòng ban không được trùng nhau.`);
+          errors.push(`Phòng ban không được trùng nhau.`);
+          break;
       }
-    }
+  }
 
-    if (errors.length > 0) {
+  // Kiểm tra nếu có roleID xuất hiện nhiều hơn 1 lần
+  for (const count of Object.values(roleIdCount)) {
+      if (count > 1) {
+          errors.push(`Chức vụ không được trùng nhau.`);
+          break;
+      }
+  }
+
+  if (errors.length > 0) {
       errors.forEach((error) => {
-        toast.warning(error);
+          toast.warning(error);
       });
       return false;
-    }
-    return true;
-  };
+  }
+  return true;
+};
+
 
   const validateDataContract = () => {
     const errors = [];

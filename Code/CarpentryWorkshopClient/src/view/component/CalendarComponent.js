@@ -5,8 +5,10 @@ import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { Form, Input, Select, Switch } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
+import { toast } from "react-toastify";
+import { GetTeamForSchedule, GetAllWorks } from "../../sevices/CalendarSevice";
 import {
   ListSearchFilterAdd,
   ModalListShift,
@@ -17,11 +19,18 @@ import {
   ListModuleDetail3
 } from "./componentCalendar";
 const CalendarComponent = () => {
+  const userEmployeeID =
+    localStorage.getItem("userEmployeeID") ||
+    sessionStorage.getItem("userEmployeeID");
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
   // Modal danh sach cong viec
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
+  const [teamForSchedule, setTeamForSchedule] = useState(false);
+  const [allWorks, setAllWorks] = useState(false);
+
   const showModalListShift = () => {
     setIsModalOpenListShift(true);
   };
@@ -81,17 +90,71 @@ const CalendarComponent = () => {
 
   //Thay doi trang thai chinh sua chi tiet phan cong viec
   const [isEditingDetailShift, setIsEditingDetailShift] = useState(false);
+
+
   const handleEditDetailShift = () => {
     setIsEditingDetailShift(true);
-    setIsModalOpenDetailShift(true); // Mở modal khi bắt đầu chỉnh sửa
+    setIsModalOpenDetailShift(true);
   };
   const handleSaveDetailShift = () => {
     setIsEditingDetailShift(false);
-    setIsModalOpenDetailShift(false); // Đóng modal khi lưu
+    setIsModalOpenDetailShift(false);
   };
   const handleBackDetailShift = () => {
     setIsEditingDetailShift(false);
   };
+
+  const log = () => {
+    console.log('');
+  };
+
+  const fetchAllWorks = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        GetAllWorks()
+          .then((data) => {
+            resolve(data);
+            showModalListShift()
+            setAllWorks(data)
+            console.log('GetAllWorks', data);
+
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
+  };
+
+  const fetchTeamForSchedule = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        GetTeamForSchedule(userEmployeeID)
+          .then((data) => {
+            resolve(data);
+            console.log('data', data);
+
+            setTeamForSchedule(data)
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        error: 'Lỗi dữ liệu',
+      }
+    );
+  };
+  useEffect(() => {
+    fetchTeamForSchedule();
+  }, []);
+
   return (
     <>
       <div className="col-right-container">
@@ -104,7 +167,7 @@ const CalendarComponent = () => {
           <ListUserHeader />
         </div>
         <ListSearchFilterAdd
-          showModalListShift={showModalListShift}
+          fetchAllWorks={fetchAllWorks}
           showModalAdd={showModalAdd}
         />
         <div className="time-shift">
@@ -119,6 +182,7 @@ const CalendarComponent = () => {
         <TableCalendar
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
+          teamForSchedule={teamForSchedule}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
