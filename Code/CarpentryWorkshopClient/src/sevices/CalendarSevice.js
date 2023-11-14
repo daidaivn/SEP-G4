@@ -6,12 +6,21 @@ const GetTeamForSchedule = (id) => {
         `/CCMSapi/Team/GetTeamForSchedule?teamleaderid=${userEmployeeID}`
     );
 };
-const GetAllWorks = () => {
-    // const userEmployeeID = id
+const GetAllWorks = (id) => {
+    const userEmployeeID = id
   return axios.get(
-    `/CCMSapi/Works/GetAllWorks`
+    `/CCMSapi/Works/GetAllWorks?employeeId=${userEmployeeID}`
+  );
+};
+
+const GetWorkDetailById = (tId) => {
+  const wid = tId;
+  console.log(`/CCMSapi/Works/GetWorkDetailById/${wid}`);
+  
+  return axios.get(
+    `/CCMSapi/Works/GetWorkDetailById/${wid}`
   );
 };
 
 
-export { GetTeamForSchedule, GetAllWorks };
+export { GetTeamForSchedule, GetAllWorks , GetWorkDetailById};
