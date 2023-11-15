@@ -2,13 +2,24 @@
 {
     public class AllRewardDTO
     {
-        public int SalaryDetailId { get; set; }
-        public double? Amount { get; set; }
-        public string? StartDatestring { get; set; }
-        public string? EndDatestring { get; set; }
-        public int? SalaryTypeId { get; set; }
-        public string? SalaryTypeName { get; set; }
-        public int? EmployeeId { get; set; }
-        public string? EmployeeName { get; set; }
+        public List<PR> PersonalRewardList { get; set; }
+        public List<CWR> CompanyRewardList { get; set; }
+        public class PR
+        {
+            public int BonusId { get; set; }
+            public int? EmployeeId { get; set; }
+            public string? Beneficiary { get; set; }
+            public decimal? BonusAmount { get; set; }
+            public string? BonusName { get; set; }
+            public string? BonusDatestring { get; set; }
+        }
+        public class CWR
+        {
+            public int CompanyBonusId { get; set; }
+            public string? Beneficiary { get; set; }
+            public decimal? BonusAmount { get; set; }
+            public string? BonusName { get; set; }
+            public string? BonusDatestring { get; set; }
+        }
     }
 }

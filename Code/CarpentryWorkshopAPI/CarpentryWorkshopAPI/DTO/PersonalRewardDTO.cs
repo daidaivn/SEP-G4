@@ -2,9 +2,12 @@
 {
     public class PersonalRewardDTO
     {
-        public int? SalaryTypeId { get; set; }
+        public int BonusId { get; set; }
         public int? EmployeeId { get; set; }
-        public double? Amount { get; set; }
-        
+        public decimal? BonusAmount { get; set; }
+        public string? BonusName { get; set; }
+        public string? BonusDatestring { get; set; }
+        public string? BonusReason { get; set; }
+
     }
 }
