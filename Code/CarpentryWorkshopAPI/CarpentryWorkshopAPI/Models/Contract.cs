@@ -19,6 +19,7 @@ namespace CarpentryWorkshopAPI.Models
         public int? ContractTypeId { get; set; }
         public string? ContractCode { get; set; }
         public string? Image { get; set; }
+        public decimal? Amount { get; set; }
 
         public virtual ContractType? ContractType { get; set; }
         public virtual Employee? Employee { get; set; }
