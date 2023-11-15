@@ -10,5 +10,8 @@ namespace CarpentryWorkshopAPI.Models
         public double? Hour { get; set; }
         public decimal? TotalMoneyOfTeam { get; set; }
         public decimal? AmountMoneyPerHour { get; set; }
+        public DateTime? Date { get; set; }
+
+        public virtual Team? Team { get; set; }
     }
 }
