@@ -37,6 +37,7 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<EmployeeDegree> EmployeeDegrees { get; set; } = null!;
         public virtual DbSet<EmployeeTeam> EmployeeTeams { get; set; } = null!;
+        public virtual DbSet<EmployeesAllowance> EmployeesAllowances { get; set; } = null!;
         public virtual DbSet<EmployeesStatusHistory> EmployeesStatusHistories { get; set; } = null!;
         public virtual DbSet<HistoryAllowanceType> HistoryAllowanceTypes { get; set; } = null!;
         public virtual DbSet<HistoryChangeCheckInOut> HistoryChangeCheckInOuts { get; set; } = null!;
@@ -96,19 +97,6 @@ namespace CarpentryWorkshopAPI.Models
                     .WithMany(p => p.AllowanceTypes)
                     .HasForeignKey(d => d.AllowanceId)
                     .HasConstraintName("FK_SalaryType_SalaryGroupTypes");
-
-                entity.HasMany(d => d.Employees)
-                    .WithMany(p => p.AllowanceTypes)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "EmployeesAllowance",
-                        l => l.HasOne<Employee>().WithMany().HasForeignKey("EmployeeId").HasConstraintName("FK_EmployeesAllowance_Employees"),
-                        r => r.HasOne<AllowanceType>().WithMany().HasForeignKey("AllowanceTypeId").HasConstraintName("FK_EmployeesAllowance_AllowanceType"),
-                        j =>
-                        {
-                            j.HasKey("AllowanceTypeId", "EmployeeId").HasName("PK_SalaryDetail");
-
-                            j.ToTable("EmployeesAllowance");
-                        });
             });
 
             modelBuilder.Entity<BonusDetail>(entity =>
@@ -473,6 +461,24 @@ namespace CarpentryWorkshopAPI.Models
                     .WithMany(p => p.EmployeeTeams)
                     .HasForeignKey(d => d.TeamId)
                     .HasConstraintName("FK_EmployeeTeams_Teams");
+            });
+
+            modelBuilder.Entity<EmployeesAllowance>(entity =>
+            {
+                entity.HasKey(e => new { e.AllowanceTypeId, e.EmployeeId })
+                    .HasName("PK_SalaryDetail");
+
+                entity.ToTable("EmployeesAllowance");
+
+                entity.HasOne(d => d.AllowanceType)
+                    .WithMany(p => p.EmployeesAllowances)
+                    .HasForeignKey(d => d.AllowanceTypeId)
+                    .HasConstraintName("FK_EmployeesAllowance_AllowanceType");
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.EmployeesAllowances)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .HasConstraintName("FK_EmployeesAllowance_Employees");
             });
 
             modelBuilder.Entity<EmployeesStatusHistory>(entity =>

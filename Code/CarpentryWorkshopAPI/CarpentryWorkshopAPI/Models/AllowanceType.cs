@@ -7,8 +7,8 @@ namespace CarpentryWorkshopAPI.Models
     {
         public AllowanceType()
         {
+            EmployeesAllowances = new HashSet<EmployeesAllowance>();
             HistoryAllowanceTypes = new HashSet<HistoryAllowanceType>();
-            Employees = new HashSet<Employee>();
         }
 
         public int AllowanceTypeId { get; set; }
@@ -17,8 +17,7 @@ namespace CarpentryWorkshopAPI.Models
         public DateTime? StartDate { get; set; }
 
         public virtual Allowance? Allowance { get; set; }
+        public virtual ICollection<EmployeesAllowance> EmployeesAllowances { get; set; }
         public virtual ICollection<HistoryAllowanceType> HistoryAllowanceTypes { get; set; }
-
-        public virtual ICollection<Employee> Employees { get; set; }
     }
 }
