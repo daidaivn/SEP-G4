@@ -94,7 +94,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return BadRequest("startdate err");
                 }
                 int count = 0;
-                while (count > teamWorkDTO.time)
+                while (count < teamWorkDTO.time)
                 {
                     if(startDate < work.EndDate)
                     {
@@ -105,8 +105,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             TotalProduct = 0,
                             Date = startDate,
                         };
-                        teamWorks.Add(teamWork);
-                        
+                        teamWorks.Add(teamWork);                        
                         startDate = startDate.AddDays(1);
                         count++;
                     }
