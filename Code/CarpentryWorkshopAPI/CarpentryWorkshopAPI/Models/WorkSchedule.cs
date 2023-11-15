@@ -14,6 +14,8 @@ namespace CarpentryWorkshopAPI.Models
         public int? ShiftTypeId { get; set; }
         public int? TeamId { get; set; }
         public bool? Status { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public virtual ShiftType? ShiftType { get; set; }
         public virtual Team? Team { get; set; }
