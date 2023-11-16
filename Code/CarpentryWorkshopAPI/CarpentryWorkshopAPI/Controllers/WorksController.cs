@@ -23,12 +23,16 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public IActionResult GetAllWorks(int employeeId)
         {
-            var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => re.Department.DepartmentId).FirstOrDefault();
-            if(department <= 0)
+            var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+            {
+                DepartmentId =  re.DepartmentId,
+                DepartmentName = re.Department.DepartmentName,
+            }).FirstOrDefault();
+            if(department == null)
             {
                 return NotFound("notHaveDepartment");
             }
-            var work = _context.Works.Include(w=>w.UniCost).Include(w=>w.WorkArea).Include(w=>w.TeamWorks).ThenInclude(w=>w.Team).Where(de=>de.DepartmentId == department)
+            var work = _context.Works.Include(w=>w.UniCost).Include(w=>w.WorkArea).Include(w=>w.TeamWorks).ThenInclude(w=>w.Team).Where(de=>de.DepartmentId == department.DepartmentId)
                 .Select(w=> new
                 {
                     WorkId = w.WorkId,
@@ -38,6 +42,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     TotalProduct = w.TotalProduct,
                     UniCostName = w.UniCost.UnitName,
                     WorkArea = w.WorkArea.WorkAreaName,
+                    Department= department.DepartmentName,
                     Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
                 }).ToList();
             return Ok(work);
@@ -62,6 +67,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     TimeEnd = w.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
                     Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
                     TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
+                    DepartmentId = w.DepartmentId,
                 }).FirstOrDefault();
             return Ok(work);
 
@@ -108,9 +114,19 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == workDTO.EmployeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                {
+                    DepartmentId = re.DepartmentId,
+                    DepartmentName = re.Department.DepartmentName,
+                }).FirstOrDefault();
+                if (department == null)
+                {
+                    return NotFound("notHaveDepartment");
+                }
                 var work =  _mapper.Map<Work>(workDTO);
                 work.StartDate= string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
                 work.EndDate= string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : null;
+                work.DepartmentId = department.DepartmentId;
                 _context.Works.Add(work);
                 _context.SaveChanges();
                 return Ok("add success");
@@ -132,7 +148,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 }                
                 DateTime? StartDate = string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.StartDate;
                 DateTime? EndDate = string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.EndDate;
-                work.DepartmentId = workDTO.DepartmentId > 0 ? workDTO.DepartmentId : work.DepartmentId;
                 work.WorkAreaId= workDTO.WorkAreaId > 0 ? workDTO.WorkAreaId : work.WorkAreaId;
                 work.WorkName = string.IsNullOrEmpty(workDTO.WorkName) ? workDTO.WorkName : work.WorkName;
                 work.StartDate = StartDate.HasValue ? StartDate : work.StartDate;
