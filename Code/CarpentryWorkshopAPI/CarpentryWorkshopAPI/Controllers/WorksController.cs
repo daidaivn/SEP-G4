@@ -145,18 +145,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 if(work == null)
                 {
                     return NotFound();
-                }                
-                DateTime? StartDate = string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.StartDate;
-                DateTime? EndDate = string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.EndDate;
+                }                                
                 work.WorkAreaId= workDTO.WorkAreaId > 0 ? workDTO.WorkAreaId : work.WorkAreaId;
                 work.WorkName = string.IsNullOrEmpty(workDTO.WorkName) ? workDTO.WorkName : work.WorkName;
-                work.StartDate = StartDate.HasValue ? StartDate : work.StartDate;
-                work.EndDate = EndDate.HasValue ? EndDate : work.EndDate;
+                work.StartDate = string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.StartDate;
+                work.EndDate = string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.EndDate;
                 work.UniCostId = workDTO.UniCostId > 0 ? workDTO.UniCostId : work.UniCostId;
                 work.TotalProduct = workDTO.TotalProduct> 0 ? workDTO.TotalProduct : work.TotalProduct;
                 work.Cost = workDTO.Cost > 0 ? workDTO.Cost : work.Cost;
                 work.Note = string.IsNullOrEmpty(workDTO.Note) ? workDTO.Note : work.Note;
-                _context.Works.Add(work);
+                _context.Works.Update(work);
                 _context.SaveChanges();
                 return Ok("add success");
 
