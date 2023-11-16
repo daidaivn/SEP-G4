@@ -6,6 +6,7 @@ const ListModuleDetail2 = ({
   handleOkDetail,
   handleCancelDetail,
   handleEdit,
+  workDetailById
 }) => {
   return (
     <div className="modal-detail ">
@@ -23,43 +24,43 @@ const ListModuleDetail2 = ({
             <div className="item-modal">
               <p>Tên công việc</p>
               <div className="item-right">
-                <p>Lắp ghép sản phẩm</p>
+                <p>{workDetailById.workName}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Loại sản phẩm:</p>
               <div className="item-right">
-                <p>Ghế</p>
+                <p>{workDetailById.uniCostName}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Đơn giá 1 sản phẩm</p>
               <div className="item-right">
-                <p>20000</p>
+                <p>{workDetailById.uniCost}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Số sản phẩm cần sản xuất</p>
               <div className="item-right">
-                <p>500.000</p>
+                <p>{workDetailById.numberProduct}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Khu vục sản xuất</p>
               <div className="item-right">
-                <p>Nhà A</p>
+                <p>{workDetailById.workArea}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Thời gian bắt đầu:</p>
               <div className="item-right">
-                <p>20-11-2023 :00:00:00</p>
+                <p>{workDetailById.timeStart }</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Thời gian kết thúc</p>
               <div className="item-right">
-                <p>21-11-2023 :00:00:00</p>
+                <p>{workDetailById.timeEnd}</p>
               </div>
             </div>
             <div className="footer-modal">
@@ -72,6 +73,7 @@ const ListModuleDetail2 = ({
             </div>
           </div>
         </div>
+
       </Modal>
     </div>
   );
