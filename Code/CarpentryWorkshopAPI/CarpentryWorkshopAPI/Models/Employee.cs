@@ -15,13 +15,13 @@ namespace CarpentryWorkshopAPI.Models
             Dependents = new HashSet<Dependent>();
             EmployeeDegrees = new HashSet<EmployeeDegree>();
             EmployeeTeams = new HashSet<EmployeeTeam>();
+            EmployeesAllowances = new HashSet<EmployeesAllowance>();
             EmployeesStatusHistories = new HashSet<EmployeesStatusHistory>();
             HoursWorkDays = new HashSet<HoursWorkDay>();
             RolesEmployees = new HashSet<RolesEmployee>();
             Salaries = new HashSet<Salary>();
             SpecialOccasions = new HashSet<SpecialOccasion>();
             Subsidies = new HashSet<Subsidy>();
-            AllowanceTypes = new HashSet<AllowanceType>();
         }
 
         public int EmployeeId { get; set; }
@@ -48,13 +48,12 @@ namespace CarpentryWorkshopAPI.Models
         public virtual ICollection<Dependent> Dependents { get; set; }
         public virtual ICollection<EmployeeDegree> EmployeeDegrees { get; set; }
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
+        public virtual ICollection<EmployeesAllowance> EmployeesAllowances { get; set; }
         public virtual ICollection<EmployeesStatusHistory> EmployeesStatusHistories { get; set; }
         public virtual ICollection<HoursWorkDay> HoursWorkDays { get; set; }
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
         public virtual ICollection<Salary> Salaries { get; set; }
         public virtual ICollection<SpecialOccasion> SpecialOccasions { get; set; }
         public virtual ICollection<Subsidy> Subsidies { get; set; }
-
-        public virtual ICollection<AllowanceType> AllowanceTypes { get; set; }
     }
 }

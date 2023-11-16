@@ -5,4 +5,5 @@ export { default as ListModuleDetail2} from "./ListModalDetail2.js";
 export { default as ModalAdd} from "./ModalAdd.js";
 export { default as ListModuleDetail3} from "./ListModalDetail3.js";
 export { default as WorkModalTeam} from "./WorkModalTeam.js";
+export { default as EditListModalDetail} from "./EditListModalDetail.js";
 

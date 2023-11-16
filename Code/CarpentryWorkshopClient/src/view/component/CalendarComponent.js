@@ -21,6 +21,7 @@ import {
   ModalAdd,
   ListModuleDetail3,
   WorkModalTeam,
+  EditListModalDetail
 } from "./componentCalendar";
 const CalendarComponent = () => {
   const userEmployeeID =
@@ -34,7 +35,15 @@ const CalendarComponent = () => {
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
   const [teamForSchedule, setTeamForSchedule] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
-  const [test, settest] = useState([]);
+  const [workDetailById, setWorkDetailById] = useState({
+    workName: '',
+    uniCostName: '',
+    uniCost: '',
+    numberProduct: '',
+    workArea: '',
+    timeStart: '',
+    timeEnd: ''
+  });
 
   const showModalListShift = () => {
     setIsModalOpenListShift(true);
@@ -145,6 +154,7 @@ const CalendarComponent = () => {
       }
     );
   };
+  console.log('workDetailById', workDetailById);
 
   const fetchTeamForSchedule = () => {
     toast.promise(
@@ -172,7 +182,17 @@ const CalendarComponent = () => {
       new Promise((resolve) => {
         GetWorkDetailById(TeamID)
           .then((data) => {
+            console.log('data', data);
             resolve(data);
+            setWorkDetailById({
+              workName: data.workName || 'Chưa có',
+              uniCostName: data.uniCostName || 'Chưa có',
+              uniCost: data.uniCost || 'Chưa có',
+              numberProduct: data.numberProduct || 'Chưa có',
+              workArea: data.workArea || 'Chưa có',
+              timeStart: data.timeStart || 'Chưa có',
+              timeEnd: data.timeEnd || 'Chưa có'
+            });
             showModalDetail();
           })
           .catch((error) => {
@@ -181,7 +201,7 @@ const CalendarComponent = () => {
       }),
       {
         pending: "Đang xử lý",
-        error: "Lỗi thêm vào nhóm",
+        error: "Lỗi thông tin chi tiết công việc",
       }
     );
   };
@@ -231,98 +251,15 @@ const CalendarComponent = () => {
 
         {isEditing ? (
           // modal chinh sua cong viec
-          <div className="modal-edit">
-            <Modal
-              className="modal"
-              open={isModalOpenDetail}
-              onOk={handleSave}
-              onCancel={handleCancelDetail}
-            >
-              <div className="modal-detail-all">
-                <div className="head-modal">
-                  <p>Sửa công việc</p>
-                </div>
-                <div className="body-edit">
-                  <div className="item-modal">
-                    <p>Tên công việc</p>
-                    <Input type="text"></Input>
-                  </div>
-                  <div className="item-modal">
-                    <p>Loại sản phẩm:</p>
-                    <Select
-                      defaultValue="lucy"
-                      style={{
-                        width: 120,
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="item-modal">
-                    <p>Đơn giá 1 sản phẩm</p>
-                    <Input type="text" placeholder="ví dụ: 20.000"></Input>
-                  </div>
-                  <div className="item-modal">
-                    <p>Số sản phẩm cần sản xuất</p>
-                    <Input type="text" placeholder="ví dụ: 500.000"></Input>
-                  </div>
-                  <div className="item-modal">
-                    <p>Khu vục sản xuất</p>
-                    <Select
-                      defaultValue="lucy"
-                      style={{
-                        width: 120,
-                      }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "jack",
-                          label: "Jack",
-                        },
-                        {
-                          value: "lucy",
-                          label: "Lucy",
-                        },
-                        {
-                          value: "Yiminghe",
-                          label: "yiminghe",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="item-modal">
-                    <p>Thời gian bắt đầu:</p>
-                    <Input type="date"></Input>
-                  </div>
-                  <div className="item-modal">
-                    <p>Thời gian kết thúc</p>
-                    <Input type="date"></Input>
-                  </div>
-                  <div className="footer-modal">
-                    <span className="back" onClick={handleCancel}>
-                      Hủy bỏ
-                    </span>
-                    <span className="edit save" onClick={handleSave}>
-                      Lưu
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Modal>
-          </div>
+          <EditListModalDetail
+            isModalOpenDetail={isModalOpenDetail}
+            handleSave={handleSave}
+            handleCancelDetail={handleCancelDetail}
+            workDetailById={workDetailById}
+            handleChange={handleChange}
+            setWorkDetailById={setWorkDetailById}
+            handleCancel={handleCancel}
+          />
         ) : (
           // modal chi tiet cong viec
           <ListModuleDetail2
@@ -330,6 +267,7 @@ const CalendarComponent = () => {
             handleOkDetail={handleOkDetail}
             handleCancelDetail={handleCancelDetail}
             handleEdit={handleEdit}
+            workDetailById={workDetailById}
           />
         )}
 
