@@ -149,7 +149,7 @@ function Role() {
       }
     );
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -452,14 +452,14 @@ function Role() {
           <div className="modal-dependent modal-detail-group">
             <div className="modal-head">
               {" "}
-              <h3>{roleDetail.roleName}</h3>
+              <h3>Danh sách {roleDetail.roleName}</h3>
             </div>
             <div className=" modal-group">
               <div className="info-detail-group">
                 <div className="info-body-group">
                   <div className="box1-modal-group">
                     <div className="box1-child">
-                      <p className="child1-group">STT</p>
+                      <p className="child1-group">MSNV</p>
                     </div>
                     <div className="box3-child">
                       <p className="child3-group">Họ và tên</p>
