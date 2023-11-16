@@ -1,10 +1,10 @@
 import React from "react";
 import { Input, Modal, Select } from "antd";
 
-const RewardPersonal = ({
-  isModalOpenRewardPersonal,
-  handleOkRewardPersonal,
-  handleCancelRewardPersonal,
+const Holiday = ({
+  isModalOpenHoliday,
+  handleOkHoliday,
+  handleCancelHoliday,
   handleChange,
 }) => {
   return (
@@ -12,18 +12,18 @@ const RewardPersonal = ({
       {/* Modal Thưởng cá nhân */}
       <Modal
         className="modal"
-        open={isModalOpenRewardPersonal}
-        onOk={handleOkRewardPersonal}
-        onCancel={handleCancelRewardPersonal}
+        open={isModalOpenHoliday}
+        onOk={handleOkHoliday}
+        onCancel={handleCancelHoliday}
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            <p>Thưởng cá nhân</p>
+            <p>Hiếu hỉ</p>
           </div>
           <div className="body-modal">
             <div className="item-modal">
-              <p>Loại thưởng</p>
-              <Input type="text" placeholder="Sản xuất chân ghế"></Input>
+              <p>Loại hiếu hỉ:</p>
+              <Input type="text" placeholder="Viếng thăm"></Input>
             </div>
             <div className="item-modal">
               <p>Số tiền thưởng:</p>
@@ -62,10 +62,10 @@ const RewardPersonal = ({
             </div>
 
             <div className="footer-modal">
-              <span className="back" onClick={handleOkRewardPersonal}>
+              <span className="back" onClick={handleOkHoliday}>
                 Hủy bỏ
               </span>
-              <span className="edit save" onClick={handleCancelRewardPersonal}>
+              <span className="edit save" onClick={handleCancelHoliday}>
                 Lưu
               </span>
             </div>
@@ -75,4 +75,4 @@ const RewardPersonal = ({
     </>
   );
 };
-export default RewardPersonal;
+export default Holiday;

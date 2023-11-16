@@ -13,6 +13,7 @@ import RewardAll from "./componentPayroll/RewardAll";
 import TypeReward from "./componentPayroll/TypeReward";
 import Reward from "./componentPayroll/Reward";
 import RewardPersonal from "./componentPayroll/RewardPersonal";
+import { Holiday } from "./componentPayroll";
 const PayrollComponent = () => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -117,6 +118,19 @@ const PayrollComponent = () => {
   const handleCancelEditReward = () => {
     setIsModalOpenEditReward(false);
   };
+
+  //modal Hiếu hỉ
+  const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
+  const showModalHoliday = () => {
+    setIsModalOpenHoliday(true);
+  };
+  const handleOkHoliday = () => {
+    setIsModalOpenHoliday(false);
+  };
+  const handleCancelHoliday = () => {
+    setIsModalOpenHoliday(false);
+  };
+
   return (
     <>
       <div className="col-right-container">
@@ -966,6 +980,7 @@ const PayrollComponent = () => {
           handleCancelRewardCompany={handleCancelRewardCompany}
           showModalRewardPersonal={showModalRewardPersonal}
           showModalRewardAll={showModalRewardAll}
+          showModalHoliday={showModalHoliday}
         />
 
         <RewardAll
@@ -991,6 +1006,12 @@ const PayrollComponent = () => {
           isModalOpenRewardPersonal={isModalOpenRewardPersonal}
           handleOkRewardPersonal={handleOkRewardPersonal}
           handleCancelRewardPersonal={handleCancelRewardPersonal}
+          handleChange={handleChange}
+        />
+        <Holiday
+          isModalOpenHoliday={isModalOpenHoliday}
+          handleOkHoliday={handleOkHoliday}
+          handleCancelHoliday={handleCancelHoliday}
           handleChange={handleChange}
         />
         {/* Modal Sửa tên thưởng */}

@@ -49,6 +49,13 @@ const RewardAll = ({
               <p>Số tiền thưởng:</p>
               <Input type="text"></Input>
             </div>
+            <div className="item-modal">
+              <p>Chi tiết thưởng</p>
+              <Input
+                type="text"
+                placeholder="Ví lý do gì đấy nên được thưởng các quyền lợi"
+              ></Input>
+            </div>
 
             <div className="footer-modal">
               <span className="back" onClick={handleOkRewardAll}>
