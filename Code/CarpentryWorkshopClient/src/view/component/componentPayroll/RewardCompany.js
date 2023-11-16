@@ -7,6 +7,7 @@ const RewardCompany = ({
   handleCancelRewardCompany,
   showModalRewardPersonal,
   showModalRewardAll,
+  showModalHoliday,
 }) => {
   return (
     <>
@@ -105,6 +106,10 @@ const RewardCompany = ({
               {/* show modal Thưởng toàn thể công ty */}
               <span className="btn-reward" onClick={showModalRewardAll}>
                 Thưởng toàn thể công ty
+              </span>
+              {/* show modal Thưởng toàn thể công ty */}
+              <span className="btn-reward" onClick={showModalHoliday}>
+                Hiếu hỉ
               </span>
             </div>
           </div>
