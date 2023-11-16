@@ -88,7 +88,8 @@ namespace CarpentryWorkshopAPI.Controllers
             
             var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work)
+                .Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),

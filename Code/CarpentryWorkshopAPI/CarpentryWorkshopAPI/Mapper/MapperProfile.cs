@@ -7,20 +7,20 @@ namespace CarpentryWorkshopAPI.Mapper
 {
     public class MapperProfile : Profile
     {
-        public MapperProfile() 
+        public MapperProfile()
         {
 
             CreateMap<CreateEmployeeDTO, Employee>()
                .ForMember(de => de.Dob, option => option.MapFrom(d => DateTime.ParseExact(d.Dobstring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture)));
-               
-            CreateMap<Employee, EmployeeSearchDTO>() 
+
+            CreateMap<Employee, EmployeeSearchDTO>()
                .ReverseMap();
             CreateMap<Role, RoleDTO>()
                .ReverseMap();
             //Department
             CreateMap<Department, DepartmentListDTO>()
-                .ForMember(de=>de.number,option=>option.MapFrom(d=>d.RolesEmployees.Where(re=>re.EndDate == null).Select(re=>re.EmployeeId).Distinct().Count()))
+                .ForMember(de => de.number, option => option.MapFrom(d => d.RolesEmployees.Where(re => re.EndDate == null).Select(re => re.EmployeeId).Distinct().Count()))
                 .ReverseMap();
             CreateMap<Department, DepartmentDTO>().ReverseMap();
             //Dependent
@@ -36,7 +36,7 @@ namespace CarpentryWorkshopAPI.Mapper
             //
             CreateMap<CreateContractDTO, Contract>()
                 .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture) ))
+                                   System.Globalization.CultureInfo.InvariantCulture)))
                 .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture)));
             CreateMap<Contract, ContractDTO>()
@@ -99,7 +99,7 @@ namespace CarpentryWorkshopAPI.Mapper
                .ForMember(de => de.UniCostName, option => option.MapFrom(d => d.UniCost.UnitName))
                .ForMember(de => de.ActionDatestring, option => option.MapFrom(d => d.ActionDate.Value.ToString("dd'-'MM'-'yyyy")))
               .ReverseMap();
-            CreateMap<Page, PageDTO>()          
+            CreateMap<Page, PageDTO>()
                 .ReverseMap();
             CreateMap<Employee, TeamMemberDTO>()
                 .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
@@ -108,7 +108,7 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<WorkArea, WorkAreasDTO>()
                 .ReverseMap();
             CreateMap<UnitCost, UnitCostDTO>()
-                .ReverseMap();            
+                .ReverseMap();
             CreateMap<CreateWageDTO, Wage>()
                 .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture)))
@@ -117,11 +117,22 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<Employee, LeadDetailDTO>()
                .ForMember(de => de.FullName, option => option.MapFrom(d => d.FirstName + " " + d.LastName))
                .ReverseMap();
-                      
+
             //Work
             CreateMap<WorkDTO, Work>()
                 .ReverseMap();
-         
+            //Bonus
+            CreateMap<PersonalRewardDTO, BonusDetail>()
+               .ForMember(de => de.BonusDate, option => option.MapFrom(d => DateTime.ParseExact(d.BonusDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)));
+            CreateMap<BonusDetail, DTO.AllRewardDTO.PR>()
+              .ForMember(de => de.BonusDatestring, option => option.MapFrom(d => d.BonusDate.Value.ToString("dd'-'MM'-'yyyy")))
+              .ForMember(de => de.Beneficiary, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
+              .ReverseMap();
+            //WorkArea
+            CreateMap<WorkArea, WorkAreasDTO>()
+                 .ReverseMap();
+
         }
     }
 }

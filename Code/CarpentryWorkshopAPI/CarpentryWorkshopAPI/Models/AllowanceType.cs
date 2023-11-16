@@ -7,14 +7,17 @@ namespace CarpentryWorkshopAPI.Models
     {
         public AllowanceType()
         {
-            AllowanceDetails = new HashSet<AllowanceDetail>();
+            EmployeesAllowances = new HashSet<EmployeesAllowance>();
+            HistoryAllowanceTypes = new HashSet<HistoryAllowanceType>();
         }
 
         public int AllowanceTypeId { get; set; }
-        public string? Name { get; set; }
+        public decimal? Amount { get; set; }
         public int? AllowanceId { get; set; }
+        public DateTime? StartDate { get; set; }
 
         public virtual Allowance? Allowance { get; set; }
-        public virtual ICollection<AllowanceDetail> AllowanceDetails { get; set; }
+        public virtual ICollection<EmployeesAllowance> EmployeesAllowances { get; set; }
+        public virtual ICollection<HistoryAllowanceType> HistoryAllowanceTypes { get; set; }
     }
 }
