@@ -27,7 +27,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(areas);
+                var dto = _mapper.Map<List<WorkAreasDTO>>(areas);
+                return Ok(dto);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
