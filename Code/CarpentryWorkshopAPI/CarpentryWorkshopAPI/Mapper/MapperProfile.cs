@@ -129,6 +129,9 @@ namespace CarpentryWorkshopAPI.Mapper
               .ForMember(de => de.BonusDatestring, option => option.MapFrom(d => d.BonusDate.Value.ToString("dd'-'MM'-'yyyy")))
               .ForMember(de => de.Beneficiary, option => option.MapFrom(d => d.Employee.FirstName + " " + d.Employee.LastName))
               .ReverseMap();
+            //WorkArea
+            CreateMap<WorkArea, WorkAreasDTO>()
+                 .ReverseMap();
             //SpecialOccasion
             CreateMap<SpecialOccasion, SpecialOccasionDTO>()
                 .ReverseMap();

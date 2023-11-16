@@ -11,6 +11,6 @@
         public string? EndDateString { get; set; }
         public double? Cost { get; set; }
         public string? Note { get; set; }
-        public int? DepartmentId { get; set; }
+        public int? EmployeeId { get; set; }
     }
 }
