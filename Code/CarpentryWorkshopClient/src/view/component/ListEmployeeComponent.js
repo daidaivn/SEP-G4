@@ -186,6 +186,8 @@ function ListEmployeeComponent() {
 
     GetEmployeeContract(value)
       .then((data) => {
+        console.log('setContract',data);
+        
         setContract(data);
         setContractID(data.contractId);
         setContractCode(data.contractCode);
@@ -1362,89 +1364,75 @@ const validateDataDepartmentEdit = () => {
             <table>
               <thead className="thead-first"></thead>
               <div className="body-table body-table-contract">
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      value={contract?.employeeName}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
+              <tr>
+                <Input
+                  className="select-input"
+                  placeholder="Mã hợp đồng"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                  }}
+                  value={contractCode} 
+                />
+                <div className="input-date">
+                  <Input
+                    className="select-input"
+                    value={contract.contractTypeName} 
+                    style={{
+                      width: "100%",
+                    }}
+                  />
+                </div>
+              </tr>
+              <tr>
+                <p className="salary-contract">Lương hợp đồng:</p>
+                <Input type="text" placeholder="Lương hợp đồng"></Input>
+              </tr>
+              <tr>
+                <div className="input-date">
+                  <Input
+                    className="select-input"
+                    placeholder="Thời gian bắt đầu"
+                    type="date"
+                    style={{
+                      width: "100%",
+                    }}
+                    value={convertDobToISO(contractStartDate)}
+                  />
+                </div>
+                <div className="input-date">
+                  <Input
+                    className="select-input"
+                    placeholder="Thời gian kết thúc" 
+                    type="date"
+                    style={{
+                      width: "100%",
+                    }}
+                    value={convertDobToISO(contractEndDate)} 
+                  />
+                </div>
+              </tr>
+              <tr>
+                <div className="input-date">
+                  <Input
+                    className="select-input"
+                    placeholder="Đường dẫn hợp đồng"
+                    style={{
+                      width: "100%",
+                    }}
+                    value={contractLink}
+                  />
+                  <div className="input-date-cn">
+                  <p>Trạng thái: </p>
+                  <Form.Item valuePropName="checked" className="action">
+                    <Switch
+                      checked={contractStatus} 
                     />
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      value={contract?.contractCode}
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                    <div className="input-date-cn">
-                      <p>Trạng thái: </p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked={contract?.status} />
-                      </Form.Item>
-                    </div>
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian bắt đầu"
-                      type="date"
-                      value={convertDobToISO(contract?.startDate)}
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian kết thúc"
-                      type="date"
-                      value={convertDobToISO(contract?.endDate)}
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                  <div className="input-date">
-                    <Select
-                      className="select-input"
-                      value={contract?.contractTypeId}
-                      style={{
-                        width: "100%",
-                      }}
-                      onChange={handleChange}
-                      options={
-                        contractTypes
-                          ? contractTypes.map((contractType) => ({
-                              value: contractType.contractTypeId,
-                              label: contractType.contractName,
-                            }))
-                          : []
-                      }
-                    />
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      value={contract?.linkDoc}
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                </tr>
-              </div>
+                  </Form.Item>
+                </div>
+                </div>
+              </tr>
+            </div>
               <thead className="thead-last"></thead>
             </table>
           </div>

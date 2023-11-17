@@ -5,8 +5,8 @@ const ListModuleDetail2 = ({
   isModalOpenDetail,
   handleOkDetail,
   handleCancelDetail,
-  handleEdit,
-  workDetailById
+  handleEditWork,
+  workDetailById,
 }) => {
   return (
     <div className="modal-detail ">
@@ -30,19 +30,19 @@ const ListModuleDetail2 = ({
             <div className="item-modal">
               <p>Loại sản phẩm:</p>
               <div className="item-right">
-                <p>{workDetailById.uniCostName}</p>
+                <p>{workDetailById.unitCostName}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Đơn giá 1 sản phẩm</p>
               <div className="item-right">
-                <p>{workDetailById.uniCost}</p>
+                <p>{workDetailById.unitCost}</p>
               </div>
             </div>
             <div className="item-modal">
               <p>Số sản phẩm cần sản xuất</p>
               <div className="item-right">
-                <p>{workDetailById.numberProduct}</p>
+                <p>{workDetailById.totalProduct}</p>
               </div>
             </div>
             <div className="item-modal">
@@ -54,7 +54,7 @@ const ListModuleDetail2 = ({
             <div className="item-modal">
               <p>Thời gian bắt đầu:</p>
               <div className="item-right">
-                <p>{workDetailById.timeStart }</p>
+                <p>{workDetailById.timeStart}</p>
               </div>
             </div>
             <div className="item-modal">
@@ -67,15 +67,14 @@ const ListModuleDetail2 = ({
               <span className="back" onClick={handleCancelDetail}>
                 Quay lại
               </span>
-              <span className="edit" onClick={handleEdit}>
+              <span className={`edit ${workDetailById.status !== "WorkNotStart" ? "disabled" : ""}`} onClick={handleEditWork}>
                 Sửa
               </span>
             </div>
           </div>
         </div>
-
-      </Modal>
-    </div>
+      </Modal >
+    </div >
   );
 };
 
