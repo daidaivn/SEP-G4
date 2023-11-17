@@ -63,8 +63,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     UnitCostId = w.UniCost.UniCostId,
                     WorkArea = w.WorkArea.WorkAreaName,
                     WorkAreaId = w.WorkArea.WorkAreaId,
-                    TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
-                    TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
+                    TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                    TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
                     Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
                     TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
                     DepartmentId = w.DepartmentId,
@@ -124,8 +124,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound("notHaveDepartment");
                 }
                 var work =  _mapper.Map<Work>(workDTO);
-                work.StartDate= !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
-                work.EndDate= !string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : null;
+                work.StartDate= !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
+                work.EndDate= !string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : null;
                 work.DepartmentId = department.DepartmentId;
                 _context.Works.Add(work);
                 _context.SaveChanges();
@@ -151,7 +151,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 work.StartDate = !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.StartDate;
                 work.EndDate = !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : work.EndDate;
                 work.UniCostId = workDTO.UniCostId > 0 ? workDTO.UniCostId : work.UniCostId;
-                work.TotalProduct = workDTO.TotalProduct> 0 ? workDTO.TotalProduct : work.TotalProduct;
+                work.TotalProduct = workDTO.TotalProduct > 0 ? workDTO.TotalProduct : work.TotalProduct;
                 work.Cost = workDTO.Cost > 0 ? workDTO.Cost : work.Cost;
                 work.Note = !string.IsNullOrEmpty(workDTO.Note) ? workDTO.Note : work.Note;
                 _context.Works.Update(work);
