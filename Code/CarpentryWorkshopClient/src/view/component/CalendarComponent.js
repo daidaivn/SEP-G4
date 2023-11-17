@@ -8,7 +8,7 @@ import { Form, Input, Select, Switch } from "antd";
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import { toast } from "react-toastify";
-import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../../getDate";
+import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../logicTime/getDate";
 import {
   GetTeamForSchedule,
   GetAllWorks,
@@ -28,8 +28,23 @@ import {
   WorkModalTeam,
   EditListModalDetail,
 } from "./componentCalendar";
-
+import {createYearOptions, getWeekRange, createWeekOptions, parseWeekRange } from "../logicTime/getWeeDays";
 const CalendarComponent = () => {
+  
+  const yearOptions = createYearOptions();
+  const weekOptions = createWeekOptions();
+  const currentWeek = getWeekRange(new Date());
+  const defaultValue = `${currentWeek.start}-${currentWeek.end}`;
+  const [selectedWeek, setSelectedWeek] = useState(defaultValue);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+  const weekDays = selectedWeek ? parseWeekRange(selectedWeek) : parseWeekRange(defaultValue);
+  const handleChangeWeek = (newWeek) => {
+    setSelectedWeek(newWeek);
+  };
+  const handleChangeYear = (newYear) => {
+    setSelectedYear(newYear);
+  };
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -64,7 +79,7 @@ const CalendarComponent = () => {
     workAreaId: "",
     timeStart: getCurrentDateSEAsia(),
     timeEnd: getTomorrowDateSEAsia(),
-    status:"",
+    status: "",
   });
   const [allUnitCosts, setAllUnitCosts] = useState([]);
   const [allWorkAreas, setAllWorkAreas] = useState([]);
@@ -216,6 +231,10 @@ const CalendarComponent = () => {
     setIsEditingDetailShift(false);
   };
 
+  const log = () =>{
+    console.log('selectedYear',selectedYear);
+    console.log('selectedWeek',selectedWeek);
+  }
   const resetWorkDetailById = () => {
     setWorkDetailById({
       workId: "",
@@ -382,6 +401,7 @@ const CalendarComponent = () => {
     fetchAllWorkAreas();
   }, []);
 
+
   return (
     <>
       <div className="col-right-container">
@@ -396,6 +416,13 @@ const CalendarComponent = () => {
         <ListSearchFilterAdd
           fetchAllWorks={fetchAllWorks}
           showModalAdd={showModalAdd}
+          selectedWeek={selectedWeek}
+          defaultValue={defaultValue}
+          handleChangeWeek={handleChangeWeek}
+          weekOptions={weekOptions}
+          selectedYear={selectedYear}
+          handleChangeYear={handleChangeYear}
+          yearOptions={yearOptions}
         />
         <div className="time-shift">
           <div className="item-time-shift">
@@ -411,6 +438,7 @@ const CalendarComponent = () => {
           showModalDetailShift={showModalDetailShift}
           teamForSchedule={teamForSchedule}
           showModalAssignWork={showModalAssignWork}
+          weekDays ={weekDays}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift

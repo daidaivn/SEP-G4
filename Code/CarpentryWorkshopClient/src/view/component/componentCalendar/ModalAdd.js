@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Select, Modal } from "antd";
-import {getCurrentDateSEAsia ,getTomorrowDateSEAsia } from "../../../getDate";
+import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../../logicTime/getDate";
 
 const ModalAdd = ({
   isModalOpeAdd,
@@ -108,35 +108,35 @@ const ModalAdd = ({
               )}
             </div>
             <div className="item-modal">
-  <p>Thời gian bắt đầu:</p>
-  <Input
-    type="date"
-    placeholder="Chọn ngày bắt đầu"
-    value={workDetailById && workDetailById.timeStart ? convertDate(workDetailById.timeStart) : convertDate(getCurrentDateSEAsia())}
-    min={convertDate(getCurrentDateSEAsia())} 
-    onChange={(e) =>
-      setWorkDetailById({
-        ...workDetailById,
-        timeStart: convertDate(e.target.value),
-      })
-    }
-  />
-</div>
-<div className="item-modal">
-  <p>Thời gian kết thúc:</p>
-  <Input
-    type="date"
-    placeholder="Chọn ngày kết thúc"
-    value={workDetailById && workDetailById.timeEnd ? convertDate(workDetailById.timeEnd) : convertDate(getTomorrowDateSEAsia())}
-    min={convertDate(getTomorrowDateSEAsia())} 
-    onChange={(e) =>
-      setWorkDetailById({
-        ...workDetailById,
-        timeEnd: convertDate(e.target.value),
-      })
-    }
-  />
-</div>
+              <p>Thời gian bắt đầu:</p>
+              <Input
+                type="date"
+                placeholder="Chọn ngày bắt đầu"
+                value={workDetailById && workDetailById.timeStart ? convertDate(workDetailById.timeStart) : convertDate(getCurrentDateSEAsia())}
+                min={convertDate(getCurrentDateSEAsia())}
+                onChange={(e) =>
+                  setWorkDetailById({
+                    ...workDetailById,
+                    timeStart: convertDate(e.target.value),
+                  })
+                }
+              />
+            </div>
+            <div className="item-modal">
+              <p>Thời gian kết thúc:</p>
+              <Input
+                type="date"
+                placeholder="Chọn ngày kết thúc"
+                value={workDetailById && workDetailById.timeEnd ? convertDate(workDetailById.timeEnd) : convertDate(getTomorrowDateSEAsia())}
+                min={convertDate(getTomorrowDateSEAsia())}
+                onChange={(e) =>
+                  setWorkDetailById({
+                    ...workDetailById,
+                    timeEnd: convertDate(e.target.value),
+                  })
+                }
+              />
+            </div>
 
             <div className="footer-modal">
               <span className="back" onClick={handleCancelAdd}>
