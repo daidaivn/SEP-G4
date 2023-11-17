@@ -19,5 +19,10 @@ const deleteRolePage = (pageId, roleId) => {
   console.log(roleId);
   return axios.delete(`/CCMSapi/AccessCotroller/DeleteRolePage/${roleId}/${pageId}`);
 };
+const formatDateTimeForInput = (dateTime) => {
+  if (!dateTime) return '';
 
-export { fetchAllDecentralization, addRolePage, deleteRolePage };
+  // Cắt chuỗi để loại bỏ phần giây và 'Z' nếu có
+  return dateTime.length > 16 ? dateTime.substring(0, 16) : dateTime;
+};
+export { fetchAllDecentralization, addRolePage, deleteRolePage, formatDateTimeForInput };

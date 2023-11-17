@@ -114,6 +114,15 @@ const EditContractModal = ({
                     value={contractLink} // Thêm dòng này để hiển thị giá trị từ state
                     onChange={(e) => setContractLink(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
                   />
+                  <div className="input-date-cn">
+                  <p>Trạng thái: </p>
+                  <Form.Item valuePropName="checked" className="action">
+                    <Switch
+                      checked={contractStatus} // Thêm dòng này để hiển thị giá trị từ state
+                      onChange={(checked) => setContractStatus(checked)} // Thêm dòng này để cập nhật giá trị vào state
+                    />
+                  </Form.Item>
+                </div>
                 </div>
               </tr>
             </div>

@@ -18,7 +18,7 @@ const WorkModalTeam = ({
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            <p>Phân công công việc nhóm 1</p>
+            <p>Phân công công việc nhóm 3</p>
           </div>
           <div className="body-modal">
             <div className="item-modal">
@@ -46,7 +46,7 @@ const WorkModalTeam = ({
               />
             </div>
             <div className="item-modal">
-              <p>Loại sản phẩm:</p>
+              <p>Số ngày làm:</p>
               <Select
                 defaultValue="lucy"
                 style={{
@@ -70,31 +70,7 @@ const WorkModalTeam = ({
               />
             </div>
             <div className="item-modal">
-              <p>Loại sản phẩm:</p>
-              <Select
-                defaultValue="lucy"
-                style={{
-                  width: 120,
-                }}
-                onChange={handleChange}
-                options={[
-                  {
-                    value: "jack",
-                    label: "Jack",
-                  },
-                  {
-                    value: "lucy",
-                    label: "Lucy",
-                  },
-                  {
-                    value: "Yiminghe",
-                    label: "yiminghe",
-                  },
-                ]}
-              />
-            </div>
-            <div className="item-modal">
-              <p>Loại sản phẩm:</p>
+              <p>Ngày bắt đầu:</p>
               <Input type="date"></Input>
             </div>
             <div className="item-modal-last">

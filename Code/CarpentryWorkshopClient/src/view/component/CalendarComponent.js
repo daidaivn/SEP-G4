@@ -8,11 +8,16 @@ import { Form, Input, Select, Switch } from "antd";
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import { toast } from "react-toastify";
+import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../../getDate";
 import {
   GetTeamForSchedule,
   GetAllWorks,
   GetWorkDetailById,
+  UpdateWork,
+  AddWork,
 } from "../../sevices/CalendarSevice";
+import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
+import { GetAllWorkAreas } from "../../sevices/WorkAreaSevice";
 import {
   ListSearchFilterAdd,
   ModalListShift,
@@ -21,8 +26,9 @@ import {
   ModalAdd,
   ListModuleDetail3,
   WorkModalTeam,
-  EditListModalDetail
+  EditListModalDetail,
 } from "./componentCalendar";
+
 const CalendarComponent = () => {
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
@@ -31,19 +37,90 @@ const CalendarComponent = () => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+  const handleChangeUnitCostId = (value) => {
+    setWorkDetailById({
+      ...workDetailById,
+      unitCostId: value,
+    });
+  };
+  const handleChangeWorkAreaId = (value) => {
+    setWorkDetailById({
+      ...workDetailById,
+      workAreaId: value,
+    });
+  };
   // Modal danh sach cong viec
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
   const [teamForSchedule, setTeamForSchedule] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
   const [workDetailById, setWorkDetailById] = useState({
-    workName: '',
-    uniCostName: '',
-    uniCost: '',
-    numberProduct: '',
-    workArea: '',
-    timeStart: '',
-    timeEnd: ''
+    workId: "",
+    workName: "",
+    unitCostName: "",
+    unitCostId: "",
+    unitCost: "",
+    totalProduct: "",
+    workArea: "",
+    workAreaId: "",
+    timeStart: getCurrentDateSEAsia(),
+    timeEnd: getTomorrowDateSEAsia(),
+    status:"",
   });
+  const [allUnitCosts, setAllUnitCosts] = useState([]);
+  const [allWorkAreas, setAllWorkAreas] = useState([]);
+  const [workidDetail, setWorkidDetail] = useState([]);
+
+  const validateWorkDetail = (workDetail) => {
+    if (!workDetail.workName || workDetail.workName.length === 0) {
+      toast.warning("Tên công việc không được để trống.");
+      return false;
+    }
+    if (!workDetail.unitCostId || workDetail.unitCostId.length === 0) {
+      toast.warning("Vui lòng chọn loại sản phẩm.");
+      return false;
+    }
+    if (
+      isNaN(parseFloat(workDetail.unitCost)) ||
+      parseFloat(workDetail.unitCost) < 0
+    ) {
+      toast.warning("Đơn giá sản phẩm không hợp lệ.");
+      return false;
+    }
+
+    if (
+      isNaN(parseFloat(workDetail.totalProduct)) ||
+      parseFloat(workDetail.totalProduct) < 0
+    ) {
+      toast.warning("Số lượng sản phẩm không hợp lệ.");
+      return false;
+    }
+
+    if (!workDetail.workAreaId || workDetail.workAreaId.length === 0) {
+      toast.warning("Vui lòng chọn khu vực.");
+      return false;
+    }
+
+    if (workDetail.timeStart > workDetail.timeEnd) {
+      toast.warning("Thời gian bắt đầu không thể sau thời gian kết thúc.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const convertDate = (dobstring) => {
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
+    }
+    return dobstring;
+  };
 
   const showModalListShift = () => {
     setIsModalOpenListShift(true);
@@ -53,6 +130,7 @@ const CalendarComponent = () => {
   };
   const handleCancelListShift = () => {
     setIsModalOpenListShift(false);
+    resetWorkDetailById();
   };
 
   // Modal them cong viec
@@ -108,6 +186,14 @@ const CalendarComponent = () => {
   const handleEdit = () => {
     setIsEditing(true);
   };
+
+  const handleEditWork = () => {
+    if (workDetailById.status === "WorkNotStart") {
+      setIsEditing(true);
+    } else {
+      toast.warning("Đã đến thời gian của công việc này, không thể chỉnh sửa.");
+    }
+  };
   const handleSave = () => {
     setIsEditing(false);
   };
@@ -130,8 +216,19 @@ const CalendarComponent = () => {
     setIsEditingDetailShift(false);
   };
 
-  const log = () => {
-    console.log("");
+  const resetWorkDetailById = () => {
+    setWorkDetailById({
+      workId: "",
+      workName: "",
+      unitCostName: "",
+      unitCostId: "",
+      unitCost: "",
+      totalProduct: "",
+      workArea: "",
+      workAreaId: "",
+      timeStart: "",
+      timeEnd: "",
+    });
   };
 
   const fetchAllWorks = () => {
@@ -154,7 +251,7 @@ const CalendarComponent = () => {
       }
     );
   };
-  console.log('workDetailById', workDetailById);
+  console.log("workDetailById", workDetailById);
 
   const fetchTeamForSchedule = () => {
     toast.promise(
@@ -178,20 +275,27 @@ const CalendarComponent = () => {
   };
 
   const fetchWorkDetailById = (TeamID) => {
+    setWorkidDetail(TeamID);
     toast.promise(
       new Promise((resolve) => {
         GetWorkDetailById(TeamID)
           .then((data) => {
-            console.log('data', data);
+            console.log("data", data);
             resolve(data);
+            fetchAllUnitCosts();
+            fetchAllWorkAreas();
             setWorkDetailById({
-              workName: data.workName || 'Chưa có',
-              uniCostName: data.uniCostName || 'Chưa có',
-              uniCost: data.uniCost || 'Chưa có',
-              numberProduct: data.numberProduct || 'Chưa có',
-              workArea: data.workArea || 'Chưa có',
-              timeStart: data.timeStart || 'Chưa có',
-              timeEnd: data.timeEnd || 'Chưa có'
+              workId: data.workId,
+              workName: data.workName || "Chưa có",
+              unitCostName: data.uniCostName || "Chưa có",
+              unitCostId: data.unitCostId,
+              unitCost: data.cost || "Chưa có",
+              totalProduct: data.totalProduct || "Chưa có",
+              workArea: data.workArea || "Chưa có",
+              workAreaId: data.workAreaId,
+              timeStart: data.timeStart || "Chưa có",
+              timeEnd: data.timeEnd || "Chưa có",
+              status: data.status
             });
             showModalDetail();
           })
@@ -205,8 +309,77 @@ const CalendarComponent = () => {
       }
     );
   };
+
+  const fetchAllUnitCosts = () => {
+    GetAllUnitCosts()
+      .then((data) => {
+        console.log(data);
+        setAllUnitCosts(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const fetchAllWorkAreas = () => {
+    GetAllWorkAreas()
+      .then((data) => {
+        console.log("fetchAllWorkAreas", data);
+        setAllWorkAreas(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleUpdateWork = () => {
+    if (!validateWorkDetail(workDetailById)) {
+      return;
+    }
+    toast.promise(
+      new Promise((resolve) => {
+        UpdateWork(workDetailById)
+          .then((data) => {
+            resolve(data);
+            handleSave();
+            fetchAllWorks();
+            fetchWorkDetailById(workidDetail);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Cập nhật công việ thành công",
+        error: "Lỗi thêm vào nhóm",
+      }
+    );
+  };
+  const handleAddWork = () => {
+    if (!validateWorkDetail(workDetailById)) {
+      return;
+    }
+    toast.promise(
+      new Promise((resolve) => {
+        AddWork(workDetailById, userEmployeeID)
+          .then((data) => {
+            resolve(data);
+            handleOkAdd();
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Thêm công việc mới thành công",
+        error: "Lỗi thêm vào nhóm",
+      }
+    );
+  };
   useEffect(() => {
     fetchTeamForSchedule();
+    fetchAllUnitCosts();
+    fetchAllWorkAreas();
   }, []);
 
   return (
@@ -259,6 +432,14 @@ const CalendarComponent = () => {
             handleChange={handleChange}
             setWorkDetailById={setWorkDetailById}
             handleCancel={handleCancel}
+            convertDate={convertDate}
+            allUnitCosts={allUnitCosts}
+            allWorkAreas={allWorkAreas}
+            handleChangeUnitCostId={handleChangeUnitCostId}
+            handleChangeWorkAreaId={handleChangeWorkAreaId}
+            handleUpdateWork={handleUpdateWork}
+            fetchWorkDetailById={fetchWorkDetailById}
+            workidDetail={workidDetail}
           />
         ) : (
           // modal chi tiet cong viec
@@ -266,7 +447,7 @@ const CalendarComponent = () => {
             isModalOpenDetail={isModalOpenDetail}
             handleOkDetail={handleOkDetail}
             handleCancelDetail={handleCancelDetail}
-            handleEdit={handleEdit}
+            handleEditWork={handleEditWork}
             workDetailById={workDetailById}
           />
         )}
@@ -276,7 +457,14 @@ const CalendarComponent = () => {
           isModalOpeAdd={isModalOpeAdd}
           handleOkAdd={handleOkAdd}
           handleCancelAdd={handleCancelAdd}
-          handleChange={handleChange}
+          workDetailById={workDetailById}
+          setWorkDetailById={setWorkDetailById}
+          handleChangeUnitCostId={handleChangeUnitCostId}
+          allUnitCosts={allUnitCosts}
+          handleChangeWorkAreaId={handleChangeWorkAreaId}
+          allWorkAreas={allWorkAreas}
+          convertDate={convertDate}
+          handleAddWork={handleAddWork}
         />
 
         {isEditingDetailShift ? (
@@ -308,7 +496,7 @@ const CalendarComponent = () => {
         >
           <div className="modal-detail-all">
             <div className="head-modal">
-              <p>Phân công công việc nhóm 1</p>
+              <p>Phân công công việc nhóm 2</p>
             </div>
             <div className="body-modal">
               <div className="item-modal">
