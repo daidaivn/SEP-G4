@@ -769,13 +769,15 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule(int teamleaderid)
+        public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule(int leaderId, string date, string year )
         {
             try
             {
+                string[] split = date.Split('-');
+                string start = split[0];
+                string end = split[1];
                 var result = new List<object>();
-
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == teamleaderid && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == leaderId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
@@ -800,14 +802,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     var day = new List<object>();
                     var teamworks = _context.TeamWorks.Where(tw=>tw.TeamId == team.TeamId).ToList();
-                    var endDate = DateTime.Now.AddDays(7);
-                    var startDate = DateTime.Now;
-                    while(startDate < endDate)
+                    var endDate = DateTime.ParseExact(end+ "/" + year, "dd/MM/yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                    var startDate = DateTime.ParseExact(start + "/" + year, "dd/MM/yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture); ;
+                    while(startDate <= endDate)
                     {
                         day.Add(new
                         {
                             Date = startDate.ToString("dd'-'MM'-'yyyy"),
-                            Status = teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no"
+                            Status = DateTime.Now < startDate ? (teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end"
                         });
                         startDate = startDate.AddDays(1);
                     }

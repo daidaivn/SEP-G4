@@ -105,7 +105,6 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 workForTeam = work.Where(w => w.TimeRemain > 2);
             }
-            
             return Ok(workForTeam);
 
         }
