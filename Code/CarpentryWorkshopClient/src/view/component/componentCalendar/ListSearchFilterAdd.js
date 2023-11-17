@@ -1,7 +1,17 @@
-import React from 'react';
-import { Input } from 'antd';
+import React from "react";
+import { Input, Select } from "antd";
 
-const ListSearchFilterAdd = ({ fetchAllWorks, showModalAdd }) => {
+const ListSearchFilterAdd = ({
+    fetchAllWorks,
+    showModalAdd,
+    selectedWeek,
+    defaultValue,
+    handleChangeWeek,
+    weekOptions,
+    selectedYear,
+    handleChangeYear,
+    yearOptions
+}) => {
     return (
         <div className="list-search-filter-add">
             <div className="list-input-search">
@@ -66,6 +76,26 @@ const ListSearchFilterAdd = ({ fetchAllWorks, showModalAdd }) => {
                     </svg>
                 </i>
                 <Input placeholder="Tìm kiếm"></Input>
+            </div>
+            <div className="list-filter">
+                <Select
+                    className="select-input"
+                    value={selectedWeek || defaultValue}
+                    style={{ width: 120 }}
+                    onChange={handleChangeWeek}
+                    options={weekOptions}
+                    placeholder="Chọn tuần"
+                />
+            </div>
+            <div className="list-filter">
+                <Select
+                    className="select-input"
+                    value={selectedYear}
+                    style={{ width: 120 }}
+                    onChange={handleChangeYear}
+                    options={yearOptions}
+                    placeholder="Chọn năm"
+                />
             </div>
             <div className="ListWork" onClick={fetchAllWorks}>
                 <svg

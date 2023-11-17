@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Modal, Select } from "antd";
-import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../../../getDate";
+import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../../logicTime/getDate";
 const EditListModalDetail = ({
     isModalOpenDetail,
     handleSave,
@@ -117,23 +117,23 @@ const EditListModalDetail = ({
                             <Input
                                 type="date"
                                 placeholder="Chọn ngày bắt đầu"
-                                value={workDetailById && workDetailById.timeStart ? convertDate(workDetailById.timeStart) : getCurrentDateSEAsia()}
-                                min={getCurrentDateSEAsia()} // Đặt giới hạn là ngày hiện tại theo múi giờ SE Asia
+                                value={workDetailById && convertDate(workDetailById.timeStart) ? convertDate(workDetailById.timeStart) : convertDate(getCurrentDateSEAsia())}
+                                min={convertDate(getCurrentDateSEAsia())}
                                 onChange={(e) =>
                                     setWorkDetailById({
                                         ...workDetailById,
                                         timeStart: convertDate(e.target.value),
                                     })
                                 }
-                            ></Input>
+                            />
                         </div>
                         <div className="item-modal">
                             <p>Thời gian kết thúc:</p>
                             <Input
                                 type="date"
                                 placeholder="Chọn ngày kết thúc"
-                                value={workDetailById && workDetailById.timeEnd ? convertDate(workDetailById.timeEnd) : getTomorrowDateSEAsia()}
-                                min={getTomorrowDateSEAsia()} // Đặt giới hạn là ngày mai theo múi giờ SE Asia
+                                value={workDetailById && convertDate(workDetailById.timeEnd) ? convertDate(workDetailById.timeEnd) : convertDate(getTomorrowDateSEAsia())}
+                                min={convertDate(getTomorrowDateSEAsia())}
                                 onChange={(e) =>
                                     setWorkDetailById({
                                         ...workDetailById,

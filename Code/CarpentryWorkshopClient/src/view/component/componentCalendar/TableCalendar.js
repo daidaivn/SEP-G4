@@ -1,23 +1,21 @@
 import React from "react";
 import { Input } from "antd";
 
+
+
 const TableCalendar = ({
   handleEditDetailShift,
   showModalDetailShift,
   teamForSchedule,
   showModalAssignWork,
+  weekDays,
 }) => {
   return (
     <table className="list-table ">
       <thead>
         <tr>
-          <td>STT</td>
-          <td>Nhóm</td>
-          <td>Số nhân viên</td>
-          <td>Ca làm việc</td>
-          <td>Trạng thái công việc</td>
-          <td>Trưởng ca</td>
-          <td>Giao việc / Chi tiết công việc</td>
+          <td>Ngày/nhóm</td>
+          {weekDays.map((day, index) => <td key={index}>{day}</td>)}
         </tr>
       </thead>
       {Array.isArray(teamForSchedule) && teamForSchedule.length === 0 ? (

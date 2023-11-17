@@ -1,12 +1,15 @@
 import React from "react";
 import { Input, Modal, Select, Form, Switch } from "antd";
 
+
+
 const WorkModalTeam = ({
   isModalOpenDetailShift,
   handleSaveDetailShift,
   handleCancelDetailShift,
   handleChange,
   handleBackDetailShift,
+  
 }) => {
   return (
     <div className="modal-detail ">
