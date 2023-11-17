@@ -45,6 +45,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Status= c.Status,
                         ContractCode= c.ContractCode,
                         Image = c.Image,
+                        Amount= c.Amount,
                     }).ToList();
                 if (contracts == null)
                 {
@@ -64,7 +65,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var employeecontract = _context.Contracts
-                    .Where(x => x.EmployeeId == eid && x.Status == true)
+                    .Where(x => x.EmployeeId == eid)
                     .Include(ctt => ctt.ContractType)
                     .Include(emp => emp.Employee)
                     .OrderByDescending(c => c.StartDate)
@@ -80,6 +81,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Status = c.Status,
                         ContractCode = c.ContractCode,
                         Image = c.Image,
+                        Amount= c.Amount,
                     }).FirstOrDefault();
                 if (employeecontract == null)
                 {
@@ -313,6 +315,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     Status = c.Status,
                     ContractCode = c.ContractCode,
                     Image = c.Image,
+                    Amount = c.Amount
                 });
                 return Ok(result);
             }
