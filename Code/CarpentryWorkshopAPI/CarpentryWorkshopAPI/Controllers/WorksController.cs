@@ -72,6 +72,43 @@ namespace CarpentryWorkshopAPI.Controllers
             return Ok(work);
 
         }
+        [HttpGet("{teamId}/{employeeId}")]
+        public IActionResult GetWorkDetailForTeamById(int teamId , int employeeId)
+        {
+            var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+            {
+                DepartmentId = re.DepartmentId,
+                DepartmentName = re.Department.DepartmentName,
+            }).FirstOrDefault();
+            if (department == null)
+            {
+                return NotFound("notHaveDepartment");
+            }
+            var worklSchedule = _context.WorkSchedules.Include(ws=>ws.ShiftType).Where(ws=>ws.StartDate <= DateTime.Now && ws.EndDate == null && ws.TeamId == teamId)
+                .Select(ws=> new
+                {
+                    StartTime = ws.ShiftType.StartTime,
+                    Endtime = ws.ShiftType.EndTime,
+                }).FirstOrDefault();
+
+            var work = _context.Works.Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
+                .Where(de => de.DepartmentId == department.DepartmentId)
+                .Select(w => new
+                {
+                    WorkId = w.WorkId,
+                    TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                    TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                    TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
+                }).ToList();
+            var workForTeam = work.Where(w => w.TimeRemain > 0);
+            if (worklSchedule.StartTime > worklSchedule.Endtime)
+            {
+                workForTeam = work.Where(w => w.TimeRemain > 2);
+            }
+            
+            return Ok(workForTeam);
+
+        }
         //[HttpGet("{wId}")]
         //public async Task<ActionResult<IEnumerable<object>>> GetWorkById(int wId)
         //{
