@@ -768,6 +768,68 @@ namespace CarpentryWorkshopAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule(int leaderId, string date, string year )
+        {
+            try
+            {
+                string[] split = date.Split('-');
+                string start = split[0];
+                string end = split[1];
+                var result = new List<object>();
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == leaderId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                {
+                    DepartmentId = re.DepartmentId,
+                    DepartmentName = re.Department.DepartmentName,
+                }).FirstOrDefault();
+                if (department == null)
+                {
+                    return NotFound("notHaveDepartment");
+                }
+                var teams = await _context.Teams
+                    .Include(t => t.EmployeeTeams)
+                        .ThenInclude(et => et.Employee)
+                        .ThenInclude(e => e.RolesEmployees)
+                    .Include(t => t.WorkSchedules)
+                        .ThenInclude(wc => wc.ShiftType)
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId)))
+                    .ToListAsync();
+                if (teams.Count < 0)
+                {
+                    return BadRequest("notfound");
+                }
+                foreach(Team team in teams)
+                {
+                    var day = new List<object>();
+                    var teamworks = _context.TeamWorks.Where(tw=>tw.TeamId == team.TeamId).ToList();
+                    var endDate = DateTime.ParseExact(end+ "/" + year, "dd/MM/yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                    var startDate = DateTime.ParseExact(start + "/" + year, "dd/MM/yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture); ;
+                    while(startDate <= endDate)
+                    {
+                        day.Add(new
+                        {
+                            Date = startDate.ToString("dd'-'MM'-'yyyy"),
+                            Status = DateTime.Now < startDate ? (teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end"
+                        });
+                        startDate = startDate.AddDays(1);
+                    }
+                    result.Add(new
+                    {
+                        TeamId = team.TeamId,
+                        Year = DateTime.Now.Year,
+                        Date = day,
+                    });
+                    
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
 
     }
 }
