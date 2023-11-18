@@ -1,15 +1,12 @@
 import React from "react";
 import { Input, Modal, Select, Form, Switch } from "antd";
 
-
-
 const WorkModalTeam = ({
   isModalOpenDetailShift,
   handleSaveDetailShift,
   handleCancelDetailShift,
   handleChange,
   handleBackDetailShift,
-  
 }) => {
   return (
     <div className="modal-detail ">
@@ -21,11 +18,15 @@ const WorkModalTeam = ({
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            <p>Phân công công việc nhóm 3</p>
+            <p>Chi tiết công việc</p>
           </div>
           <div className="body-modal">
             <div className="item-modal">
               <p>Tên công việc</p>
+              <Input type="text"></Input>
+            </div>
+            <div className="item-modal">
+              <p>Loại sản phẩm:</p>
               <Select
                 defaultValue="lucy"
                 style={{
@@ -49,7 +50,15 @@ const WorkModalTeam = ({
               />
             </div>
             <div className="item-modal">
-              <p>Số ngày làm:</p>
+              <p>Đơn giá 1 sản phẩm</p>
+              <Input type="text" placeholder="ví dụ: 20.000"></Input>
+            </div>
+            <div className="item-modal">
+              <p>Số sản phẩm cần sản xuất</p>
+              <Input type="text" placeholder="ví dụ: 500.000"></Input>
+            </div>
+            <div className="item-modal">
+              <p>Khu vục sản xuất</p>
               <Select
                 defaultValue="lucy"
                 style={{
@@ -73,28 +82,8 @@ const WorkModalTeam = ({
               />
             </div>
             <div className="item-modal">
-              <p>Ngày bắt đầu:</p>
+              <p>Ngày</p>
               <Input type="date"></Input>
-            </div>
-            <div className="item-modal-last">
-              <p>Trạng thái:</p>
-              <div className="item-right">
-                <p className="switch">
-                  <Form.Item valuePropName="checked">
-                    <Switch checked="true" />
-                  </Form.Item>
-                </p>
-                <p>Làm việc</p>
-              </div>
-            </div>
-
-            <div className="footer-modal">
-              <span className="back" onClick={handleCancelDetailShift}>
-                Hủy bỏ
-              </span>
-              <span className="edit save" onClick={handleSaveDetailShift}>
-                Lưu
-              </span>
             </div>
           </div>
         </div>
