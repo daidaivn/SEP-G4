@@ -2,15 +2,23 @@ import React, { useEffect, useState } from "react";
 import user from "../../assets/images/Ellipse 69.svg";
 import notification from "../../assets/images/icons/notification.svg";
 import "../../scss/index.scss";
+import { toast } from "react-toastify";
 import { Input, Switch, Form } from "antd";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
+import {
+  DetailID,
+} from "../../../sevices/EmployeeService";
 // import avt from ".../";
 function ListUserHeader() {
+  const [employee, setEmployee] = useState([]);
   const [gender, setGender] = useState("Nguyễn Văn An");
   const [userName, setUserName] = useState("");
   const [userAllVisible, setUserAllVisible] = useState(false);
+  const userEmployeeID =
+    localStorage.getItem("userEmployeeID") ||
+    sessionStorage.getItem("userEmployeeID");
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -28,9 +36,27 @@ function ListUserHeader() {
       setUserName(storedUserName);
     }
   }, []);
-
+  
   const [isModalOpenUser, setIsModalOpenUser] = useState(false);
   const showModalUser = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        DetailID(userEmployeeID)
+          .then((data) => {
+            setEmployee(data);
+            
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "success",
+        error: `Lỗi làm việc`,
+      }
+    );
     setIsModalOpenUser(true);
   };
   const handleOkUser = () => {
@@ -179,7 +205,7 @@ function ListUserHeader() {
               <div className="modal-child-body2">
                 <div className="div-modal-child2 fix-color">
                   <p>Họ và tên:</p>
-                  <p className="fix-input">Nguyễn Văn An</p>
+                  <p className="fix-input">{employee.fullName}</p>
                 </div>
 
                 <div className="div-modal-child2 fix-color">

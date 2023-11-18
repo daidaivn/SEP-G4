@@ -54,7 +54,18 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
 
         public dynamic UpdateSpecialOccasion(SpecialOccasionDTO specialOccasionDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var specialOccasion = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
+                specialOccasion.OccasionDate = DateTime.ParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                _context.SpecialOccasions.Update(specialOccasion);
+                _context.SaveChanges();
+                return "add success";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Diagnostics.Contracts;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Authorize(Roles = "ListEmployee")]
+    
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
@@ -26,7 +26,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        
+        [Authorize(Roles = "ListEmployee")]
         [HttpGet]
         public IActionResult GetAllEmployee()
         {
@@ -166,6 +166,7 @@ namespace CarpentryWorkshopAPI.Controllers
         //        return BadRequest(ex.Message);
         //    }
         //}
+        [Authorize(Roles = "ListEmployee")]
         [HttpGet]
         public IActionResult GetEmployeeDependent(int eid)
         {
@@ -185,6 +186,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult DeleteEmployee(int employeeid)
         {
@@ -203,6 +205,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
@@ -263,6 +266,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
         {
@@ -311,7 +315,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-       
+        [Authorize(Roles = "ListEmployee")]
         [HttpPut]
         public IActionResult ChangeStatusEmployee(int eid)
         {
@@ -377,6 +381,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
       
         }
+        [Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult SearchEmployee([FromBody] EmployeeSearchDTO employeeSearchDTO)
         {
@@ -435,6 +440,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult ChangeRoleInDepartment(int oldemployeeid, int oldroleid, int newemployeeid,
             int newroleid, int departmentid)
