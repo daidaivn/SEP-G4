@@ -63,7 +63,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                 .Where(c => c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
                                 .ToDictionaryAsync(c => c.EmployeeId, c => c.Amount.GetValueOrDefault());
 
-            // Truy vấn dữ liệu phụ cấp
             var allowanceData = await _context.EmployeesAllowances
                                 .Include(ea => ea.AllowanceType)
                                 .ThenInclude(at => at.Allowance)
@@ -78,7 +77,15 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                         Amount = ea.AllowanceType.Amount.GetValueOrDefault()
                                     }).ToList()
                                 }).ToListAsync();
-
+            var deductionData = await _context.DeductionsDetails
+                                .Include(dd => dd.DeductionType)
+                                .Select(dd => new
+                                {
+                                    DeductionTypeName = dd.DeductionType.Name,
+                                    Percentage = dd.Percentage ?? 0
+                                })
+                                .Distinct()
+                                .ToListAsync();
 
             int maxAllowances = allowanceData.Any() ? allowanceData.Max(a => a.Allowances.Count) : 0;
             int maxIdLength = employeeData.Any() ? employeeData.Max(e => e.EmployeeId.ToString().Length) : 0;
@@ -89,17 +96,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .Distinct()
                 .OrderBy(name => name) // Sắp xếp nếu bạn muốn
                 .ToList();
-
-            //truy vấn dữ liệu hiếu hỉ
-            var specialOccasionsData = await _context.SpecialOccasions
-                .Where(so => so.OccasionDate.Value.Month == month && so.OccasionDate.Value.Year == year)
-                .Select(so => new
-                {
-                    EmployeeId = so.EmployeeId.Value,
-                    OccasionType = so.OccasionType,
-                    Amount = so.Amount.Value
-                })
-                .ToListAsync();
 
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Salaries");
@@ -132,6 +128,23 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells[1, allowanceHeaderStart].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             worksheet.Cells[1, allowanceHeaderStart].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
+            int deductionHeaderStart = allowanceHeaderEnd + 1;
+            int deductionHeaderEnd = deductionHeaderStart + deductionData.Count - 1;
+
+            if (deductionHeaderEnd < deductionHeaderStart)
+            {
+                deductionHeaderEnd = deductionHeaderStart; // Điều chỉnh để tránh lỗi
+            }
+
+            worksheet.Cells[1, deductionHeaderStart, 1, deductionHeaderEnd].Merge = true;
+
+
+            int deductionColumnIndex = deductionHeaderStart;
+            foreach (var deduction in deductionData)
+            {
+                worksheet.Cells[2, deductionColumnIndex].Value = $"{deduction.DeductionTypeName} ({deduction.Percentage * 100}%)";
+                deductionColumnIndex++;
+            }
 
             int allowanceColumnIndex = allowanceHeaderStart;
             foreach (var allowanceName in uniqueAllowanceTypes)
@@ -148,10 +161,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var basicSalary = basicSalaries.FirstOrDefault(s => s.EmployeeId == data.EmployeeId)?.BasicSalary ?? 0;
                 var actualSalary = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
                 var allowances = allowanceData.FirstOrDefault(a => a.EmployeeId == data.EmployeeId)?.Allowances;
-                var hieuHiAmount = specialOccasionsData
-                .Where(so => so.EmployeeId == data.EmployeeId && so.OccasionType == "Hiếu hỉ")
-                .Sum(so => so.Amount);
-                int hieuHiColumnIndex = allowanceHeaderEnd + 1;
+                var contractAmount = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
+
                 worksheet.Cells[row, 1].Value = row - 2;
                 worksheet.Cells[row, 2].Value = $"{month}/{year}";
                 worksheet.Cells[row, 3].Value = data.EmployeeId.ToString($"D{maxIdLength}");
@@ -162,7 +173,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 worksheet.Cells[row, 8].Value = data.TotalHours;
                 worksheet.Cells[row, 9].Value = actualSalary;
                 worksheet.Cells[row, 10].Value = basicSalary;
-                worksheet.Cells[row, hieuHiColumnIndex].Value = hieuHiAmount;
+
                 allowanceColumnIndex = allowanceHeaderStart;
                 foreach (var allowanceType in uniqueAllowanceTypes)
                 {
@@ -171,11 +182,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     allowanceColumnIndex++;
                 }
 
+                deductionColumnIndex = deductionHeaderStart; 
+                foreach (var deduction in deductionData)
+                {
+                    var deductionAmount = contractAmount * (decimal)deduction.Percentage;
+                    worksheet.Cells[row, deductionColumnIndex].Value = deductionAmount;
+                    deductionColumnIndex++;
+                }
+
                 row++;
             }
-            worksheet.Cells["A1"].Value = "Hiếu hỉ";
-            worksheet.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            worksheet.Cells["A1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
             using (var range = worksheet.Cells[1, 1, 2, allowanceHeaderEnd])
             {
                 range.Style.Font.Bold = true;
