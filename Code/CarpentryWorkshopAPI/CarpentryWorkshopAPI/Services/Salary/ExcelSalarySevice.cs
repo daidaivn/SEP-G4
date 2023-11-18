@@ -122,23 +122,34 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells["J1"].Value = "Lương thực tế";
 
             int allowanceHeaderStart = 11; // Kí tự K trong bảng Excel
-            int allowanceHeaderEnd = 10 + uniqueAllowanceTypes.Count; // Kết thúc tại cột sau cùng của Phụ cấp
+            int allowanceHeaderEnd = 10 + uniqueAllowanceTypes.Count;
             worksheet.Cells[1, allowanceHeaderStart, 1, allowanceHeaderEnd].Merge = true;
             worksheet.Cells[1, allowanceHeaderStart].Value = "Phụ cấp";
-            worksheet.Cells[1, allowanceHeaderStart].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            worksheet.Cells[1, allowanceHeaderStart].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
+            // Thiết lập tiêu đề cho phần các khoản trừ
             int deductionHeaderStart = allowanceHeaderEnd + 1;
             int deductionHeaderEnd = deductionHeaderStart + deductionData.Count - 1;
+            worksheet.Cells[1, deductionHeaderStart, 1, deductionHeaderEnd].Merge = true;
+            worksheet.Cells[1, deductionHeaderStart].Value = "Các Khoản Trừ";
 
             if (deductionHeaderEnd < deductionHeaderStart)
             {
                 deductionHeaderEnd = deductionHeaderStart; // Điều chỉnh để tránh lỗi
             }
+            int reductionHeaderStart = deductionHeaderEnd + 1; // Chỉ số cột bắt đầu của các khoản giảm trừ
+            int reductionHeaderEnd = reductionHeaderStart + 2;
 
-            worksheet.Cells[1, deductionHeaderStart, 1, deductionHeaderEnd].Merge = true;
 
-
+            worksheet.Cells[2, deductionHeaderStart].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[2, deductionHeaderStart].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+           
+            worksheet.Cells[1, reductionHeaderStart, 1, reductionHeaderEnd].Merge = true;
+            worksheet.Cells[1, reductionHeaderStart].Value = "Các Khoản Giảm Trừ";
+            worksheet.Cells[1, reductionHeaderStart].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[1, reductionHeaderStart].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            worksheet.Cells[2, reductionHeaderStart].Value = "Bảo Hiểm";
+            worksheet.Cells[2, reductionHeaderStart + 1].Value = "Giảm Trừ Gia Cảnh";
+            worksheet.Cells[2, reductionHeaderStart + 2].Value = "Người Phụ Thuộc";
             int deductionColumnIndex = deductionHeaderStart;
             foreach (var deduction in deductionData)
             {
@@ -154,6 +165,16 @@ namespace CarpentryWorkshopAPI.Services.Salary
             }
 
             // Thêm tiêu đề cột cho các phụ cấp vào Excel
+            decimal totalDeductionPercentage = 0m;
+
+            foreach (var deduction in deductionData)
+            {
+                // Chuyển đổi trực tiếp từ double sang decimal
+                decimal percentage = Convert.ToDecimal(deduction.Percentage);
+                totalDeductionPercentage += percentage;
+            }
+
+
 
             int row = 3;
             foreach (var data in employeeData)
@@ -162,6 +183,28 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var actualSalary = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
                 var allowances = allowanceData.FirstOrDefault(a => a.EmployeeId == data.EmployeeId)?.Allowances;
                 var contractAmount = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
+                const decimal familyAllowance = 11000000;
+                decimal insurancePercentage = (decimal)_context.DeductionsDetails
+                    .Where(dd => dd.DeductionType.Name.ToLower().Contains("insurance"))
+                    .Sum(dd => dd.Percentage ?? 0);
+                
+                
+                // Tính Người phụ thuộc
+                int numberOfDependents = _context.Dependents.Count(d => d.EmployeeId == data.EmployeeId && (d.EndDate == null || d.EndDate >= DateTime.Today));
+                decimal dependentAllowance = numberOfDependents * 4400000;
+
+                // Tính Bảo hiểm
+                decimal totalInsurancePercentage = (decimal)_context.DeductionsDetails
+                    .Where(dd => dd.DeductionType.Name.ToLower().Contains("insurance"))
+                    .Sum(dd => dd.Percentage ?? 0);
+                decimal insuranceAmount = actualSalaries.GetValueOrDefault(data.EmployeeId, 0) * totalDeductionPercentage;
+                int insuranceColumnIndex = deductionHeaderEnd + 1;
+                int familyAllowanceColumnIndex = insuranceColumnIndex + 1;
+                int dependentColumnIndex = familyAllowanceColumnIndex + 1;
+                int insuranceHeaderIndex = deductionHeaderEnd + 1;
+                int familyAllowanceHeaderIndex = insuranceHeaderIndex + 1;
+                int dependentHeaderIndex = familyAllowanceHeaderIndex + 1;
+
 
                 worksheet.Cells[row, 1].Value = row - 2;
                 worksheet.Cells[row, 2].Value = $"{month}/{year}";
@@ -169,27 +212,30 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 worksheet.Cells[row, 4].Value = data.FullName;
                 worksheet.Cells[row, 5].Value = data.Role;
                 worksheet.Cells[row, 6].Value = data.Gender == true ? "Nam" : "Nữ";
-                worksheet.Cells[row, 7].Value = data.WorkDays.Count();
-                worksheet.Cells[row, 8].Value = data.TotalHours;
-                worksheet.Cells[row, 9].Value = actualSalary;
-                worksheet.Cells[row, 10].Value = basicSalary;
+                worksheet.Cells[row, 7].Value = data.WorkDays.Count() != 0 ? (object)data.WorkDays.Count() : "-";
+                worksheet.Cells[row, 8].Value = data.TotalHours != 0 ? (object)data.TotalHours : "-";
+                worksheet.Cells[row, 9].Value = actualSalary != 0 ? (object)actualSalary : "-";
+                worksheet.Cells[row, 10].Value = basicSalary != 0 ? (object)basicSalary : "-";
+                worksheet.Cells[row, insuranceHeaderIndex].Value = insuranceAmount != 0 ? (object)insuranceAmount : "-";
 
                 allowanceColumnIndex = allowanceHeaderStart;
                 foreach (var allowanceType in uniqueAllowanceTypes)
                 {
                     var amount = allowances?.FirstOrDefault(a => a.AllowanceName == allowanceType)?.Amount ?? 0;
-                    worksheet.Cells[row, allowanceColumnIndex].Value = amount;
+                    worksheet.Cells[row, allowanceColumnIndex].Value = amount != 0 ? (object)amount : "-";
                     allowanceColumnIndex++;
                 }
 
-                deductionColumnIndex = deductionHeaderStart; 
+                deductionColumnIndex = deductionHeaderStart;
                 foreach (var deduction in deductionData)
                 {
                     var deductionAmount = contractAmount * (decimal)deduction.Percentage;
-                    worksheet.Cells[row, deductionColumnIndex].Value = deductionAmount;
+                    worksheet.Cells[row, deductionColumnIndex].Value = deductionAmount != 0 ? (object)deductionAmount : "-";
                     deductionColumnIndex++;
                 }
-
+                worksheet.Cells[row, insuranceColumnIndex].Value = insuranceAmount != 0 ? (object)insuranceAmount : "-";
+                worksheet.Cells[row, familyAllowanceColumnIndex].Value = familyAllowance != 0 ? (object)familyAllowance : "-";
+                worksheet.Cells[row, dependentColumnIndex].Value = dependentAllowance != 0 ? (object)dependentAllowance : "-";
                 row++;
             }
 
