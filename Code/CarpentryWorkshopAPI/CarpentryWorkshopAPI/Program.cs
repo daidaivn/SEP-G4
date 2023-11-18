@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using CarpentryWorkshopAPI.IServices.IBonus;
 using CarpentryWorkshopAPI.Services.Bonus;
+using CarpentryWorkshopAPI.IServices.ISalary;
+using CarpentryWorkshopAPI.Services.Salary;
 //using Microsoft.Extensions.Options;
 //using CarpentryWorkshopAPI.Services;
 //using CarpentryWorkshopAPI.IServices.t;
@@ -81,6 +83,7 @@ builder.Services.AddDbContext<SEPG4CCMSContext>(options =>
 });
 //builder.Services.AddScoped<ISalaryTypeService,SalaryTypeService>();
 //builder.Services.AddScoped<ISalaryDetailService, SalaryDetailService>();
+builder.Services.AddScoped<IExcelSalarySevice, ExcelSalarySevice>();
 builder.Services.AddScoped<IBonusService,BonusService>();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
