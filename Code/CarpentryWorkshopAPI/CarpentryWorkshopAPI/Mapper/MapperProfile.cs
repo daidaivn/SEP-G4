@@ -136,6 +136,7 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<SpecialOccasion, SpecialOccasionDTO>()
                 .ReverseMap();
 
+
         }
     }
 }

@@ -8,7 +8,10 @@ import { Form, Input, Select, Switch } from "antd";
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import { toast } from "react-toastify";
-import { getCurrentDateSEAsia, getTomorrowDateSEAsia } from "../logicTime/getDate";
+import {
+  getCurrentDateSEAsia,
+  getTomorrowDateSEAsia,
+} from "../logicTime/getDate";
 import {
   GetTeamForSchedule,
   GetAllWorks,
@@ -28,9 +31,13 @@ import {
   WorkModalTeam,
   EditListModalDetail,
 } from "./componentCalendar";
-import {createYearOptions, getWeekRange, createWeekOptions, parseWeekRange } from "../logicTime/getWeeDays";
+import {
+  createYearOptions,
+  getWeekRange,
+  createWeekOptions,
+  parseWeekRange,
+} from "../logicTime/getWeeDays";
 const CalendarComponent = () => {
-  
   const yearOptions = createYearOptions();
   const weekOptions = createWeekOptions();
   const currentWeek = getWeekRange(new Date());
@@ -38,7 +45,9 @@ const CalendarComponent = () => {
   const [selectedWeek, setSelectedWeek] = useState(defaultValue);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  const weekDays = selectedWeek ? parseWeekRange(selectedWeek) : parseWeekRange(defaultValue);
+  const weekDays = selectedWeek
+    ? parseWeekRange(selectedWeek)
+    : parseWeekRange(defaultValue);
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
@@ -231,10 +240,10 @@ const CalendarComponent = () => {
     setIsEditingDetailShift(false);
   };
 
-  const log = () =>{
-    console.log('selectedYear',selectedYear);
-    console.log('selectedWeek',selectedWeek);
-  }
+  const log = () => {
+    console.log("selectedYear", selectedYear);
+    console.log("selectedWeek", selectedWeek);
+  };
   const resetWorkDetailById = () => {
     setWorkDetailById({
       workId: "",
@@ -314,7 +323,7 @@ const CalendarComponent = () => {
               workAreaId: data.workAreaId,
               timeStart: data.timeStart || "Chưa có",
               timeEnd: data.timeEnd || "Chưa có",
-              status: data.status
+              status: data.status,
             });
             showModalDetail();
           })
@@ -401,7 +410,6 @@ const CalendarComponent = () => {
     fetchAllWorkAreas();
   }, []);
 
-
   return (
     <>
       <div className="col-right-container">
@@ -424,21 +432,13 @@ const CalendarComponent = () => {
           handleChangeYear={handleChangeYear}
           yearOptions={yearOptions}
         />
-        <div className="time-shift">
-          <div className="item-time-shift">
-            <p>Thời gian làm việc:</p>
-          </div>
-          <div className="item-time-shift">
-            <p>- Ca 1: 6h30 đến 15h30 </p>
-            <p>- Ca 2: 6h30 đến15h30 </p>
-          </div>
-        </div>
+
         <TableCalendar
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
           teamForSchedule={teamForSchedule}
           showModalAssignWork={showModalAssignWork}
-          weekDays ={weekDays}
+          weekDays={weekDays}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
