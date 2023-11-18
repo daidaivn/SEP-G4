@@ -250,12 +250,6 @@ namespace CarpentryWorkshopAPI.Models
                     .HasForeignKey(d => d.DeductionTypeId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_DeductionsDetail_DeductionsType");
-
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.DeductionsDetails)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_DeductionsDetail_Employees");
             });
 
             modelBuilder.Entity<DeductionsType>(entity =>
