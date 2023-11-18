@@ -90,6 +90,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .OrderBy(name => name) // Sắp xếp nếu bạn muốn
                 .ToList();
 
+            //truy vấn dữ liệu hiếu hỉ
+            var specialOccasionsData = await _context.SpecialOccasions
+                .Where(so => so.OccasionDate.Value.Month == month && so.OccasionDate.Value.Year == year)
+                .Select(so => new
+                {
+                    EmployeeId = so.EmployeeId.Value,
+                    OccasionType = so.OccasionType,
+                    Amount = so.Amount.Value
+                })
+                .ToListAsync();
+
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Salaries");
             worksheet.Cells["A1:A2"].Merge = true;
@@ -137,7 +148,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var basicSalary = basicSalaries.FirstOrDefault(s => s.EmployeeId == data.EmployeeId)?.BasicSalary ?? 0;
                 var actualSalary = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
                 var allowances = allowanceData.FirstOrDefault(a => a.EmployeeId == data.EmployeeId)?.Allowances;
-
+                var hieuHiAmount = specialOccasionsData
+                .Where(so => so.EmployeeId == data.EmployeeId && so.OccasionType == "Hiếu hỉ")
+                .Sum(so => so.Amount);
+                int hieuHiColumnIndex = allowanceHeaderEnd + 1;
                 worksheet.Cells[row, 1].Value = row - 2;
                 worksheet.Cells[row, 2].Value = $"{month}/{year}";
                 worksheet.Cells[row, 3].Value = data.EmployeeId.ToString($"D{maxIdLength}");
@@ -148,7 +162,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 worksheet.Cells[row, 8].Value = data.TotalHours;
                 worksheet.Cells[row, 9].Value = actualSalary;
                 worksheet.Cells[row, 10].Value = basicSalary;
-
+                worksheet.Cells[row, hieuHiColumnIndex].Value = hieuHiAmount;
                 allowanceColumnIndex = allowanceHeaderStart;
                 foreach (var allowanceType in uniqueAllowanceTypes)
                 {
@@ -159,7 +173,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
                 row++;
             }
-
+            worksheet.Cells["A1"].Value = "Hiếu hỉ";
+            worksheet.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells["A1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             using (var range = worksheet.Cells[1, 1, 2, allowanceHeaderEnd])
             {
                 range.Style.Font.Bold = true;
