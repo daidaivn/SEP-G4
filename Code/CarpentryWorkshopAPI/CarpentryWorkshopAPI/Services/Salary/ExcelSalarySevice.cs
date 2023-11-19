@@ -209,15 +209,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
             decimal insuranceDeductionPercentage = totalDeductionPercentage - falseDeductionPercentage;
 
             // Tính tổng all Bảo hiểm
-            
-
-            //decimal totalDeductionPercentage = 0m;
-            //foreach (var deduction in deductionData)
-            //{
-            //    decimal percentage = Convert.ToDecimal(deduction.Percentage);
-            //    totalDeductionPercentage += percentage;
-            //}
-            //Header thu nhập chịu thuế
             int taxableIncomeHeaderIndex = reductionHeaderEnd + 1;
             worksheet.Cells[1, taxableIncomeHeaderIndex, 2, taxableIncomeHeaderIndex].Merge = true;
             worksheet.Cells[1, taxableIncomeHeaderIndex].Value = "Thu nhập chịu thuế";
