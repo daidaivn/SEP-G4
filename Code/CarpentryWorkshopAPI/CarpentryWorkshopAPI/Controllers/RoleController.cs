@@ -79,11 +79,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
                             DepartmentId = x.DepartmentId,
                             DepartmentName = x.Department.DepartmentName,
-
                         }
                         ).ToList(),
                         
-                    });
+                    }).FirstOrDefault();
                 if (rolelist == null)
                 {
                     return NotFound();
