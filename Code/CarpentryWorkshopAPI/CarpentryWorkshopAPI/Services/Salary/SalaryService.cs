@@ -45,7 +45,14 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var totaldependent = _context.Dependents
                                      .Where(x => x.EmployeeId == item.EmployeeId)
                                      .Count();
-                var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+                var allowance = item.EmployeesAllowances
+                                 .Where(ea => ea.AllowanceType.Allowance.Status == true)
+                                 .Sum(ea => ea.AllowanceType.Amount);
+                if (allowance == null)
+                {
+                    allowance = 0;
+                }
+                var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen + allowance;
                 var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
                 var personaltax = 0.00;
                 if (taxsalary > 0)
@@ -75,13 +82,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         personaltax = (double)taxsalary * 0.35 - 9850000;
                     }
                 }
-                var allowance = item.EmployeesAllowances
-                                 .Sum(ea => ea.AllowanceType.Amount);
+                
                 var deductions = totaltaxpercen * (double)basicsalary;
-                if (allowance == null)
-                {
-                    allowance = 0;
-                }
+               
                 if (deductions == null)
                 {
                     deductions = 0;
@@ -118,7 +121,14 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var totaldependent = _context.Dependents
                                     .Where(x => x.EmployeeId == employeeid)
                                     .Count();
-            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+            var allowance = _context.EmployeesAllowances
+                                 .Where(x => x.EmployeeId == employeeid && x.AllowanceType.Allowance.Status == true)
+                                 .Sum(ea => ea.AllowanceType.Amount);
+            if (allowance == null)
+            {
+                allowance = 0;
+            }
+            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen + allowance;
             var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
             var personaltax = 0.00;
             if (taxsalary > 0)
@@ -153,9 +163,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 }
             }
             var deductions = totaltaxpercen * (double)basicsalary;
-            var allowance = _context.EmployeesAllowances
-                                 .Where(x => x.EmployeeId == employeeid)
-                                 .Sum(ea => ea.AllowanceType.Amount);
             if (deductions == null)
             {
                 deductions = 0;
@@ -234,7 +241,14 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var totaldependent = _context.Dependents
                                  .Where(x => x.EmployeeId == employeeid)
                                  .Count();
-            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+            var allowance = _context.EmployeesAllowances
+                                 .Where(x => x.EmployeeId == employeeid && x.AllowanceType.Allowance.Status == true)
+                                 .Sum(ea => ea.AllowanceType.Amount);
+            if (allowance == null)
+            {
+                allowance = 0;
+            }
+            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen + allowance;
             var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
             var personaltax = 0.00;
             if (taxsalary > 0)
@@ -302,7 +316,14 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var totaldependent = _context.Dependents
                                  .Where(x => x.EmployeeId == employeeid)
                                  .Count();
-            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+            var allowance = _context.EmployeesAllowances
+                                 .Where(x => x.EmployeeId == employeeid && x.AllowanceType.Allowance.Status == true)
+                                 .Sum(ea => ea.AllowanceType.Amount);
+            if (allowance == null)
+            {
+                allowance = 0;
+            }
+            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen + allowance;
             var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
             var personaltax = 0.00;
             if (taxsalary > 0)
@@ -336,9 +357,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     personaltax = (double)taxsalary * 0.35 - 9850000;
                 }
             }
-            var allowance = _context.EmployeesAllowances
-                                 .Where(x => x.EmployeeId == employeeid)
-                                 .Sum(ea => ea.AllowanceType.Amount);
             var deductions = totaltaxpercen * (double)basicsalary;
             if (allowance == null)
             {
