@@ -22,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-       [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
+        [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
         [HttpGet]
         public IActionResult GetAllRoles()
         {
@@ -79,11 +79,10 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
                             DepartmentId = x.DepartmentId,
                             DepartmentName = x.Department.DepartmentName,
-
                         }
                         ).ToList(),
                         
-                    });
+                    }).FirstOrDefault();
                 if (rolelist == null)
                 {
                     return NotFound();
