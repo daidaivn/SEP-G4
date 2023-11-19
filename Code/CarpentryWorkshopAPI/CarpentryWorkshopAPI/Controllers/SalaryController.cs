@@ -101,7 +101,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var result = _salaryService.GetEmployeeActualSalryDetail(employeeid, month, year);
+                var result = _salaryService.GetEmployeeActualSalaryDetail(employeeid, month, year);
                 if (result == null)
                 {
                     return BadRequest();
