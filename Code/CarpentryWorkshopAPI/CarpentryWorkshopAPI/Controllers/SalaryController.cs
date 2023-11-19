@@ -14,7 +14,7 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSalary(int month, int year)
+        public dynamic GetAllSalary(int month, int year)
         {
             try
             {
@@ -25,6 +25,90 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 return Ok(result);
             }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public dynamic GetEmployeeSalary(int employeeid, int month, int year)
+        {
+            try
+            {
+                var result = _salaryService.GetEmployeeSalaryDetail(employeeid, month, year);
+                if (result==null)
+                {
+                    return BadRequest();
+                }
+                return Ok(result);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public dynamic GetEmployeeAllowanceDetail(int employeeid, int month, int year)
+        {
+            try
+            {
+                var result = _salaryService.GetEmployeeAllowanceDetail(employeeid, month, year);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public dynamic GetEmployeeMainSalaryDetail(int employeeid, int month, int year)
+        {
+            try
+            {
+                var result = _salaryService.GetEmployeeMainSalaryDetail(employeeid, month, year);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public dynamic GetEmployeeDeductionDetail(int employeeid, int month, int year)
+        {
+            try
+            {
+                var result = _salaryService.GetEmployeeDeductionDetail(employeeid, month, year);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public dynamic GetEmployeeActualSalaryDetail(int employeeid, int month, int year)
+        {
+            try
+            {
+                var result = _salaryService.GetEmployeeActualSalryDetail(employeeid, month, year);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

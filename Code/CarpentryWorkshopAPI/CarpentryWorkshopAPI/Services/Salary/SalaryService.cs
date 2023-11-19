@@ -92,12 +92,270 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     EmployeeIDstring = item.EmployeeId.ToString($"D{employeeIdLength}"),
                     MainSalary = mainsalary,
                     Allowances = allowance,
-                    Deductions = deductions,
-                    ActualSalary = mainsalary - (decimal)deductions + allowance
+                    Deductions = deductions + personaltax,
+                    ActualSalary = mainsalary - (decimal)deductions + allowance - (decimal)personaltax
                 });
             }
             
             return result;
+        }
+        public dynamic GetEmployeeSalaryDetail(int employeeid, int month, int year)
+        {
+            var result = new List<Object>();
+            var mainsalary = _context.HoursWorkDays
+                                        .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
+                                        .Sum(h => h.DailyRate.GetValueOrDefault());
+            var basicsalary = _context.Contracts
+                               .Where(c => c.EmployeeId == employeeid && c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
+                               .Select(c => c.Amount).FirstOrDefault();
+            if (basicsalary == null)
+            {
+                basicsalary = 0;
+            }
+            var totaltaxpercen = _context.DeductionsDetails
+                             .Include(x => x.DeductionType)
+                             .Sum(d => d.Percentage);
+            var totaldependent = _context.Dependents
+                                    .Where(x => x.EmployeeId == employeeid)
+                                    .Count();
+            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+            var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
+            var personaltax = 0.00;
+            if (taxsalary > 0)
+            {
+                if (taxsalary <= 5000000)
+                {
+                    personaltax = 0.05 * (double)taxsalary;
+                }
+                else if (taxsalary > 5000000 && taxsalary <= 10000000)
+                {
+                    personaltax = 250000 + (double)(taxsalary - 5000000) * 0.1;
+                }
+                else if (taxsalary > 10000000 && taxsalary <= 18000000)
+                {
+                    personaltax = (double)taxsalary * 0.15 - 750000;
+                }
+                else if (taxsalary > 18000000 && taxsalary <= 32000000)
+                {
+                    personaltax = (double)taxsalary * 0.2 - 1650000;
+                }
+                else if (taxsalary > 32000000 && taxsalary <= 52000000)
+                {
+                    personaltax = (double)taxsalary * 0.25 - 3250000;
+                }
+                else if (taxsalary > 52000000 && taxsalary <= 80000000)
+                {
+                    personaltax = (double)taxsalary * 0.3 - 5850000;
+                }
+                else
+                {
+                    personaltax = (double)taxsalary * 0.35 - 9850000;
+                }
+            }
+            var deductions = totaltaxpercen * (double)basicsalary;
+            var allowance = _context.EmployeesAllowances
+                                 .Where(x => x.EmployeeId == employeeid)
+                                 .Sum(ea => ea.AllowanceType.Amount);
+            if (deductions == null)
+            {
+                deductions = 0;
+            }
+            var allowances = _context.EmployeesAllowances
+                .Include(x => x.AllowanceType)
+                .ThenInclude(at => at.Allowance)
+                .Where(x => x.EmployeeId == employeeid)
+                .Select(al => new
+                {
+                    AllowanceName = al.AllowanceType.Allowance.Name,
+                    Amounts = al.AllowanceType.Amount
+                });
+            var bonus = _context.BonusDetails
+                .Include(x => x.Employee)
+                .Where(x => x.Employee.EmployeeId == employeeid)
+                .Select(x => new
+                {
+                    BonusNames = x.BonusName, 
+                    Amounts = x.BonusAmount
+                });
+            result.Add(new
+            {
+                MainSalary = mainsalary,
+                AllowanceDetails = allowances,
+                Bonus = bonus,
+                ActualSalary = mainsalary - (decimal)deductions + allowance - (decimal)personaltax
+            });
+            return result;
+
+        }
+        public dynamic GetEmployeeAllowanceDetail(int employeeid, int month, int year)
+        {
+            var allowances = _context.EmployeesAllowances
+               .Include(x => x.AllowanceType)
+               .ThenInclude(at => at.Allowance)
+               .Where(x => x.EmployeeId == employeeid)
+               .Select(al => new
+               {
+                   AllowanceName = al.AllowanceType.Allowance.Name,
+                   Amounts = al.AllowanceType.Amount
+               });
+            return allowances;
+        }
+        public dynamic GetEmployeeMainSalaryDetail(int employeeid, int month, int year)
+        {
+            var mainsalary = _context.HoursWorkDays
+                                        .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
+                                        .Sum(h => h.DailyRate.GetValueOrDefault());
+            var result = new List<Object>();
+            result.Add(new
+            {
+                MainSalaryName = "Lương chính",
+                Amounts = mainsalary
+            }) ;
+            return result;
+        }
+        public dynamic GetEmployeeDeductionDetail(int employeeid, int month, int year)
+        {
+            var mainsalary = _context.HoursWorkDays
+                                        .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
+                                        .Sum(h => h.DailyRate.GetValueOrDefault());
+            var basicsalary = _context.Contracts
+                                .Where(c => c.EmployeeId == employeeid && c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
+                                .Select(c => c.Amount).FirstOrDefault();
+            var types = _context.DeductionsDetails
+                             .Include(x => x.DeductionType)
+                             .ToList();
+            if (basicsalary == null)
+            {
+                basicsalary = 0;
+            }
+            var totaltaxpercen = _context.DeductionsDetails
+                             .Include(x => x.DeductionType)
+                             .Sum(d => d.Percentage);
+            var totaldependent = _context.Dependents
+                                 .Where(x => x.EmployeeId == employeeid)
+                                 .Count();
+            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+            var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
+            var personaltax = 0.00;
+            if (taxsalary > 0)
+            {
+                if (taxsalary <= 5000000)
+                {
+                    personaltax = 0.05 * (double)taxsalary;
+                }
+                else if (taxsalary > 5000000 && taxsalary <= 10000000)
+                {
+                    personaltax = 250000 + (double)(taxsalary - 5000000) * 0.1;
+                }
+                else if (taxsalary > 10000000 && taxsalary <= 18000000)
+                {
+                    personaltax = (double)taxsalary * 0.15 - 750000;
+                }
+                else if (taxsalary > 18000000 && taxsalary <= 32000000)
+                {
+                    personaltax = (double)taxsalary * 0.2 - 1650000;
+                }
+                else if (taxsalary > 32000000 && taxsalary <= 52000000)
+                {
+                    personaltax = (double)taxsalary * 0.25 - 3250000;
+                }
+                else if (taxsalary > 52000000 && taxsalary <= 80000000)
+                {
+                    personaltax = (double)taxsalary * 0.3 - 5850000;
+                }
+                else
+                {
+                    personaltax = (double)taxsalary * 0.35 - 9850000;
+                }
+            }
+            var result = new List<Object>();
+            foreach (var item in types)
+            {
+                result.Add(new
+                {
+                    DeductionNames = item.DeductionType.Name,
+                    Amounts = basicsalary * (decimal)item.Percentage
+                });
+            }
+            result.Add(new
+            {
+                DeductionNames = "Thuế thu nhập cá nhân",
+                Amounts = personaltax
+            });
+            return result;
+        }
+        public dynamic GetEmployeeActualSalryDetail(int employeeid, int month, int year)
+        {
+            var mainsalary = _context.HoursWorkDays
+                                       .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
+                                       .Sum(h => h.DailyRate.GetValueOrDefault());
+            var basicsalary = _context.Contracts
+                            .Where(c => c.EmployeeId == employeeid && c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
+                            .Select(c => c.Amount).FirstOrDefault();
+            if (basicsalary == null)
+            {
+                basicsalary = 0;
+            }
+            var totaltaxpercen = _context.DeductionsDetails
+                             .Include(x => x.DeductionType)
+                             .Sum(d => d.Percentage);
+            var totaldependent = _context.Dependents
+                                 .Where(x => x.EmployeeId == employeeid)
+                                 .Count();
+            var minustaxSalary = mainsalary - basicsalary * (decimal)totaltaxpercen;
+            var taxsalary = minustaxSalary - 11000000 - 4400000 * totaldependent;
+            var personaltax = 0.00;
+            if (taxsalary > 0)
+            {
+                if (taxsalary <= 5000000)
+                {
+                    personaltax = 0.05 * (double)taxsalary;
+                }
+                else if (taxsalary > 5000000 && taxsalary <= 10000000)
+                {
+                    personaltax = 250000 + (double)(taxsalary - 5000000) * 0.1;
+                }
+                else if (taxsalary > 10000000 && taxsalary <= 18000000)
+                {
+                    personaltax = (double)taxsalary * 0.15 - 750000;
+                }
+                else if (taxsalary > 18000000 && taxsalary <= 32000000)
+                {
+                    personaltax = (double)taxsalary * 0.2 - 1650000;
+                }
+                else if (taxsalary > 32000000 && taxsalary <= 52000000)
+                {
+                    personaltax = (double)taxsalary * 0.25 - 3250000;
+                }
+                else if (taxsalary > 52000000 && taxsalary <= 80000000)
+                {
+                    personaltax = (double)taxsalary * 0.3 - 5850000;
+                }
+                else
+                {
+                    personaltax = (double)taxsalary * 0.35 - 9850000;
+                }
+            }
+            var allowance = _context.EmployeesAllowances
+                                 .Where(x => x.EmployeeId == employeeid)
+                                 .Sum(ea => ea.AllowanceType.Amount);
+            var deductions = totaltaxpercen * (double)basicsalary;
+            if (allowance == null)
+            {
+                allowance = 0;
+            }
+            if (deductions == null)
+            {
+                deductions = 0;
+            }
+            var result = new List<Object>();
+            result.Add(new
+            {
+                ActualSalaryName = "Lương thực nhận",
+                Amounts = mainsalary - (decimal)deductions + allowance - (decimal)personaltax
+            });
+            return result;
+           
         }
     }
 }
