@@ -85,6 +85,7 @@ builder.Services.AddDbContext<SEPG4CCMSContext>(options =>
 //builder.Services.AddScoped<ISalaryDetailService, SalaryDetailService>();
 builder.Services.AddScoped<IExcelSalarySevice, ExcelSalarySevice>();
 builder.Services.AddScoped<IBonusService,BonusService>();
+builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
