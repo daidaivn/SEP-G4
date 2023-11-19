@@ -64,7 +64,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employeeIdLength = maxEmployeeId.ToString().Length;
                 var rolelist = _context.Roles
                     .Include(x => x.RolesEmployees)
-                    .ThenInclude(roleemp => roleemp.Role)
+                    .ThenInclude(roleemp => roleemp.Department)
                     .Where(x => x.RoleId == roleid)
                     .Select(roled => new EmployeeRoleDTO
                     {
@@ -77,6 +77,9 @@ namespace CarpentryWorkshopAPI.Controllers
                             EmployeeId = x.EmployeeId,
                             EmployeeIdstring = x.EmployeeId.ToString().PadLeft(employeeIdLength, '0'),
                             EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
+                            DepartmentId = x.DepartmentId,
+                            DepartmentName = x.Department.DepartmentName,
+
                         }
                         ).ToList(),
                         
@@ -92,7 +95,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
         [HttpGet]
         public IActionResult GetRoleById(int rid) 
         {
