@@ -24,13 +24,20 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
         public async Task<MemoryStream> GenerateSalaryExcel(int month, int year)
         {
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            //Truy vấn danh sách employee có trạng thái là true
             var employeeIds = await _context.Employees.Where(em => em.Status == true).Select(e => e.EmployeeId).ToListAsync();
+
+            //Tuy vấn vai trò nhân viên theo theo chức vụ cao nhất
             var roles = await _context.RolesEmployees
                         .Where(r => r.EndDate == null && employeeIds.Contains(r.EmployeeId.Value))
                         .GroupBy(r => r.EmployeeId)
                         .Select(g => new { EmployeeId = g.Key, RoleName = g.OrderByDescending(r => r.Role.RoleLevel).Select(r => r.Role.RoleName).FirstOrDefault() })
                         .ToListAsync();
-
+            
+            //Truy vấn thông tin nhân viên
             var employeeData = await _context.Employees
                 .Where(e=>e.Status == true)
                 .Include(e => e.HoursWorkDays)
@@ -53,16 +60,20 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .Sum(h => h.Hour.GetValueOrDefault())
             })
             .ToListAsync();
-            var basicSalaries = await _context.HoursWorkDays
+
+            //Truy vấn tổng lương làm theo giờ
+            var actualSalaries = await _context.HoursWorkDays
                                 .Where(h => h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
                                 .GroupBy(h => h.EmployeeId)
                                 .Select(g => new { EmployeeId = g.Key, BasicSalary = g.Sum(h => h.DailyRate.GetValueOrDefault()) })
                                 .ToListAsync();
 
-            var actualSalaries = await _context.Contracts
+            //Truy vấn lương cơ bản trong hợp đồng
+            var basicSalaries = await _context.Contracts
                                 .Where(c => c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
                                 .ToDictionaryAsync(c => c.EmployeeId, c => c.Amount.GetValueOrDefault());
-
+           
+            //Truy vấn các khoản phụ cấp
             var allowanceData = await _context.EmployeesAllowances
                                 .Include(ea => ea.AllowanceType)
                                 .ThenInclude(at => at.Allowance)
@@ -73,10 +84,14 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                     EmployeeId = g.Key,
                                     Allowances = g.Select(ea => new
                                     {
+                                        AllowanceTypeId = ea.AllowanceTypeId,
                                         AllowanceName = ea.AllowanceType.Allowance.Name,
-                                        Amount = ea.AllowanceType.Amount.GetValueOrDefault()
+                                        Amount = ea.AllowanceType.Amount.GetValueOrDefault(),
+                                        Status = ea.AllowanceType.Allowance.Status
                                     }).ToList()
                                 }).ToListAsync();
+
+            //Truy vấn các khoản trừ
             var deductionData = await _context.DeductionsDetails
                                 .Include(dd => dd.DeductionType)
                                 .Select(dd => new
@@ -87,6 +102,25 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                 .Distinct()
                                 .ToListAsync();
 
+
+            // Truy vấn tổng phần trăm của tất cả các khoản trừ
+            double totalDeductionPercentageDouble = await _context.DeductionsDetails
+                .SumAsync(dd => dd.Percentage ?? 0);
+
+            // Chuyển đổi sang decimal
+            decimal totalDeductionPercentage = (decimal)totalDeductionPercentageDouble;
+
+            // Truy vấn tổng phần trăm của các khoản trừ có Status là false
+            double falseDeductionPercentageDouble = await _context.DeductionsDetails
+                .Include(dd => dd.DeductionType)
+                .Where(dd => dd.DeductionType.Status == false)
+                .SumAsync(dd => dd.Percentage ?? 0);
+
+            // Chuyển đổi sang decimal
+            decimal falseDeductionPercentage = (decimal)falseDeductionPercentageDouble;
+
+
+
             int maxAllowances = allowanceData.Any() ? allowanceData.Max(a => a.Allowances.Count) : 0;
             int maxIdLength = employeeData.Any() ? employeeData.Max(e => e.EmployeeId.ToString().Length) : 0;
 
@@ -94,7 +128,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .SelectMany(a => a.Allowances)
                 .Select(a => a.AllowanceName)
                 .Distinct()
-                .OrderBy(name => name) // Sắp xếp nếu bạn muốn
+                .OrderBy(name => name) 
                 .ToList();
 
             using var package = new ExcelPackage();
@@ -121,7 +155,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells["I1"].Value = "Lương cơ bản";
             worksheet.Cells["J1"].Value = "Lương thực tế";
 
-            int allowanceHeaderStart = 11; // Kí tự K trong bảng Excel
+            // bắt đầu từ cột kí tự K trong bảng Excel
+            int allowanceHeaderStart = 11; 
             int allowanceHeaderEnd = 10 + uniqueAllowanceTypes.Count;
             worksheet.Cells[1, allowanceHeaderStart, 1, allowanceHeaderEnd].Merge = true;
             worksheet.Cells[1, allowanceHeaderStart].Value = "Phụ cấp";
@@ -132,11 +167,15 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells[1, deductionHeaderStart, 1, deductionHeaderEnd].Merge = true;
             worksheet.Cells[1, deductionHeaderStart].Value = "Các Khoản Trừ";
 
+
+
+
             if (deductionHeaderEnd < deductionHeaderStart)
             {
-                deductionHeaderEnd = deductionHeaderStart; // Điều chỉnh để tránh lỗi
+                deductionHeaderEnd = deductionHeaderStart; 
             }
-            int reductionHeaderStart = deductionHeaderEnd + 1; // Chỉ số cột bắt đầu của các khoản giảm trừ
+
+            int reductionHeaderStart = deductionHeaderEnd + 1; 
             int reductionHeaderEnd = reductionHeaderStart + 2;
 
 
@@ -150,6 +189,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells[2, reductionHeaderStart].Value = "Bảo Hiểm";
             worksheet.Cells[2, reductionHeaderStart + 1].Value = "Giảm Trừ Gia Cảnh";
             worksheet.Cells[2, reductionHeaderStart + 2].Value = "Người Phụ Thuộc";
+
             int deductionColumnIndex = deductionHeaderStart;
             foreach (var deduction in deductionData)
             {
@@ -157,6 +197,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 deductionColumnIndex++;
             }
 
+            //Thêm tiêu đề cột cho các phụ cấp vào Excel
             int allowanceColumnIndex = allowanceHeaderStart;
             foreach (var allowanceName in uniqueAllowanceTypes)
             {
@@ -164,40 +205,71 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 allowanceColumnIndex++;
             }
 
-            // Thêm tiêu đề cột cho các phụ cấp vào Excel
-            decimal totalDeductionPercentage = 0m;
+            //Tính % bảo hiểm
+            decimal insuranceDeductionPercentage = totalDeductionPercentage - falseDeductionPercentage;
 
-            foreach (var deduction in deductionData)
-            {
-                // Chuyển đổi trực tiếp từ double sang decimal
-                decimal percentage = Convert.ToDecimal(deduction.Percentage);
-                totalDeductionPercentage += percentage;
-            }
+            // Tính tổng all Bảo hiểm
+            
+
+            //decimal totalDeductionPercentage = 0m;
+            //foreach (var deduction in deductionData)
+            //{
+            //    decimal percentage = Convert.ToDecimal(deduction.Percentage);
+            //    totalDeductionPercentage += percentage;
+            //}
+            //Header thu nhập chịu thuế
+            int taxableIncomeHeaderIndex = reductionHeaderEnd + 1;
+            worksheet.Cells[1, taxableIncomeHeaderIndex, 2, taxableIncomeHeaderIndex].Merge = true;
+            worksheet.Cells[1, taxableIncomeHeaderIndex].Value = "Thu nhập chịu thuế";
+            worksheet.Cells[1, taxableIncomeHeaderIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[1, taxableIncomeHeaderIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
 
+            //Header thu nhập tính thuế
+            int taxableIncomeColumnIndex = taxableIncomeHeaderIndex + 1;
+            worksheet.Cells[1, taxableIncomeColumnIndex, 2, taxableIncomeColumnIndex].Merge = true;
+            worksheet.Cells[1, taxableIncomeColumnIndex].Value = "Thu nhập Tính Thuế";
+            worksheet.Cells[1, taxableIncomeColumnIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[1, taxableIncomeColumnIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
+            //Header TNCN
+            int personalIncomeTaxColumnIndex = taxableIncomeColumnIndex + 1;
+            worksheet.Cells[1, personalIncomeTaxColumnIndex, 2, personalIncomeTaxColumnIndex].Merge = true;
+            worksheet.Cells[1, personalIncomeTaxColumnIndex].Value = "Thuế TNCN";
+            worksheet.Cells[1, personalIncomeTaxColumnIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[1, personalIncomeTaxColumnIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+            //Header thực nhật
+            int ActualSalaryColumnIndex = personalIncomeTaxColumnIndex + 1;
+            worksheet.Cells[1, ActualSalaryColumnIndex, 2, ActualSalaryColumnIndex].Merge = true;
+            worksheet.Cells[1, ActualSalaryColumnIndex].Value = "Thực nhận";
+            worksheet.Cells[1, ActualSalaryColumnIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[1, ActualSalaryColumnIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+            //Hiển thị dữ liệu
             int row = 3;
+            decimal totalTaxableIncome = 0m;
+
             foreach (var data in employeeData)
             {
-                var basicSalary = basicSalaries.FirstOrDefault(s => s.EmployeeId == data.EmployeeId)?.BasicSalary ?? 0;
-                var actualSalary = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
+                var actualSalary = actualSalaries.FirstOrDefault(s => s.EmployeeId == data.EmployeeId)?.BasicSalary ?? 0;
+                var basicSalary = basicSalaries.GetValueOrDefault(data.EmployeeId, 0);
                 var allowances = allowanceData.FirstOrDefault(a => a.EmployeeId == data.EmployeeId)?.Allowances;
-                var contractAmount = actualSalaries.GetValueOrDefault(data.EmployeeId, 0);
+                var contractAmount = basicSalaries.GetValueOrDefault(data.EmployeeId, 0);
+
+
                 const decimal familyAllowance = 11000000;
-                decimal insurancePercentage = (decimal)_context.DeductionsDetails
-                    .Where(dd => dd.DeductionType.Name.ToLower().Contains("insurance"))
-                    .Sum(dd => dd.Percentage ?? 0);
-                
                 
                 // Tính Người phụ thuộc
                 int numberOfDependents = _context.Dependents.Count(d => d.EmployeeId == data.EmployeeId && (d.EndDate == null || d.EndDate >= DateTime.Today));
                 decimal dependentAllowance = numberOfDependents * 4400000;
 
                 // Tính Bảo hiểm
-                decimal totalInsurancePercentage = (decimal)_context.DeductionsDetails
-                    .Where(dd => dd.DeductionType.Name.ToLower().Contains("insurance"))
-                    .Sum(dd => dd.Percentage ?? 0);
-                decimal insuranceAmount = actualSalaries.GetValueOrDefault(data.EmployeeId, 0) * totalDeductionPercentage;
+                decimal insuranceAmount = basicSalaries.GetValueOrDefault(data.EmployeeId, 0) * totalDeductionPercentage;
+
+                //Tính thực nhận
+                decimal insuranceAmountBasic = basicSalaries.GetValueOrDefault(data.EmployeeId, 0) * totalDeductionPercentage;
+
                 int insuranceColumnIndex = deductionHeaderEnd + 1;
                 int familyAllowanceColumnIndex = insuranceColumnIndex + 1;
                 int dependentColumnIndex = familyAllowanceColumnIndex + 1;
@@ -205,6 +277,15 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 int familyAllowanceHeaderIndex = insuranceHeaderIndex + 1;
                 int dependentHeaderIndex = familyAllowanceHeaderIndex + 1;
 
+                // Tính tổng các khoản phụ cấp có status là true
+                decimal totalAllowance = 0m;
+                foreach (var allowance in allowances)
+                {
+                    if (allowance.Status == true) 
+                    {
+                        totalAllowance += allowance.Amount;
+                    }
+                }
 
                 worksheet.Cells[row, 1].Value = row - 2;
                 worksheet.Cells[row, 2].Value = $"{month}/{year}";
@@ -214,10 +295,11 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 worksheet.Cells[row, 6].Value = data.Gender == true ? "Nam" : "Nữ";
                 worksheet.Cells[row, 7].Value = data.WorkDays.Count() != 0 ? (object)data.WorkDays.Count() : "-";
                 worksheet.Cells[row, 8].Value = data.TotalHours != 0 ? (object)data.TotalHours : "-";
-                worksheet.Cells[row, 9].Value = actualSalary != 0 ? (object)actualSalary : "-";
-                worksheet.Cells[row, 10].Value = basicSalary != 0 ? (object)basicSalary : "-";
+                worksheet.Cells[row, 9].Value = basicSalary != 0 ? (object)basicSalary : "-";
+                worksheet.Cells[row, 10].Value = actualSalary != 0 ? (object)actualSalary : "-";
                 worksheet.Cells[row, insuranceHeaderIndex].Value = insuranceAmount != 0 ? (object)insuranceAmount : "-";
 
+                //Hiển thị các khoản phụ cấp
                 allowanceColumnIndex = allowanceHeaderStart;
                 foreach (var allowanceType in uniqueAllowanceTypes)
                 {
@@ -226,6 +308,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     allowanceColumnIndex++;
                 }
 
+                //Hiển thị các khoản giảm trừ
                 deductionColumnIndex = deductionHeaderStart;
                 foreach (var deduction in deductionData)
                 {
@@ -236,6 +319,27 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 worksheet.Cells[row, insuranceColumnIndex].Value = insuranceAmount != 0 ? (object)insuranceAmount : "-";
                 worksheet.Cells[row, familyAllowanceColumnIndex].Value = familyAllowance != 0 ? (object)familyAllowance : "-";
                 worksheet.Cells[row, dependentColumnIndex].Value = dependentAllowance != 0 ? (object)dependentAllowance : "-";
+
+                //Tính tổng thu nhập chịu thuế và hiển thị
+                decimal taxableIncome = actualSalary + totalAllowance;
+                worksheet.Cells[row, taxableIncomeHeaderIndex].Value = taxableIncome != 0 ? (object)taxableIncome : "-";
+
+                //Tính tổng các khoản giảm trừ
+                decimal totalReductions = insuranceAmount + familyAllowance + dependentAllowance;
+
+
+                //Tính tổng thu nhập chịu thuế và hiển thị
+                decimal incomeSubjectToTax = taxableIncome - totalReductions;
+                int incomeSubjectToTaxColumnIndex = taxableIncomeHeaderIndex + 1;
+                worksheet.Cells[row, incomeSubjectToTaxColumnIndex].Value = incomeSubjectToTax > 0 ? (object)incomeSubjectToTax : "-";
+
+                // Tính Thuế TNCN 
+                decimal personalIncomeTax = CalculatePersonalIncomeTax(incomeSubjectToTax);
+                worksheet.Cells[row, personalIncomeTaxColumnIndex].Value = personalIncomeTax > 0 ? (object)personalIncomeTax : "-";
+
+                //Tính thực nhận
+                decimal actualReceivedSalary = actualSalary + totalAllowance - insuranceAmount;
+                worksheet.Cells[row, ActualSalaryColumnIndex].Value = actualReceivedSalary > 0 ? (object)actualReceivedSalary : "-";
                 row++;
             }
 
@@ -248,6 +352,24 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            }
+
+            decimal CalculatePersonalIncomeTax(decimal income)
+            {
+                if (income <= 5000000)
+                    return income * 0.05m;
+                else if (income <= 10000000)
+                    return income * 0.10m;
+                else if (income <= 18000000)
+                    return income * 0.15m;
+                else if (income <= 32000000)
+                    return income * 0.20m;
+                else if (income <= 52000000)
+                    return income * 0.25m;
+                else if (income <= 80000000)
+                    return income * 0.30m;
+                else
+                    return income * 0.35m;
             }
 
             var stream = new MemoryStream();
