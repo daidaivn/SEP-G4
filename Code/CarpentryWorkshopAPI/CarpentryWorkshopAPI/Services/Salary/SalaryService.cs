@@ -39,8 +39,13 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     basicsalary = 0;
                 }
-                var totaltaxpercen = _context.DeductionsDetails
+                var totaltaxpercen = _context.DeductionsDetails                           
                                  .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Status == true)
+                                 .Sum(d => d.Percentage);
+                var deductionnotax = _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Status == false)
                                  .Sum(d => d.Percentage);
                 var totaldependent = _context.Dependents
                                      .Where(x => x.EmployeeId == item.EmployeeId)
@@ -96,7 +101,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     MainSalary = mainsalary,
                     Allowances = allowance,
                     Deductions = deductions + personaltax,
-                    ActualSalary = mainsalary - (decimal)deductions + allowance - (decimal)personaltax
+                    ActualSalary = mainsalary - (decimal)deductions + allowance - (decimal)personaltax - (decimal)deductionnotax * basicsalary
                 });
             }
             
@@ -117,7 +122,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
             }
             var totaltaxpercen = _context.DeductionsDetails
                              .Include(x => x.DeductionType)
+                             .Where(x => x.DeductionType.Status == true)
                              .Sum(d => d.Percentage);
+            var deductionnotax = _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Status == false)
+                                 .Sum(d => d.Percentage);
             var totaldependent = _context.Dependents
                                     .Where(x => x.EmployeeId == employeeid)
                                     .Count();
@@ -189,7 +199,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 MainSalary = mainsalary,
                 AllowanceDetails = allowances,
                 Bonus = bonus,
-                ActualSalary = mainsalary - (decimal)deductions + allowance - (decimal)personaltax
+                ActualSalary = mainsalary - (decimal)deductions + allowance - (decimal)personaltax - (decimal)deductionnotax * basicsalary
             });
             return result;
 
@@ -237,6 +247,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             }
             var totaltaxpercen = _context.DeductionsDetails
                              .Include(x => x.DeductionType)
+                             .Where(x => x.DeductionType.Status == true)
                              .Sum(d => d.Percentage);
             var totaldependent = _context.Dependents
                                  .Where(x => x.EmployeeId == employeeid)
@@ -298,7 +309,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             });
             return result;
         }
-        public dynamic GetEmployeeActualSalryDetail(int employeeid, int month, int year)
+        public dynamic GetEmployeeActualSalaryDetail(int employeeid, int month, int year)
         {
             var mainsalary = _context.HoursWorkDays
                                        .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
@@ -312,7 +323,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
             }
             var totaltaxpercen = _context.DeductionsDetails
                              .Include(x => x.DeductionType)
+                             .Where(x => x.DeductionType.Status == true)
                              .Sum(d => d.Percentage);
+            var deductionnotax = _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Status == false)
+                                 .Sum(d => d.Percentage);
             var totaldependent = _context.Dependents
                                  .Where(x => x.EmployeeId == employeeid)
                                  .Count();
@@ -370,7 +386,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             result.Add(new
             {
                 ActualSalaryName = "Lương thực nhận",
-                Amounts = mainsalary - (decimal)deductions + allowance - (decimal)personaltax
+                Amounts = mainsalary - (decimal)deductions + allowance - (decimal)personaltax - (decimal)deductionnotax * basicsalary
             });
             return result;
            

@@ -7,6 +7,6 @@
         dynamic GetEmployeeAllowanceDetail(int employeeid, int month, int year);
         dynamic GetEmployeeMainSalaryDetail(int employeeid, int month, int year);
         dynamic GetEmployeeDeductionDetail(int employeeid, int month, int year);
-        dynamic GetEmployeeActualSalryDetail(int employeeid, int month, int year);
+        dynamic GetEmployeeActualSalaryDetail(int employeeid, int month, int year);
     }
 }
