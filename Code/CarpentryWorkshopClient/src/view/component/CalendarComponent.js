@@ -38,6 +38,7 @@ import {
   parseWeekRange,
 } from "../logicTime/getWeeDays";
 import EditWork from "./componentCalendar/ModalEditWork";
+import ModalGroup from "./componentCalendar/ModalGroup";
 const CalendarComponent = () => {
   const yearOptions = createYearOptions();
   const weekOptions = createWeekOptions();
@@ -216,6 +217,18 @@ const CalendarComponent = () => {
   };
   const handleCancelEditWork = () => {
     setIsModalOpenEditWork(false);
+  };
+
+  // Modal nhom
+  const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
+  const showModalGroup = () => {
+    setIsModalOpenGroup(true);
+  };
+  const handleOkGroup = () => {
+    setIsModalOpenGroup(false);
+  };
+  const handleCancelGroup = () => {
+    setIsModalOpenGroup(false);
   };
 
   //Thay doi trang thai chinh sua chi tiet cong viec
@@ -467,6 +480,7 @@ const CalendarComponent = () => {
           teamForSchedule={teamForSchedule}
           showModalAssignWork={showModalAssignWork}
           weekDays={weekDays}
+          showModalGroup={showModalGroup}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -667,6 +681,13 @@ const CalendarComponent = () => {
             </div>
           </div>
         </Modal>
+
+        {/* modal nhom */}
+        <ModalGroup
+          isModalOpenGroup={isModalOpenGroup}
+          handleOkGroup={handleOkGroup}
+          handleCancelGroup={handleCancelGroup}
+        />
       </div>
     </>
   );
