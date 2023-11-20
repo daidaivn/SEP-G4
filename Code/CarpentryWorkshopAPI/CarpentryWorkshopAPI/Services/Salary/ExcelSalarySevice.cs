@@ -146,8 +146,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             worksheet.Cells["A1"].Value = "STT";
             worksheet.Cells["B1"].Value = "Tháng/Năm";
-            worksheet.Cells["C1"].Value = "Mã Nhân viên";
-            worksheet.Cells["D1"].Value = "Họ tên nhân viên";
+            worksheet.Cells["C1"].Value = "MNV";
+            worksheet.Cells["D1"].Value = "Họ tên NV";
             worksheet.Cells["E1"].Value = "Chức vụ";
             worksheet.Cells["F1"].Value = "Giới tính";
             worksheet.Cells["G1"].Value = "Số công";
@@ -237,6 +237,39 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells[1, ActualSalaryColumnIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             worksheet.Cells[1, ActualSalaryColumnIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
+
+            // Đặt font in đậm và căn giữa cho tất cả các header
+            worksheet.Row(1).Style.Font.Bold = true;
+            worksheet.Row(2).Style.Font.Bold = true;
+            worksheet.Cells[1, 1, 2, ActualSalaryColumnIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells[1, 1, 2, ActualSalaryColumnIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+            // Điều chỉnh kích thước cột
+            for (int i = 1; i <= ActualSalaryColumnIndex; i++)
+            {
+                worksheet.Column(i).AutoFit(); // Hoặc sử dụng worksheet.Column(i).Width = giá trị cụ thể cho cột cần rộng hơn
+            }
+
+            // Đặt màu cho header
+            using (var headerRange = worksheet.Cells[1, 1, 2, ActualSalaryColumnIndex])
+            {
+                headerRange.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue); 
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            }
+
+            // Thêm viền cho toàn bộ bảng
+            int totalRows = employeeData.Count + 2; // 2 hàng header
+            using (var dataRange = worksheet.Cells[1, 1, totalRows, ActualSalaryColumnIndex])
+            {
+                dataRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                dataRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                dataRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                dataRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            }
+
             //Hiển thị dữ liệu
             int row = 3;
             decimal totalTaxableIncome = 0m;
@@ -270,13 +303,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
                 // Tính tổng các khoản phụ cấp có status là true
                 decimal totalAllowance = 0m;
-                foreach (var allowance in allowances)
+                if (allowances != null)
                 {
-                    if (allowance.Status == true) 
+                    foreach (var allowance in allowances)
                     {
-                        totalAllowance += allowance.Amount;
+                        if (allowance != null && allowance.Status == true)
+                        {
+                            totalAllowance += allowance.Amount;
+                        }
                     }
                 }
+
 
                 worksheet.Cells[row, 1].Value = row - 2;
                 worksheet.Cells[row, 2].Value = $"{month}/{year}";
