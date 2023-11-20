@@ -7,9 +7,7 @@ import { Input, Switch, Form } from "antd";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
-import {
-  DetailID,
-} from "../../../sevices/EmployeeService";
+import { DetailID } from "../../../sevices/EmployeeService";
 // import avt from ".../";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
@@ -36,7 +34,7 @@ function ListUserHeader() {
       setUserName(storedUserName);
     }
   }, []);
-  
+
   const [isModalOpenUser, setIsModalOpenUser] = useState(false);
   const showModalUser = () => {
     toast.promise(
@@ -44,7 +42,7 @@ function ListUserHeader() {
         DetailID(userEmployeeID)
           .then((data) => {
             setEmployee(data);
-            
+
             resolve(data);
           })
           .catch((error) => {
@@ -281,7 +279,7 @@ function ListUserHeader() {
         Ok={handleOkPayroll}
         onCancel={handleCancelPayroll}
       >
-        <div className="modal-payroll">
+        <div className="modal-payroll payroll-fix">
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Bảng lương</p>
