@@ -212,7 +212,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //[Authorize(Roles = "ListEmployee")]
+        [Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
