@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
@@ -5,7 +7,6 @@ import "../scss/PayrollComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { Form, Input, Select, Switch, Modal } from "antd";
-import { useState } from "react";
 import SubsidiesDetail from "./componentPayroll/SubsidiesDetail";
 import AllowanceDetails from "./componentPayroll/AllowanceDetails";
 import RewardCompany from "./componentPayroll/RewardCompany";
@@ -14,11 +15,12 @@ import TypeReward from "./componentPayroll/TypeReward";
 import Reward from "./componentPayroll/Reward";
 import RewardPersonal from "./componentPayroll/RewardPersonal";
 import { Holiday } from "./componentPayroll";
+import { fetchAllSalaries } from "../../sevices/PayrollSevice";
 const PayrollComponent = () => {
+  const [salaries, setSalaries] = useState([]);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
-
   //modal Chi tiết phụ cấp
   const [isModalOpenSubsidies, setIsModalOpenSubsidies] = useState(false);
   const showModalSubsidies = () => {
@@ -56,9 +58,8 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng công ty
-  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] = useState(
-    false
-  );
+  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
+    useState(false);
   const showModalRewardCompany = () => {
     setIsModalOpenRewardCompany(true);
   };
@@ -70,9 +71,8 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng cá nhân
-  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
-    false
-  );
+  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
+    useState(false);
   const showModalRewardPersonal = () => {
     setIsModalOpenRewardPersonal(true);
   };
@@ -130,6 +130,32 @@ const PayrollComponent = () => {
   const handleCancelHoliday = () => {
     setIsModalOpenHoliday(false);
   };
+  // get All salaries
+  const fetData = () => {
+    var currentDateTime = new Date();
+    var currentMonth = currentDateTime.getMonth() + 1;
+    var currentYear = currentDateTime.getFullYear();
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllSalaries(currentMonth, currentYear)
+          .then((data) => {
+            setSalaries(data);
+            resolve(data);
+            console.log('data',data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
+      }
+    );
+  };
+  useEffect(() => {
+    fetData();
+  }, []);
 
   return (
     <>

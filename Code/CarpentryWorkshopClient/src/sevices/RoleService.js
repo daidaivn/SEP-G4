@@ -20,7 +20,7 @@ const GetRoleById = (ID) => {
   console.log('rid', rid);
 
   return axios.get(
-    `/CCMSapi/Role/GetRoleById?rid=${rid}`
+    `/CCMSapi/Role/GetRoleEmployeeById?roleid=${rid}`
   );
 };
 const UpdateRole = (id, name, status) => {

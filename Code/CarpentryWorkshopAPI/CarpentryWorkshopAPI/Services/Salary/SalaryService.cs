@@ -97,6 +97,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 result.Add(new
                 {
                     EmployeeID = item.EmployeeId,
+                    EmployeeName = item.FirstName + " " + item.LastName,
                     EmployeeIDstring = item.EmployeeId.ToString($"D{employeeIdLength}"),
                     MainSalary = mainsalary,
                     Allowances = allowance,

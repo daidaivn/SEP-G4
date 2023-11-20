@@ -557,7 +557,7 @@ function ListDepartmentComponent() {
               <div className="text-department">Tên phòng - ban</div>
               <Input
                 value={departmentNameUpdate}
-                onChange={(e) => (e.target.value)}
+                onChange={(e) => setDepartmentNameUpdate(e.target.value)}
               />
             </div>
           </div>
