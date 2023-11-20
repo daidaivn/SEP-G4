@@ -11,6 +11,11 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Globalization;
 using System.Diagnostics.Contracts;
+using Org.BouncyCastle.Asn1.Ocsp;
+using MimeKit;
+using MimeKit.Text;
+using MailKit.Net.Smtp;
+using CarpentryWorkshopAPI.IServices.Account;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -19,12 +24,14 @@ namespace CarpentryWorkshopAPI.Controllers
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
     {
+        private readonly IAccountService _accountService;
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
-        public EmployeeController(SEPG4CCMSContext context, IMapper mapper)
+        public EmployeeController(SEPG4CCMSContext context, IMapper mapper, IAccountService accountService)
         {
             _context = context;
             _mapper = mapper;
+            _accountService = accountService;
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpGet]
@@ -205,7 +212,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [Authorize(Roles = "ListEmployee")]
+        //[Authorize(Roles = "ListEmployee")]
         [HttpPost]
         public IActionResult CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
@@ -246,10 +253,38 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.RolesEmployees.Add(newremp);
                 }
+                var username = _accountService.GenerateRandomString(8);
+                var pass = _accountService.GenerateRandomString(8);
                 UserAccount newaccount = new UserAccount()
                 {
-
+                    EmployeeId = newemp.EmployeeId,
+                    UserName = username,
+                    Password = BCrypt.Net.BCrypt.HashPassword(pass),
+                    Status = true
                 };
+                _context.UserAccounts.Add(newaccount);
+                _context.SaveChanges();
+                string htmlBody = "<p>Xin chào,</p>" +
+                  "<p>Dưới đây là nội dung email của bạn:</p>" +
+                  "<p><strong>Đây là tài khoản của bạn</strong></p>" +
+                  "<h3>Tài khoản: </h3>" + $"<h4>{username}</h4>" +
+                  "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
+                  "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
+                  "<p>Cảm ơn bạn đã đọc email này.</p>";
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
+                email.To.Add(MailboxAddress.Parse($"{newemp.Email}"));
+                email.Subject = "Tài khoản của nhân viên";
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = htmlBody
+                };
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                smtp.Dispose();
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = newemp.EmployeeId,
