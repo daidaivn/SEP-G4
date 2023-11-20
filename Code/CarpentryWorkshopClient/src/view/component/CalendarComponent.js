@@ -37,6 +37,7 @@ import {
   createWeekOptions,
   parseWeekRange,
 } from "../logicTime/getWeeDays";
+import EditWork from "./componentCalendar/ModalEditWork";
 const CalendarComponent = () => {
   const yearOptions = createYearOptions();
   const weekOptions = createWeekOptions();
@@ -205,6 +206,18 @@ const CalendarComponent = () => {
     setIsModalOpenAssignWork(false);
   };
 
+  // Modal chinh sua cong viec
+  const [isModalOpenEditWork, setIsModalOpenEditWork] = useState(false);
+  const showModalEditWork = () => {
+    setIsModalOpenEditWork(true);
+  };
+  const handleOkEditWork = () => {
+    setIsModalOpenEditWork(false);
+  };
+  const handleCancelEditWork = () => {
+    setIsModalOpenEditWork(false);
+  };
+
   //Thay doi trang thai chinh sua chi tiet cong viec
   const [isEditing, setIsEditing] = useState(false);
   const handleEdit = () => {
@@ -238,6 +251,21 @@ const CalendarComponent = () => {
   };
   const handleBackDetailShift = () => {
     setIsEditingDetailShift(false);
+  };
+
+  //Thay doi trang thai chinh sua phan cong viec
+  const [isEditingEditWork, setIsEditingEditWork] = useState(false);
+
+  const handleEditEditWork = () => {
+    setIsEditingEditWork(true);
+    // setIsModalOpenEditWork(true);
+  };
+  const handleSaveEditWork = () => {
+    setIsEditingEditWork(false);
+    // setIsModalOpenEditWork(false);
+  };
+  const handleBackEditWork = () => {
+    setIsEditingEditWork(false);
   };
 
   const log = () => {
@@ -512,8 +540,21 @@ const CalendarComponent = () => {
             handleCancelDetailShift={handleCancelDetailShift}
             handleEditDetailShift={handleEditDetailShift}
             showModalDetail={showModalDetail}
+            showModalEditWork={showModalEditWork}
           />
         )}
+
+        {/* {isEditingEditWork ? (
+        
+        ): (
+            
+        )} */}
+        <EditWork
+          isModalOpenEditWork={isModalOpenEditWork}
+          handleOkEditWork={handleOkEditWork}
+          handleCancelEditWork={handleCancelEditWork}
+          handleChange={handleChange}
+        />
 
         {/* / Modal phan cong cong viec */}
         <Modal
