@@ -10,6 +10,8 @@ using CarpentryWorkshopAPI.IServices.IBonus;
 using CarpentryWorkshopAPI.Services.Bonus;
 using CarpentryWorkshopAPI.IServices.ISalary;
 using CarpentryWorkshopAPI.Services.Salary;
+using CarpentryWorkshopAPI.Services.SpecialOccasion;
+using CarpentryWorkshopAPI.IServices.SpecialOccasion;
 using CarpentryWorkshopAPI.Services.Account;
 using CarpentryWorkshopAPI.IServices.Account;
 //using Microsoft.Extensions.Options;
@@ -88,6 +90,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IExcelSalarySevice, ExcelSalarySevice>();
 builder.Services.AddScoped<IBonusService,BonusService>();
 builder.Services.AddScoped<ISalaryService, SalaryService>();
+builder.Services.AddScoped<ISpecialOccasion, SpecialOccasionService>();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
