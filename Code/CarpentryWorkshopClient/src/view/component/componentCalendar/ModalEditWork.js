@@ -1,25 +1,24 @@
 import React from "react";
-import { Input, Modal, Switch, Form, Select } from "antd";
+import { Input, Modal, Select, Form, Switch } from "antd";
 
-const ListModuleDetail3 = ({
-  isModalOpenDetailShift,
-  handleOkDetailShift,
-  handleCancelDetailShift,
-  showModalEditWork,
-  showModalDetail,
+const EditWork = ({
+  isModalOpenEditWork,
+  handleOkEditWork,
+  handleCancelEditWork,
   handleChange,
 }) => {
   return (
-    <div className="modal-detail ">
+    <>
+      {" "}
       <Modal
         className="modal"
-        open={isModalOpenDetailShift}
-        onOk={handleOkDetailShift}
-        onCancel={handleCancelDetailShift}
+        open={isModalOpenEditWork}
+        onOk={handleOkEditWork}
+        onCancel={handleCancelEditWork}
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            <p>Thêm công việc</p>
+            <p>Chỉnh sửa công việc</p>
           </div>
           <div className="body-modal">
             <div className="item-modal">
@@ -87,21 +86,17 @@ const ListModuleDetail3 = ({
               <Input type="date"></Input>
             </div>
             <div className="footer-modal">
-              <span className="back" onClick={handleCancelDetailShift}>
+              <span className="back" onClick={handleCancelEditWork}>
                 Hủy bỏ
               </span>
-              <span className="edit" onClick={showModalEditWork}>
-                Sửa
-              </span>
-              <span className="save" onClick={handleOkDetailShift}>
+              <span className="save" onClick={handleOkEditWork}>
                 Lưu
               </span>
             </div>
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
-
-export default ListModuleDetail3;
+export default EditWork;

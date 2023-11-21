@@ -12,6 +12,8 @@ using CarpentryWorkshopAPI.IServices.ISalary;
 using CarpentryWorkshopAPI.Services.Salary;
 using CarpentryWorkshopAPI.Services.SpecialOccasion;
 using CarpentryWorkshopAPI.IServices.SpecialOccasion;
+using CarpentryWorkshopAPI.Services.Account;
+using CarpentryWorkshopAPI.IServices.Account;
 //using Microsoft.Extensions.Options;
 //using CarpentryWorkshopAPI.Services;
 //using CarpentryWorkshopAPI.IServices.t;
@@ -84,7 +86,7 @@ builder.Services.AddDbContext<SEPG4CCMSContext>(options =>
 
 });
 //builder.Services.AddScoped<ISalaryTypeService,SalaryTypeService>();
-//builder.Services.AddScoped<ISalaryDetailService, SalaryDetailService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IExcelSalarySevice, ExcelSalarySevice>();
 builder.Services.AddScoped<IBonusService,BonusService>();
 builder.Services.AddScoped<ISalaryService, SalaryService>();

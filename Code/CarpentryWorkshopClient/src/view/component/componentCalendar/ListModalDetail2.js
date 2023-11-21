@@ -20,6 +20,7 @@ const ListModuleDetail2 = ({
           <div className="head-modal">
             <p>Chi tiết công việc</p>
           </div>
+
           <div className="body-modal">
             <div className="item-modal">
               <p>Tên công việc</p>
@@ -67,14 +68,19 @@ const ListModuleDetail2 = ({
               <span className="back" onClick={handleCancelDetail}>
                 Quay lại
               </span>
-              <span className={`edit ${workDetailById.status !== "WorkNotStart" ? "disabled" : ""}`} onClick={handleEditWork}>
+              <span
+                className={`edit ${
+                  workDetailById.status !== "WorkNotStart" ? "disabled" : ""
+                }`}
+                onClick={handleEditWork}
+              >
                 Sửa
               </span>
             </div>
           </div>
         </div>
-      </Modal >
-    </div >
+      </Modal>
+    </div>
   );
 };
 

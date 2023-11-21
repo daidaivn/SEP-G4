@@ -7,7 +7,7 @@ const ModalListShift = ({
   handleCancelListShift,
   showModalDetail,
   allWorks,
-  fetchWorkDetailById
+  fetchWorkDetailById,
 }) => {
   return (
     <div className="modal-shift">
@@ -59,8 +59,8 @@ const ModalListShift = ({
                   </div>
                 </thead>
                 <tbody className="scrollbar" id="style-15">
-                  {
-                    Array.isArray(allWorks) && allWorks.map((work, index) => (
+                  {Array.isArray(allWorks) &&
+                    allWorks.map((work, index) => (
                       <tr>
                         <div className="item1">
                           <p>{index + 1}</p>
@@ -190,7 +190,10 @@ const ModalListShift = ({
                             </>
                           )}
                         </div>
-                        <div className="item4" onClick={() => fetchWorkDetailById(work.workId)}>
+                        <div
+                          className="item4"
+                          onClick={() => fetchWorkDetailById(work.workId)}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="30"
@@ -209,8 +212,7 @@ const ModalListShift = ({
                           </svg>
                         </div>
                       </tr>
-                    ))
-                  }
+                    ))}
                 </tbody>
               </table>
             </div>
