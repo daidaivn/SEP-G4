@@ -769,17 +769,20 @@ namespace CarpentryWorkshopAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-        [HttpGet("{leaderId}/{date}/{year}")]
-        public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule(int leaderId, string date, string year )
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule([FromBody] ScheduleDataInputDTO scheduleDataInputDTO)
         {
             try
             {
-                string decodedDate = WebUtility.UrlDecode(date);
-                string[] split = decodedDate.Split('-');
+                if(scheduleDataInputDTO == null)
+                {
+                    return BadRequest("not have data to");
+                }
+                string[] split = scheduleDataInputDTO.Date.Split('-');
                 string start = split[0];
                 string end = split[1];
                 var result = new List<object>();
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == leaderId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
@@ -804,9 +807,9 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     var day = new List<object>();
                     var teamworks = _context.TeamWorks.Where(tw=>tw.TeamId == team.TeamId).ToList();
-                    var endDate = DateTime.ParseExact(end+ "/" + year, "dd/MM/yyyy",
+                    var endDate = DateTime.ParseExact(end+ "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
-                    var startDate = DateTime.ParseExact(start + "/" + year, "dd/MM/yyyy",
+                    var startDate = DateTime.ParseExact(start + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture); ;
                     while(startDate <= endDate)
                     {
