@@ -16,7 +16,7 @@ const AllowanceDetails = ({
         Ok={handleOkAllowance}
         onCancel={handleCancelAllowance}
       >
-        <div className="modal-payroll">
+        <div className="modal-payroll payroll-fix">
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Chi tiết trợ cấp</p>
