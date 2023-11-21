@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
@@ -5,7 +7,6 @@ import "../scss/PayrollComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { Form, Input, Select, Switch, Modal } from "antd";
-import { useState } from "react";
 import SubsidiesDetail from "./componentPayroll/SubsidiesDetail";
 import AllowanceDetails from "./componentPayroll/AllowanceDetails";
 import RewardCompany from "./componentPayroll/RewardCompany";
@@ -14,7 +15,9 @@ import TypeReward from "./componentPayroll/TypeReward";
 import Reward from "./componentPayroll/Reward";
 import RewardPersonal from "./componentPayroll/RewardPersonal";
 import { Holiday } from "./componentPayroll";
+import { fetchAllSalaries } from "../../sevices/PayrollSevice";
 const PayrollComponent = () => {
+  const [salaries, setSalaries] = useState([]);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -68,9 +71,8 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng công ty
-  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] = useState(
-    false
-  );
+  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
+    useState(false);
   const showModalRewardCompany = () => {
     setIsModalOpenRewardCompany(true);
   };
@@ -82,9 +84,8 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng cá nhân
-  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
-    false
-  );
+  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
+    useState(false);
   const showModalRewardPersonal = () => {
     setIsModalOpenRewardPersonal(true);
   };
@@ -142,6 +143,32 @@ const PayrollComponent = () => {
   const handleCancelHoliday = () => {
     setIsModalOpenHoliday(false);
   };
+  // get All salaries
+  const fetData = () => {
+    var currentDateTime = new Date();
+    var currentMonth = currentDateTime.getMonth() + 1;
+    var currentYear = currentDateTime.getFullYear();
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllSalaries(currentMonth, currentYear)
+          .then((data) => {
+            setSalaries(data);
+            resolve(data);
+            console.log('data',data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
+      }
+    );
+  };
+  useEffect(() => {
+    fetData();
+  }, []);
 
   return (
     <>
@@ -338,655 +365,126 @@ const PayrollComponent = () => {
               <td>MNV</td>
               <td>Họ và tên</td>
               <td>Lương chính</td>
-              <td>Trợ cấp</td>
+              <td>Khoản giảm trừ</td>
               <td>Phụ cấp</td>
-              <td>Thưởng</td>
+              <td>Lương thực nhận</td>
             </tr>
           </thead>
-          <tbody className="scrollbar" id="style-15">
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn An</td>
-              <td>
-                9.000.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết trợ cấp */}
-              <td onClick={showModalAllowance}>
-                500.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết phụ cấp */}
-              <td onClick={showModalSubsidies}>
-                800.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết thưởng */}
-              <td onClick={showModalReward}>
-                200.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn An</td>
-              <td>
-                9.000.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết trợ cấp */}
-              <td onClick={showModalAllowance}>
-                500.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết phụ cấp */}
-              <td onClick={showModalSubsidies}>
-                800.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết thưởng */}
-              <td onClick={showModalReward}>
-                200.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn An</td>
-              <td>
-                9.000.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết trợ cấp */}
-              <td onClick={showModalAllowance}>
-                500.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết phụ cấp */}
-              <td onClick={showModalSubsidies}>
-                800.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết thưởng */}
-              <td onClick={showModalReward}>
-                200.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn An</td>
-              <td>
-                9.000.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết trợ cấp */}
-              <td onClick={showModalAllowance}>
-                500.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết phụ cấp */}
-              <td onClick={showModalSubsidies}>
-                800.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết thưởng */}
-              <td onClick={showModalReward}>
-                200.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn An</td>
-              <td>
-                9.000.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết trợ cấp */}
-              <td onClick={showModalAllowance}>
-                500.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết phụ cấp */}
-              <td onClick={showModalSubsidies}>
-                800.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết thưởng */}
-              <td onClick={showModalReward}>
-                200.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn An</td>
-              <td>
-                9.000.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết trợ cấp */}
-              <td onClick={showModalAllowance}>
-                500.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết phụ cấp */}
-              <td onClick={showModalSubsidies}>
-                800.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-              {/* show Modal Chi tiết thưởng */}
-              <td onClick={showModalReward}>
-                200.000 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </td>
-            </tr>
-          </tbody>
+          {salaries.length === 0 ? (
+            <p>Thông tin sẵn sàng hoặc không tồn tại.</p>
+          ) : (
+            <tbody className="scrollbar" id="style-15">
+              {salaries.map((Salary, index) => (
+                <tr>
+                <td>{index + 1}</td>
+                <td>{Salary.employeeName}</td>
+                <td>
+                  {Salary.mainSalary == 0 ? "-" : Salary.mainSalary} VNĐ{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="31"
+                    height="30"
+                    viewBox="0 0 31 30"
+                    fill="none"
+                  >
+                    <path
+                      d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </td>
+                {/* show Modal Chi tiết trợ cấp */}
+                <td onClick={showModalAllowance}>
+                  500.000 VNĐ{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="31"
+                    height="30"
+                    viewBox="0 0 31 30"
+                    fill="none"
+                  >
+                    <path
+                      d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </td>
+                {/* show Modal Chi tiết phụ cấp */}
+                <td onClick={showModalSubsidies}>
+                  800.000 VNĐ{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="31"
+                    height="30"
+                    viewBox="0 0 31 30"
+                    fill="none"
+                  >
+                    <path
+                      d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </td>
+                {/* show Modal Chi tiết thưởng */}
+                <td onClick={showModalReward}>
+                  {Salary.actualSalary == 0 ? "-" : Salary.actualSalary} VNĐ{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="31"
+                    height="30"
+                    viewBox="0 0 31 30"
+                    fill="none"
+                  >
+                    <path
+                      d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
+                      stroke="#FF8F19"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </td>
+              </tr>
+              ))}
+            </tbody>
+          )}
         </table>
 
         <SubsidiesDetail

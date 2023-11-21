@@ -100,6 +100,9 @@ function Role() {
             showModalDetail();
             setroleDetail(data);
             resolve();
+            console.log('data', roleDetail);
+            console.log('id', RoleID);
+            console.log('name', RoleName);
           })
           .catch((error) => {
             resolve(error);
@@ -110,6 +113,7 @@ function Role() {
       }
     );
   };
+  
 
   const UpdateNameRole = () => {
     toast.promise(
@@ -459,6 +463,9 @@ function Role() {
                 <div className="info-body-group">
                   <div className="box1-modal-group">
                     <div className="box1-child">
+                      <p className="child1-group">STT</p>
+                    </div>
+                    <div className="box2-child">
                       <p className="child1-group">MSNV</p>
                     </div>
                     <div className="box3-child">
@@ -481,6 +488,9 @@ function Role() {
                           <div className="box1-child">
                             <p className="child1-group">{index + 1}</p>
                           </div>
+                          <div className="box1-child">
+                            <p className="child1-group">{employee.employeeId}</p>
+                          </div>
                           <div className="box3-child">
                             <div className="child3-group">
                               <p>{employee.employeeName}</p>
@@ -488,7 +498,7 @@ function Role() {
                           </div>
                           <div className="box3-child">
                             <div className="child3-group">
-                              <p>{employee.employeeName}</p>
+                              <p>{employee.departmentName}</p>
                             </div>
                           </div>
                         </div>

@@ -80,7 +80,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             DepartmentId = x.DepartmentId,
                             DepartmentName = x.Department.DepartmentName,
                         }
-                        ).ToList(),
+                        ).OrderBy(x=>x.DepartmentName).ToList(),
                         
                     }).FirstOrDefault();
                 if (rolelist == null)
