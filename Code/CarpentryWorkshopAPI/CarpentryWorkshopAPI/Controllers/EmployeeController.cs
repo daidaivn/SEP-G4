@@ -233,13 +233,23 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return Ok("Nhân viên này đã tồn tại");
                 }
-                var newemp = _mapper.Map<Employee>(createEmployeeDTO);
-                if (!newemp.Status.HasValue)
-                {
-                    newemp.Status = true;
-                }
-                _context.Employees.Add(newemp);
-                _context.SaveChanges();
+                Employee newemp = new Employee();
+               
+                    var checkEmail = _accountService.Check_Gmail(createEmployeeDTO.Email);
+                    if (checkEmail == true)
+                    {
+                        newemp = _mapper.Map<Employee>(createEmployeeDTO);
+                        if (!newemp.Status.HasValue)
+                        {
+                            newemp.Status = true;
+                        }
+                        _context.Employees.Add(newemp);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        return StatusCode(550, "Authentication is Required for Relay");
+                    }              
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
                     RolesEmployee newremp = new RolesEmployee
@@ -263,6 +273,15 @@ namespace CarpentryWorkshopAPI.Controllers
                     Status = true
                 };
                 _context.UserAccounts.Add(newaccount);
+                _context.SaveChanges();
+                UserAccountsStatusHistory newhistory = new UserAccountsStatusHistory()
+                {
+                    EmployeeId= newemp.EmployeeId,
+                    Action = "Create",
+                    ActionDate = DateTime.Now,
+                    CurrentEmployeeId= null
+                };
+                _context.UserAccountsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 string htmlBody = "<p>Xin chào,</p>" +
                   "<p>Dưới đây là nội dung email của bạn:</p>" +
