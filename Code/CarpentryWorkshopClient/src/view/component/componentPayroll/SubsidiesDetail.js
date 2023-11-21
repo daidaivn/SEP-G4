@@ -16,7 +16,7 @@ const SubsidiesDetail = ({
         Ok={handleOkSubsidies}
         onCancel={handleCancelSubsidies}
       >
-        <div className="modal-payroll">
+        <div className="modal-payroll payroll-fix">
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Chi tiết phụ cấp</p>

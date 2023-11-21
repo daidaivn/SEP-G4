@@ -297,3 +297,107 @@
     }
   }
 }
+.excel {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 30px;
+  background: #386641;
+  color: #fff;
+  font-family: Noto Sans;
+  font-size: 20px;
+  font-weight: 500;
+}
+.modal-excel {
+  display: flex;
+  width: 540px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  border-radius: 60px;
+  background: #fff;
+  .head-excel {
+    display: flex;
+    padding: 36px 0px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    background: #3a5a40;
+    color: #fff;
+    font-family: Noto Sans;
+    font-size: 40px;
+    font-weight: 600;
+  }
+  .body-excel {
+    display: flex;
+    padding: 0px 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 26px;
+    align-self: stretch;
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      align-self: stretch;
+      p {
+        width: 130px;
+        color: #000;
+        font-family: Noto Sans;
+        font-size: 22px;
+        font-weight: 400;
+      }
+
+      .ant-select {
+        border-radius: 60px;
+        border: 1px solid #e6e5ea;
+        display: flex;
+        height: 58px;
+        padding: 14px 24px;
+        align-items: center;
+        gap: 10px;
+        flex: 1 0 0;
+        .ant-select-selector {
+          background-color: unset !important;
+          color: #80808f;
+          font-family: Noto Sans;
+          font-size: 22px;
+          font-weight: 400;
+          flex: 1 0 0;
+        }
+      }
+    }
+    .footer {
+      display: flex;
+      padding: 20px;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      align-self: stretch;
+      color: #fff;
+      font-family: Noto Sans;
+      font-size: 21px;
+      font-weight: 400;
+      .back {
+        display: flex;
+        padding: 14px 64px 17px 64px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        background: #c5c5c5;
+      }
+      .save {
+        display: flex;
+        padding: 15px 53px 16px 55px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        background: #1967ff;
+      }
+    }
+  }
+}

@@ -19,6 +19,23 @@ const WorkModalTeam = ({
         <div className="modal-detail-all">
           <div className="head-modal">
             <p>Chi tiết công việc</p>
+            <div className="close">
+              <svg
+                onClick={handleCancelDetailShift}
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
           </div>
           <div className="body-modal">
             <div className="item-modal">

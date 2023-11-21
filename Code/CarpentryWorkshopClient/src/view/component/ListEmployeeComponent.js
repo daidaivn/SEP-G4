@@ -186,8 +186,8 @@ function ListEmployeeComponent() {
 
     GetEmployeeContract(value)
       .then((data) => {
-        console.log('setContract',data);
-        
+        console.log("setContract", data);
+
         setContract(data);
         setContractID(data.contractId);
         setContractCode(data.contractCode);
@@ -264,111 +264,119 @@ function ListEmployeeComponent() {
     let isValidPairFound = false;
 
     if (!roleDepartmentValues || roleDepartmentValues.length === 0) {
-        errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
+      errors.push("Cần thêm ít nhất một cặp chức vụ phòng ban.");
     } else {
-        roleDepartmentValues.forEach((value) => {
-            // Kiểm tra tính hợp lệ của mỗi cặp
-            if ((value.roleID && !value.departmentID) ||
-                (!value.roleID && value.departmentID)) {
-                errors.push("Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.");
-            } else if (value.roleID && value.departmentID) {
-                isValidPairFound = true;
+      roleDepartmentValues.forEach((value) => {
+        // Kiểm tra tính hợp lệ của mỗi cặp
+        if (
+          (value.roleID && !value.departmentID) ||
+          (!value.roleID && value.departmentID)
+        ) {
+          errors.push(
+            "Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null."
+          );
+        } else if (value.roleID && value.departmentID) {
+          isValidPairFound = true;
 
-                // Đếm số lần xuất hiện của mỗi departmentID
-                departmentIdCount[value.departmentID] = (departmentIdCount[value.departmentID] || 0) + 1;
+          // Đếm số lần xuất hiện của mỗi departmentID
+          departmentIdCount[value.departmentID] =
+            (departmentIdCount[value.departmentID] || 0) + 1;
 
-                // Đếm số lần xuất hiện của mỗi roleID
-                roleIdCount[value.roleID] = (roleIdCount[value.roleID] || 0) + 1;
-            }
-        });
-
-        // Kiểm tra nếu có ít nhất một cặp hợp lệ
-        if (!isValidPairFound) {
-            errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
+          // Đếm số lần xuất hiện của mỗi roleID
+          roleIdCount[value.roleID] = (roleIdCount[value.roleID] || 0) + 1;
         }
+      });
 
-        // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
-        for (const count of Object.values(departmentIdCount)) {
-            if (count > 1) {
-                errors.push(`Phòng ban không được trùng nhau.`);
-                break;
-            }
-        }
+      // Kiểm tra nếu có ít nhất một cặp hợp lệ
+      if (!isValidPairFound) {
+        errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
+      }
 
-        // Kiểm tra nếu có roleID xuất hiện nhiều hơn 1 lần
-        for (const count of Object.values(roleIdCount)) {
-            if (count > 1) {
-                errors.push(`Chức vụ không được trùng nhau.`);
-                break;
-            }
+      // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
+      for (const count of Object.values(departmentIdCount)) {
+        if (count > 1) {
+          errors.push(`Phòng ban không được trùng nhau.`);
+          break;
         }
+      }
+
+      // Kiểm tra nếu có roleID xuất hiện nhiều hơn 1 lần
+      for (const count of Object.values(roleIdCount)) {
+        if (count > 1) {
+          errors.push(`Chức vụ không được trùng nhau.`);
+          break;
+        }
+      }
     }
 
     if (errors.length > 0) {
-        errors.forEach((error) => {
-            toast.warning(error);
-        });
-        return false;
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
     }
     return true;
-};
+  };
 
+  const validateDataDepartmentEdit = () => {
+    const errors = [];
+    const departmentIdCount = {};
+    const roleIdCount = {};
+    let isValidPairFound = false;
 
-const validateDataDepartmentEdit = () => {
-  const errors = [];
-  const departmentIdCount = {};
-  const roleIdCount = {};
-  let isValidPairFound = false;
-
-  updatedRoleDepartments.forEach((roleDept) => {
+    updatedRoleDepartments.forEach((roleDept) => {
       // Kiểm tra tính hợp lệ của mỗi cặp
-      if ((roleDept.roleID && !roleDept.departmentID) ||
-          (!roleDept.roleID && roleDept.departmentID)) {
-          errors.push("Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null.");
+      if (
+        (roleDept.roleID && !roleDept.departmentID) ||
+        (!roleDept.roleID && roleDept.departmentID)
+      ) {
+        errors.push(
+          "Trong mỗi cặp, cả roleID và departmentID phải cùng hợp lệ hoặc cùng null."
+        );
       }
 
       // Kiểm tra có ít nhất một cặp hợp lệ
       if (roleDept.roleID && roleDept.departmentID) {
-          isValidPairFound = true;
+        isValidPairFound = true;
 
-          // Đếm số lần xuất hiện của mỗi departmentID
-          departmentIdCount[roleDept.departmentID] = (departmentIdCount[roleDept.departmentID] || 0) + 1;
+        // Đếm số lần xuất hiện của mỗi departmentID
+        departmentIdCount[roleDept.departmentID] =
+          (departmentIdCount[roleDept.departmentID] || 0) + 1;
 
-          // Đếm số lần xuất hiện của mỗi roleID
-          roleIdCount[roleDept.roleID] = (roleIdCount[roleDept.roleID] || 0) + 1;
+        // Đếm số lần xuất hiện của mỗi roleID
+        roleIdCount[roleDept.roleID] = (roleIdCount[roleDept.roleID] || 0) + 1;
       }
-  });
+    });
 
-  // Nếu không tìm thấy cặp hợp lệ nào
-  if (!isValidPairFound) {
+    // Nếu không tìm thấy cặp hợp lệ nào
+    if (!isValidPairFound) {
       errors.push("Phải có ít nhất một cặp có dữ liệu hợp lệ.");
-  }
+    }
 
-  // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
-  for (const count of Object.values(departmentIdCount)) {
+    // Kiểm tra nếu có departmentID xuất hiện nhiều hơn 1 lần
+    for (const count of Object.values(departmentIdCount)) {
       if (count > 1) {
-          errors.push(`Phòng ban không được trùng nhau.`);
-          break;
+        errors.push(`Phòng ban không được trùng nhau.`);
+        break;
       }
-  }
+    }
 
-  // Kiểm tra nếu có roleID xuất hiện nhiều hơn 1 lần
-  for (const count of Object.values(roleIdCount)) {
+    // Kiểm tra nếu có roleID xuất hiện nhiều hơn 1 lần
+    for (const count of Object.values(roleIdCount)) {
       if (count > 1) {
-          errors.push(`Chức vụ không được trùng nhau.`);
-          break;
+        errors.push(`Chức vụ không được trùng nhau.`);
+        break;
       }
-  }
+    }
 
-  if (errors.length > 0) {
+    if (errors.length > 0) {
       errors.forEach((error) => {
-          toast.warning(error);
+        toast.warning(error);
       });
       return false;
-  }
-  return true;
-};
-
+    }
+    return true;
+  };
 
   const validateDataContract = () => {
     const errors = [];
@@ -1086,10 +1094,13 @@ const validateDataDepartmentEdit = () => {
                     />
                   </div>
                   <div className="div-modal-child2 div-detail">
-                    <p>Địa chỉ: </p>
+                    <p>Ngày sinh:</p>
                     <Input
-                      value={originalAddress}
-                      onChange={(e) => setOriginalAddress(e.target.value)}
+                      type="date"
+                      value={convertDobToISO(originalDOB)}
+                      onChange={(e) =>
+                        setOriginalDOB(convertDobToISO(e.target.value))
+                      }
                     />
                   </div>
                   <div className="div-modal-child2 div-detail">
@@ -1113,24 +1124,18 @@ const validateDataDepartmentEdit = () => {
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Email:</p>
-                      <Input
-                        value={originalEmail}
-                        onChange={(e) => setOriginalEmail(e.target.value)}
-                        placeholder="Nhập email"
+                      <p>Địa chỉ: </p>
+                      <textarea
+                        value={originalAddress}
+                        onChange={(e) => setOriginalAddress(e.target.value)}
                       />
                     </div>
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
-                      <p>Ngày sinh:</p>
-                      <input
-                        type="date"
-                        value={convertDobToISO(originalDOB)}
-                        onChange={(e) =>
-                          setOriginalDOB(convertDobToISO(e.target.value))
-                        }
-                      />
+                      {" "}
+                      <p>Lương cơ bản:</p>
+                      <Input value="1.000.000" />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
@@ -1233,21 +1238,22 @@ const validateDataDepartmentEdit = () => {
                   </div>
 
                   <div className="div-modal-child2 div-detail">
-                    <p>Địa chỉ: </p>
-                    <Input
-                      value={
-                        idDetail && idDetail.address
-                          ? idDetail.address
-                          : "Chưa có thông tin"
-                      }
-                    />
-                  </div>
-                  <div className="div-modal-child2 div-detail">
                     <p>Mã định danh: </p>
                     <Input
                       value={
                         idDetail && idDetail.cic
                           ? idDetail.cic
+                          : "Chưa có thông tin"
+                      }
+                    />
+                  </div>
+                  <div className="div-modal-child2 div-detail">
+                    <p>Ngày sinh:</p>
+                    <Input
+                      type="date"
+                      value={
+                        idDetail && idDetail.dobstring
+                          ? convertDobToISO(idDetail.dobstring)
                           : "Chưa có thông tin"
                       }
                     />
@@ -1278,11 +1284,11 @@ const validateDataDepartmentEdit = () => {
                       />
                     </div>
                     <div className="box-child-employee1 div-detail">
-                      <p>Email:</p>
-                      <Input
+                      <p>Địa chỉ: </p>
+                      <textarea
                         value={
-                          idDetail && idDetail.email
-                            ? idDetail.email
+                          idDetail && idDetail.address
+                            ? idDetail.address
                             : "Chưa có thông tin"
                         }
                       />
@@ -1290,15 +1296,9 @@ const validateDataDepartmentEdit = () => {
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
-                      <p>Ngày sinh:</p>
-                      <input
-                        type="date"
-                        value={
-                          idDetail && idDetail.dobstring
-                            ? convertDobToISO(idDetail.dobstring)
-                            : "Chưa có thông tin"
-                        }
-                      />
+                      {" "}
+                      <p>Lương cơ bản:</p>
+                      <Input value="1.000.000" />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
@@ -1364,75 +1364,73 @@ const validateDataDepartmentEdit = () => {
             <table>
               <thead className="thead-first"></thead>
               <div className="body-table body-table-contract">
-              <tr>
-                <Input
-                  className="select-input"
-                  placeholder="Mã hợp đồng"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                  }}
-                  value={contractCode} 
-                />
-                <div className="input-date">
+                <tr>
                   <Input
                     className="select-input"
-                    value={contract.contractTypeName} 
+                    placeholder="Mã hợp đồng"
                     style={{
                       width: "100%",
+                      height: "auto",
                     }}
+                    value={contractCode}
                   />
-                </div>
-              </tr>
-              <tr>
-                <p className="salary-contract">Lương hợp đồng:</p>
-                <Input type="text" placeholder="Lương hợp đồng"></Input>
-              </tr>
-              <tr>
-                <div className="input-date">
-                  <Input
-                    className="select-input"
-                    placeholder="Thời gian bắt đầu"
-                    type="date"
-                    style={{
-                      width: "100%",
-                    }}
-                    value={convertDobToISO(contractStartDate)}
-                  />
-                </div>
-                <div className="input-date">
-                  <Input
-                    className="select-input"
-                    placeholder="Thời gian kết thúc" 
-                    type="date"
-                    style={{
-                      width: "100%",
-                    }}
-                    value={convertDobToISO(contractEndDate)} 
-                  />
-                </div>
-              </tr>
-              <tr>
-                <div className="input-date">
-                  <Input
-                    className="select-input"
-                    placeholder="Đường dẫn hợp đồng"
-                    style={{
-                      width: "100%",
-                    }}
-                    value={contractLink}
-                  />
-                  <div className="input-date-cn">
-                  <p>Trạng thái: </p>
-                  <Form.Item valuePropName="checked" className="action">
-                    <Switch
-                      checked={contractStatus} 
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      value={contract.contractTypeName}
+                      style={{
+                        width: "100%",
+                      }}
                     />
-                  </Form.Item>
-                </div>
-                </div>
-              </tr>
-            </div>
+                  </div>
+                </tr>
+                <tr>
+                  <p className="salary-contract">Lương hợp đồng:</p>
+                  <Input type="text" placeholder="Lương hợp đồng"></Input>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian bắt đầu"
+                      type="date"
+                      style={{
+                        width: "100%",
+                      }}
+                      value={convertDobToISO(contractStartDate)}
+                    />
+                  </div>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Thời gian kết thúc"
+                      type="date"
+                      style={{
+                        width: "100%",
+                      }}
+                      value={convertDobToISO(contractEndDate)}
+                    />
+                  </div>
+                </tr>
+                <tr>
+                  <div className="input-date">
+                    <Input
+                      className="select-input"
+                      placeholder="Đường dẫn hợp đồng"
+                      style={{
+                        width: "100%",
+                      }}
+                      value={contractLink}
+                    />
+                    <div className="input-date-cn">
+                      <p>Trạng thái: </p>
+                      <Form.Item valuePropName="checked" className="action">
+                        <Switch checked={contractStatus} />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </tr>
+              </div>
               <thead className="thead-last"></thead>
             </table>
           </div>
