@@ -3,7 +3,7 @@ using CarpentryWorkshopAPI.IServices.SpecialOccasion;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarpentryWorkshopAPI.Models
+namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
@@ -14,7 +14,7 @@ namespace CarpentryWorkshopAPI.Models
 
         public SpecialOccasionController(ISpecialOccasion service, IMapper mapper)
         {
-           _service= service;
+            _service = service;
             _mapper = mapper;
         }
         [HttpGet]

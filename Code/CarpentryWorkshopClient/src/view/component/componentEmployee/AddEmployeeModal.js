@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import { Select, Input, Modal, Radio, Form, Switch } from "antd";
-import { useState } from 'react';
+import { useState } from "react";
 
 const AddEmployeeModal = ({
   avt,
@@ -51,9 +51,8 @@ const AddEmployeeModal = ({
   contractTypes,
   handleImageUpload,
   previewImage,
-  setPreviewImage
+  setPreviewImage,
 }) => {
-
   return (
     <Modal
       className="modal"
@@ -70,7 +69,11 @@ const AddEmployeeModal = ({
           <div className="modal-employee-box1">
             <div className="modal-child-body1">
               <div className="img-body1">
-                <input type="file" accept="image/*" onChange={handleImageUpload} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
                 {previewImage && <img src={previewImage} alt="Xem trước ảnh" />}
               </div>
             </div>
@@ -134,11 +137,13 @@ const AddEmployeeModal = ({
                 />
               </div>
               <div className="div-modal-child2 div-detail">
-                <p>Địa chỉ: </p>
+                <p>Ngày sinh:</p>
                 <Input
-                  value={originalAddress}
-                  onChange={(e) => setOriginalAddress(e.target.value)}
-                  placeholder="Nhập địa chỉ"
+                  type="date"
+                  value={convertDobToISO(originalDOB)}
+                  onChange={(e) =>
+                    setOriginalDOB(convertDobToISO(e.target.value))
+                  }
                 />
               </div>
               <div className="div-modal-child2 div-detail">
@@ -163,22 +168,18 @@ const AddEmployeeModal = ({
                   />
                 </div>
                 <div className="box-child-employee1 div-detail">
-                  <p>Email:</p>
-                  <Input
-                    value={originalEmail}
-                    onChange={(e) => setOriginalEmail(e.target.value)}
-                    placeholder="Nhập email"
+                  <p>Địa chỉ: </p>
+                  <textarea
+                    value={originalAddress}
+                    onChange={(e) => setOriginalAddress(e.target.value)}
+                    placeholder="Nhập địa chỉ"
                   />
                 </div>
               </div>
               <div className="box2-child-cn">
                 <div className="box-child-employee1 div-detail">
-                  <p>Ngày sinh:</p>
-                  <input
-                    type="date"
-                    value={convertDobToISO(originalDOB)}
-                    onChange={(e) => setOriginalDOB(convertDobToISO(e.target.value))}
-                  />
+                  <p>Lương cơ bản:</p>
+                  <Input value="1.000.000" />
                 </div>
                 <div className="box-child-employee1 div-detail">
                   <p>Trạng thái:</p>
@@ -201,10 +202,7 @@ const AddEmployeeModal = ({
             >
               Thêm hợp đồng
             </div>
-            <div
-              className="modal-footer1 add-green"
-              onClick={showModalAddRole}
-            >
+            <div className="modal-footer1 add-green" onClick={showModalAddRole}>
               Thêm chức vụ
             </div>
           </div>

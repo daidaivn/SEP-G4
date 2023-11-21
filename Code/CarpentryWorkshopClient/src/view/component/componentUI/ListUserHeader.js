@@ -7,9 +7,7 @@ import { Input, Switch, Form } from "antd";
 import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
-import {
-  DetailID,
-} from "../../../sevices/EmployeeService";
+import { DetailID } from "../../../sevices/EmployeeService";
 // import avt from ".../";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
@@ -19,6 +17,20 @@ function ListUserHeader() {
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
+    //convert date
+  const convertDobToISO = (dobstring) => {
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
+    }
+    return dobstring;
+  };
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -36,7 +48,7 @@ function ListUserHeader() {
       setUserName(storedUserName);
     }
   }, []);
-  
+
   const [isModalOpenUser, setIsModalOpenUser] = useState(false);
   const showModalUser = () => {
     toast.promise(
@@ -44,7 +56,7 @@ function ListUserHeader() {
         DetailID(userEmployeeID)
           .then((data) => {
             setEmployee(data);
-            
+
             resolve(data);
           })
           .catch((error) => {
@@ -210,24 +222,24 @@ function ListUserHeader() {
 
                 <div className="div-modal-child2 fix-color">
                   <p>Số điện thoại:</p>
-                  <p className="fix-input">0192568746</p>
+                  <p className="fix-input">{employee.phoneNumber}</p>
                 </div>
 
                 <div className="div-modal-child2 fix-color">
                   <p>Giới tính: </p>
-                  <p className="fix-input">Nam</p>
+                  <p className="fix-input">{employee.genderstring}</p>
                 </div>
                 <div className="div-modal-child2 fix-color">
                   <p>Quốc tịch:</p>
-                  <p className="fix-input">Việt Nam</p>
+                  <p className="fix-input">{employee.country}</p>
                 </div>
                 <div className="div-modal-child2 fix-color">
                   <p>Địa chỉ: </p>
-                  <p className="fix-input">Hà Nội</p>
+                  <p className="fix-input">{employee.address}</p>
                 </div>
                 <div className="div-modal-child2 div-detail fix-color">
                   <p>Email: </p>
-                  <p className="fix-input">okri@gmail.com</p>
+                  <p className="fix-input">{employee.email}</p>
                 </div>
               </div>
             </div>
@@ -236,7 +248,7 @@ function ListUserHeader() {
                 <div className="box2-child-cn ">
                   <div className="box-child-employee1 div-detail fix-color">
                     <p>Mã số thuế:</p>
-                    <p className="fix-input">000125558995</p>
+                    <p className="fix-input">{employee.taxId}</p>
                   </div>
                   <div className="box-child-employee1 fix-color">
                     <p>Lương cơ bản:</p>
@@ -244,13 +256,17 @@ function ListUserHeader() {
                   </div>
                   <div className="box-child-employee1 fix-color">
                     <p>Mã định danh:</p>
-                    <p className="fix-input">000125558995</p>
+                    <p className="fix-input">{employee.cic}</p>
                   </div>
                 </div>
                 <div className="box2-child-cn">
                   <div className="box-child-employee1 fix-color">
                     <p>Ngày sinh:</p>
-                    <Input type="date" className="fix-input"></Input>
+                    <Input
+                      type="date"
+                      className="fix-input"
+                      value={convertDobToISO(employee.dobstring)}
+                    ></Input>
                   </div>
                   <div className="box-child-employee1 fix-color">
                     <p>Trạng thái:</p>
@@ -281,7 +297,7 @@ function ListUserHeader() {
         Ok={handleOkPayroll}
         onCancel={handleCancelPayroll}
       >
-        <div className="modal-payroll">
+        <div className="modal-payroll payroll-fix">
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Bảng lương</p>
@@ -423,43 +439,55 @@ function ListUserHeader() {
                 <td>Phòng ban</td>
               </thead>
               <div className="body-table">
+              {employee && employee.roleDepartments && (
                 <div className="show-role">
                   <div className="show-item-role">
                     <tr>
                       <p>Chức vụ chính:</p>
                     </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value="aaaaaaaaaaa"></Input>
-                      </div>
+                    {employee.roleDepartments.length > 0 && (
+                      <tr>
+                        <div className="tr-child">
+                          <Input
+                            type="text"
+                            value={employee.roleDepartments[0].roleName}
+                          ></Input>
+                        </div>
 
-                      <div className="tr-child">
-                        <Input type="text" value="aaaaaaaaaaa"></Input>
-                      </div>
-                    </tr>
+                        <div className="tr-child">
+                          <Input
+                            type="text"
+                            value={employee.roleDepartments[0].departmentName}
+                          ></Input>
+                        </div>
+                      </tr>
+                    )}
                   </div>
                   <div className="show-item-role role-fix">
                     <tr>
                       <p>Kiêm chức vụ:</p>
                     </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value="aaaaaaaaaaa"></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value="aaaaaaaaaaa"></Input>
-                      </div>
-                    </tr>
-                    <tr>
-                      <div className="tr-child">
-                        <Input type="text" value="aaaaaaaaaaa"></Input>
-                      </div>
-                      <div className="tr-child">
-                        <Input type="text" value="aaaaaaaaaaa"></Input>
-                      </div>
-                    </tr>
+                    {employee.roleDepartments
+                      .slice(1)
+                      .map((roleDept, index) => (
+                        <tr key={index}>
+                          <div className="tr-child">
+                            <Input
+                              type="text"
+                              value={roleDept.roleName}
+                            ></Input>
+                          </div>
+                          <div className="tr-child">
+                            <Input
+                              type="text"
+                              value={roleDept.departmentName}
+                            ></Input>
+                          </div>
+                        </tr>
+                      ))}
                   </div>
                 </div>
+              )}
               </div>
               <thead className="thead-last"></thead>
             </table>

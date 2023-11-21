@@ -4,6 +4,16 @@
     {
         public List<PR> PersonalRewardList { get; set; }
         public List<CWR> CompanyRewardList { get; set; }
+        public List<SPE> SpecialOcationList { get; set; }
+        public class SPE
+        {
+            public int OccasionId { get; set; }
+            public int? EmployeeId { get; set; }
+            public string? Beneficiary { get; set; }
+            public string? OccasionType { get; set; }
+            public decimal? Amount { get; set; }
+            public string? OccasionDateString { get; set; }
+        }
         public class PR
         {
             public int BonusId { get; set; }

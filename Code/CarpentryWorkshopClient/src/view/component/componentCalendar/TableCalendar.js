@@ -7,6 +7,7 @@ const TableCalendar = ({
   teamForSchedule,
   showModalAssignWork,
   weekDays,
+  showModalGroup,
 }) => {
   return (
     <table className="list-table-calendar">
@@ -25,7 +26,10 @@ const TableCalendar = ({
         <tbody className="scrollbar" id="style-15">
           <tr>
             <td>
-              Nhóm 1<div className="shift">Ca 1</div>
+              Nhóm 1
+              <div className="shift" onClick={showModalGroup}>
+                Ca 1
+              </div>
             </td>
             <td>
               Kết thúc
@@ -175,7 +179,10 @@ const TableCalendar = ({
           </tr>
           <tr>
             <td>
-              Nhóm 1<div className="shift">Ca 1</div>
+              Nhóm 1
+              <div className="shift" onClick={showModalGroup}>
+                Ca 1
+              </div>
             </td>
             <td>
               Kết thúc
@@ -325,7 +332,10 @@ const TableCalendar = ({
           </tr>
           <tr>
             <td>
-              Nhóm 1<div className="shift">Ca 1</div>
+              Nhóm 1
+              <div className="shift" onClick={showModalGroup}>
+                Ca 1
+              </div>
             </td>
             <td>
               Kết thúc
@@ -475,7 +485,10 @@ const TableCalendar = ({
           </tr>
           <tr>
             <td>
-              Nhóm 1<div className="shift">Ca 1</div>
+              Nhóm 1
+              <div className="shift" onClick={showModalGroup}>
+                Ca 1
+              </div>
             </td>
             <td>
               Kết thúc
@@ -625,7 +638,10 @@ const TableCalendar = ({
           </tr>
           <tr>
             <td>
-              Nhóm 1<div className="shift">Ca 1</div>
+              Nhóm 1
+              <div className="shift" onClick={showModalGroup}>
+                Ca 1
+              </div>
             </td>
             <td>
               Kết thúc
