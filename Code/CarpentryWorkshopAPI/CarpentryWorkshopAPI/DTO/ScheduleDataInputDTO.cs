@@ -4,6 +4,6 @@
     {
         public int LeaderId { get; set; }
         public string? Date { get; set; }
-        public string? Year { get; set; }
+        public int Year { get; set; }
     }
 }
