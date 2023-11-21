@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.ProjectModel;
 using System.Data;
+using System.Net;
 using System.Security.Cryptography.Xml;
 using System.Text;
 
@@ -768,12 +769,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-        [HttpGet]
+        [HttpGet("{leaderId}/{date}/{year}")]
         public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule(int leaderId, string date, string year )
         {
             try
             {
-                string[] split = date.Split('-');
+                string decodedDate = WebUtility.UrlDecode(date);
+                string[] split = decodedDate.Split('-');
                 string start = split[0];
                 string end = split[1];
                 var result = new List<object>();
