@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.ProjectModel;
 using System.Data;
+using System.Net;
 using System.Security.Cryptography.Xml;
 using System.Text;
 
@@ -768,12 +769,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-        [HttpGet]
+        [HttpGet("{leaderId}/{date}/{year}")]
         public async Task<ActionResult<IEnumerable<object>>> GetDataForSchedule(int leaderId, string date, string year )
         {
             try
             {
-                string[] split = date.Split('-');
+                string decodedDate = WebUtility.UrlDecode(date);
+                string[] split = decodedDate.Split('-');
                 string start = split[0];
                 string end = split[1];
                 var result = new List<object>();
@@ -811,15 +813,16 @@ namespace CarpentryWorkshopAPI.Controllers
                         day.Add(new
                         {
                             Date = startDate.ToString("dd'-'MM'-'yyyy"),
-                            Status = DateTime.Now < startDate ? (teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end"
+                            Status = DateTime.Now.Date < startDate.Date ? (teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end"
                         });
                         startDate = startDate.AddDays(1);
                     }
                     result.Add(new
                     {
                         TeamId = team.TeamId,
+                        TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
-                        Date = day,
+                        DataForWork = day,
                     });
                     
                 }

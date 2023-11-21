@@ -96,6 +96,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     .GroupBy(sd => sd.BonusName)
                     .Select(group => group.First())
                     .ToList();
+                
                 List<DTO.AllRewardDTO.CWR> companydto = new List<AllRewardDTO.CWR>();
                 foreach (var item in company)
                 {
