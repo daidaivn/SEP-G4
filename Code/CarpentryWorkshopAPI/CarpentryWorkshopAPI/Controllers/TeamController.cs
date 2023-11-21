@@ -811,15 +811,16 @@ namespace CarpentryWorkshopAPI.Controllers
                         day.Add(new
                         {
                             Date = startDate.ToString("dd'-'MM'-'yyyy"),
-                            Status = DateTime.Now < startDate ? (teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end"
+                            Status = DateTime.Now.Date < startDate.Date ? (teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end"
                         });
                         startDate = startDate.AddDays(1);
                     }
                     result.Add(new
                     {
                         TeamId = team.TeamId,
+                        TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
-                        Date = day,
+                        DataForWork = day,
                     });
                     
                 }
