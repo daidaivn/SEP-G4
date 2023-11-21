@@ -274,14 +274,14 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.UserAccounts.Add(newaccount);
                 _context.SaveChanges();
-                UserAccountsStatusHistory newhistory = new UserAccountsStatusHistory()
+                UserAccountsStatusHistory newUahistory = new UserAccountsStatusHistory()
                 {
                     EmployeeId= newemp.EmployeeId,
                     Action = "Create",
                     ActionDate = DateTime.Now,
                     CurrentEmployeeId= null
                 };
-                _context.UserAccountsStatusHistories.Add(newhistory);
+                _context.UserAccountsStatusHistories.Add(newUahistory);
                 _context.SaveChanges();
                 string htmlBody = "<p>Xin chào,</p>" +
                   "<p>Dưới đây là nội dung email của bạn:</p>" +
