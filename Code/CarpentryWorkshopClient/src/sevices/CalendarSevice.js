@@ -80,7 +80,20 @@ const AddWork = (workDetailById,userEmployeeID) => {
   );
 };
 
+const GetDataForSchedule = (userEmployeeID,selectedWeek, selectedYear) => {
+  const requestBody = {
+    leaderId: userEmployeeID,
+    date: selectedWeek,
+    year: selectedYear
+  };
+  console.log('requestBody',requestBody);
+  
+  return axios.post(
+    `/CCMSapi/Team/GetDataForSchedule`,requestBody
+  );
+};
 
 
 
-export { GetTeamForSchedule, GetAllWorks , GetWorkDetailById, UpdateWork, AddWork};
+
+export { GetTeamForSchedule, GetAllWorks , GetWorkDetailById, UpdateWork, AddWork, GetDataForSchedule};

@@ -18,6 +18,7 @@ import {
   GetWorkDetailById,
   UpdateWork,
   AddWork,
+  GetDataForSchedule
 } from "../../sevices/CalendarSevice";
 import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
 import { GetAllWorkAreas } from "../../sevices/WorkAreaSevice";
@@ -25,7 +26,6 @@ import {
   ListSearchFilterAdd,
   ModalListShift,
   TableCalendar,
-  ListModuleDetail2,
   ModalAdd,
   ListModuleDetail3,
   WorkModalTeam,
@@ -35,7 +35,6 @@ import {
   createYearOptions,
   getWeekRange,
   createWeekOptions,
-  parseWeekRange,
 } from "../logicTime/getWeeDays";
 import EditWork from "./componentCalendar/ModalEditWork";
 import ModalGroup from "./componentCalendar/ModalGroup";
@@ -46,13 +45,12 @@ const CalendarComponent = () => {
   const defaultValue = `${currentWeek.start}-${currentWeek.end}`;
   const [selectedWeek, setSelectedWeek] = useState(defaultValue);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-
-  const weekDays = selectedWeek
-    ? parseWeekRange(selectedWeek)
-    : parseWeekRange(defaultValue);
+  const [dataForSchedule, setDataForSchedule] = useState();
+  
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
+  
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
   };
@@ -63,6 +61,7 @@ const CalendarComponent = () => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+
   const handleChangeUnitCostId = (value) => {
     setWorkDetailById({
       ...workDetailById,
@@ -123,11 +122,6 @@ const CalendarComponent = () => {
 
     if (!workDetail.workAreaId || workDetail.workAreaId.length === 0) {
       toast.warning("Vui lòng chọn khu vực.");
-      return false;
-    }
-
-    if (workDetail.timeStart > workDetail.timeEnd) {
-      toast.warning("Thời gian bắt đầu không thể sau thời gian kết thúc.");
       return false;
     }
 
@@ -445,11 +439,32 @@ const CalendarComponent = () => {
       }
     );
   };
+
+  const FetchDataForSchedule = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear)
+          .then((data) => {
+            setDataForSchedule(data)
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang tải dữ liệu',
+        error: 'Lỗi lịch làm việc ',
+      }
+    );
+  };
+
+
   useEffect(() => {
-    fetchTeamForSchedule();
-    fetchAllUnitCosts();
-    fetchAllWorkAreas();
-  }, []);
+    if (selectedWeek) {
+    FetchDataForSchedule();
+  }
+  }, [selectedWeek]);
 
   return (
     <>
@@ -477,10 +492,13 @@ const CalendarComponent = () => {
         <TableCalendar
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
-          teamForSchedule={teamForSchedule}
-          showModalAssignWork={showModalAssignWork}
-          weekDays={weekDays}
           showModalGroup={showModalGroup}
+          setDataForSchedule = {setDataForSchedule}
+          dataForSchedule={dataForSchedule}
+          defaultValue={defaultValue}
+          selectedWeek={selectedWeek}
+          selectedYear={selectedYear}
+          userEmployeeID={userEmployeeID}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -512,14 +530,8 @@ const CalendarComponent = () => {
             workidDetail={workidDetail}
           />
         ) : (
-          // modal chi tiet cong viec
-          <ListModuleDetail2
-            isModalOpenDetail={isModalOpenDetail}
-            handleOkDetail={handleOkDetail}
-            handleCancelDetail={handleCancelDetail}
-            handleEditWork={handleEditWork}
-            workDetailById={workDetailById}
-          />
+          <>
+          </>
         )}
 
         {/* modal them cong viec */}
@@ -569,118 +581,6 @@ const CalendarComponent = () => {
           handleCancelEditWork={handleCancelEditWork}
           handleChange={handleChange}
         />
-
-        {/* / Modal phan cong cong viec */}
-        <Modal
-          className="modal"
-          open={isModalOpenAssignWork}
-          onOk={handleOkAssignWork}
-          onCancel={handleCancelAssignWork}
-        >
-          <div className="modal-detail-all">
-            <div className="head-modal">
-              <p>Phân công công việc nhóm 2</p>
-            </div>
-            <div className="body-modal">
-              <div className="item-modal">
-                <p>Tên công việc</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item-modal">
-                <p>Loại sản phẩm:</p>
-                <Input type="date"></Input>
-              </div>
-              <div className="item-modal-last">
-                <p>Trạng thái:</p>
-                <div className="item-right">
-                  <p className="switch">
-                    <Form.Item valuePropName="checked">
-                      <Switch checked="true" />
-                    </Form.Item>
-                  </p>
-                  <p>Làm việc</p>
-                </div>
-              </div>
-
-              <div className="footer-modal">
-                <span className="back" onClick={handleCancelAssignWork}>
-                  Hủy bỏ
-                </span>
-                <span className="edit save" onClick={handleOkAssignWork}>
-                  Lưu
-                </span>
-              </div>
-            </div>
-          </div>
-        </Modal>
 
         {/* modal nhom */}
         <ModalGroup
