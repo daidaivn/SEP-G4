@@ -18,7 +18,7 @@ import {
   GetWorkDetailById,
   UpdateWork,
   AddWork,
-  GetDataForSchedule
+  GetDataForSchedule,
 } from "../../sevices/CalendarSevice";
 import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
 import { GetAllWorkAreas } from "../../sevices/WorkAreaSevice";
@@ -46,11 +46,11 @@ const CalendarComponent = () => {
   const [selectedWeek, setSelectedWeek] = useState(defaultValue);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [dataForSchedule, setDataForSchedule] = useState();
-  
+
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
-  
+
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
   };
@@ -445,7 +445,7 @@ const CalendarComponent = () => {
       new Promise((resolve) => {
         GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear)
           .then((data) => {
-            setDataForSchedule(data)
+            setDataForSchedule(data);
             resolve(data);
           })
           .catch((error) => {
@@ -453,17 +453,16 @@ const CalendarComponent = () => {
           });
       }),
       {
-        pending: 'Đang tải dữ liệu',
-        error: 'Lỗi lịch làm việc ',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi lịch làm việc ",
       }
     );
   };
 
-
   useEffect(() => {
     if (selectedWeek) {
-    FetchDataForSchedule();
-  }
+      FetchDataForSchedule();
+    }
   }, [selectedWeek]);
 
   return (
@@ -493,7 +492,7 @@ const CalendarComponent = () => {
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
           showModalGroup={showModalGroup}
-          setDataForSchedule = {setDataForSchedule}
+          setDataForSchedule={setDataForSchedule}
           dataForSchedule={dataForSchedule}
           defaultValue={defaultValue}
           selectedWeek={selectedWeek}
@@ -530,8 +529,7 @@ const CalendarComponent = () => {
             workidDetail={workidDetail}
           />
         ) : (
-          <>
-          </>
+          <></>
         )}
 
         {/* modal them cong viec */}
