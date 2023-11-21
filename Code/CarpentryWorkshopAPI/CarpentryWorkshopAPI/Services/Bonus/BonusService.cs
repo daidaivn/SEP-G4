@@ -89,6 +89,18 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     .Include(x => x.Employee)
                     .Where(sd => sd.BonusDate >= startDateOfMonth && sd.BonusDate <= endDateOfMonth)
                     .ToList();
+                var personSpecial = _context.SpecialOccasions
+                    .Include(sp => sp.Employee)
+                    .Where(sd => sd.OccasionDate >= startDateOfMonth && sd.OccasionDate <= endDateOfMonth)
+                    .Select(ps => new AllRewardDTO.SPE
+                    {
+                        OccasionId = ps.OccasionId,
+                        EmployeeId = ps.EmployeeId,
+                        Beneficiary =ps.Employee.LastName +" "+ps.Employee.FirstName,
+                        OccasionType = ps.OccasionType,
+                        Amount = ps.Amount,
+                        OccasionDateString = ps.OccasionDate.Value.ToString("dd'-'MM'-'yyyy"),
+                    }).ToList();
                 var persondto = _mapper.Map<List<DTO.AllRewardDTO.PR>>(person);
                 var company = _context.CompanyWideBonus
                     .Include(x => x.Employee)
@@ -113,6 +125,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 }
                 listreward.PersonalRewardList = persondto;
                 listreward.CompanyRewardList = companydto;
+                listreward.SpecialOcationList = personSpecial;
             }
             return listreward;
         }
