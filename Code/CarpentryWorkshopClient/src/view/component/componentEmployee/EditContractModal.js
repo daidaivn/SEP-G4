@@ -24,6 +24,7 @@ const EditContractModal = ({
   contractTypes,
   EditName,
   amount,
+  handleContractAmountChange,
   setAmount
 }) => {
   return (
@@ -73,7 +74,7 @@ const EditContractModal = ({
               </tr>
               <tr>
                 <p className="salary-contract">Lương hợp đồng:</p>
-                <Input type="text" placeholder="Lương hợp đồng" value={amount} onChange={(e) => setAmount(e.target.value)}></Input>
+                <Input type="text" placeholder="Lương hợp đồng" value={amount} onChange={handleContractAmountChange}></Input>
               </tr>
               <tr>
                 <div className="input-date">
