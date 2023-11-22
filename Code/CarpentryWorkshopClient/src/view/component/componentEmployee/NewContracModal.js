@@ -20,6 +20,9 @@ const NewContractModal = ({
   setContractStatus,
   convertDobToISO,
   contractTypes,
+  amount,
+  handleContractAmountChange,
+  setAmount
 }) => {
   return (
     <Modal
@@ -70,7 +73,7 @@ const NewContractModal = ({
               </tr>
               <tr>
                 <p className="salary-contract">Lương hợp đồng:</p>
-                <Input type="text" placeholder="Lương hợp đồng"></Input>
+                <Input type="text" placeholder="Lương hợp đồng" value={amount} onChange={(e) => setAmount(e.target.value)}></Input>
               </tr>
               <tr>
                 <div className="input-date">
