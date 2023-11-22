@@ -1,5 +1,8 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { Input, Modal, Switch, Form, Select } from "antd";
+import { AddWork, UpdateWork } from "../../../sevices/CalendarSevice";
+
 
 const ListModuleDetail3 = ({
   isModalOpenDetailShift,
@@ -13,20 +16,104 @@ const ListModuleDetail3 = ({
   allWorkAreas,
   handleChangeWorkAreaId,
   convertDate,
-  getCurrentDateSEAsia,
-  setIsModalOpenDetailShift,
   handleCancelDetailWorkInList,
+  getTomorrowDateSEAsia,
+  userEmployeeID,
+  fetchWorkDetailById,
+  workidDetail,
+  FetchDataForSchedule,
 }) => {
+  console.log('ac',actionWork);
   
-  const CheckActionEditAndAdd =() =>{
-    if(actionWork === "addWork"){
-      setIsModalOpenDetailShift(false);
+  const CheckActionEditAndAdd = () => {
+    if (actionWork === "addWork") {
+      handleAddWork()
     }
-    else{
-      setIsModalOpenDetailShift(false);
+    else {
+      handleUpdateWork()
     }
   }
 
+  const handleAddWork = () => {
+    if (!validateWorkDetail(workDetailById)) {
+      return;
+    }
+    toast.promise(
+      new Promise((resolve) => {
+        AddWork(workDetailById, userEmployeeID)
+          .then((data) => {
+            handleCancelDetailWorkInList()
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Thêm công việc mới thành công",
+        error: "Lỗi thêm vào nhóm",
+      }
+    );
+  };
+
+  const handleUpdateWork = () => {
+    if (!validateWorkDetail(workDetailById)) {
+      return;
+    }
+    toast.promise(
+      new Promise((resolve) => {
+        UpdateWork(workDetailById)
+          .then((data) => {
+            resolve(data);
+            FetchDataForSchedule();
+              handleCancelDetailWorkInList()
+              fetchWorkDetailById(workidDetail);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Cập nhật công việ thành công",
+        error: "Lỗi thêm vào nhóm",
+      }
+    );
+  };
+
+  const validateWorkDetail = (workDetail) => {
+    if (!workDetail.workName || workDetail.workName.length === 0) {
+      toast.warning("Tên công việc không được để trống.");
+      return false;
+    }
+    if (!workDetail.unitCostId || workDetail.unitCostId.length === 0) {
+      toast.warning("Vui lòng chọn loại sản phẩm.");
+      return false;
+    }
+    if (
+      isNaN(parseFloat(workDetail.unitCost)) ||
+      parseFloat(workDetail.unitCost) < 0
+    ) {
+      toast.warning("Đơn giá sản phẩm không hợp lệ.");
+      return false;
+    }
+
+    if (
+      isNaN(parseFloat(workDetail.totalProduct)) ||
+      parseFloat(workDetail.totalProduct) < 0
+    ) {
+      toast.warning("Số lượng sản phẩm không hợp lệ.");
+      return false;
+    }
+
+    if (!workDetail.workAreaId || workDetail.workAreaId.length === 0) {
+      toast.warning("Vui lòng chọn khu vực.");
+      return false;
+    }
+
+    return true;
+  };
 
   return (
     <div className="modal-detail ">
@@ -34,12 +121,32 @@ const ListModuleDetail3 = ({
         className="modal"
         open={isModalOpenDetailShift}
         onOk={handleOkDetailShift}
+        onCancel={handleCancelDetailWorkInList}
       >
         <div className="modal-detail-all">
           <div className="head-modal">
             {
               actionWork === "addWork" ? (<p>Thêm công việc</p>) : (<p>Sửa công việc</p>)
             }
+            {
+              actionWork === "viewWork" ? (
+                <svg
+                  onClick={handleCancelDetailWorkInList}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
+                    fill="white"
+                  />
+                </svg>) : (<></>)
+            }
+
           </div>
           <div className="body-modal">
             <div className="item-modal">
@@ -54,6 +161,7 @@ const ListModuleDetail3 = ({
                     workName: e.target.value,
                   })
                 }
+                disabled={actionWork === "viewWork"}
               />
             </div>
             <div className="item-modal">
@@ -70,6 +178,7 @@ const ListModuleDetail3 = ({
                     value: unitCost.uniCostId,
                     label: unitCost.unitName,
                   }))}
+                  disabled={actionWork === "viewWork"}
                 />
               ) : (
                 <Select
@@ -84,12 +193,14 @@ const ListModuleDetail3 = ({
                 type="number"
                 value={workDetailById.unitCost}
                 placeholder="Nhập giá sản phẩm"
-                onChange={(e) => {
-                  if (e.target.value.match(/^\d*$/)) { // Chỉ cho phép số nguyên
+                onChange={actionWork !== "viewWork" ? (e) => {
+                  if (e.target.value.match(/^\d*$/)) {
                     setWorkDetailById({ ...workDetailById, unitCost: e.target.value });
                   }
-                }}
+                } : undefined}
+                disabled={actionWork === "viewWork"}
               />
+
             </div>
             <div className="item-modal">
               <p>Số sản phẩm cần sản xuất</p>
@@ -97,11 +208,12 @@ const ListModuleDetail3 = ({
                 type="number"
                 value={workDetailById.totalProduct}
                 placeholder="Nhập số sản phẩm cần sản xuất"
-                onChange={(e) => {
-                  if (e.target.value.match(/^\d*$/)) { // Chỉ cho phép số nguyên
+                onChange={actionWork !== "viewWork" ? (e) => {
+                  if (e.target.value.match(/^\d*$/)) {
                     setWorkDetailById({ ...workDetailById, totalProduct: e.target.value });
                   }
-                }}
+                } : undefined}
+                disabled={actionWork === "viewWork"}
               />
             </div>
             <div className="item-modal">
@@ -113,11 +225,14 @@ const ListModuleDetail3 = ({
                   value={workDetailById && allWorkAreas.some(area => area.workAreaId === workDetailById.workAreaId)
                     ? workDetailById.workAreaId
                     : undefined}
-                  onChange={handleChangeWorkAreaId}
-                  options={allWorkAreas.map((allWorkArea) => ({
-                    value: allWorkArea.workAreaId,
-                    label: allWorkArea.workAreaName,
-                  }))}
+                  onChange={actionWork !== "viewWork" ? handleChangeWorkAreaId : undefined}
+                  options={actionWork !== "viewWork"
+                    ? allWorkAreas.map((allWorkArea) => ({
+                      value: allWorkArea.workAreaId,
+                      label: allWorkArea.workAreaName,
+                    }))
+                    : []}
+                  disabled={actionWork === "viewWork"}
                 />
               ) : (
                 <Select
@@ -127,30 +242,33 @@ const ListModuleDetail3 = ({
               )}
             </div>
             <div className="item-modal">
-              <p>Thời gian bắt đầu:</p>
+              <p>Ngày:</p>
               <Input
                 type="date"
-                placeholder="Chọn ngày bắt đầu"
-                value={workDetailById && convertDate(workDetailById.timeStart) ? convertDate(workDetailById.timeStart) : convertDate(getCurrentDateSEAsia())}
-                min={convertDate(getCurrentDateSEAsia())}
+                placeholder="Chọn ngày kết thúc"
+                value={workDetailById && convertDate(workDetailById.date) ? convertDate(workDetailById.date) : convertDate(getTomorrowDateSEAsia())}
+                min={convertDate(getTomorrowDateSEAsia())}
                 onChange={(e) =>
                   setWorkDetailById({
                     ...workDetailById,
-                    timeStart: convertDate(e.target.value),
+                    date: convertDate(e.target.value),
                   })
                 }
+                disabled={actionWork === "viewWork"}
               />
             </div>
-            <div className="footer-modal">
-              <span className="back" onClick={handleCancelDetailWorkInList}>
-                Hủy bỏ
-              </span>
-              {
-               <span className="save" onClick={CheckActionEditAndAdd}>
-                  Lưu
-                </span>
-              }
-            </div>
+            {
+              actionWork !== "viewWork" ? (
+                <div className="footer-modal">
+                  <span className="back" onClick={handleCancelDetailWorkInList}>
+                    Hủy bỏ
+                  </span>
+                  <span className="save" onClick={CheckActionEditAndAdd}>
+                    Lưu
+                  </span>
+                </div>
+              ) : (<></>)
+            }
           </div>
         </div>
       </Modal>

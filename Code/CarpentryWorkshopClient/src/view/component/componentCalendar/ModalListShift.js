@@ -5,10 +5,8 @@ const ModalListShift = ({
   isModalOpenListShift,
   handleOkListShift,
   handleCancelListShift,
-  showModalDetail,
   allWorks,
-  fetchWorkDetailById,
-  handleCancelDetailWorkInList
+  handlegetDataDetail,
 }) => {
   return (
     <div className="modal-shift">
@@ -193,7 +191,7 @@ const ModalListShift = ({
                         </div>
                         <div
                           className="item4"
-                          onClick={() => fetchWorkDetailById(work.workId)}
+                          onClick={() => handlegetDataDetail(work.workId,work.status)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

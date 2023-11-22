@@ -1,14 +1,13 @@
 import { parseWeekRange } from "../../logicTime/getWeeDays";
 
 const TableCalendar = ({
-  handleEditDetailShift,
   showModalDetailShift,
   dataForSchedule,
   selectedWeek,
   defaultValue,
   showModalGroup,
   setActionWork,
-  fetchWorkDetailById
+  handlegetDataDetail
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -45,7 +44,8 @@ const TableCalendar = ({
                         Kết thúc
                         <svg
                           onClick={() => {
-                            fetchWorkDetailById(work.workId, work.status, team.teamName)
+                            handlegetDataDetail(work.workId)
+                            setActionWork("viewWork")
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -104,7 +104,7 @@ const TableCalendar = ({
                         <svg
                           onClick={() => {
                             setActionWork("editWork")
-                            fetchWorkDetailById(work.workId)
+                            handlegetDataDetail(work.workId)
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -123,10 +123,7 @@ const TableCalendar = ({
                         </svg>
                       </>
                     ) : (
-                      <>
-                        
-                      </>
-                    )
+                      <></>)
                     }
                   </td>
                 ))}
