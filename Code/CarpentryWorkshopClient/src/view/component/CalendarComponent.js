@@ -86,10 +86,12 @@ const CalendarComponent = () => {
   }
 
   const handleCancelDetailWorkInList = () =>{
-    setIsModalOpenListShift(true);
+    if(actionWork === "detailWork"){
+      setIsModalOpenListShift(true);
+    }
     setIsModalOpenDetailShift(false);
   }
-  
+
   const [allWorks, setAllWorks] = useState([]);
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
@@ -455,6 +457,7 @@ const CalendarComponent = () => {
           selectedYear={selectedYear}
           handleChangeYear={handleChangeYear}
           yearOptions={yearOptions}
+          setActionWork={setActionWork}
         />
 
         <TableCalendar
@@ -503,33 +506,8 @@ const CalendarComponent = () => {
           <></>
         )}
 
-        {/* modal them cong viec */}
-        <ModalAdd
-          isModalOpeAdd={isModalOpeAdd}
-          handleOkAdd={handleOkAdd}
-          handleCancelAdd={handleCancelAdd}
-          workDetailById={workDetailById}
-          setWorkDetailById={setWorkDetailById}
-          handleChangeUnitCostId={handleChangeUnitCostId}
-          allUnitCosts={allUnitCosts}
-          handleChangeWorkAreaId={handleChangeWorkAreaId}
-          allWorkAreas={allWorkAreas}
-          convertDate={convertDate}
-          handleAddWork={handleAddWork}
-
-        />
-
-        {isEditingDetailShift ? (
-          // modal chỉnh sửa phân công việc
-          <WorkModalTeam
-            isModalOpenDetailShift={isModalOpenDetailShift}
-            handleSaveDetailShift={handleSaveDetailShift}
-            handleCancelDetailShift={handleCancelDetailShift}
-            handleChange={handleChange}
-            handleBackDetailShift={handleBackDetailShift}
-          />
-        ) : (
-          // modal chi tiêt phân công việc
+        
+          {/* // modal chi tiêt phân công việc */}
           <ListModuleDetail3
             isModalOpenDetailShift={isModalOpenDetailShift}
             handleCancelDetailShift={handleCancelDetailShift}
@@ -548,7 +526,7 @@ const CalendarComponent = () => {
              handleCancelDetailWorkInList={handleCancelDetailWorkInList}
             
           />
-        )}
+        
 
         {/* {isEditingEditWork ? (
         

@@ -11,6 +11,7 @@ const ListSearchFilterAdd = ({
   selectedYear,
   handleChangeYear,
   yearOptions,
+  setActionWork
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -97,7 +98,10 @@ const ListSearchFilterAdd = ({
           placeholder="Chọn năm"
         />
       </div>
-      <div className="ListWork" onClick={fetchAllWorks}>
+      <div className="ListWork" onClick={() => {
+        fetchAllWorks();
+        setActionWork("detailWork")
+      }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="36"
