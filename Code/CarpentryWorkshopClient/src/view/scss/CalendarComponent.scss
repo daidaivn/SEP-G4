@@ -452,6 +452,7 @@ td {
     gap: 10px;
     align-self: stretch;
     tr {
+      box-shadow: unset;
       display: flex;
       padding: 0px 12px;
       align-items: center;
@@ -502,6 +503,7 @@ td {
     gap: 10px;
     align-self: stretch;
     tr {
+      box-shadow: unset;
       display: flex;
       padding: 0px 23px 0px 12px;
       justify-content: space-between;
@@ -619,6 +621,7 @@ td {
           border: unset;
         }
         td {
+          height: 100%;
           display: flex;
           padding: 20px 0px;
           flex-direction: column;

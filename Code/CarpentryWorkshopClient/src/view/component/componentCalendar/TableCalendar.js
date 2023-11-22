@@ -1,13 +1,13 @@
 import { parseWeekRange } from "../../logicTime/getWeeDays";
 
 const TableCalendar = ({
-  handleEditDetailShift,
   showModalDetailShift,
   dataForSchedule,
   selectedWeek,
   defaultValue,
   showModalGroup,
-  setActionWork
+  setActionWork,
+  handlegetDataDetail
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -38,12 +38,15 @@ const TableCalendar = ({
                   </div>
                 </td>
                 {team.dataForWork.map((work, workIndex) => (
-                  <td key={workIndex}>
+                  <td key={workIndex} >
                     {work.status === "end" ? (
                       <>
                         Kết thúc
                         <svg
-                          onClick={handleEditDetailShift}
+                          onClick={() => {
+                            handlegetDataDetail(work.workId)
+                            setActionWork("viewWork")
+                          }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
                           height="30"
@@ -95,13 +98,13 @@ const TableCalendar = ({
                           </defs>
                         </svg>
                       </>
-                    ) : (
+                    ) : work.status === "yes" ? (
                       <>
                         Chi tiết
                         <svg
                           onClick={() => {
-                            showModalDetailShift();
                             setActionWork("editWork")
+                            handlegetDataDetail(work.workId)
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -119,7 +122,9 @@ const TableCalendar = ({
                           />
                         </svg>
                       </>
-                    )}
+                    ) : (
+                      <></>)
+                    }
                   </td>
                 ))}
               </tr>
