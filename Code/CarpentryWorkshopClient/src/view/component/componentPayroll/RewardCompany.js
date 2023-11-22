@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Modal } from "antd";
 
 const RewardCompany = ({
@@ -8,6 +8,9 @@ const RewardCompany = ({
   showModalRewardPersonal,
   showModalRewardAll,
   showModalHoliday,
+  reward,
+  date,
+  setDate,
 }) => {
   return (
     <>
@@ -23,7 +26,7 @@ const RewardCompany = ({
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Thưởng công ty</p>
-              <Input type="date"></Input>
+              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)}></Input>
             </div>
             <div className="close">
               <svg
@@ -52,51 +55,78 @@ const RewardCompany = ({
                 <td className="middle">Người được thưởng</td>
                 <td className="last">Ngày khen thưởng</td>
               </thead>
-              <div className="item-reward">
-                <p className="stt">1</p>
-                <div className="child-reward">
-                  <p>Thưởng Tết</p>
-                </div>
-                <div className="child-reward">
-                  <p>1.000.000</p>
-                </div>
-                <div className="child-reward">
-                  <p>Toàn thể nhân viên</p>
-                </div>
-                <div className="child-reward last1">
-                  <p>20/10/2023</p>
-                </div>
-              </div>
-              <div className="item-reward">
-                <p className="stt">2</p>
-                <div className="child-reward">
-                  <p>Nhân viên xuất sắc</p>
-                </div>
-                <div className="child-reward">
-                  <p>500.000</p>
-                </div>
-                <div className="child-reward">
-                  <p>Nguyễn Văn an</p>
-                </div>
-                <div className="child-reward last1">
-                  <p>30/10/2023</p>
-                </div>
-              </div>
-              <div className="item-reward">
-                <p className="stt">3</p>
-                <div className="child-reward">
-                  <p>Thưởng 30/4 - 1/5</p>
-                </div>
-                <div className="child-reward">
-                  <p>500.000</p>
-                </div>
-                <div className="child-reward">
-                  <p>Toàn thể nhân viên</p>
-                </div>
-                <div className="child-reward last1">
-                  <p>15/11/2023</p>
-                </div>
-              </div>
+              {reward &&
+              reward.personalRewardList &&
+              Array.isArray(reward.personalRewardList) &&
+              reward.personalRewardList.length === 0 &&
+              reward.companyRewardList &&
+              Array.isArray(reward.companyRewardList) &&
+              reward.companyRewardList.length === 0 &&
+              reward.specialOcationList &&
+              Array.isArray(reward.specialOcationList) &&
+              reward.specialOcationList.length === 0 ? (
+                <p>Thông tin chưa sẵn sàng hoặc không tồn tại.</p>
+              ) : (
+                <React.Fragment>
+                  {Array.isArray(reward.specialOcationList) &&
+                    reward.specialOcationList.map((item, index) => (
+                      // Render individual items here
+                      <div key={index} className="item-reward">
+                        <p className="stt">{index+1}</p>
+                        <div className="child-reward">
+                          <p>{item.occasionType}</p>
+                        </div>
+                        <div className="child-reward">
+                          <p>{item.amount}VNĐ</p>
+                        </div>
+                        <div className="child-reward">
+                          <p>{item.beneficiary}</p>
+                        </div>
+                        <div className="child-reward last1">
+                          <p>{item.occasionDateString}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {Array.isArray(reward.companyRewardList) &&
+                    reward.companyRewardList.map((item, index) => (
+                      // Render individual items here
+                      <div key={index} className="item-reward">
+                        <p className="stt">{index+1}</p>
+                        <div className="child-reward">
+                          <p>{item.bonusName}</p>
+                        </div>
+                        <div className="child-reward">
+                          <p>{item.bonusAmount}VNĐ</p>
+                        </div>
+                        <div className="child-reward">
+                          <p>{item.beneficiary}</p>
+                        </div>
+                        <div className="child-reward last1">
+                          <p>{item.bonusDatestring}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {Array.isArray(reward.personalRewardList) &&
+                    reward.personalRewardList.map((item, index) => (
+                      // Render individual items here
+                      <div key={index} className="item-reward">
+                        <p className="stt">{index+1}</p>
+                        <div className="child-reward">
+                          <p>{item.bonusName}</p>
+                        </div>
+                        <div className="child-reward">
+                          <p>{item.bonusAmount}VNĐ</p>
+                        </div>
+                        <div className="child-reward">
+                          <p>{item.beneficiary}</p>
+                        </div>
+                        <div className="child-reward last1">
+                          <p>{item.bonusDatestring}</p>
+                        </div>
+                      </div>
+                    ))}
+                </React.Fragment>
+              )}
             </div>
             <div className="div2">
               {/*show Modal Thưởng cá nhân */}
