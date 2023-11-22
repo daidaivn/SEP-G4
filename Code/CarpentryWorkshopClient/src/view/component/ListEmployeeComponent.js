@@ -77,6 +77,7 @@ function ListEmployeeComponent() {
   const [contractLink, setContractLink] = useState("");
   const [contractStatus, setContractStatus] = useState(true);
   const [contractImage, setContractImage] = useState("");
+  const [amount, setAmount] = useState("");
 
   const [filterGender, setFilterGender] = useState(null);
   const [filterStatus, setFilterStatus] = useState(null);
@@ -383,6 +384,12 @@ function ListEmployeeComponent() {
     if (!contractCode) {
       errors.push("Vui lòng nhập mã hợp đồng.");
     }
+    if(!amount){
+      errors.push("Vui lòng nhập số tiền");
+    }
+    if(!(typeof amount === 'number')){
+      errors.push("Vui lòng nhập số tiền là số");
+    }
 
     if (!contractStartDate) {
       errors.push("Vui lòng chọn thời gian bắt đầu hợp đồng không được phép.");
@@ -405,7 +412,6 @@ function ListEmployeeComponent() {
 
   const EditName = () => {
     const isDataContract = validateDataContract();
-
     if (!isDataContract) {
       return;
     }
@@ -420,7 +426,8 @@ function ListEmployeeComponent() {
           contractStatus,
           contractType,
           contractCode,
-          contractImage
+          contractImage,
+          amount,
         )
           .then((data) => {
             resolve(data);
@@ -972,6 +979,8 @@ function ListEmployeeComponent() {
         handleImageUpload={handleImageUpload}
         previewImage={previewImage}
         setPreviewImage={setPreviewImage}
+        amount={amount}
+        setAmount={setAmount}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -1386,7 +1395,7 @@ function ListEmployeeComponent() {
                 </tr>
                 <tr>
                   <p className="salary-contract">Lương hợp đồng:</p>
-                  <Input type="text" placeholder="Lương hợp đồng"></Input>
+                  <Input type="text" placeholder="Lương hợp đồng" value={contract.amount}></Input>
                 </tr>
                 <tr>
                   <div className="input-date">

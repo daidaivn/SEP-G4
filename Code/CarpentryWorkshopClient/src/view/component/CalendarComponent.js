@@ -4,9 +4,7 @@ import "../scss/fonts.scss";
 import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Form, Input, Select, Switch } from "antd";
 import React, { useState, useEffect } from "react";
-import { Modal } from "antd";
 import { toast } from "react-toastify";
 import {
   getCurrentDateSEAsia,
@@ -18,7 +16,7 @@ import {
   GetWorkDetailById,
   UpdateWork,
   AddWork,
-  GetDataForSchedule
+  GetDataForSchedule,
 } from "../../sevices/CalendarSevice";
 import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
 import { GetAllWorkAreas } from "../../sevices/WorkAreaSevice";
@@ -46,11 +44,14 @@ const CalendarComponent = () => {
   const [selectedWeek, setSelectedWeek] = useState(defaultValue);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [dataForSchedule, setDataForSchedule] = useState();
+  const [actionWork, setActionWork] = useState();
+
+  console.log('actionWork',actionWork);
   
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
-  
+
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
   };
@@ -347,6 +348,7 @@ const CalendarComponent = () => {
             resolve(data);
             fetchAllUnitCosts();
             fetchAllWorkAreas();
+            showModalDetailShift()
             setWorkDetailById({
               workId: data.workId,
               workName: data.workName || "Chưa có",
@@ -360,7 +362,6 @@ const CalendarComponent = () => {
               timeEnd: data.timeEnd || "Chưa có",
               status: data.status,
             });
-            showModalDetail();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -445,7 +446,7 @@ const CalendarComponent = () => {
       new Promise((resolve) => {
         GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear)
           .then((data) => {
-            setDataForSchedule(data)
+            setDataForSchedule(data);
             resolve(data);
           })
           .catch((error) => {
@@ -453,17 +454,16 @@ const CalendarComponent = () => {
           });
       }),
       {
-        pending: 'Đang tải dữ liệu',
-        error: 'Lỗi lịch làm việc ',
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi lịch làm việc ",
       }
     );
   };
 
-
   useEffect(() => {
     if (selectedWeek) {
-    FetchDataForSchedule();
-  }
+      FetchDataForSchedule();
+    }
   }, [selectedWeek]);
 
   return (
@@ -493,12 +493,13 @@ const CalendarComponent = () => {
           handleEditDetailShift={handleEditDetailShift}
           showModalDetailShift={showModalDetailShift}
           showModalGroup={showModalGroup}
-          setDataForSchedule = {setDataForSchedule}
+          setDataForSchedule={setDataForSchedule}
           dataForSchedule={dataForSchedule}
           defaultValue={defaultValue}
           selectedWeek={selectedWeek}
           selectedYear={selectedYear}
           userEmployeeID={userEmployeeID}
+          setActionWork={setActionWork}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -530,8 +531,7 @@ const CalendarComponent = () => {
             workidDetail={workidDetail}
           />
         ) : (
-          <>
-          </>
+          <></>
         )}
 
         {/* modal them cong viec */}
@@ -567,6 +567,8 @@ const CalendarComponent = () => {
             handleEditDetailShift={handleEditDetailShift}
             showModalDetail={showModalDetail}
             showModalEditWork={showModalEditWork}
+            actionWork={actionWork}
+
           />
         )}
 

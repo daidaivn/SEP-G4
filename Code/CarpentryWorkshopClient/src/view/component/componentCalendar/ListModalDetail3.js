@@ -8,6 +8,7 @@ const ListModuleDetail3 = ({
   showModalEditWork,
   showModalDetail,
   handleChange,
+  actionWork
 }) => {
   return (
     <div className="modal-detail ">
@@ -15,11 +16,12 @@ const ListModuleDetail3 = ({
         className="modal"
         open={isModalOpenDetailShift}
         onOk={handleOkDetailShift}
-        onCancel={handleCancelDetailShift}
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            <p>Thêm công việc</p>
+            {
+              actionWork === "addWork" ? (<p>Thêm công việc</p>) : (<p>Sửa công việc</p>)
+            }
           </div>
           <div className="body-modal">
             <div className="item-modal">
@@ -90,12 +92,13 @@ const ListModuleDetail3 = ({
               <span className="back" onClick={handleCancelDetailShift}>
                 Hủy bỏ
               </span>
-              <span className="edit" onClick={showModalEditWork}>
-                Sửa
-              </span>
-              <span className="save" onClick={handleOkDetailShift}>
-                Lưu
-              </span>
+              {
+                actionWork === "addWork" ? (<span className="save" onClick={handleOkDetailShift}>
+                  Lưu
+                </span>) : (<span className="edit" onClick={showModalEditWork}>
+                  Sửa
+                </span>)
+              }
             </div>
           </div>
         </div>
