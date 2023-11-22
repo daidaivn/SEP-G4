@@ -84,7 +84,9 @@ const ListSearchAndFilter = ({
   EditName,
   handleImageUpload,
   previewImage,
-  setPreviewImage
+  setPreviewImage,
+  setAmount,
+  amount,
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -415,6 +417,8 @@ const ListSearchAndFilter = ({
         setContractStatus={setContractStatus}
         convertDobToISO={convertDobToISO}
         contractTypes={contractTypes}
+        setAmount={setAmount}
+        amount={amount}
       />
       <NewRoleDepartmentModal
         isModalOpenAddRole={isModalOpenAddRole}
@@ -448,6 +452,8 @@ const ListSearchAndFilter = ({
           convertDobToISO={convertDobToISO}
           contractTypes={contractTypes}
           EditName={EditName}
+          setAmount={setAmount}
+          amount={amount}
         />
       ) : (
         <ViewContractModal
