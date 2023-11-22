@@ -813,19 +813,36 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture); ;
                     while(startDate <= endDate)
                     {
+                        string status;
+                        if (startDate.Date <= DateTime.Now.Date)
+                        {
+                            status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null;
+                        }
+                        else
+                        {
+                            status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no";
+                        }
+
                         day.Add(new
                         {
                             Date = startDate.ToString("dd'-'MM'-'yyyy"),
-                            Status = DateTime.Now.Date == DateTime.Now.Date ? (DateTime.Now.Date < startDate.Date ?(teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end" ) : "continue"
+                            Status = status,
+                            WorkId = teamworks.Where(tw => tw.Date.Value.Date == startDate.Date).Select(tw => tw.WorkId).FirstOrDefault()
                         });
                         startDate = startDate.AddDays(1);
                     }
+                    var shiftTypeNames = _context.WorkSchedules
+                        .Where(ws => ws.TeamId == team.TeamId && ws.StartDate.Value.Date <= startDate.Date && ws.EndDate.Value.Date >= endDate.Date)
+                        .Select(ws => ws.ShiftType.TypeName)
+                        .Distinct()
+                        .ToList();
                     result.Add(new
                     {
+                        ShiftTypeName = shiftTypeNames,
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
-                        DataForWork = day,
+                        DataForWork = day,                     
                     });
                     
                 }
