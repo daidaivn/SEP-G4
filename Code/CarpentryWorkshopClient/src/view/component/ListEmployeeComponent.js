@@ -113,6 +113,7 @@ function ListEmployeeComponent() {
     console.log("contractLink:", contractLink);
     console.log("contractStatus:", contractStatus);
     console.log("contractImage", contractImage);
+    console.log("amount", amount);
   };
 
   const addDependent = () => {
@@ -125,6 +126,10 @@ function ListEmployeeComponent() {
       );
       setRoleDepartmentValues(newRoleDepartmentValues);
     }
+  };
+  const handleContractAmountChange = (e) => {
+    const formattedValue = e.target.value.replace(/\D/g, "");
+    setAmount(formattedValue);
   };
 
   const handlePhoneNumberChange = (e) => {
@@ -198,6 +203,7 @@ function ListEmployeeComponent() {
         setContractEndDate(data.endDate); // Tên state đã được sửa
         setContractLink(data.linkDoc);
         setContractImage(data.image);
+        setAmount(data.amount);
       })
       .catch((error) => {
         console.log("error", error);
@@ -387,7 +393,7 @@ function ListEmployeeComponent() {
     if(!amount){
       errors.push("Vui lòng nhập số tiền");
     }
-    if(!(typeof amount === 'number')){
+    if(isNaN(amount)){
       errors.push("Vui lòng nhập số tiền là số");
     }
 
@@ -560,7 +566,8 @@ function ListEmployeeComponent() {
           contractLink,
           contractStatus,
           contractType,
-          contractCode
+          contractCode,
+          amount
         )
           .then((data) => {
             console.log("data", data);
@@ -635,6 +642,7 @@ function ListEmployeeComponent() {
     setContractLink("");
     setContractStatus("");
     setContractImage("");
+    setAmount("");
   };
 
   const handleCancelView = () => {
@@ -981,6 +989,7 @@ function ListEmployeeComponent() {
         previewImage={previewImage}
         setPreviewImage={setPreviewImage}
         amount={amount}
+        handleContractAmountChange={handleContractAmountChange}
         setAmount={setAmount}
       />
       <div className="list-text-header-res">

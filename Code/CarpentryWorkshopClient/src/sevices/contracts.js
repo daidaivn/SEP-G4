@@ -16,7 +16,8 @@ const CreateContract = (
   lDoc,
   stt,
   contractType,
-  cCode
+  cCode,
+  amount
 ) => {
   const eid = id;
   const requestBody = {
@@ -27,6 +28,7 @@ const CreateContract = (
     contractTypeID: contractType,
     contractCode: cCode,
     image: "",
+    amount:Number(amount)
   };
 
   return axios.post(
@@ -44,7 +46,8 @@ const UpdateContract = (
   stt,
   cTypeID,
   cCode,
-  img
+  img,
+  amount
 ) => {
   const requestBody = {
     contractId: cId,
@@ -55,8 +58,10 @@ const UpdateContract = (
     status: stt,
     contractTypeID: cTypeID,
     contractCode: cCode,
-    image:img
+    image:img,
+    amount:Number(amount)
   };
+  console.log('data contract',requestBody);
 
   return axios.put(
     `CCMSapi/Contract/UpdateContract`,
