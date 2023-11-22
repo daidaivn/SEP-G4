@@ -813,19 +813,22 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture); ;
                     while(startDate <= endDate)
                     {
-                        object dayInfo;
+                        string status;
                         if (startDate.Date <= DateTime.Now.Date)
                         {
-                            var status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null;
-                            dayInfo = new { Date = startDate.ToString("dd'-'MM'-'yyyy"), Status = status };
+                            status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null;
                         }
                         else
                         {
-                            string status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no";
-                            dayInfo = new { Date = startDate.ToString("dd'-'MM'-'yyyy"), Status = status };
+                            status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no";
                         }
 
-                        day.Add(dayInfo);
+                        day.Add(new
+                        {
+                            Date = startDate.ToString("dd'-'MM'-'yyyy"),
+                            Status = status,
+                            WorkId = teamworks.Where(tw => tw.Date.Value.Date == startDate.Date).Select(tw => tw.WorkId).FirstOrDefault()
+                        });
                         startDate = startDate.AddDays(1);
                     }
                     var shiftTypeNames = _context.WorkSchedules
@@ -835,7 +838,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ToList();
                     result.Add(new
                     {
-                        ShiftTypeName = shiftTypeNames
+                        ShiftTypeName = shiftTypeNames,
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
