@@ -7,6 +7,7 @@ const TableCalendar = ({
   selectedWeek,
   defaultValue,
   showModalGroup,
+  setActionWork
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -42,6 +43,7 @@ const TableCalendar = ({
                       <>
                         Kết thúc
                         <svg
+                          onClick={handleEditDetailShift}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
                           height="30"
@@ -70,7 +72,10 @@ const TableCalendar = ({
                       <>
                         Thêm
                         <svg
-                          onClick={showModalDetailShift}
+                          onClick={() => {
+                            showModalDetailShift();
+                            setActionWork("addWork")
+                          }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="30"
                           height="30"
@@ -94,7 +99,10 @@ const TableCalendar = ({
                       <>
                         Chi tiết
                         <svg
-                          onClick={handleEditDetailShift}
+                          onClick={() => {
+                            showModalDetailShift();
+                            setActionWork("editWork")
+                          }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
                           height="30"

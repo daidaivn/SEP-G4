@@ -405,7 +405,6 @@ function ListEmployeeComponent() {
 
   const EditName = () => {
     const isDataContract = validateDataContract();
-
     if (!isDataContract) {
       return;
     }

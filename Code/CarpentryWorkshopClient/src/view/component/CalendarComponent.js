@@ -4,9 +4,7 @@ import "../scss/fonts.scss";
 import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Form, Input, Select, Switch } from "antd";
 import React, { useState, useEffect } from "react";
-import { Modal } from "antd";
 import { toast } from "react-toastify";
 import {
   getCurrentDateSEAsia,
@@ -46,7 +44,10 @@ const CalendarComponent = () => {
   const [selectedWeek, setSelectedWeek] = useState(defaultValue);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [dataForSchedule, setDataForSchedule] = useState();
+  const [actionWork, setActionWork] = useState();
 
+  console.log('actionWork',actionWork);
+  
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
@@ -347,6 +348,7 @@ const CalendarComponent = () => {
             resolve(data);
             fetchAllUnitCosts();
             fetchAllWorkAreas();
+            showModalDetailShift()
             setWorkDetailById({
               workId: data.workId,
               workName: data.workName || "Chưa có",
@@ -360,7 +362,6 @@ const CalendarComponent = () => {
               timeEnd: data.timeEnd || "Chưa có",
               status: data.status,
             });
-            showModalDetail();
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -498,6 +499,7 @@ const CalendarComponent = () => {
           selectedWeek={selectedWeek}
           selectedYear={selectedYear}
           userEmployeeID={userEmployeeID}
+          setActionWork={setActionWork}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -565,6 +567,8 @@ const CalendarComponent = () => {
             handleEditDetailShift={handleEditDetailShift}
             showModalDetail={showModalDetail}
             showModalEditWork={showModalEditWork}
+            actionWork={actionWork}
+
           />
         )}
 
