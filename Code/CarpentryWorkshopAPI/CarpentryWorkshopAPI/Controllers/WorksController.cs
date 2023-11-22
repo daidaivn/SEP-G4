@@ -23,89 +23,112 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public IActionResult GetAllWorks(int employeeId)
         {
-            var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+            try
             {
-                DepartmentId =  re.DepartmentId,
-                DepartmentName = re.Department.DepartmentName,
-            }).FirstOrDefault();
-            if(department == null)
-            {
-                return NotFound("notHaveDepartment");
-            }
-            var work = _context.Works.Include(w=>w.UniCost).Include(w=>w.WorkArea).Include(w=>w.TeamWorks).ThenInclude(w=>w.Team).Where(de=>de.DepartmentId == department.DepartmentId)
-                .Select(w=> new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
-                    WorkId = w.WorkId,
-                    WorkName = w.WorkName,
-                    NumberProduct = w.TeamWorks.Sum(e=> e.TotalProduct),
-                    TeamName = w.TeamWorks.Select(tw=>tw.Team.TeamName).Distinct(),
-                    TotalProduct = w.TotalProduct,
-                    UniCostName = w.UniCost.UnitName,
-                    WorkArea = w.WorkArea.WorkAreaName,
-                    Department= department.DepartmentName,
-                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
-                }).ToList();
-            return Ok(work);
+                    DepartmentId = re.DepartmentId,
+                    DepartmentName = re.Department.DepartmentName,
+                }).FirstOrDefault();
+                if (department == null)
+                {
+                    return NotFound("notHaveDepartment");
+                }
+                var work = _context.Works.Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team).Where(de => de.DepartmentId == department.DepartmentId)
+                    .Select(w => new
+                    {
+                        WorkId = w.WorkId,
+                        WorkName = w.WorkName,
+                        NumberProduct = w.TeamWorks.Sum(e => e.TotalProduct),
+                        TeamName = w.TeamWorks.Select(tw => tw.Team.TeamName).Distinct(),
+                        TotalProduct = w.TotalProduct,
+                        UniCostName = w.UniCost.UnitName,
+                        WorkArea = w.WorkArea.WorkAreaName,
+                        Department = department.DepartmentName,
+                        Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
+                    }).ToList();
+                return Ok(work);
+            }catch(Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
         }
         [HttpGet("{wId}")]
         public IActionResult GetWorkDetailById(int wId)
         {
-            var work = _context.Works.Where(w=>w.WorkId == wId).Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
-                .Select(w => new
-                {
-                    WorkId = w.WorkId,
-                    WorkName = w.WorkName,
-                    NumberProduct = w.TeamWorks != null ?  w.TeamWorks.Sum(e => e.TotalProduct) : 0,
-                    TeamName = w.TeamWorks.Select(tw => tw.Team.TeamName).Distinct(),
-                    TotalProduct = w.TotalProduct,
-                    Cost = w.Cost,
-                    UniCostName = w.UniCost.UnitName,
-                    UnitCostId = w.UniCost.UniCostId,
-                    WorkArea = w.WorkArea.WorkAreaName,
-                    WorkAreaId = w.WorkArea.WorkAreaId,
-                    TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
-                    TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
-                    Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
-                    TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
-                    DepartmentId = w.DepartmentId,
-                }).FirstOrDefault();
-            return Ok(work);
+            try
+            {
+                var work = _context.Works.Where(w => w.WorkId == wId).Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
+                    .Select(w => new
+                    {
+                        WorkId = w.WorkId,
+                        WorkName = w.WorkName,
+                        NumberProduct = w.TeamWorks != null ? w.TeamWorks.Sum(e => e.TotalProduct) : 0,
+                        TeamName = w.TeamWorks.Select(tw => tw.Team.TeamName).Distinct(),
+                        TotalProduct = w.TotalProduct,
+                        Cost = w.Cost,
+                        UniCostName = w.UniCost.UnitName,
+                        UnitCostId = w.UniCost.UniCostId,
+                        WorkArea = w.WorkArea.WorkAreaName,
+                        WorkAreaId = w.WorkArea.WorkAreaId,
+                        //TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                        //TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                        Date = w.TeamWorks != null ? w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.ToString("dd-MM-yyyy") : "",
+                        Status = w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date ? "WorkNotStart" :
+                        (w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date < DateTime.Now.Date ? "WorkEnd" :
+                        ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
+                        ? "Done" : "NotDone")),
+                        DepartmentId = w.DepartmentId,
+                    }).FirstOrDefault();
+                return Ok(work);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
 
         }
         [HttpGet("{teamId}/{employeeId}")]
         public IActionResult GetWorkDetailForTeamById(int teamId , int employeeId)
         {
-            var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+            try
             {
-                DepartmentId = re.DepartmentId,
-                DepartmentName = re.Department.DepartmentName,
-            }).FirstOrDefault();
-            if (department == null)
-            {
-                return NotFound("notHaveDepartment");
-            }
-            var worklSchedule = _context.WorkSchedules.Include(ws=>ws.ShiftType).Where(ws=>ws.StartDate <= DateTime.Now && ws.EndDate == null && ws.TeamId == teamId)
-                .Select(ws=> new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
-                    StartTime = ws.ShiftType.StartTime,
-                    Endtime = ws.ShiftType.EndTime,
+                    DepartmentId = re.DepartmentId,
+                    DepartmentName = re.Department.DepartmentName,
                 }).FirstOrDefault();
-
-            var work = _context.Works.Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
-                .Where(de => de.DepartmentId == department.DepartmentId)
-                .Select(w => new
+                if (department == null)
                 {
-                    WorkId = w.WorkId,
-                    TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
-                    TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
-                    TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
-                }).ToList();
-            var workForTeam = work.Where(w => w.TimeRemain > 0);
-            if (worklSchedule.StartTime > worklSchedule.Endtime)
-            {
-                workForTeam = work.Where(w => w.TimeRemain > 2);
+                    return NotFound("notHaveDepartment");
+                }
+                var worklSchedule = _context.WorkSchedules.Include(ws => ws.ShiftType).Where(ws => ws.StartDate <= DateTime.Now && ws.EndDate == null && ws.TeamId == teamId)
+                    .Select(ws => new
+                    {
+                        StartTime = ws.ShiftType.StartTime,
+                        Endtime = ws.ShiftType.EndTime,
+                    }).FirstOrDefault();
+
+                var work = _context.Works.Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
+                    .Where(de => de.DepartmentId == department.DepartmentId)
+                    .Select(w => new
+                    {
+                        WorkId = w.WorkId,
+                        TimeStart = w.StartDate.HasValue ? w.StartDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                        TimeEnd = w.EndDate.HasValue ? w.EndDate.Value.ToString("dd-MM-yyyy HH:mm:ss") : "",
+                        TimeRemain = w.StartDate > DateTime.Now ? (int)(w.StartDate - w.EndDate).Value.TotalDays : (w.EndDate < DateTime.Now ? 0 : (int)(w.EndDate - DateTime.Now).Value.TotalDays),
+                    }).ToList();
+                var workForTeam = work.Where(w => w.TimeRemain > 0);
+                if (worklSchedule.StartTime > worklSchedule.Endtime)
+                {
+                    workForTeam = work.Where(w => w.TimeRemain > 2);
+                }
+                return Ok(workForTeam);
             }
-            return Ok(workForTeam);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
 
         }
         //[HttpGet("{wId}")]
@@ -160,10 +183,19 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound("notHaveDepartment");
                 }
                 var work =  _mapper.Map<Work>(workDTO);
-                work.StartDate= !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
+                work.StartDate= !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : null;
                 work.EndDate= !string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : null;
                 work.DepartmentId = department.DepartmentId;
                 _context.Works.Add(work);
+                _context.SaveChanges();
+                TeamWork newTw = new TeamWork()
+                {
+                    TeamId = workDTO.TeamId,
+                    WorkId = work.WorkId,
+                    TotalProduct = null,
+                    Date = DateTime.Now,
+                };
+                _context.TeamWorks.Add(newTw);
                 _context.SaveChanges();
                 return Ok("add success");
 

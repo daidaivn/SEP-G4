@@ -14,7 +14,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    [Authorize(Roles = "ListGroup")]
+    //[Authorize(Roles = "ListGroup")]
     public class TeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
@@ -820,12 +820,18 @@ namespace CarpentryWorkshopAPI.Controllers
                         });
                         startDate = startDate.AddDays(1);
                     }
+                    var shiftTypeNames = _context.WorkSchedules
+                        .Where(ws => ws.TeamId == team.TeamId && ws.StartDate.Value.Date <= startDate.Date && ws.EndDate.Value.Date >= endDate.Date)
+                        .Select(ws => ws.ShiftType.TypeName)
+                        .Distinct()
+                        .ToList();
                     result.Add(new
                     {
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
                         DataForWork = day,
+                        ShiftTypeName = shiftTypeNames
                     });
                     
                 }
