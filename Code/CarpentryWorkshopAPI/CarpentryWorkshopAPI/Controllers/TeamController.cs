@@ -14,7 +14,7 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
-    //[Authorize(Roles = "ListGroup")]
+    [Authorize(Roles = "ListGroup")]
     public class TeamController : Controller
     {
         private readonly SEPG4CCMSContext _context;
@@ -813,12 +813,19 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture); ;
                     while(startDate <= endDate)
                     {
-                        day.Add(new
+                        object dayInfo;
+                        if (startDate.Date <= DateTime.Now.Date)
                         {
-                            Date = startDate.ToString("dd'-'MM'-'yyyy"),
-                            Status = DateTime.Now.Date == DateTime.Now.Date ? (DateTime.Now.Date < startDate.Date ?(teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end" ) : "continue",
-                            WorkId = teamworks.Where(tw => tw.Date.Value.Date == startDate.Date).Select(tw=>tw.WorkId).FirstOrDefault() 
-                        });
+                            var status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null;
+                            dayInfo = new { Date = startDate.ToString("dd'-'MM'-'yyyy"), Status = status };
+                        }
+                        else
+                        {
+                            string status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no";
+                            dayInfo = new { Date = startDate.ToString("dd'-'MM'-'yyyy"), Status = status };
+                        }
+
+                        day.Add(dayInfo);
                         startDate = startDate.AddDays(1);
                     }
                     var shiftTypeNames = _context.WorkSchedules
@@ -828,11 +835,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ToList();
                     result.Add(new
                     {
+                        ShiftTypeName = shiftTypeNames
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
-                        DataForWork = day,
-                        ShiftTypeName = shiftTypeNames
+                        DataForWork = day,                     
                     });
                     
                 }
