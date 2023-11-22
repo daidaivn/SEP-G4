@@ -77,6 +77,19 @@ const CalendarComponent = () => {
   };
   // Modal danh sach cong viec
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
+  const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
+  const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
+
+  const handleDetailWorkInList = () =>{
+    setIsModalOpenListShift(false);
+    setIsModalOpenDetailShift(true);
+  }
+
+  const handleCancelDetailWorkInList = () =>{
+    setIsModalOpenListShift(true);
+    setIsModalOpenDetailShift(false);
+  }
+  
   const [allWorks, setAllWorks] = useState([]);
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
@@ -142,9 +155,6 @@ const CalendarComponent = () => {
     return dobstring;
   };
 
-  const showModalListShift = () => {
-    setIsModalOpenListShift(true);
-  };
   const handleOkListShift = () => {
     setIsModalOpenListShift(false);
   };
@@ -166,7 +176,8 @@ const CalendarComponent = () => {
   };
 
   // Modal chi tiet cong viec
-  const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
+
+
   const showModalDetail = () => {
     setIsModalOpenDetail(true);
   };
@@ -175,7 +186,6 @@ const CalendarComponent = () => {
     setIsModalOpenDetail(false);
   };
 
-  const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
   const showModalDetailShift = () => {
     setIsModalOpenDetailShift(true);
     setIsEditingDetailShift(false);
@@ -184,7 +194,7 @@ const CalendarComponent = () => {
 
 
   const handleCancelDetailShift = () => {
-    setIsModalOpenDetailShift(false);
+    
   };
 
   // Modal chinh sua cong viec
@@ -270,7 +280,7 @@ const CalendarComponent = () => {
         GetAllWorks(userEmployeeID)
           .then((data) => {
             resolve(data);
-            showModalListShift();
+            setIsModalOpenListShift(true);
             setAllWorks(data);
             console.log("GetAllWorks", data);
           })
@@ -302,7 +312,7 @@ const CalendarComponent = () => {
               handleEditDetailShift();
             }
             else{
-              showModalDetailShift();
+              handleDetailWorkInList();
             }
             setWorkDetailById({
               workId: data.workId,
@@ -535,6 +545,8 @@ const CalendarComponent = () => {
             convertDate={convertDate}
             getCurrentDateSEAsia={getCurrentDateSEAsia}
             setIsModalOpenDetailShift={setIsModalOpenDetailShift}
+             handleCancelDetailWorkInList={handleCancelDetailWorkInList}
+            
           />
         )}
 

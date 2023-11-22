@@ -14,7 +14,8 @@ const ListModuleDetail3 = ({
   handleChangeWorkAreaId,
   convertDate,
   getCurrentDateSEAsia,
-  setIsModalOpenDetailShift
+  setIsModalOpenDetailShift,
+  handleCancelDetailWorkInList,
 }) => {
   
   const CheckActionEditAndAdd =() =>{
@@ -141,7 +142,7 @@ const ListModuleDetail3 = ({
               />
             </div>
             <div className="footer-modal">
-              <span className="back" onClick={handleCancelDetailShift}>
+              <span className="back" onClick={handleCancelDetailWorkInList}>
                 Hủy bỏ
               </span>
               {

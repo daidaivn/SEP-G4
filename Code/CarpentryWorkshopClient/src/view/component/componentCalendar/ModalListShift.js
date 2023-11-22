@@ -8,6 +8,7 @@ const ModalListShift = ({
   showModalDetail,
   allWorks,
   fetchWorkDetailById,
+  handleCancelDetailWorkInList
 }) => {
   return (
     <div className="modal-shift">
