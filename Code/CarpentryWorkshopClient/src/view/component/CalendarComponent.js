@@ -46,8 +46,8 @@ const CalendarComponent = () => {
   const [dataForSchedule, setDataForSchedule] = useState();
   const [actionWork, setActionWork] = useState();
 
-  console.log('actionWork',actionWork);
-  
+  console.log('actionWork', actionWork);
+
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
@@ -77,7 +77,6 @@ const CalendarComponent = () => {
   };
   // Modal danh sach cong viec
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
-  const [teamForSchedule, setTeamForSchedule] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
@@ -171,35 +170,21 @@ const CalendarComponent = () => {
   const showModalDetail = () => {
     setIsModalOpenDetail(true);
   };
-  const handleOkDetail = () => {
-    setIsModalOpenDetail(false);
-  };
+
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
   };
-  // Modal Chi tiết phân công việc
+
   const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
   const showModalDetailShift = () => {
     setIsModalOpenDetailShift(true);
     setIsEditingDetailShift(false);
   };
-  const handleOkDetailShift = () => {
-    setIsModalOpenDetailShift(false);
-  };
+
+
+
   const handleCancelDetailShift = () => {
     setIsModalOpenDetailShift(false);
-  };
-
-  // Modal phan cong cong viec
-  const [isModalOpenAssignWork, setIsModalOpenAssignWork] = useState(false);
-  const showModalAssignWork = () => {
-    setIsModalOpenAssignWork(true);
-  };
-  const handleOkAssignWork = () => {
-    setIsModalOpenAssignWork(false);
-  };
-  const handleCancelAssignWork = () => {
-    setIsModalOpenAssignWork(false);
   };
 
   // Modal chinh sua cong viec
@@ -228,9 +213,6 @@ const CalendarComponent = () => {
 
   //Thay doi trang thai chinh sua chi tiet cong viec
   const [isEditing, setIsEditing] = useState(false);
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
 
   const handleEditWork = () => {
     if (workDetailById.status === "WorkNotStart") {
@@ -239,6 +221,7 @@ const CalendarComponent = () => {
       toast.warning("Đã đến thời gian của công việc này, không thể chỉnh sửa.");
     }
   };
+
   const handleSave = () => {
     setIsEditing(false);
   };
@@ -261,25 +244,11 @@ const CalendarComponent = () => {
     setIsEditingDetailShift(false);
   };
 
-  //Thay doi trang thai chinh sua phan cong viec
-  const [isEditingEditWork, setIsEditingEditWork] = useState(false);
-
-  const handleEditEditWork = () => {
-    setIsEditingEditWork(true);
-    // setIsModalOpenEditWork(true);
-  };
-  const handleSaveEditWork = () => {
-    setIsEditingEditWork(false);
-    // setIsModalOpenEditWork(false);
-  };
-  const handleBackEditWork = () => {
-    setIsEditingEditWork(false);
-  };
-
   const log = () => {
     console.log("selectedYear", selectedYear);
     console.log("selectedWeek", selectedWeek);
   };
+
   const resetWorkDetailById = () => {
     setWorkDetailById({
       workId: "",
@@ -317,28 +286,11 @@ const CalendarComponent = () => {
   };
   console.log("workDetailById", workDetailById);
 
-  const fetchTeamForSchedule = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        GetTeamForSchedule(userEmployeeID)
-          .then((data) => {
-            resolve(data);
-            console.log("data", data);
-
-            setTeamForSchedule(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang xử lý",
-        error: "Lỗi dữ liệu",
-      }
-    );
-  };
-
-  const fetchWorkDetailById = (TeamID) => {
+  const fetchWorkDetailById = (TeamID, Status, teamName) => {
+    if (!TeamID) {
+      toast.error(`Nhóm "${teamName}" không có công việc cho ngày này`);
+      return;
+    }
     setWorkidDetail(TeamID);
     toast.promise(
       new Promise((resolve) => {
@@ -346,9 +298,12 @@ const CalendarComponent = () => {
           .then((data) => {
             console.log("data", data);
             resolve(data);
-            fetchAllUnitCosts();
-            fetchAllWorkAreas();
-            showModalDetailShift()
+            if(Status === "end"){
+              handleEditDetailShift();
+            }
+            else{
+              showModalDetailShift();
+            }
             setWorkDetailById({
               workId: data.workId,
               workName: data.workName || "Chưa có",
@@ -368,7 +323,6 @@ const CalendarComponent = () => {
           });
       }),
       {
-        pending: "Đang xử lý",
         error: "Lỗi thông tin chi tiết công việc",
       }
     );
@@ -384,6 +338,7 @@ const CalendarComponent = () => {
         console.log(error);
       });
   };
+
   const fetchAllWorkAreas = () => {
     GetAllWorkAreas()
       .then((data) => {
@@ -465,7 +420,10 @@ const CalendarComponent = () => {
       FetchDataForSchedule();
     }
   }, [selectedWeek]);
-
+  useEffect(() => {
+    fetchAllUnitCosts();
+    fetchAllWorkAreas();
+  }, []);
   return (
     <>
       <div className="col-right-container">
@@ -500,6 +458,7 @@ const CalendarComponent = () => {
           selectedYear={selectedYear}
           userEmployeeID={userEmployeeID}
           setActionWork={setActionWork}
+          fetchWorkDetailById={fetchWorkDetailById}
         />
         {/* modal danh sach cong viec */}
         <ModalListShift
@@ -547,6 +506,7 @@ const CalendarComponent = () => {
           allWorkAreas={allWorkAreas}
           convertDate={convertDate}
           handleAddWork={handleAddWork}
+
         />
 
         {isEditingDetailShift ? (
@@ -562,13 +522,19 @@ const CalendarComponent = () => {
           // modal chi tiêt phân công việc
           <ListModuleDetail3
             isModalOpenDetailShift={isModalOpenDetailShift}
-            handleOkDetailShift={handleOkDetailShift}
             handleCancelDetailShift={handleCancelDetailShift}
             handleEditDetailShift={handleEditDetailShift}
             showModalDetail={showModalDetail}
-            showModalEditWork={showModalEditWork}
             actionWork={actionWork}
-
+            allUnitCosts={allUnitCosts}
+            workDetailById={workDetailById}
+            handleChangeUnitCostId={handleChangeUnitCostId}
+            setWorkDetailById={setWorkDetailById}
+            allWorkAreas={allWorkAreas}
+            handleChangeWorkAreaId={handleChangeWorkAreaId}
+            convertDate={convertDate}
+            getCurrentDateSEAsia={getCurrentDateSEAsia}
+            setIsModalOpenDetailShift={setIsModalOpenDetailShift}
           />
         )}
 

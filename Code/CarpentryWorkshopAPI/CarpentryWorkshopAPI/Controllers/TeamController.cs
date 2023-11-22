@@ -816,8 +816,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         day.Add(new
                         {
                             Date = startDate.ToString("dd'-'MM'-'yyyy"),
-                            Status = DateTime.Now.Date == DateTime.Now.Date ? (DateTime.Now.Date < startDate.Date ?(teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end" ) : "continue",
-                            WorkId = teamworks.Where(tw => tw.Date.Value.Date == startDate.Date).Select(tw=>tw.WorkId).FirstOrDefault() 
+                            Status = DateTime.Now.Date == DateTime.Now.Date ? (DateTime.Now.Date < startDate.Date ?(teamworks.Where(tw=>tw.Date.Value.Date == startDate.Date).Count() > 0 ? "yes" : "no") : "end" ) : "continue"
                         });
                         startDate = startDate.AddDays(1);
                     }
