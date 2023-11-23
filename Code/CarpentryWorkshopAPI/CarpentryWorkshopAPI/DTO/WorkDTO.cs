@@ -2,6 +2,7 @@
 {
     public class WorkDTO
     {
+        public int TeamId { get; set; }
         public int WorkId { get; set; }
         public string? WorkName { get; set; }
         public int? TotalProduct { get; set; }
@@ -12,5 +13,6 @@
         public double? Cost { get; set; }
         public string? Note { get; set; }
         public int? EmployeeId { get; set; }
+        public string? DateString { get; set; }
     }
 }

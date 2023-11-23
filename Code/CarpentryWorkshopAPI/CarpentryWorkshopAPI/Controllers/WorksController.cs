@@ -207,15 +207,20 @@ namespace CarpentryWorkshopAPI.Controllers
                 work.DepartmentId = department.DepartmentId;
                 _context.Works.Add(work);
                 _context.SaveChanges();
-                //TeamWork newTw = new TeamWork()
-                //{
-                //    TeamId = workDTO.TeamId,
-                //    WorkId = work.WorkId,
-                //    TotalProduct = null,
-                //    Date = DateTime.Now,
-                //};
-                //_context.TeamWorks.Add(newTw);
-                //_context.SaveChanges();
+                if(string.IsNullOrEmpty(workDTO.DateString))
+                {
+                    return BadRequest("date not right format");
+                }
+                TeamWork newTw = new TeamWork()
+                {
+                    TeamWorkId = 0,
+                    TeamId = workDTO.TeamId,
+                    WorkId = work.WorkId,
+                    TotalProduct = 0,
+                    Date = DateTime.ParseExact(workDTO.DateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                };
+                _context.TeamWorks.Add(newTw);
+                _context.SaveChanges();
                 return Ok("add success");
 
             }catch(Exception ex)
