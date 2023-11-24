@@ -3,6 +3,7 @@ using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Net.WebSockets;
 
@@ -25,6 +26,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                if(employeeId <= 0)
+                {
+                    return BadRequest("employeeId not valid");
+                }
                 var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
@@ -45,7 +50,9 @@ namespace CarpentryWorkshopAPI.Controllers
                         UniCostName = w.UniCost.UnitName,
                         WorkArea = w.WorkArea.WorkAreaName,
                         Department = department.DepartmentName,
-                        Status = w.StartDate > DateTime.Now ? "WorkNotStart" : (w.EndDate < DateTime.Now ? "WorkEnd" : ((w.EndDate > DateTime.Now && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
+                        Status = w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date ? "WorkNotStart" : 
+                        (w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date < DateTime.Now.Date ? "WorkEnd" 
+                        : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
                     }).ToList();
                 return Ok(work);
             }catch(Exception ex)
@@ -58,6 +65,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                if(wId <= 0)
+                {
+                    return BadRequest("wid not valid");
+                }
                 var work = _context.Works.Where(w => w.WorkId == wId).Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
                     .Select(w => new
                     {
@@ -80,6 +91,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         ? "Done" : "NotDone")),
                         DepartmentId = w.DepartmentId,
                     }).FirstOrDefault();
+                if(work == null)
+                {
+                    return NotFound("Không tồn tại workId");
+                }
                 return Ok(work);
             }
             catch (Exception ex)
@@ -93,6 +108,10 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                if(teamId <= 0 || employeeId <= 0)
+                {
+                    return BadRequest("data not valid");
+                }
                 var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
@@ -123,6 +142,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     workForTeam = work.Where(w => w.TimeRemain > 2);
                 }
+                
                 return Ok(workForTeam);
             }
             catch (Exception ex)
@@ -173,6 +193,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+
                 var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == workDTO.EmployeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
@@ -183,17 +204,22 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound("notHaveDepartment");
                 }
                 var work =  _mapper.Map<Work>(workDTO);
-                work.StartDate= !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : null;
-                work.EndDate= !string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : null;
+                work.StartDate= !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : null;
+                work.EndDate= !string.IsNullOrEmpty(workDTO.EndDateString) ? DateTime.ParseExact(workDTO.EndDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : null;
                 work.DepartmentId = department.DepartmentId;
                 _context.Works.Add(work);
                 _context.SaveChanges();
+                if(string.IsNullOrEmpty(workDTO.DateString))
+                {
+                    return BadRequest("date not right format");
+                }
                 TeamWork newTw = new TeamWork()
                 {
+                    TeamWorkId = 0,
                     TeamId = workDTO.TeamId,
                     WorkId = work.WorkId,
-                    TotalProduct = null,
-                    Date = DateTime.Now,
+                    TotalProduct = 0,
+                    Date = DateTime.ParseExact(workDTO.DateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture),
                 };
                 _context.TeamWorks.Add(newTw);
                 _context.SaveChanges();
@@ -212,7 +238,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var work = _context.Works.FirstOrDefault(w=>w.WorkId == workDTO.WorkId);
                 if(work == null)
                 {
-                    return NotFound();
+                    return NotFound("can not find work to update");
                 }                                
                 work.WorkAreaId= workDTO.WorkAreaId > 0 ? workDTO.WorkAreaId : work.WorkAreaId;
                 work.WorkName = !string.IsNullOrEmpty(workDTO.WorkName) ? workDTO.WorkName : work.WorkName;
@@ -225,7 +251,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.Works.Update(work);
                 _context.SaveChanges();
                 return Ok("add success");
-
             }
             catch (Exception ex)
             {

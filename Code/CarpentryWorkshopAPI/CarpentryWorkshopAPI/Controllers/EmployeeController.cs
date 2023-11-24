@@ -231,7 +231,18 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (employee != null)
                 {
-                    return Ok("Nhân viên này đã tồn tại");
+                    if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
+                    {
+                        return StatusCode(503, "PhoneNumber already exists.");
+                    }
+                    else if (employee.Email == createEmployeeDTO.Email)
+                    {
+                        return StatusCode(501, "Email already exists.");
+                    }
+                    else if (employee.Cic == createEmployeeDTO.Cic)
+                    {
+                        return StatusCode(502, "Cic already exists.");
+                    }
                 }
                 Employee newemp = new Employee();
                

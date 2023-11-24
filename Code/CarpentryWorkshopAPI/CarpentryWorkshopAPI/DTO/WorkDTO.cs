@@ -13,5 +13,6 @@
         public double? Cost { get; set; }
         public string? Note { get; set; }
         public int? EmployeeId { get; set; }
+        public string? DateString { get; set; }
     }
 }

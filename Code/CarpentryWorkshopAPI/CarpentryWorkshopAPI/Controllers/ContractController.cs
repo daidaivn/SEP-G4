@@ -23,7 +23,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        //[Authorize(Roles = "SystemManager")]
+        [Authorize(Roles = "SystemManager")]
         [HttpGet]
         public IActionResult GetAllContract()
         {
@@ -217,16 +217,16 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPut]
-        public IActionResult ChangeContractStatus([FromBody] ContractChangeDTO contractChangeDTO)
+        public IActionResult ChangeContractStatus(int contractId)
         {
             try
             {
                Models.Contract contract = new Models.Contract();
-                if (contractChangeDTO.ContractId != 0) {
+              
                          contract = _context.Contracts
                         .Include(ctt => ctt.ContractType)
                         .Include(emp => emp.Employee)
-                        .FirstOrDefault(x => x.ContractId == contractChangeDTO.ContractId);
+                        .FirstOrDefault(x => x.ContractId == contractId);
                     if (contract == null)
                     {
                         return NotFound();
@@ -239,7 +239,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     {
                         contract.Status = true;
                     }
-                }
+                
                 _context.Contracts.Update(contract);
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
