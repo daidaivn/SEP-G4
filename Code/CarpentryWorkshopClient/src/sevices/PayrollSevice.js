@@ -7,4 +7,12 @@ const fetchAllReward = (date) => {
     return axios.get(`/CCMSapi/Reward/GetAllRewards?date=${date}`);
 
 };
-export{fetchAllSalaries, fetchAllReward,}
+
+const ExportSalaryExcel = (month, date) => {
+  const newMonth = month;
+  const newDate = date;
+  return axios.get(
+    `/CCMSapi/ExcelSalary/ExportSalaryExcel/export/${newMonth}/${newDate}`
+  );
+};
+export{fetchAllSalaries, fetchAllReward, ExportSalaryExcel}

@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { Input, Select, Modal } from "antd";
+
 import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
 import "../scss/PayrollComponent.scss";
-import MenuResponsive from "./componentUI/MenuResponsive";
+
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { Form, Input, Select, Switch, Modal } from "antd";
-import SubsidiesDetail from "./componentPayroll/SubsidiesDetail";
-import AllowanceDetails from "./componentPayroll/AllowanceDetails";
-import RewardCompany from "./componentPayroll/RewardCompany";
-import RewardAll from "./componentPayroll/RewardAll";
-import TypeReward from "./componentPayroll/TypeReward";
-import Reward from "./componentPayroll/Reward";
-import RewardPersonal from "./componentPayroll/RewardPersonal";
-import { Holiday } from "./componentPayroll";
+
+import {
+  Reward,
+  Holiday,
+  RewardPersonal,
+  TypeReward,
+  RewardAll,
+  RewardCompany,
+  AllowanceDetails, 
+  SubsidiesDetail,
+  ExcelModal
+} from "./componentPayroll";
+
 import { fetchAllSalaries, fetchAllReward } from "../../sevices/PayrollSevice";
 const PayrollComponent = () => {
   const [salaries, setSalaries] = useState([]);
   const [reward, setReward] = useState([]);
   const [date, setDate] = useState("");
   const currentDateTime = new Date();
+
   const currentMonth = currentDateTime.getMonth() + 1;
   const currentYear = currentDateTime.getFullYear();
+
   const day = currentDateTime.getDate();
-  const formattedDate = new Date().toISOString().split('T')[0];
+  const formattedDate = new Date().toISOString().split("T")[0];
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -96,7 +104,7 @@ const PayrollComponent = () => {
   const showModalRewardCompany = () => {
     toast.promise(
       new Promise((resolve) => {
-        fetchAllReward(currentMonth+"-"+currentYear)
+        fetchAllReward(currentMonth + "-" + currentYear)
           .then((data) => {
             setReward(data);
             resolve(data);
@@ -215,7 +223,6 @@ const PayrollComponent = () => {
               Lưu thông tin bắt đầu làm việc và ngưng làm việc củ một nhóm
             </span>
           </div>
-          <MenuResponsive />
           <ListUserHeader />
         </div>
         <div className="list-search-filter-add">
@@ -440,7 +447,7 @@ const PayrollComponent = () => {
                   </td>
                   {/* show Modal Chi tiết trợ cấp */}
                   <td onClick={showModalAllowance}>
-                  {Salary.allowances == 0 ? "-" : Salary.allowances} VNĐ{" "}
+                    {Salary.allowances == 0 ? "-" : Salary.allowances} VNĐ{" "}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="31"
@@ -466,7 +473,7 @@ const PayrollComponent = () => {
                   </td>
                   {/* show Modal Chi tiết phụ cấp */}
                   <td onClick={showModalSubsidies}>
-                  {Salary.deductions == 0 ? "-" : Salary.deductions}VNĐ{" "}
+                    {Salary.deductions == 0 ? "-" : Salary.deductions}VNĐ{" "}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="31"
@@ -607,73 +614,12 @@ const PayrollComponent = () => {
         </Modal>
 
         {/* Modal excel */}
-        <Modal
-          open={isModalOpenExcel}
-          onOk={handleOkExcel}
-          onCancel={handleCancelExcel}
-        >
-          <div className="modal-excel">
-            <div className="head-excel">Xuất Excel</div>
-            <div className="body-excel">
-              <div className="item">
-                <p>Chọn tháng:</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="item">
-                <p>Chọn năm:</p>
-                <Select
-                  defaultValue="lucy"
-                  style={{
-                    width: 120,
-                  }}
-                  onChange={handleChange}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]}
-                />
-              </div>
-              <div className="footer">
-                <span className="back" onClick={handleCancelExcel}>
-                  Hủy bỏ
-                </span>
-                <span className="save" onClick={handleOkExcel}>
-                  Xác nhận
-                </span>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <ExcelModal
+        isModalOpenExcel={isModalOpenExcel}
+        handleOkExcel={handleOkExcel}
+        handleCancelExcel={handleCancelExcel}
+        handleChange={handleChange}
+        />
       </div>
     </>
   );

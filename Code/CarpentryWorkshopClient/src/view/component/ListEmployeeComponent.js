@@ -149,16 +149,16 @@ function ListEmployeeComponent() {
   };
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
-        const updatedValue = {};
-        if (value) {
-          updatedValue.roleID = value.roleID;
-          updatedValue.departmentID = value.departmentID;
-        } else {
-          updatedValue.roleID = null;
-          updatedValue.departmentID = null;
-        }
-        return updatedValue;
-      })
+      const updatedValue = {};
+      if (value) {
+        updatedValue.roleID = value.roleID;
+        updatedValue.departmentID = value.departmentID;
+      } else {
+        updatedValue.roleID = null;
+        updatedValue.departmentID = null;
+      }
+      return updatedValue;
+    })
     : [];
 
   const handleEdit = () => {
@@ -250,7 +250,7 @@ function ListEmployeeComponent() {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (originalEmail && !emailRegex.test(originalEmail)) {
+    if (!originalEmail || originalEmail && !emailRegex.test(originalEmail)) {
       errors.push("Email không hợp lệ.");
     }
 
@@ -262,7 +262,7 @@ function ListEmployeeComponent() {
     }
     return true;
   };
-  log();
+  // log();
 
   const validateDataDepartment = () => {
     const errors = [];
@@ -390,10 +390,10 @@ function ListEmployeeComponent() {
     if (!contractCode) {
       errors.push("Vui lòng nhập mã hợp đồng.");
     }
-    if(!amount){
+    if (!amount) {
       errors.push("Vui lòng nhập số tiền");
     }
-    if(isNaN(amount)){
+    if (isNaN(amount)) {
       errors.push("Vui lòng nhập số tiền là số");
     }
 
@@ -500,6 +500,7 @@ function ListEmployeeComponent() {
           originalStatus,
           originalEmail,
           originalImage
+
         )
           .then((data) => {
             resolve(data);
@@ -524,36 +525,57 @@ function ListEmployeeComponent() {
     const isDataValid = validateData();
     const isDataDepartment = validateDataDepartment();
     const isDataContract = validateDataContract();
-
+  
     if (!isDataValid || !isDataDepartment || !isDataContract) {
       return;
     }
-
-    CreateEmployee(
-      originalLastName,
-      originalFirstName,
-      originalPhoneNumber,
-      originalGender,
-      originalNationality,
-      originalAddress,
-      originalCIC,
-      originalTaxId,
-      originalDOB,
-      originalStatus,
-      updatedRoleDepartmentsAdd,
-      originalEmail,
-      originalImage
-    )
-      .then((data) => {
-        fetchData();
-        handleCancelAdd();
-        AddContract(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  
+    toast.promise(
+      new Promise((resolve) => {
+        CreateEmployee(
+          originalLastName,
+          originalFirstName,
+          originalPhoneNumber,
+          originalGender,
+          originalNationality,
+          originalAddress,
+          originalCIC,
+          originalTaxId,
+          originalDOB,
+          originalStatus,
+          updatedRoleDepartmentsAdd,
+          originalEmail,
+          originalImage
+        )
+          .then((data) => {
+            fetchData();
+            handleCancelAdd();
+            AddContract(data);
+            console.log(data);
+            resolve(data);
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 550) {
+              toast.error("Email chưa được đăng kí");
+            } else if (error.response && error.response.status === 501) {
+              toast.error("Email đã tồn tại");
+            } else if (error.response && error.response.status === 502) {
+              toast.error("Mã định danh đã tồn tại");
+            } else if (error.response && error.response.status === 503) {
+              toast.error("Số điện thoại đã tồn tại");
+            } else {
+              toast.error("Tạo nhân viên không thành công");
+            }
+            resolve(error);
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        warning: "Thông tin nhân viên đã tồn",
+      }
+    );
   };
+  
 
   const AddContract = (eid) => {
     toast.promise(
@@ -591,7 +613,7 @@ function ListEmployeeComponent() {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleSave = () => {
@@ -639,7 +661,7 @@ function ListEmployeeComponent() {
     setContractEndDate("");
     setContractType("");
     setContractLink("");
-    setContractStatus("");
+    setContractStatus(true);
     setContractImage("");
     setAmount("");
   };
@@ -663,7 +685,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -692,7 +714,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchData = () => {
@@ -763,11 +785,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -1151,9 +1173,12 @@ function ListEmployeeComponent() {
                   </div>
                   <div className="box2-child-cn">
                     <div className="box-child-employee1 div-detail">
-                      {" "}
-                      <p>Lương cơ bản:</p>
-                      <Input value="1.000.000" />
+                      <p>Email:</p>
+                      <Input
+                        value={originalEmail}
+                        onChange={(e) => setOriginalEmail(e.target.value)}
+                        placeholder="Nhập email"
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
@@ -1313,10 +1338,15 @@ function ListEmployeeComponent() {
                     </div>
                   </div>
                   <div className="box2-child-cn">
-                    <div className="box-child-employee1 div-detail">
-                      {" "}
-                      <p>Lương cơ bản:</p>
-                      <Input value="1.000.000" />
+                  <div className="box-child-employee1 div-detail">
+                      <p>Email:</p>
+                      <Input
+                        value={
+                          idDetail && idDetail.email
+                            ? idDetail.email
+                            : "Chưa có thông tin"
+                        }
+                      />
                     </div>
                     <div className="box-child-employee1 div-detail">
                       <p>Trạng thái:</p>
