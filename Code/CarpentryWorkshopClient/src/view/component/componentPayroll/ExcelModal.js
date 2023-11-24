@@ -27,13 +27,13 @@ const ExcelModal = ({
         ExportSalaryExcel(months, date)
             .then((data) => {
                 handleOkExcel();
-                // Tạo một URL tạm thời cho file blob
+                const fileName = `Bảng lương ${months}-${date}.xlsx`;
                 const url = window.URL.createObjectURL(new Blob([data]));
     
                 // Tạo một thẻ a để tạo link tải xuống và kích thước nó
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'salary_excel_file.xlsx');
+                link.setAttribute('download', fileName);
                 document.body.appendChild(link);
     
                 // Simulate click để bắt đầu tải xuống
