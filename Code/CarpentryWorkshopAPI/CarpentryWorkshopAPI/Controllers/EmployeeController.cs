@@ -233,7 +233,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
                     {
-                        return StatusCode(500, "PhoneNumber already exists.");
+                        return StatusCode(503, "PhoneNumber already exists.");
                     }
                     else if (employee.Email == createEmployeeDTO.Email)
                     {
