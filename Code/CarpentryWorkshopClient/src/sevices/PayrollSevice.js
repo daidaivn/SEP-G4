@@ -8,11 +8,10 @@ const fetchAllReward = (date) => {
 
 };
 
-const ExportSalaryExcel = (month, date) => {
-  const newMonth = month;
-  const newDate = date;
-  return axios.get(
-    `/CCMSapi/ExcelSalary/ExportSalaryExcel/export/${newMonth}/${newDate}`
-  );
+const ExportSalaryExcel = (month, year) => {
+    return axios.get(
+        `/CCMSapi/ExcelSalary/ExportSalaryExcel/export/${month}/${year}`,
+        { responseType: 'blob' }
+    );
 };
 export{fetchAllSalaries, fetchAllReward, ExportSalaryExcel}

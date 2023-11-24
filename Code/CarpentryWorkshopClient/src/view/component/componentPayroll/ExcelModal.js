@@ -23,37 +23,31 @@ const ExcelModal = ({
 
 
     const handleExportSalaryExcel = () => {
-        toast.promise(
-          new Promise((resolve) => {
-            ExportSalaryExcel(months, date)
-              .then((data) => {
-                const blob = new Blob([data], { type: 'application/octet-stream' });
-                const url = window.URL.createObjectURL(blob);
-      
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Bảng lương công ty tháng ${months}-${date}.xlsx`; // Sử dụng biến months
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-      
+    
+        ExportSalaryExcel(months, date)
+            .then((data) => {
                 handleOkExcel();
-                resolve(data);
-              })
-              .catch((error) => {
-                resolve(Promise.reject(error));
-              });
-          }),
-          {
-            pending: 'Đang xử lý dữ liệu',
-            success: 'Tải xuống thành công',
-            error: 'Lỗi dữ liệu',
-          }
-        );
-      };
-      
-      
+                // Tạo một URL tạm thời cho file blob
+                const url = window.URL.createObjectURL(new Blob([data]));
+    
+                // Tạo một thẻ a để tạo link tải xuống và kích thước nó
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'salary_excel_file.xlsx');
+                document.body.appendChild(link);
+    
+                // Simulate click để bắt đầu tải xuống
+                link.click();
+    
+                // Xóa thẻ và URL sau khi đã tải xuống
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((error) => {
+                console.log('error', error);
+            });
+    };
+    
 
     return (
         <Modal
