@@ -40,9 +40,10 @@ const ListModuleDetail3 = ({
     }
     toast.promise(
       new Promise((resolve) => {
-        AddWork(workDetailById, userEmployeeID)
+        AddWork(workDetailById, userEmployeeID, workidDetail)
           .then((data) => {
             handleCancelDetailWorkInList()
+            FetchDataForSchedule()
             resolve(data);
           })
           .catch((error) => {
@@ -126,10 +127,10 @@ const ListModuleDetail3 = ({
         <div className="modal-detail-all">
           <div className="head-modal">
             {
-              actionWork === "addWork" ? (<p>Thêm công việc</p>) : (<p>Sửa công việc</p>)
+              actionWork === "addWork" ? (<p>Thêm công việc</p>) : actionWork === "editWork" ? (<p>Thêm công việc</p>) : (<p>Chi tiết công việc</p>)
             }
             {
-              actionWork === "viewWork" ? (
+              actionWork === "viewWork" || actionWork === "viewWorkList" ? (
                 <svg
                   onClick={handleCancelDetailWorkInList}
                   xmlns="http://www.w3.org/2000/svg"
@@ -254,11 +255,11 @@ const ListModuleDetail3 = ({
                     date: convertDate(e.target.value),
                   })
                 }
-                disabled={actionWork === "viewWork"}
+                disabled={actionWork === "viewWork" || actionWork === "addWork" || actionWork === "editWork"}
               />
             </div>
             {
-              actionWork !== "viewWork" ? (
+              actionWork !== "viewWork" && actionWork !== "viewWorkList" ? (
                 <div className="footer-modal">
                   <span className="back" onClick={handleCancelDetailWorkInList}>
                     Hủy bỏ

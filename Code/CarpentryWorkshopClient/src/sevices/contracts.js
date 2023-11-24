@@ -11,26 +11,37 @@ const GetAllContractType = () => {
 
 const CreateContract = (
   id,
-  sDatestring,
-  eDatestring,
-  lDoc,
-  stt,
-  contractType,
-  cCode,
-  amount
+          contractStartDate,
+          contractEndDate,
+          contractLink,
+          contractStatus,
+          contractType,
+          contractCode,
+          amount
 ) => {
+  console.log(id);
+  console.log(contractStartDate);
+  console.log(contractEndDate);
+  console.log(contractLink);
+  console.log(contractStatus);
+  console.log(contractType);
+  console.log(contractCode);
+  console.log(amount);
+  
   const eid = id;
   const requestBody = {
-    startDatestring: sDatestring,
-    endDatestring: eDatestring,
-    linkDoc: lDoc,
-    status: stt,
-    contractTypeID: contractType,
-    contractCode: cCode,
+    startDatestring: contractStartDate,
+    endDatestring: contractEndDate,
+    linkDoc: contractLink,
+    status: contractStatus,
+    contractTypeID: Number(contractType),
+    contractCode: contractCode,
     image: "",
     amount:Number(amount)
   };
-
+  
+  console.log('requestBody',requestBody);
+  
   return axios.post(
     `CCMSapi/Contract/CreateContract?employeeid=${eid}`,
     requestBody

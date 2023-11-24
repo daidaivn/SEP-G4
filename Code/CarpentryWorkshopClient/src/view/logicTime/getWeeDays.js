@@ -6,6 +6,24 @@
     return years.map(year => ({ value: year, label: year.toString() }));
 };
 
+const getMonthsInYear = (year) => {
+    const months = [
+        '1', '2', '3', '4', '5', '6',
+        '7', '8', '9', '10', '11', '12'
+    ];
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    let result = [];
+    if (year < currentYear) {
+        result = months;
+    } else if (year === currentYear) {
+        result = months.slice(0, currentMonth + 1);
+    } else {
+        result = [];
+    }
+    return result.map((month, index) => ({ value: index + 1, label: month }));
+};
+
  const getWeekRange = (date) => {
     const startOfWeek = new Date(date);
     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Chủ nhật là ngày đầu tiên của tuần
@@ -42,4 +60,4 @@
     }
     return days;
 };
-export{createYearOptions, getWeekRange, createWeekOptions, parseWeekRange};
+export{createYearOptions, getWeekRange, createWeekOptions, parseWeekRange, getMonthsInYear};

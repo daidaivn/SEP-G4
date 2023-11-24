@@ -93,20 +93,6 @@ const Menucomponent = () => {
             </NavLink>
           </div>
           )}
-          {userPages.includes("SeeWork") && (
-          <div className="item-link">
-            <NavLink
-              to={"/seeWork"}
-              id="item-menu"
-              onClick={() => handleDivClick("div11")}
-              activeClassName={activeDiv === "div11" ? "active" : ""}
-            >
-              <i className="icon-activity"></i>
-
-              <span className="text">Xem công việc</span>
-            </NavLink>
-          </div>
-          )}
           {userPages.includes("Shift") && (
           <div className="item-link">
             <NavLink

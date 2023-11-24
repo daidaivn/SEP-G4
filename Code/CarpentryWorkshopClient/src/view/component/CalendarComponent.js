@@ -7,15 +7,11 @@ import ListUserHeader from "./componentUI/ListUserHeader";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import {
-  getCurrentDateSEAsia,
   getTomorrowDateSEAsia,
 } from "../logicTime/getDate";
 import {
-  GetTeamForSchedule,
   GetAllWorks,
   GetWorkDetailById,
-  UpdateWork,
-  AddWork,
   GetDataForSchedule,
 } from "../../sevices/CalendarSevice";
 import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
@@ -24,10 +20,7 @@ import {
   ListSearchFilterAdd,
   ModalListShift,
   TableCalendar,
-  ModalAdd,
   ListModuleDetail3,
-  WorkModalTeam,
-  EditListModalDetail,
   ModalGroup
 } from "./componentCalendar";
 import {
@@ -49,7 +42,26 @@ const CalendarComponent = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [saveWork, setSaveWork] = useState(false);
- 
+  const [allWorks, setAllWorks] = useState([]);
+  const [workDetailById, setWorkDetailById] = useState({
+    workId: "",
+    workName: "",
+    unitCostName: "",
+    unitCostId: "",
+    unitCost: "",
+    totalProduct: "",
+    workArea: "",
+    workAreaId: "",
+    status: "",
+    date: getTomorrowDateSEAsia()
+  });
+  const [allUnitCosts, setAllUnitCosts] = useState([]);
+  const [allWorkAreas, setAllWorkAreas] = useState([]);
+  const [workidDetail, setWorkidDetail] = useState([]);
+
+console.log('selectedYear',selectedYear);
+
+
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
@@ -62,7 +74,6 @@ const CalendarComponent = () => {
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
   };
-
 
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
@@ -91,7 +102,7 @@ const CalendarComponent = () => {
   }
 
   const handleCancelDetailWorkInList = () => {
-    if (actionWork === "detailWork") {
+    if (actionWork === "detailWork" || actionWork === "viewWorkList") {
       setIsModalOpenListShift(true);
     }
     setIsModalOpenDetailShift(false);
@@ -102,27 +113,6 @@ const CalendarComponent = () => {
     fetchWorkDetailById(id)
     handleDetailWorkInList()
   }
-
-  const [allWorks, setAllWorks] = useState([]);
-  const [workDetailById, setWorkDetailById] = useState({
-    workId: "",
-    workName: "",
-    unitCostName: "",
-    unitCostId: "",
-    unitCost: "",
-    totalProduct: "",
-    workArea: "",
-    workAreaId: "",
-    status: "",
-    date: getTomorrowDateSEAsia()
-  });
-
-  const [allUnitCosts, setAllUnitCosts] = useState([]);
-  const [allWorkAreas, setAllWorkAreas] = useState([]);
-  const [workidDetail, setWorkidDetail] = useState([]);
-
-console.log('allWorks',allWorks);
-  
 
   const convertDate = (dobstring) => {
     if (dobstring) {
@@ -169,7 +159,6 @@ console.log('allWorks',allWorks);
     setIsModalOpenDetailShift(true);
   };
 
-
   const resetWorkDetailById = () => {
     setWorkDetailById({
       workId: "",
@@ -207,7 +196,6 @@ console.log('allWorks',allWorks);
   console.log("workDetailById", workDetailById);
 
   const fetchWorkDetailById = (TeamID) => {
-  
     setWorkidDetail(TeamID);
     toast.promise(
       new Promise((resolve) => {
@@ -324,6 +312,9 @@ console.log('allWorks',allWorks);
           setActionWork={setActionWork}
           showModalGroup={showModalGroup}
           handlegetDataDetail={handlegetDataDetail}
+          setWorkidDetail={setWorkidDetail}
+          setWorkDetailById={setWorkDetailById}
+          convertDate={convertDate}
         />
 
         <ModalListShift
@@ -332,6 +323,7 @@ console.log('allWorks',allWorks);
           handleCancelListShift={handleCancelListShift}
           allWorks={allWorks}
           handlegetDataDetail={handlegetDataDetail}
+          setActionWork={setActionWork}
         />
 
         <ListModuleDetail3

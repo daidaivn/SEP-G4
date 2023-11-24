@@ -73,13 +73,18 @@ namespace CarpentryWorkshopAPI.Mapper
                .ForMember(de => de.EndTime, option => option.MapFrom(d => DateTime.Parse(d.EndTimestring.ToString()).ToString("HH':'mm':'ss")));
             CreateMap<Team, TeamListDTO>()
                .ReverseMap();
-            CreateMap<WorkSchedule, CreateWorkScheduleDTO>()
-               .ReverseMap();
+            CreateMap<CreateWorkScheduleDTO, WorkSchedule>()
+               .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)))
+                .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture)));
             CreateMap<Team, CreateTeamDTO>()
                .ReverseMap();
             CreateMap<WorkSchedule, WorkScheduleDTO>()
                .ForMember(de => de.ShiftTypeName, option => option.MapFrom(d => d.ShiftType!.TypeName))
                .ForMember(de => de.TeamName, option => option.MapFrom(d => d.Team!.TeamName))
+               .ForMember(de => de.StartDatestring, option => option.MapFrom(d => d.StartDate.Value.ToString("dd'-'MM'-'yyyy")))
+               .ForMember(de => de.EndDatestring, option => option.MapFrom(d => d.EndDate.Value.ToString("dd'-'MM'-'yyyy")))
                .ReverseMap();
             CreateMap<HistoryChangeShiftType, HistoryChangeShiftTypeDTO>()
                 .ForMember(de => de.ShiftTypeName, option => option.MapFrom(d => d.ShiftType!.TypeName))

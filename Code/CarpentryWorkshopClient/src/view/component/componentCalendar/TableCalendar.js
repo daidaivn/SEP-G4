@@ -1,4 +1,5 @@
 import { parseWeekRange } from "../../logicTime/getWeeDays";
+import { format, parse } from 'date-fns';
 
 const TableCalendar = ({
   showModalDetailShift,
@@ -7,7 +8,11 @@ const TableCalendar = ({
   defaultValue,
   showModalGroup,
   setActionWork,
-  handlegetDataDetail
+  handlegetDataDetail,
+  setWorkidDetail,
+  setWorkDetailById,
+  convertDate,
+  selectedYear
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -78,6 +83,13 @@ const TableCalendar = ({
                           onClick={() => {
                             showModalDetailShift();
                             setActionWork("addWork")
+                            setWorkidDetail(team.teamId)
+                            const columnIndex = workIndex;
+                            const selectedDate = weekDays[columnIndex];
+                            const formattedDate = format(parse(selectedDate, 'dd/MM', new Date()), 'dd-MM-yyyy');
+                            setWorkDetailById({
+                              date: formattedDate,
+                            });
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="30"

@@ -30,9 +30,7 @@ const UpdateWork = (workDetailById) => {
     unitCost,
     totalProduct,
     workAreaId,
-    timeStart,
-    timeEnd
-    
+    date,
   } = workDetailById;
   
   const requestBody = {
@@ -41,40 +39,43 @@ const UpdateWork = (workDetailById) => {
     totalProduct: totalProduct,
     uniCostId: unitCostId, 
     workAreaId: workAreaId,
-    startDateString: timeStart, 
-    endDateString: timeEnd, 
+    startDateString: "", 
+    endDateString: "", 
     cost: unitCost, 
     note: "", 
+    dateString:date
   };
   return axios.put(
     `/CCMSapi/Works/UpdateWork`,requestBody
   );
 };
 
-const AddWork = (workDetailById,userEmployeeID) => {
+const AddWork = (workDetailById, userEmployeeID, teamId) => {
   const {
     workName,
     unitCostId,
     unitCost,
     totalProduct,
     workAreaId,
-    timeStart,
-    timeEnd
+    date
   } = workDetailById;
-  console.log('workDetailById',workDetailById);
   
   const requestBody = {
+    teamId: Number(teamId),
     workName: workName,
-    totalProduct: totalProduct,
-    uniCostId: unitCostId, 
-    workAreaId: workAreaId,
-    startDateString: timeStart, 
-    endDateString: timeEnd, 
-    cost: unitCost, 
+    totalProduct: Number(totalProduct),
+    uniCostId: Number(unitCostId), 
+    workAreaId: Number(workAreaId),
+    startDateString: "", 
+    endDateString: "", 
+    cost: Number(unitCost), 
     note: "", 
-    employeeId: userEmployeeID,
+    employeeId: Number(userEmployeeID),
+    dateString:date
   };
+
   console.log('requestBody',requestBody);
+  
   return axios.post(
     `/CCMSapi/Works/AddWork`,requestBody
   );
