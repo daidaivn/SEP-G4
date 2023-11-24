@@ -22,7 +22,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAllWorks(int employeeId)
+        public IActionResult GetAllWorks(int employeeId, string pageName)
         {
             try
             {
@@ -30,7 +30,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("employeeId not valid");
                 }
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.Pages.Any(pa=>pa.PageName == pageName) && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,

@@ -70,7 +70,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
           if (_context.Dependents == null)
           {
-              return NotFound();
+              return NotFound("Can not Context");
           }
             var dependent = _context.Dependents.Where(de=>de.DependentId == id).Include(de => de.Employee).Include(de => de.Relationship)
                 .Select(de => new DependentListDTO
@@ -94,7 +94,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }).FirstOrDefault();
             if (dependent == null)
             {
-                return NotFound();
+                return NotFound("Can not have dependent");
             }
 
             return Ok(dependent);
@@ -109,9 +109,7 @@ namespace CarpentryWorkshopAPI.Controllers
             if(dependent == null)
             {
                 return NotFound();
-            }
-            dependent.Dob = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture) : dependent.Dob;
+            } 
             dependent.EmployeeId= dependentDTO.EmployeeId >0 ? dependentDTO.EmployeeId : dependent.EmployeeId;
             dependent.FullName = !string.IsNullOrEmpty(dependentDTO.FullName) ? dependentDTO.FullName : dependent.FullName;
             dependent.IdentifierCode = !string.IsNullOrEmpty(dependentDTO.IdentifierCode) ? dependentDTO.IdentifierCode : dependent.IdentifierCode;
@@ -120,10 +118,15 @@ namespace CarpentryWorkshopAPI.Controllers
             dependent.Status = dependentDTO.Status.HasValue ? dependentDTO.Status : dependent.Status;
             dependent.NoteReason = !string.IsNullOrEmpty(dependentDTO.NoteReason) ? dependentDTO.NoteReason : dependent.NoteReason;
             dependent.RelationshipId = dependentDTO.RelationshipId > 0 ? dependentDTO.RelationshipId : dependent.RelationshipId;
-            if(dependentDTO.RelationshipId == 1)
+            dependent.Dob = !string.IsNullOrEmpty(dependentDTO.DobString) &&
+                DateTime.TryParseExact(dependentDTO.DobString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture,
+                                       System.Globalization.DateTimeStyles.None, out var parsedDate)
+                ? parsedDate
+                : dependent.Dob;
+            if (dependentDTO.RelationshipId == 1)
             {
-                DateTime? DOB = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture) : dependent.Dob;
+                DateTime? DOB = dependent.Dob;
                 if (DOB.HasValue)
                 {
                     dependent.EndDate = DOB.Value.AddYears(18);
@@ -177,12 +180,33 @@ namespace CarpentryWorkshopAPI.Controllers
             try 
             {
                 var dependent = _mapper.Map<Dependent>(dependentDTO);
-                dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
-                                        System.Globalization.CultureInfo.InvariantCulture) : null;
-                dependent.EndDate = !string.IsNullOrEmpty(dependentDTO.EndDateString) ? DateTime.ParseExact(dependentDTO.EndDateString, "dd-MM-yyyy",
-                                           System.Globalization.CultureInfo.InvariantCulture) : null;
-                dependent.Dob = !string.IsNullOrEmpty(dependentDTO.DobString) ? DateTime.ParseExact(dependentDTO.DobString, "dd-MM-yyyy",
-                                           System.Globalization.CultureInfo.InvariantCulture) : null;
+                if (DateTime.TryParseExact(dependentDTO.DobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime result))
+                {
+                    dependent.Dob = result;
+                }
+                else
+                {
+                    return BadRequest("data is not valid");
+                }
+                if (dependentDTO.RelationshipId == 1)
+                {
+                    DateTime? DOB = dependent.Dob;
+                    if (DOB.HasValue)
+                    {
+                        dependent.EndDate = DOB.Value.AddYears(18);
+                        dependent.StartDate = DOB;
+                    }
+                }
+                else  if (dependentDTO.RelationshipId > 1)
+                {
+                    dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
+                                           System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now.Date;
+                    dependent.EndDate = null;
+                }
+                else
+                {
+                    return BadRequest("Not have relationship");
+                }
                 _context.Dependents.Add(dependent);               
                 _context.SaveChanges();
                 DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory()
