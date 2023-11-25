@@ -9,21 +9,18 @@ const ExcelModal = ({
     handleOkExcel,
     handleCancelExcel,
     handleChange,
+    months,
+    date,
+    setMonths,
+    monthOptions,
+    setDate,
+    yearOptions
 }) => {
 
-    const yearOptions = createYearOptions();
-    const [date, setDate] = useState(new Date().getFullYear());
-
-    const monthOptions = getMonthsInYear(date)
-    const currentMonth = new Date().getMonth();
-    const [months, setMonths] = useState(currentMonth.toString());
-
-    console.log('months', months);
-    console.log('months', date);
+ 
 
 
     const handleExportSalaryExcel = () => {
-    
         ExportSalaryExcel(months, date)
             .then((data) => {
                 handleOkExcel();
@@ -85,7 +82,7 @@ const ExcelModal = ({
                             Hủy bỏ
                         </span>
                         <span className="save" onClick={handleExportSalaryExcel}>
-                            Xác nhận
+                            Tải xuống
                         </span>
                     </div>
                 </div>
