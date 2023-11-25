@@ -44,6 +44,7 @@ const PayrollComponent = () => {
   const monthOptions = getMonthsInYear(date);
   const currentMonth = new Date().getMonth();
   const [months, setMonths] = useState(currentMonth.toString());
+  const [iText, setIText] = useState("");
   const [dataAllowance, setDataAllowance] = useState([]);
   const [dataDeduction, setDataDeduction] = useState([]);
   const [dataActualSalary, setActualSalary] = useState([]);
@@ -271,29 +272,21 @@ const PayrollComponent = () => {
   };
 
   const fetData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllSalaries(months, date)
+        fetchAllSalaries(iText, months, date)
           .then((data) => {
             setSalaries(data);
-            resolve(data);
             console.log("data", data);
           })
           .catch((error) => {
-            resolve(Promise.reject(error));
+            console.log('error',error);
+            
           });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
-      }
-    );
   };
   console.log("Salary", salaries);
 
   useEffect(() => {
     fetData();
-  }, [date, months]);
+  }, [iText,date, months]);
 
   return (
     <>
@@ -318,6 +311,8 @@ const PayrollComponent = () => {
           monthOptions={monthOptions}
           setMonths={setMonths}
           months={months}
+          setIText={setIText}
+          iText={iText}
         />
 
         <ListTable
