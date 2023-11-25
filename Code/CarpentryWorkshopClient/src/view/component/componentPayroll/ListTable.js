@@ -7,7 +7,7 @@ const ListTable = ({
   showModalReward,
   fetchEmployeeAllowanceDetail,
   fetchEmployeeDeductionDetail,
-  fetchEmployeeActualSalaryDetail
+  fetchEmployeeActualSalaryDetail,
 }) => {
 
 
