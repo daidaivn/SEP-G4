@@ -99,5 +99,73 @@
 }
 
 // Tablet
-@media (min-width: 768px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 1536px) {
+  .screen {
+    height: 100vh;
+    overflow: hidden;
+  }
+  .text-login,
+  .title-login p,
+  .text-user {
+    font-size: 30px !important;
+  }
+  .body-login {
+    padding: 20px !important;
+  }
+  .save-user p,
+  .box-forget .forget-pass a,
+  .submit .btn-login,
+  .btn-back a,
+  .submit-forget .btn-login {
+    font-size: 22px !important;
+  }
+  .submit .btn-login,
+  .btn-back a,
+  .submit-forget .btn-login {
+    padding: 20px 75px !important;
+  }
+  .dropdown-content {
+    .item-link {
+      .text {
+        font-size: 16px !important;
+      }
+    }
+  }
+  .list-input-search {
+    input {
+      font-size: 18px !important;
+    }
+  }
+  .list-filter {
+    .ant-select-selection-placeholder {
+      font-size: 18px;
+    }
+  }
+
+  .list-text-header {
+    h2 {
+      font-size: 30px;
+    }
+    span {
+      font-size: 20px;
+    }
+  }
+  .list-user-header {
+    span {
+      font-size: 18px;
+    }
+    .user-list {
+      width: 45px;
+      height: 45px;
+    }
+    .notification-list {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  #item-menu {
+    .text {
+      font-size: 18px !important;
+    }
+  }
 }
