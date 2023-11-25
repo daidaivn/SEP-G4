@@ -153,7 +153,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
         }
         public async Task<dynamic> GetEmployeeSalaryDetail(int employeeid, int month, int year)
         {
-            var result = new List<Object>();
+            var result = new Object();
             var mainsalary = await _context.HoursWorkDays
                                         .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
                                         .SumAsync(h => h.DailyRate.GetValueOrDefault());
@@ -249,13 +249,13 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .Where(b => b.EmployeeId == employeeid && b.OccasionDate.HasValue && b.OccasionDate.Value.Month == month
                 && b.OccasionDate.Value.Year == year)
                 .SumAsync(b => b.Amount.GetValueOrDefault());
-            result.Add(new
+            result = new
             {
                 MainSalary = mainsalary,
                 AllowanceDetails = allowances,
                 Bonus = bonus,
                 ActualSalary = mainsalary - (decimal)deductions + totalAllowance + totalbonus + totalspecial - (decimal)personaltax - (decimal)deductionnotax * basicsalary
-            });
+            };
             return result;
 
         }
@@ -271,12 +271,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
                    Amounts = al.AllowanceType.Amount
                }).ToListAsync();
             decimal? totalAmount = allowances.Sum(a => a.Amounts);
-            var result = new List<Object>();
-            result.Add(new
+            var result = new Object();
+            result = new
             {
                 Allowances = allowances,
-                TotalAmount = totalAmount,
-            });
+                TotalAmount = totalAmount
+            };
             return result;
         }
         public async Task<dynamic> GetEmployeeMainSalaryDetail(int employeeid, int month, int year)
@@ -284,12 +284,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var mainsalary = await _context.HoursWorkDays
                                         .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
                                         .SumAsync(h => h.DailyRate.GetValueOrDefault());
-            var result = new List<Object>();
-            result.Add(new
+            var result = new Object();
+            result = new
             {
                 MainSalaryName = "Lương chính",
                 Amounts = mainsalary
-            }) ;
+            };
             return result;
         }
         public async Task<dynamic> GetEmployeeDeductionDetail(int employeeid, int month, int year)
@@ -352,7 +352,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     personaltax = (double)taxsalary * 0.35 - 9850000;
                 }
             }
-            var result = new List<Object>();
+            var result = new Object();
             var types = await _context.DeductionsDetails
                              .Include(x => x.DeductionType)
                              .Select(x => new
@@ -362,16 +362,11 @@ namespace CarpentryWorkshopAPI.Services.Salary
                              })
                              .ToListAsync();
             decimal? totalAmounts = types.Sum(t => t.Amounts);
-            result.Add(new
+            result = new
             {
                 Deductions = types,
                 TotalDeductionAmounts = totalAmounts,
-            });
-            result.Add(new
-            {
-                DeductionNames = "Thuế thu nhập cá nhân",
-                Amounts = personaltax
-            });
+            };
             return result;
         }
         public async Task<dynamic> GetEmployeeActualSalaryDetail(int employeeid, int month, int year)
@@ -458,47 +453,26 @@ namespace CarpentryWorkshopAPI.Services.Salary
             {
                 deductions = 0;
             }
-            var result = new List<Object>();
-            result.Add(new
+            var result = new Object();
+            result = new
             {
                 MainSalaryName = "Lương chính",
-                MainSalaryAmount = mainsalary
-            });
-            result.Add(new
-            {
+                MainSalaryAmount = mainsalary,
                 DeductionName = "Các khoản giảm trừ (tính thuế)",
-                DeductionAmount = deductions
-            });
-            result.Add(new
-            {
+                DeductionAmount = deductions,
                 AllowanceName = "Phụ cấp",
-                AllowanceAmount = totalAllowance
-            });
-            result.Add(new
-            {
+                AllowanceAmount = totalAllowance,
                 BonusName = "Thưởng",
-                BonusAmount = bonus
-            });
-            result.Add(new
-            {
+                BonusAmount = bonus,
                 SpecialName = "Hiếu hỉ",
-                SpecialAmount = special
-            });
-            result.Add(new
-            {
+                SpecialAmount = special,
                 PersonalTaxName = "Thuế thu nhập cá nhân",
-                PersonalTaxAmount = personaltax
-            });
-            result.Add(new
-            {
-                DeductionName = "Các khoản giảm trừ (không tính thuế)",
-                DeductionAmount = (decimal)deductionnotax * basicsalary
-            });
-            result.Add(new
-            {
+                PersonalTaxAmount = personaltax,
+                DeductionNoTaxName = "Các khoản giảm trừ (không tính thuế)",
+                DeductionNoTaxAmount = (decimal)deductionnotax * basicsalary,
                 TotalName = "Tổng",
                 TotalAmount = mainsalary - (decimal)deductions + totalAllowance + bonus + special - (decimal)personaltax - (decimal)deductionnotax * basicsalary
-            });
+            };
             return result;
            
         }
