@@ -78,6 +78,31 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 return " Update company reward successful";
             }
         }
+        public dynamic CreateAndUpdateSpecialOccasion(SpecialOccasionDTO specialOccasionDTO)
+        {
+            if(!DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture,
+                                       System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                return "date is  not format";
+            }
+            if (specialOccasionDTO.OccasionId == 0)
+            {
+                var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
+                newPR.OccasionDate = parsedDate;
+                _context.SpecialOccasions.Add(newPR);
+                _context.SaveChanges();
+                return " Add SpecialOccasions";
+            }
+            else
+            {
+                var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
+                newPR.OccasionDate = parsedDate;
+                _context.SpecialOccasions.Update(newPR);
+                _context.SaveChanges();
+                return " SpecialOccasions";
+            }
+        }
         public dynamic GetAllReward(string date)
         {
             AllRewardDTO listreward = new AllRewardDTO();
