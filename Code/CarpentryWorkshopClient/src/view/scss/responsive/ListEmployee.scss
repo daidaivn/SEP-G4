@@ -9,5 +9,102 @@
 }
 
 // Tablet
-@media (min-width: 768px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 1536px) {
+  .modal-res {
+    position: relative;
+  }
+  .modal-employee {
+    position: absolute;
+    top: 85px;
+    right: 360px;
+  }
+  .modal-add-employee {
+    width: 1300px;
+    height: 780px;
+  }
+  .modal-head-employee {
+    h3 {
+      font-size: 35px !important;
+    }
+  }
+  .div-modal-child2,
+  .box-child-employee1 {
+    p {
+      font-size: 20px !important;
+      width: 133px !important;
+    }
+  }
+  .box-child-employee1 {
+    textarea,
+    span,
+    button {
+      font-size: 20px !important;
+    }
+  }
+  .modal-child-body2 .div-modal-child2 .fix-input {
+    width: 250px !important;
+  }
+  .modal-child-body1,
+  .box-child-employee1 .fix-input {
+    width: 300px !important;
+  }
+  .list-table tbody {
+    max-height: 340px !important;
+  }
+
+  .div-modal-child2 Input,
+  .modal-child-body2 .div-modal-child2 .ant-select {
+    width: 242px !important;
+    font-size: 20px !important;
+  }
+  .div1-modal-cn {
+    flex: unset !important;
+    p {
+      width: unset !important;
+    }
+    input {
+      padding: 10px 20px !important;
+      font-size: 20px !important;
+      width: 180px !important;
+    }
+  }
+  .modal-child-body2 .div1-modal-child2 {
+    width: unset !important;
+  }
+  .modal-child-body2 .div-modal-child2 .radio-employee {
+    width: 302px;
+  }
+  .fix-res {
+    width: 455px;
+  }
+  .modal-child-body2 {
+    gap: 20px !important;
+  }
+  .ant-input {
+    font-size: 20px !important;
+    padding: 10px 20px !important;
+  }
+  .radio-employee span {
+    font-size: 20px !important;
+  }
+  .box2-child-cn {
+    gap: 20px !important;
+  }
+  .modal-footer {
+    padding: 10px 65px 30px 65px !important;
+  }
+  .modal-footer1,
+  .btn-cancel,
+  .btn-edit {
+    font-size: 18px !important;
+  }
+  .modal-add-roleyee-employee .body-add-role-employee {
+    padding: 20px 65px !important;
+  }
+  .img-body1 {
+    max-width: 90%;
+  }
+  .modal-head h3 {
+    font-size: 35px !important;
+  }
 }
