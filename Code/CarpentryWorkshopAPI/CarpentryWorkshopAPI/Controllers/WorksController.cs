@@ -32,11 +32,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("employeeId not valid");
                 }
-
+                string role = "Nhóm trưởng";
                 var department = await _context.RolesEmployees
                     .Include(re => re.Role)
                     .Include(re => re.Department)
-                    .Where(re => re.EmployeeId == employeeId && re.EndDate == null)
+                    .Where(re => re.EmployeeId == employeeId && re.EndDate == null && re.Role.RoleName.ToLower().Equals(role.ToLower()))
                     .Select(re => new
                     {
                         DepartmentId = re.DepartmentId,
@@ -72,7 +72,6 @@ namespace CarpentryWorkshopAPI.Controllers
                                         : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
                                             ? "Done"
                                             : "NotDone")),
-                        TeamNameSearch = w.TeamWorks.Select(tw => tw.Team.TeamName.Normalize(NormalizationForm.FormD)).Distinct(),
                     })
                     .AsQueryable()
                     .ToListAsync();

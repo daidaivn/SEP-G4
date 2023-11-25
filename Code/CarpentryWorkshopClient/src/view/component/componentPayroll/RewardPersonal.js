@@ -6,6 +6,8 @@ const RewardPersonal = ({
   handleOkRewardPersonal,
   handleCancelRewardPersonal,
   handleChange,
+  employees,
+  setEmployeesID,
 }) => {
   return (
     <>

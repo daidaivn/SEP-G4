@@ -855,6 +855,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     });
                     
                 }
+                
                 return result;
             }
             catch (Exception ex)
