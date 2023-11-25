@@ -46,7 +46,7 @@ const CalendarComponent = () => {
   const [dataForSchedule, setDataForSchedule] = useState();
   const [actionWork, setActionWork] = useState();
 
-  console.log('actionWork', actionWork);
+  console.log("actionWork", actionWork);
 
   const handleChangeWeek = (newWeek) => {
     setSelectedWeek(newWeek);
@@ -181,8 +181,6 @@ const CalendarComponent = () => {
     setIsEditingDetailShift(false);
   };
 
-
-
   const handleCancelDetailShift = () => {
     setIsModalOpenDetailShift(false);
   };
@@ -298,10 +296,9 @@ const CalendarComponent = () => {
           .then((data) => {
             console.log("data", data);
             resolve(data);
-            if(Status === "end"){
+            if (Status === "end") {
               handleEditDetailShift();
-            }
-            else{
+            } else {
               showModalDetailShift();
             }
             setWorkDetailById({
@@ -506,7 +503,6 @@ const CalendarComponent = () => {
           allWorkAreas={allWorkAreas}
           convertDate={convertDate}
           handleAddWork={handleAddWork}
-
         />
 
         {isEditingDetailShift ? (
