@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Net.WebSockets;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -21,26 +22,39 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [HttpGet]
-        public IActionResult GetAllWorks(int employeeId, string pageName)
+        [HttpPost]
+        public async Task<IActionResult> GetAllWorks([FromBody] WorkSearchDTO workSearchDTO)
         {
             try
             {
-                if(employeeId <= 0)
+
+                if (workSearchDTO.employeeId <= 0)
                 {
                     return BadRequest("employeeId not valid");
                 }
-                
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.Pages.Any(pa=>pa.PageName == pageName) && re.EndDate == null).Select(re => new
-                {
-                    DepartmentId = re.DepartmentId,
-                    DepartmentName = re.Department.DepartmentName,
-                }).FirstOrDefault();
+
+                var department = await _context.RolesEmployees
+                    .Include(re => re.Role)
+                    .Include(re => re.Department)
+                    .Where(re => re.EmployeeId == workSearchDTO.employeeId && re.Role.Pages.Any(pa => pa.PageName == workSearchDTO.pageName) && re.EndDate == null)
+                    .Select(re => new
+                    {
+                        DepartmentId = re.DepartmentId,
+                        DepartmentName = re.Department.DepartmentName,
+                    })
+                    .FirstOrDefaultAsync();
+
                 if (department == null)
                 {
                     return NotFound("notHaveDepartment");
                 }
-                var work = _context.Works.Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team).Where(de => de.DepartmentId == department.DepartmentId)
+
+                var work = await _context.Works
+                    .Include(w => w.UniCost)
+                    .Include(w => w.WorkArea)
+                    .Include(w => w.TeamWorks)
+                        .ThenInclude(w => w.Team)
+                    .Where(de => de.DepartmentId == department.DepartmentId)
                     .Select(w => new
                     {
                         WorkId = w.WorkId,
@@ -51,16 +65,34 @@ namespace CarpentryWorkshopAPI.Controllers
                         UniCostName = w.UniCost.UnitName,
                         WorkArea = w.WorkArea.WorkAreaName,
                         Department = department.DepartmentName,
-                        Status = w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date ? "WorkNotStart" : 
-                        (w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date < DateTime.Now.Date ? "WorkEnd" 
-                        : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct) ? "Done" : "NotDone")),
-                    }).ToList();
+                        Status = w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date
+                                    ? "WorkNotStart"
+                                    : (w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date < DateTime.Now.Date
+                                        ? "WorkEnd"
+                                        : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
+                                            ? "Done"
+                                            : "NotDone")),
+                        TeamNameSearch = w.TeamWorks.Select(tw => tw.Team.TeamName.Normalize(NormalizationForm.FormD)).Distinct(),
+                    })
+                    .AsQueryable()
+                    .ToListAsync();
+
+                if (!string.IsNullOrEmpty(workSearchDTO.inputText))
+                {
+                    string searchTerm = workSearchDTO.inputText.ToLower().Normalize(NormalizationForm.FormD);
+                    var dateFilter = work.Where(w => w.WorkName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm) ||
+                                           w.TeamNameSearch.Any(tn => tn.Contains(searchTerm)));
+                    return Ok(dateFilter);
+                }
+
                 return Ok(work);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
         [HttpGet("{wId}")]
         public IActionResult GetWorkDetailById(int wId)
         {
