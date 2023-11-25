@@ -20,7 +20,6 @@
   }
   .modal-add-employee {
     width: 1300px;
-    height: 780px;
   }
   .modal-head-employee {
     h3 {
@@ -103,10 +102,14 @@
   }
   .img-body1 {
     img {
-      max-width: 70%;
+      max-width: 67%;
     }
   }
   .modal-head h3 {
     font-size: 35px !important;
+  }
+  .modal-add-employee-all,
+  .modal-employee-box1 {
+    flex: unset !important;
   }
 }
