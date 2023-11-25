@@ -1,12 +1,14 @@
-﻿namespace CarpentryWorkshopAPI.IServices.ISalary
+﻿using CarpentryWorkshopAPI.DTO;
+
+namespace CarpentryWorkshopAPI.IServices.ISalary
 {
     public interface ISalaryService
     {
-        dynamic GetAllSalarys(int month, int year);
-        dynamic GetEmployeeSalaryDetail(int employeeid, int month, int year);
-        dynamic GetEmployeeAllowanceDetail(int employeeid, int month, int year);
-        dynamic GetEmployeeMainSalaryDetail(int employeeid, int month, int year);
-        dynamic GetEmployeeDeductionDetail(int employeeid, int month, int year);
-        dynamic GetEmployeeActualSalaryDetail(int employeeid, int month, int year);
+        Task<dynamic> GetAllSalarys(GetSalarysDTO getSalarysDTO);
+        Task<dynamic> GetEmployeeSalaryDetail(int employeeid, int month, int year);
+        Task<dynamic> GetEmployeeAllowanceDetail(int employeeid, int month, int year);
+        Task<dynamic> GetEmployeeMainSalaryDetail(int employeeid, int month, int year);
+        Task<dynamic> GetEmployeeDeductionDetail(int employeeid, int month, int year);
+        Task<dynamic> GetEmployeeActualSalaryDetail(int employeeid, int month, int year);
     }
 }
