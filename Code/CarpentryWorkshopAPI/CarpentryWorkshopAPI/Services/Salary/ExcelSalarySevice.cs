@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using OfficeOpenXml.Style;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace CarpentryWorkshopAPI.Services.Salary
 {
@@ -29,6 +30,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             //Truy vấn danh sách employee có trạng thái là true
             var employeeIds = await _context.Employees.Where(em => em.Status == true).Select(e => e.EmployeeId).ToListAsync();
+            var monthStart = new DateTime(year, month, 1);
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
 
             //Tuy vấn vai trò nhân viên theo theo chức vụ cao nhất
             var roles = await _context.RolesEmployees
@@ -36,10 +39,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .GroupBy(r => r.EmployeeId)
                         .Select(g => new { EmployeeId = g.Key, RoleName = g.OrderByDescending(r => r.Role.RoleLevel).Select(r => r.Role.RoleName).FirstOrDefault() })
                         .ToListAsync();
-            
+
             //Truy vấn thông tin nhân viên
             var employeeData = await _context.Employees
-                .Where(e=>e.Status == true)
+                .Where(e => e.Status == true &&
+                            e.Contracts.Any(c => c.StartDate <= monthEnd &&
+                                                 (c.EndDate == null || c.EndDate >= monthStart)))
                 .Include(e => e.HoursWorkDays)
                 .Include(e => e.RolesEmployees)
                 .ThenInclude(re => re.Role)
