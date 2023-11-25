@@ -178,8 +178,12 @@ const AddEmployeeModal = ({
               </div>
               <div className="box2-child-cn">
                 <div className="box-child-employee1 div-detail">
-                  <p>Lương cơ bản:</p>
-                  <Input value="1.000.000" />
+                  <p>Email:</p>
+                  <Input
+                    value={originalEmail}
+                    onChange={(e) => setOriginalEmail(e.target.value)}
+                    placeholder="Nhập email"
+                  />
                 </div>
                 <div className="box-child-employee1 div-detail">
                   <p>Trạng thái:</p>

@@ -35,13 +35,13 @@ namespace CarpentryWorkshopAPI.Controllers
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpGet]
-        public IActionResult GetAllEmployee()
+        public async Task<IActionResult> GetAllEmployee()
         {
             try
             {
                 var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
                 var employeeIdLength = maxEmployeeId.ToString().Length;
-                var employeelist = _context.Employees
+                var employeelist = await _context.Employees
                     .Include(x => x.Country)
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
@@ -59,7 +59,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .Select(re => re.Role.RoleName)
                         .FirstOrDefault(),
                         Status = emp.Status,
-                    });
+                    }).ToListAsync();
                 return Ok(employeelist);
             }
             catch (Exception ex)
@@ -69,11 +69,11 @@ namespace CarpentryWorkshopAPI.Controllers
            
         }
         [HttpGet]
-        public IActionResult GetEmployeeDetail(int eid)
+        public async Task<IActionResult> GetEmployeeDetail(int eid)
         {
             try
             {
-                var employeeDetailBasic = _context.Employees
+                var employeeDetailBasic = await _context.Employees
                    .Where(emp => emp.EmployeeId == eid)
                    .Include(emp => emp.RolesEmployees)
                    .ThenInclude(roleemp => roleemp.Role)
@@ -107,7 +107,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                 DepartmentName = roleemp.Department.DepartmentName,
                             })
                             .ToList()
-                   }).FirstOrDefault();
+                   }).FirstOrDefaultAsync();
                    
                 if (employeeDetailBasic == null)
                 {
@@ -175,13 +175,13 @@ namespace CarpentryWorkshopAPI.Controllers
         //}
         [Authorize(Roles = "ListEmployee")]
         [HttpGet]
-        public IActionResult GetEmployeeDependent(int eid)
+        public async Task<IActionResult> GetEmployeeDependent(int eid)
         {
             try
             {
-                var employeeDepend = _context.Dependents
+                var employeeDepend = await _context.Dependents
                     .Where(x => x.EmployeeId == eid)
-                    .ToList();
+                    .ToListAsync();
                 if (employeeDepend == null)
                 {
                     return NotFound();
@@ -214,24 +214,35 @@ namespace CarpentryWorkshopAPI.Controllers
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpPost]
-        public IActionResult CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
+        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
             {
 
-                var employee = _context.Employees
+                var employee = await _context.Employees
                    .Include(emp => emp.RolesEmployees)
                        .ThenInclude(roleemp => roleemp.Role)
                        .ThenInclude(role => role.RolesEmployees)
                    .Include(emp => emp.RolesEmployees)
                        .ThenInclude(roleemp => roleemp.Department)
-                       .FirstOrDefault(x => x.PhoneNumber == createEmployeeDTO.PhoneNumber 
+                       .FirstOrDefaultAsync(x => x.PhoneNumber == createEmployeeDTO.PhoneNumber 
                        || x.Email == createEmployeeDTO.Email
                        || x.Cic == createEmployeeDTO.Cic);
 
                 if (employee != null)
                 {
-                    return Ok("Nhân viên này đã tồn tại");
+                    if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
+                    {
+                        return StatusCode(503, "PhoneNumber already exists.");
+                    }
+                    else if (employee.Email == createEmployeeDTO.Email)
+                    {
+                        return StatusCode(501, "Email already exists.");
+                    }
+                    else if (employee.Cic == createEmployeeDTO.Cic)
+                    {
+                        return StatusCode(502, "Cic already exists.");
+                    }
                 }
                 Employee newemp = new Employee();
                

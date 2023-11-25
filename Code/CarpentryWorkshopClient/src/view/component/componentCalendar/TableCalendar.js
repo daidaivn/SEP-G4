@@ -1,14 +1,18 @@
 import { parseWeekRange } from "../../logicTime/getWeeDays";
+import { format, parse } from 'date-fns';
 
 const TableCalendar = ({
-  handleEditDetailShift,
   showModalDetailShift,
   dataForSchedule,
   selectedWeek,
   defaultValue,
   showModalGroup,
   setActionWork,
-  fetchWorkDetailById
+  handlegetDataDetail,
+  setWorkidDetail,
+  setWorkDetailById,
+  convertDate,
+  selectedYear
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -45,7 +49,8 @@ const TableCalendar = ({
                         Kết thúc
                         <svg
                           onClick={() => {
-                            fetchWorkDetailById(work.workId, work.status, team.teamName)
+                            handlegetDataDetail(work.workId)
+                            setActionWork("viewWork")
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -78,6 +83,13 @@ const TableCalendar = ({
                           onClick={() => {
                             showModalDetailShift();
                             setActionWork("addWork")
+                            setWorkidDetail(team.teamId)
+                            const columnIndex = workIndex;
+                            const selectedDate = weekDays[columnIndex];
+                            const formattedDate = format(parse(selectedDate, 'dd/MM', new Date()), 'dd-MM-yyyy');
+                            setWorkDetailById({
+                              date: formattedDate,
+                            });
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="30"
@@ -104,7 +116,7 @@ const TableCalendar = ({
                         <svg
                           onClick={() => {
                             setActionWork("editWork")
-                            fetchWorkDetailById(work.workId)
+                            handlegetDataDetail(work.workId)
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -123,8 +135,7 @@ const TableCalendar = ({
                         </svg>
                       </>
                     ) : (
-                      <></>
-                    )
+                      <></>)
                     }
                   </td>
                 ))}

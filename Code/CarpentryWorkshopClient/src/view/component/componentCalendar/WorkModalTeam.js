@@ -6,7 +6,6 @@ const WorkModalTeam = ({
   handleSaveDetailShift,
   handleCancelDetailShift,
   handleChange,
-  handleBackDetailShift,
 }) => {
   return (
     <div className="modal-detail ">

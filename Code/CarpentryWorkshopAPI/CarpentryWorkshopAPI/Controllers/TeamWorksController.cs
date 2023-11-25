@@ -46,7 +46,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }).FirstOrDefault();                
                 if (details == null)
                 {
-                    return NotFound();
+                    return NotFound("Not have data");
                 }
                 details.NumberOfProduct = _context.TeamWorks.Include(de=>de.Team).Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id).Sum(de => de.TotalProduct);
                 return Ok(details);
@@ -61,10 +61,14 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                if(teamWorkUpdateDTO.numberProduct < 0)
+                {
+                    return BadRequest("data is not valid");
+                }
                 var teamWork = _context.TeamWorks.Where(tw => tw.TeamWorkId == teamWorkUpdateDTO.teamWorkId).FirstOrDefault();
                 if (teamWork == null)
                 {
-                    return NotFound();
+                    return NotFound("not have data");
                 }
                 teamWork.TotalProduct = teamWorkUpdateDTO.numberProduct;
                 _context.TeamWorks.Update(teamWork);
@@ -76,50 +80,50 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        public IActionResult AddWorkForTeam([FromBody] TeamWorkDTO teamWorkDTO)
-        {
-            try
-            {
-                List<TeamWork> teamWorks = new List<TeamWork>();
-                var work = _context.Works.FirstOrDefault(w => w.WorkId == teamWorkDTO.WorkId);
-                if (work == null)
-                {
-                    return NotFound("can not find workid");
-                }
-                var startDate = DateTime.ParseExact(teamWorkDTO.StartDate, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture);
-                if(startDate < work.StartDate)
-                {
-                    return BadRequest("startdate err");
-                }
-                int count = 0;
-                while (count < teamWorkDTO.time)
-                {
-                    if(startDate < work.EndDate)
-                    {
-                        TeamWork teamWork = new TeamWork()
-                        {
-                            WorkId = work.WorkId,
-                            TeamId = teamWorkDTO.TeamId,
-                            TotalProduct = 0,
-                            Date = startDate,
-                        };
-                        teamWorks.Add(teamWork);                        
-                        startDate = startDate.AddDays(1);
-                        count++;
-                    }
+        //[HttpPost]
+        //public IActionResult AddWorkForTeam([FromBody] TeamWorkDTO teamWorkDTO)
+        //{
+        //    try
+        //    {
+        //        List<TeamWork> teamWorks = new List<TeamWork>();
+        //        var work = _context.Works.FirstOrDefault(w => w.WorkId == teamWorkDTO.WorkId);
+        //        if (work == null)
+        //        {
+        //            return NotFound("can not find workid");
+        //        }
+        //        var startDate = DateTime.ParseExact(teamWorkDTO.StartDate, "dd-MM-yyyy",
+        //                           System.Globalization.CultureInfo.InvariantCulture);
+        //        if(startDate < work.StartDate)
+        //        {
+        //            return BadRequest("startdate err");
+        //        }
+        //        int count = 0;
+        //        while (count < teamWorkDTO.time)
+        //        {
+        //            if(startDate < work.EndDate)
+        //            {
+        //                TeamWork teamWork = new TeamWork()
+        //                {
+        //                    WorkId = work.WorkId,
+        //                    TeamId = teamWorkDTO.TeamId,
+        //                    TotalProduct = 0,
+        //                    Date = startDate,
+        //                };
+        //                teamWorks.Add(teamWork);                        
+        //                startDate = startDate.AddDays(1);
+        //                count++;
+        //            }
                     
-                }
-                _context.TeamWorks.AddRange(teamWorks);
-                _context.SaveChanges();
-                return Ok("Add suceess");
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }                       
-        }
+        //        }
+        //        _context.TeamWorks.AddRange(teamWorks);
+        //        _context.SaveChanges();
+        //        return Ok("Add suceess");
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }                       
+        //}
         [HttpPost]
         public IActionResult RemoveWorkForTeam([FromBody] TeamWorkDTO teamWorkDTO)
         {

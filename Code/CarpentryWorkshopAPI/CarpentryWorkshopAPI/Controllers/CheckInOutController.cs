@@ -22,65 +22,65 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [HttpGet]
-        public IActionResult GetAllCheckInOut()
-        {
-            try
-            {
-                var allchecks = _context.CheckInOuts
-                    .Include(x => x.Employee)
-                    .ToList();
-                if (allchecks == null)
-                {
-                    return NotFound();
-                }
-                return Ok(allchecks);
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet]
-        [Route("api/attendance/{employeeId}")]
-        public IActionResult GetAttendanceStatus(int employeeId)
-        {
-            DateTime currentDate = DateTime.Now.Date;
+        //[HttpGet]
+        //public IActionResult GetAllCheckInOut()
+        //{
+        //    try
+        //    {
+        //        var allchecks = _context.CheckInOuts
+        //            .Include(x => x.Employee)
+        //            .ToList();
+        //        if (allchecks == null)
+        //        {
+        //            return NotFound();
+        //        }
+        //        return Ok(allchecks);
+        //    }catch(Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+        //[HttpGet]
+        //[Route("api/attendance/{employeeId}")]
+        //public IActionResult GetAttendanceStatus(int employeeId)
+        //{
+        //    DateTime currentDate = DateTime.Now.Date;
 
-            var lastAttendance = _context.CheckInOuts
-                .Where(a => a.EmployeeId == employeeId && a.Date == currentDate)
-                .OrderByDescending(a => a.TimeCheckIn)
-                .FirstOrDefault();
-            var team = _context.EmployeeTeams.Where(et => et.EmployeeId == employeeId && et.EndDate == null)
-                .Include(et => et.Team).ThenInclude(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Select(et => new
-                {
-                    TimeIn = et.Team.WorkSchedules.Select(ws=>ws.ShiftType.StartTime).Single(),
-                    Timeout = et.Team.WorkSchedules.Select(ws =>ws.ShiftType.EndTime).Single(),
-                });
-            if (lastAttendance == null)
-            {
-                if (DateTime.Now.TimeOfDay > team.Select(t => t.TimeIn.Value).Single())
-                {
-                    return Ok("Vắng mặt");
-                }
-                // Trường hợp người dùng chưa check-in
-                return Ok("Chưa có mặt");
-            }
-            else
-            {
-                if(lastAttendance.TimeCheckOut == null)
-                {
-                    if (DateTime.Now.TimeOfDay > team.Select(t => t.Timeout.Value).Single())
-                    {
-                        return Ok("Vắng mặt");
-                    }
-                    return Ok("Có mặt");
-                }else
-                {
-                    return Ok("Nhân viên đã check out");
-                }
-            }
+        //    var lastAttendance = _context.CheckInOuts
+        //        .Where(a => a.EmployeeId == employeeId && a.Date == currentDate)
+        //        .OrderByDescending(a => a.TimeCheckIn)
+        //        .FirstOrDefault();
+        //    var team = _context.EmployeeTeams.Where(et => et.EmployeeId == employeeId && et.EndDate == null)
+        //        .Include(et => et.Team).ThenInclude(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Select(et => new
+        //        {
+        //            TimeIn = et.Team.WorkSchedules.Select(ws=>ws.ShiftType.StartTime).Single(),
+        //            Timeout = et.Team.WorkSchedules.Select(ws =>ws.ShiftType.EndTime).Single(),
+        //        });
+        //    if (lastAttendance == null)
+        //    {
+        //        if (DateTime.Now.TimeOfDay > team.Select(t => t.TimeIn.Value).Single())
+        //        {
+        //            return Ok("Vắng mặt");
+        //        }
+        //        // Trường hợp người dùng chưa check-in
+        //        return Ok("Chưa có mặt");
+        //    }
+        //    else
+        //    {
+        //        if(lastAttendance.TimeCheckOut == null)
+        //        {
+        //            if (DateTime.Now.TimeOfDay > team.Select(t => t.Timeout.Value).Single())
+        //            {
+        //                return Ok("Vắng mặt");
+        //            }
+        //            return Ok("Có mặt");
+        //        }else
+        //        {
+        //            return Ok("Nhân viên đã check out");
+        //        }
+        //    }
 
-        }
+        //}
 
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
         public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
