@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -791,6 +792,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("notHaveDepartment");
                 }
+                string searchTerm = "";
+                if (!string.IsNullOrEmpty(scheduleDataInputDTO.InputText))
+                {
+                     searchTerm = scheduleDataInputDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
+                }
                 var teams = await _context.Teams
                     .Include(t => t.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
@@ -803,7 +809,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("notfound");
                 }
-                foreach(Team team in teams)
+
+                var teamSearchs = teams.Where(t => t.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm));
+
+                foreach(Team team in teamSearchs)
                 {
                     var day = new List<object>();
                     var teamworks = _context.TeamWorks.Where(tw=>tw.TeamId == team.TeamId).ToList();
