@@ -132,11 +132,13 @@
     }
   }
   .list-input-search {
+    padding: 0px 0px 0px 29px !important;
     input {
       font-size: 18px !important;
     }
   }
   .list-filter {
+    padding: 15px 28px !important   ;
     .ant-select-selection-placeholder {
       font-size: 18px;
     }
@@ -163,9 +165,12 @@
       height: 30px;
     }
   }
-  #item-menu {
-    .text {
-      font-size: 18px !important;
+
+  .item-link {
+    #item-menu {
+      .text {
+        font-size: 18px !important;
+      }
     }
   }
   .list-table {
@@ -176,6 +181,9 @@
           font-size: 18px !important;
         }
       }
+    }
+    tbody {
+      padding: 15px 12px;
     }
   }
   .modal-payroll {
@@ -199,5 +207,11 @@
     p {
       font-size: 18px !important;
     }
+  }
+  .dropdown-content span {
+    font-size: 15px !important;
+  }
+  .logo-menu {
+    gap: unset !important;
   }
 }
