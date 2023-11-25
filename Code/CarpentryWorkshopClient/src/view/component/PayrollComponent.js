@@ -119,15 +119,14 @@ const PayrollComponent = () => {
   //modal Thưởng công ty
   const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
     useState(false);
-
+  const dataConver = months + "-" + date
   const showModalRewardCompany = () => {
     toast.promise(
       new Promise((resolve) => {
-        fetchAllReward(currentMonth + "-" + currentYear)
+        fetchAllReward(dataConver)
           .then((data) => {
             setReward(data);
             resolve(data);
-            setDate(formattedDate);
             console.log("reward", data);
           })
           .catch((error) => {
