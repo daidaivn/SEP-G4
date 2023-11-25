@@ -91,7 +91,7 @@
     gap: 20px !important;
   }
   .modal-footer {
-    padding: 10px 65px 30px 65px !important;
+    padding: 10px 65px 10px 65px !important;
   }
   .modal-footer1,
   .btn-cancel,
@@ -102,7 +102,9 @@
     padding: 20px 65px !important;
   }
   .img-body1 {
-    max-width: 90%;
+    img {
+      max-width: 70%;
+    }
   }
   .modal-head h3 {
     font-size: 35px !important;
