@@ -809,7 +809,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("notfound");
                 }
-                var teamSearchs = teams.Where(t => t.TeamName.Contains(searchTerm));
+                var teamSearchs = teams.Where(t => t.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm));
                 foreach(Team team in teamSearchs)
                 {
                     var day = new List<object>();
