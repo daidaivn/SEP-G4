@@ -6,9 +6,7 @@ import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import {
-  getTomorrowDateSEAsia,
-} from "../logicTime/getDate";
+import { getTomorrowDateSEAsia } from "../logicTime/getDate";
 import {
   GetAllWorks,
   GetWorkDetailById,
@@ -21,7 +19,7 @@ import {
   ModalListShift,
   TableCalendar,
   ListModuleDetail3,
-  ModalGroup
+  ModalGroup,
 } from "./componentCalendar";
 import {
   createYearOptions,
@@ -53,14 +51,13 @@ const CalendarComponent = () => {
     workArea: "",
     workAreaId: "",
     status: "",
-    date: getTomorrowDateSEAsia()
+    date: getTomorrowDateSEAsia(),
   });
   const [allUnitCosts, setAllUnitCosts] = useState([]);
   const [allWorkAreas, setAllWorkAreas] = useState([]);
   const [workidDetail, setWorkidDetail] = useState([]);
 
-console.log('selectedYear',selectedYear);
-
+  console.log("selectedYear", selectedYear);
 
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
@@ -82,7 +79,6 @@ console.log('selectedYear',selectedYear);
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
 
-
   const handleChangeUnitCostId = (value) => {
     setWorkDetailById({
       ...workDetailById,
@@ -99,20 +95,20 @@ console.log('selectedYear',selectedYear);
   const handleDetailWorkInList = () => {
     setIsModalOpenListShift(false);
     setIsModalOpenDetailShift(true);
-  }
+  };
 
   const handleCancelDetailWorkInList = () => {
     if (actionWork === "detailWork" || actionWork === "viewWorkList") {
       setIsModalOpenListShift(true);
     }
     setIsModalOpenDetailShift(false);
-    resetWorkDetailById()
-  }
+    resetWorkDetailById();
+  };
 
-  const handlegetDataDetail =(id) =>{
-    fetchWorkDetailById(id)
-    handleDetailWorkInList()
-  }
+  const handlegetDataDetail = (id) => {
+    fetchWorkDetailById(id);
+    handleDetailWorkInList();
+  };
 
   const convertDate = (dobstring) => {
     if (dobstring) {
@@ -139,9 +135,7 @@ console.log('selectedYear',selectedYear);
     setIsModalOpenDetailShift(true);
   };
 
-  const handleCancelDetailShift = () => {
-
-  };
+  const handleCancelDetailShift = () => {};
 
   const handleEditWork = () => {
     if (workDetailById.status === "WorkNotStart") {
@@ -169,7 +163,7 @@ console.log('selectedYear',selectedYear);
       totalProduct: "",
       workArea: "",
       workAreaId: "",
-      date: ""
+      date: "",
     });
   };
 
@@ -247,8 +241,6 @@ console.log('selectedYear',selectedYear);
         console.log(error);
       });
   };
-  
-  
 
   const FetchDataForSchedule = () => {
     toast.promise(

@@ -6,6 +6,7 @@ namespace CarpentryWorkshopAPI.IServices.IBonus
     {
         dynamic CreateAndUpdatePersonalReward(PersonalRewardDTO personalRewardDTO);
         dynamic CreateAndUpdateCompanyRerward(CompanyRewardDTO companyRewardDTO);
+        dynamic CreateAndUpdateSpecialOccasion(SpecialOccasionDTO specialOccasionDTO);
         dynamic GetAllReward(string date);
     }
 }
