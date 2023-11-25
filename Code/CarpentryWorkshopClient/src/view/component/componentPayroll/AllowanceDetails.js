@@ -1,5 +1,6 @@
 import React from "react";
 import { Input, Modal } from "antd";
+import { formatMoney } from "../../logicTime/formatAll";
 
 const AllowanceDetails = ({
   isModalOpenAllowance,
@@ -7,6 +8,7 @@ const AllowanceDetails = ({
   handleCancelAllowance,
   dataAllowance
 }) => {
+  
   return (
     <>
       {/* Modal Chi tiết trợ cấp */}
@@ -20,7 +22,7 @@ const AllowanceDetails = ({
         <div className="modal-payroll payroll-fix">
           <div className="modal-head">
             <div className="body-payroll1">
-              <p>Chi tiết trợ cấp</p>
+              <p>Chi tiết phụ cấp</p>
             </div>
             <div className="close">
               <svg
@@ -42,14 +44,14 @@ const AllowanceDetails = ({
           </div>
           <div className="body-payroll">
             <div className="body-child1 scrollbar" id="style-15">
-              {dataAllowance.map((allowance, index) => (
+              {dataAllowance.allowances && dataAllowance.allowances.map((allowance, index) => (
                 <div className="item-child1-col" key={index}>
                   <div className="child1-col">
                     <div className="child1-text">
                       <p className="text1">{index + 1}.</p>
                       <p>{allowance.allowanceName}</p>
                       <div className="money">
-                        <p>{allowance.amounts.toLocaleString('en-US')} VND</p>
+                        <p>{allowance.amounts && formatMoney(allowance.amounts)} VND</p>
                       </div>
                     </div>
                   </div>
@@ -62,7 +64,7 @@ const AllowanceDetails = ({
                   <div className="item-chil1-cn">
                     <p>Tổng số tiền trợ cấp</p>
                     <div className="money">
-                      <p>{dataAllowance.reduce((acc, item) => acc + item.amounts, 0).toLocaleString('en-US')} VND</p>
+                      <p>{formatMoney(dataAllowance.totalAmount)} VND</p>
                     </div>
                   </div>
                 </div>

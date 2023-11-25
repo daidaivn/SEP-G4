@@ -30,7 +30,9 @@ import {
   GetEmployeeDeductionDetail,
   GetEmployeeActualSalaryDetail
 } from "../../sevices/PayrollSevice";
-
+import {
+  fetchAllEmplyee,
+} from "../../sevices/EmployeeService";
 const PayrollComponent = () => {
   const [salaries, setSalaries] = useState([]);
   const [reward, setReward] = useState([]);
@@ -49,12 +51,16 @@ const PayrollComponent = () => {
   const [dataDeduction, setDataDeduction] = useState([]);
   const [dataActualSalary, setActualSalary] = useState([]);
 
+  //personal reward
+  const [employees, setEmployees] = useState([]);
+  const [employeeID, setEmployeesID] = useState([]);
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
       const parts = dobstring.split("-");
@@ -153,6 +159,24 @@ const PayrollComponent = () => {
   const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
     useState(false);
   const showModalRewardPersonal = () => {
+    const fetchEmployeeData = () => {
+      toast.promise(
+        new Promise((resolve) => {
+          fetchAllEmplyee()
+            .then((data) => {
+              setEmployees(data);
+              resolve(data);
+            })
+            .catch((error) => {
+              resolve(Promise.reject(error));
+            });
+        }),
+        {
+          pending: "Đang tải dữ liệu",
+          error: "Lỗi tải dữ liệu",
+        }
+      );
+    };
     setIsModalOpenRewardPersonal(true);
   };
   const handleOkRewardPersonal = () => {
@@ -185,7 +209,8 @@ const PayrollComponent = () => {
   const handleCancelTypeReward = () => {
     setIsModalOpenTypeReward(false);
   };
-
+  console.log('data1',dataActualSalary);
+  
   //modal Sửa tên thưởng
   const [isModalOpenEditReward, setIsModalOpenEditReward] = useState(false);
   const showModalEditReward = () => {
@@ -215,8 +240,6 @@ const PayrollComponent = () => {
         GetEmployeeActualSalaryDetail(employeeId, months, date)
           .then((data) => {
             showModalReward()
-            console.log('',data);
-            
             setActualSalary(data)
             resolve(data);
           })
@@ -356,7 +379,6 @@ const PayrollComponent = () => {
           handleOkRewardAll={handleOkRewardAll}
           handleCancelRewardAll={handleCancelRewardAll}
           handleChange={handleChange}
-          dataActualSalary={dataActualSalary}
         />
 
         <TypeReward
@@ -369,7 +391,7 @@ const PayrollComponent = () => {
           isModalOpenReward={isModalOpenReward}
           handleOkReward={handleOkReward}
           handleCancelReward={handleCancelReward}
-          fetchEmployeeActualSalaryDetail={fetchEmployeeActualSalaryDetail}
+          dataActualSalary={dataActualSalary}
         />
 
         <RewardPersonal
@@ -377,6 +399,8 @@ const PayrollComponent = () => {
           handleOkRewardPersonal={handleOkRewardPersonal}
           handleCancelRewardPersonal={handleCancelRewardPersonal}
           handleChange={handleChange}
+          employees={employees}
+          setEmployeesID={setEmployeesID}
         />
         <Holiday
           isModalOpenHoliday={isModalOpenHoliday}

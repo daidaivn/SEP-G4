@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "antd";
+import { formatMoney } from "../../logicTime/formatAll";
 
 const ListTable = ({
   salaries,
@@ -32,7 +33,7 @@ const ListTable = ({
               <td>{Salary.employeeIDstring}</td>
               <td>{Salary.employeeName}</td>
               <td>
-                {Salary.mainSalary === 0 ? "-" : Salary.mainSalary} VNĐ{" "}
+                {Salary.mainSalary === 0 ? "-" : formatMoney(Salary.mainSalary)} VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
@@ -58,7 +59,7 @@ const ListTable = ({
               </td>
               {/* show Modal Chi tiết phụ cấp */}
               <td onClick={()=> fetchEmployeeAllowanceDetail(Salary.employeeID)}>
-                {Salary.allowances === 0 ? "-" : Salary.allowances} VNĐ{" "}
+                {Salary.allowances === 0 ? "-" : formatMoney(Salary.allowances)} VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
@@ -84,7 +85,7 @@ const ListTable = ({
               </td>
               {/* show Modal Chi tiết khoản giảm trừ */}
               <td onClick={()=> fetchEmployeeDeductionDetail(Salary.employeeID)}>
-                {Salary.deductions === 0 ? "-" : Salary.deductions}VNĐ{" "}
+                {Salary.deductions === 0 ? "-" : formatMoney(Salary.deductions)}VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
@@ -110,7 +111,7 @@ const ListTable = ({
               </td>
               {/* show Modal Chi tiết thưởng */}
               <td onClick={()=> fetchEmployeeActualSalaryDetail(Salary.employeeID)}>
-                {Salary.actualSalary === 0 ? "-" : Salary.actualSalary} VNĐ{" "}
+                {Salary.actualSalary === 0 ? "-" : formatMoney(Salary.actualSalary)} VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="31"
