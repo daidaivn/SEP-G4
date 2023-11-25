@@ -23,12 +23,12 @@ namespace CarpentryWorkshopAPI.Controllers
             _mapper = mapper;
         }
         [HttpPost]
-        public async Task<IActionResult> GetAllWorks([FromBody] WorkSearchDTO workSearchDTO)
+        public async Task<IActionResult> GetAllWorks(int employeeId)
         {
             try
             {
 
-                if (workSearchDTO.employeeId <= 0)
+                if (employeeId <= 0)
                 {
                     return BadRequest("employeeId not valid");
                 }
@@ -36,7 +36,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var department = await _context.RolesEmployees
                     .Include(re => re.Role)
                     .Include(re => re.Department)
-                    .Where(re => re.EmployeeId == workSearchDTO.employeeId && re.Role.Pages.Any(pa => pa.PageName == workSearchDTO.pageName) && re.EndDate == null)
+                    .Where(re => re.EmployeeId == employeeId && re.EndDate == null)
                     .Select(re => new
                     {
                         DepartmentId = re.DepartmentId,
@@ -77,13 +77,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .AsQueryable()
                     .ToListAsync();
 
-                if (!string.IsNullOrEmpty(workSearchDTO.inputText))
-                {
-                    string searchTerm = workSearchDTO.inputText.ToLower().Normalize(NormalizationForm.FormD);
-                    var dateFilter = work.Where(w => w.WorkName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm) ||
-                                           w.TeamNameSearch.Any(tn => tn.Contains(searchTerm)));
-                    return Ok(dateFilter);
-                }
+                
 
                 return Ok(work);
             }
