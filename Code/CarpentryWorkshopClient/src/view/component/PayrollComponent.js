@@ -185,7 +185,8 @@ const PayrollComponent = () => {
   const handleCancelTypeReward = () => {
     setIsModalOpenTypeReward(false);
   };
-
+  console.log('data1',dataActualSalary);
+  
   //modal Sửa tên thưởng
   const [isModalOpenEditReward, setIsModalOpenEditReward] = useState(false);
   const showModalEditReward = () => {
@@ -215,8 +216,6 @@ const PayrollComponent = () => {
         GetEmployeeActualSalaryDetail(employeeId, months, date)
           .then((data) => {
             showModalReward()
-            console.log('',data);
-            
             setActualSalary(data)
             resolve(data);
           })
@@ -356,7 +355,6 @@ const PayrollComponent = () => {
           handleOkRewardAll={handleOkRewardAll}
           handleCancelRewardAll={handleCancelRewardAll}
           handleChange={handleChange}
-          dataActualSalary={dataActualSalary}
         />
 
         <TypeReward
@@ -369,7 +367,7 @@ const PayrollComponent = () => {
           isModalOpenReward={isModalOpenReward}
           handleOkReward={handleOkReward}
           handleCancelReward={handleCancelReward}
-          fetchEmployeeActualSalaryDetail={fetchEmployeeActualSalaryDetail}
+          dataActualSalary={dataActualSalary}
         />
 
         <RewardPersonal

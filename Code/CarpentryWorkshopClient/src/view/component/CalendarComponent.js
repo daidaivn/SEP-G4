@@ -26,6 +26,7 @@ import {
   getWeekRange,
   createWeekOptions,
 } from "../logicTime/getWeeDays";
+import Item from "antd/es/list/Item";
 const CalendarComponent = () => {
   const yearOptions = createYearOptions();
   const weekOptions = createWeekOptions();
@@ -41,6 +42,8 @@ const CalendarComponent = () => {
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [saveWork, setSaveWork] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
+  const [iText, setIText] = useState("");
+
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
     workName: "",
@@ -78,6 +81,17 @@ const CalendarComponent = () => {
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
+  // Get the userPages string from localStorage or sessionStorage
+  const userPagesString =
+    localStorage.getItem('userPages') || sessionStorage.getItem('userPages');
+
+  const userPagesArray = JSON.parse(userPagesString);
+
+  if (Array.isArray(userPagesArray) && userPagesArray.includes('Calendar')) {
+    var calendarPageName = 'Calendar';
+  }
+  console.log('calendarPageName',calendarPageName);
+  
 
   const handleChangeUnitCostId = (value) => {
     setWorkDetailById({
@@ -135,7 +149,7 @@ const CalendarComponent = () => {
     setIsModalOpenDetailShift(true);
   };
 
-  const handleCancelDetailShift = () => {};
+  const handleCancelDetailShift = () => { };
 
   const handleEditWork = () => {
     if (workDetailById.status === "WorkNotStart") {
@@ -170,7 +184,7 @@ const CalendarComponent = () => {
   const fetchAllWorks = () => {
     toast.promise(
       new Promise((resolve) => {
-        GetAllWorks(userEmployeeID)
+        GetAllWorks(userEmployeeID,calendarPageName)
           .then((data) => {
             resolve(data);
             setIsModalOpenListShift(true);
@@ -245,7 +259,7 @@ const CalendarComponent = () => {
   const FetchDataForSchedule = () => {
     toast.promise(
       new Promise((resolve) => {
-        GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear)
+        GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear, iText)
           .then((data) => {
             setDataForSchedule(data);
             resolve(data);
@@ -262,10 +276,8 @@ const CalendarComponent = () => {
   };
 
   useEffect(() => {
-    if (selectedWeek) {
       FetchDataForSchedule();
-    }
-  }, [selectedWeek]);
+  }, [iText,selectedWeek]);
   useEffect(() => {
     fetchAllUnitCosts();
     fetchAllWorkAreas();
@@ -291,6 +303,8 @@ const CalendarComponent = () => {
           handleChangeYear={handleChangeYear}
           yearOptions={yearOptions}
           setActionWork={setActionWork}
+          setIText={setIText}
+          iText={iText}
         />
 
         <TableCalendar
