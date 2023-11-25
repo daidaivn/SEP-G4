@@ -9,5 +9,42 @@
 }
 
 // Tablet
-@media (min-width: 768px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 1536px) {
+  .modal-res {
+    position: relative;
+  }
+  .modal-employee {
+    position: absolute;
+    top: 85px;
+    right: 360px;
+  }
+  .modal-add-employee {
+    width: 1300px;
+    height: 780px;
+  }
+  .modal-head-employee {
+    h3 {
+      font-size: 35px !important;
+    }
+  }
+  .div-modal-child2,
+  .box-child-employee1 {
+    p {
+      font-size: 20px !important;
+      width: 133px !important;
+    }
+  }
+  .box-child-employee1 {
+    span,
+    button {
+      font-size: 20px !important;
+    }
+  }
+  .modal-child-body2 .div-modal-child2 .fix-input {
+    width: 250px !important;
+  }
+  .modal-child-body1,
+  .box-child-employee1 .fix-input {
+    width: 300px !important;
+  }
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import user from "../../assets/images/Ellipse 69.svg";
 import notification from "../../assets/images/icons/notification.svg";
 import "../../scss/index.scss";
+import "../../scss/responsive/responsive.scss";
+import "../../scss/responsive/ListEmployee.scss";
 import { toast } from "react-toastify";
 import { Input, Switch, Form } from "antd";
 import { Modal } from "antd";
@@ -17,7 +19,7 @@ function ListUserHeader() {
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
-    //convert date
+  //convert date
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
       const parts = dobstring.split("-");
@@ -181,114 +183,116 @@ function ListUserHeader() {
           </div>
         </div>
       )}
-      <Modal
-        className="modal"
-        visible={isModalOpenUser}
-        onOk={handleOkUser}
-        onCancel={handleCancelUser}
-        width={1252}
-      >
-        <div className="modal-add-employee">
-          <div className="modal-head-employee">
-            <h3>Thông tin cá nhân</h3>
-            <svg
-              onClick={handleCancelUser}
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
-                fill="white"
-              />
-            </svg>
-          </div>
-          <div className="modal-add-employee-all modal-user-all">
-            <div className="modal-employee-box1">
-              <div className="modal-child-body1">
-                <div className="img-body1">
-                  <img alt="" />
+      <div className="modal-res">
+        <Modal
+          className="modal-employee"
+          visible={isModalOpenUser}
+          onOk={handleOkUser}
+          onCancel={handleCancelUser}
+          width={1252}
+        >
+          <div className="modal-add-employee">
+            <div className="modal-head-employee">
+              <h3>Thông tin cá nhân</h3>
+              <svg
+                onClick={handleCancelUser}
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M20 1.53846L11.5385 10L20 18.4615L18.4615 20L10 11.5385L1.53846 20L0 18.4615L8.46154 10L0 1.53846L1.53846 0L10 8.46154L18.4615 0L20 1.53846Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+            <div className="modal-add-employee-all modal-user-all">
+              <div className="modal-employee-box1">
+                <div className="modal-child-body1">
+                  <div className="img-body1">
+                    <img alt="" />
+                  </div>
+                </div>
+                <div className="modal-child-body2">
+                  <div className="div-modal-child2 fix-color">
+                    <p>Họ và tên:</p>
+                    <p className="fix-input">{employee.fullName}</p>
+                  </div>
+
+                  <div className="div-modal-child2 fix-color">
+                    <p>Số điện thoại:</p>
+                    <p className="fix-input">{employee.phoneNumber}</p>
+                  </div>
+
+                  <div className="div-modal-child2 fix-color">
+                    <p>Giới tính: </p>
+                    <p className="fix-input">{employee.genderstring}</p>
+                  </div>
+                  <div className="div-modal-child2 fix-color">
+                    <p>Quốc tịch:</p>
+                    <p className="fix-input">{employee.country}</p>
+                  </div>
+                  <div className="div-modal-child2 fix-color">
+                    <p>Địa chỉ: </p>
+                    <p className="fix-input">{employee.address}</p>
+                  </div>
+                  <div className="div-modal-child2 div-detail fix-color">
+                    <p>Email: </p>
+                    <p className="fix-input">{employee.email}</p>
+                  </div>
                 </div>
               </div>
-              <div className="modal-child-body2">
-                <div className="div-modal-child2 fix-color">
-                  <p>Họ và tên:</p>
-                  <p className="fix-input">{employee.fullName}</p>
-                </div>
-
-                <div className="div-modal-child2 fix-color">
-                  <p>Số điện thoại:</p>
-                  <p className="fix-input">{employee.phoneNumber}</p>
-                </div>
-
-                <div className="div-modal-child2 fix-color">
-                  <p>Giới tính: </p>
-                  <p className="fix-input">{employee.genderstring}</p>
-                </div>
-                <div className="div-modal-child2 fix-color">
-                  <p>Quốc tịch:</p>
-                  <p className="fix-input">{employee.country}</p>
-                </div>
-                <div className="div-modal-child2 fix-color">
-                  <p>Địa chỉ: </p>
-                  <p className="fix-input">{employee.address}</p>
-                </div>
-                <div className="div-modal-child2 div-detail fix-color">
-                  <p>Email: </p>
-                  <p className="fix-input">{employee.email}</p>
+              <div className="modal-employee-box2">
+                <div className="modal-box2-child">
+                  <div className="box2-child-cn ">
+                    <div className="box-child-employee1 div-detail fix-color">
+                      <p>Mã số thuế:</p>
+                      <p className="fix-input">{employee.taxId}</p>
+                    </div>
+                    <div className="box-child-employee1 fix-color">
+                      <p>Lương cơ bản:</p>
+                      <p className="fix-input">4000000</p>
+                    </div>
+                    <div className="box-child-employee1 fix-color">
+                      <p>Mã định danh:</p>
+                      <p className="fix-input">{employee.cic}</p>
+                    </div>
+                  </div>
+                  <div className="box2-child-cn">
+                    <div className="box-child-employee1 fix-color">
+                      <p>Ngày sinh:</p>
+                      <Input
+                        type="date"
+                        className="fix-input"
+                        value={convertDobToISO(employee.dobstring)}
+                      ></Input>
+                    </div>
+                    <div className="box-child-employee1 fix-color">
+                      <p>Trạng thái:</p>
+                      <Form.Item valuePropName="checked">
+                        <Switch checked="true" />
+                      </Form.Item>
+                      <span>Còn thời hạn</span>
+                    </div>
+                    <div className="box-child-employee1 fix-color">
+                      <button
+                        className="btn-role-user"
+                        onClick={showModalUserRole}
+                      >
+                        Xem chức vụ
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="modal-employee-box2">
-              <div className="modal-box2-child">
-                <div className="box2-child-cn ">
-                  <div className="box-child-employee1 div-detail fix-color">
-                    <p>Mã số thuế:</p>
-                    <p className="fix-input">{employee.taxId}</p>
-                  </div>
-                  <div className="box-child-employee1 fix-color">
-                    <p>Lương cơ bản:</p>
-                    <p className="fix-input">4000000</p>
-                  </div>
-                  <div className="box-child-employee1 fix-color">
-                    <p>Mã định danh:</p>
-                    <p className="fix-input">{employee.cic}</p>
-                  </div>
-                </div>
-                <div className="box2-child-cn">
-                  <div className="box-child-employee1 fix-color">
-                    <p>Ngày sinh:</p>
-                    <Input
-                      type="date"
-                      className="fix-input"
-                      value={convertDobToISO(employee.dobstring)}
-                    ></Input>
-                  </div>
-                  <div className="box-child-employee1 fix-color">
-                    <p>Trạng thái:</p>
-                    <Form.Item valuePropName="checked">
-                      <Switch checked="true" />
-                    </Form.Item>
-                    <span>Còn thời hạn</span>
-                  </div>
-                  <div className="box-child-employee1 fix-color">
-                    <button
-                      className="btn-role-user"
-                      onClick={showModalUserRole}
-                    >
-                      Xem chức vụ
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
 
       <Modal
         className="modal"
@@ -439,55 +443,55 @@ function ListUserHeader() {
                 <td>Phòng ban</td>
               </thead>
               <div className="body-table">
-              {employee && employee.roleDepartments && (
-                <div className="show-role">
-                  <div className="show-item-role">
-                    <tr>
-                      <p>Chức vụ chính:</p>
-                    </tr>
-                    {employee.roleDepartments.length > 0 && (
+                {employee && employee.roleDepartments && (
+                  <div className="show-role">
+                    <div className="show-item-role">
                       <tr>
-                        <div className="tr-child">
-                          <Input
-                            type="text"
-                            value={employee.roleDepartments[0].roleName}
-                          ></Input>
-                        </div>
-
-                        <div className="tr-child">
-                          <Input
-                            type="text"
-                            value={employee.roleDepartments[0].departmentName}
-                          ></Input>
-                        </div>
+                        <p>Chức vụ chính:</p>
                       </tr>
-                    )}
-                  </div>
-                  <div className="show-item-role role-fix">
-                    <tr>
-                      <p>Kiêm chức vụ:</p>
-                    </tr>
-                    {employee.roleDepartments
-                      .slice(1)
-                      .map((roleDept, index) => (
-                        <tr key={index}>
+                      {employee.roleDepartments.length > 0 && (
+                        <tr>
                           <div className="tr-child">
                             <Input
                               type="text"
-                              value={roleDept.roleName}
+                              value={employee.roleDepartments[0].roleName}
                             ></Input>
                           </div>
+
                           <div className="tr-child">
                             <Input
                               type="text"
-                              value={roleDept.departmentName}
+                              value={employee.roleDepartments[0].departmentName}
                             ></Input>
                           </div>
                         </tr>
-                      ))}
+                      )}
+                    </div>
+                    <div className="show-item-role role-fix">
+                      <tr>
+                        <p>Kiêm chức vụ:</p>
+                      </tr>
+                      {employee.roleDepartments
+                        .slice(1)
+                        .map((roleDept, index) => (
+                          <tr key={index}>
+                            <div className="tr-child">
+                              <Input
+                                type="text"
+                                value={roleDept.roleName}
+                              ></Input>
+                            </div>
+                            <div className="tr-child">
+                              <Input
+                                type="text"
+                                value={roleDept.departmentName}
+                              ></Input>
+                            </div>
+                          </tr>
+                        ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
               </div>
               <thead className="thead-last"></thead>
             </table>

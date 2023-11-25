@@ -168,4 +168,36 @@
       font-size: 18px !important;
     }
   }
+  .list-table {
+    thead,
+    tbody {
+      tr {
+        td {
+          font-size: 18px !important;
+        }
+      }
+    }
+  }
+  .modal-payroll {
+    width: 833px;
+    height: 700px !important;
+  }
+  .modal-payroll .body-payroll .body-child1 {
+    max-height: 380px;
+  }
+  .body-payroll1 {
+    p {
+      font-size: 35px !important;
+    }
+    input {
+      font-size: 18px !important;
+    }
+  }
+  .item-chil1-cn,
+  .child1-text {
+    font-size: 18px !important;
+    p {
+      font-size: 18px !important;
+    }
+  }
 }
