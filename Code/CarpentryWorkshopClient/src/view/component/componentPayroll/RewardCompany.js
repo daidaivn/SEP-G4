@@ -26,7 +26,6 @@ const RewardCompany = ({
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Thưởng công ty</p>
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)}></Input>
             </div>
             <div className="close">
               <svg

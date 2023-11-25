@@ -10,7 +10,9 @@ const ListSearchFilterAdd = ({
     yearOptions,
     monthOptions,
     setMonths,
-    months
+    months,
+    setIText,
+    iText
 }) => {
     return (
         <div className="list-search-filter-add">
@@ -75,7 +77,10 @@ const ListSearchFilterAdd = ({
                         </g>
                     </svg>
                 </i>
-                <Input placeholder="Tìm kiếm"></Input>
+                <Input placeholder="Tìm kiếm"
+                    value={iText}
+                    onChange={(e)=>setIText(e.target.value)}
+                ></Input>
             </div>
             <div className="list-filter">
                 <Select
