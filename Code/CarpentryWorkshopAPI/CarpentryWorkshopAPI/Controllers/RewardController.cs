@@ -55,6 +55,23 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
+        public IActionResult CreateAndEditSpecialOccasion([FromBody] SpecialOccasionDTO specialOccasionDTO)
+        {
+            try
+            {
+                var service = _bonusService.CreateAndUpdateSpecialOccasion(specialOccasionDTO);
+                if (service == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(service);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet]
         public IActionResult GetAllRewards(string date)
         {
