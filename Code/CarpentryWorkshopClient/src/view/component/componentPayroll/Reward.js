@@ -1,7 +1,15 @@
 import React from "react";
 import { Input, Modal } from "antd";
 
-const Reward = ({ isModalOpenReward, handleOkReward, handleCancelReward }) => {
+const Reward = ({
+  isModalOpenReward,
+  handleOkReward,
+  handleCancelReward,
+  dataActualSalary,
+}) => {
+  if (!dataActualSalary || !Array.isArray(dataActualSalary)) {
+    return null;
+  }
   return (
     <>
       {/* Modal Chi tiết thưởng */}
@@ -37,60 +45,27 @@ const Reward = ({ isModalOpenReward, handleOkReward, handleCancelReward }) => {
           </div>
           <div className="body-payroll">
             <div className="body-child1 scrollbar" id="style-15">
-              <div className="body-child1-cn">
-                <div className="item-chil1">
-                  <div className="item-chil1-cn">
-                    <p className="text1">1.</p>
-                    <p>Lương chính</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
+              {dataActualSalary.map((salary, index) => (
+                <div className="item-child1-col" key={index}>
+                  <div className="child1-col">
+                    <div className="child1-text">
+                      <p className="text1">{index + 1}.</p>
+                      <p>{salary.actualSalaryName}</p>
+                      <div className="money">
+                        <p>{salary.amounts.toLocaleString('en-US')} VND</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="item-child1-col">
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">2.</p>
-                    <p>Phụ cấp</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="item-child1-col">
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">3.</p>
-                    <p>Thưởng</p>
-                    <div className="money">
-                      {" "}
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="item-child1-col">
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">4.</p>
-                    <p>Xăng xe</p>
-                    <div className="money">
-                      {" "}
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
             <div className="body-child2">
               <div className="body-child1-cn">
                 <div className="item-chil1">
                   <div className="item-chil1-cn">
-                    <p>Tổng số tiền thưởng</p>
+                    <p>Tổng số tiền lương thực nhận</p>
                     <div className="money">
-                      <p>9.000.000 VND</p>
+                      <p>{dataActualSalary.reduce((acc, item) => acc + item.amounts, 0).toLocaleString('en-US')} VND</p>
                     </div>
                   </div>
                 </div>
