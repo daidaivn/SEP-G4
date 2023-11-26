@@ -45,7 +45,43 @@ const GetEmployeeActualSalaryDetail = (eid, EMonth, EYear) => {
     return axios.get(
         `/CCMSapi/Salary/GetEmployeeActualSalaryDetail?employeeid=${employeeid}&month=${month}&year=${year}`
     );
+}; 
+const CreateAndEditPersonalReward = (bonusId, employeeId, bonusAmount, bonusName, bonusReason) => {
+    const requestBody = {
+        bonusId: bonusId,
+        employeeId: Number(employeeId),
+        bonusAmount: Number(bonusAmount),
+        bonusName: bonusName,
+        bonusReason: bonusReason,
+        bonusDatestring: '',
+    }
+    console.log('person', requestBody);
+    return axios.post(`/CCMSapi/Reward/CreateAndEditPersonalReward`,requestBody);
 };
+const CreateAndUpdateSpecialOccasion = (bonusId, employeeId, bonusAmount, bonusName, bonusReason) => {
+    const requestBody = {
+        occasionId: bonusId,
+        employeeId: Number(employeeId),
+        amount: Number(bonusAmount),
+        occasionType: bonusName,
+        occasionDateString: '',
+        occasionNote: bonusReason,
+    }
+    console.log('special', requestBody);
+    return axios.post(`/CCMSapi/Reward/CreateAndEditSpecialOccasion`,requestBody);
+};
+const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusReason) => {
+    const requestBody = {
+        companyBonusId: bonusId,
+        bonusAmount: Number(bonusAmount),
+        bonusName: bonusName,
+        bonusDatestring: '',
+        bonusReason: bonusReason,
+    }
+    console.log('special', requestBody);
+    return axios.post(`/CCMSapi/Reward/CreateAndEditCompanyReward`,requestBody);
+};
+
 export {
     fetchAllSalaries,
     fetchAllReward,
@@ -53,4 +89,7 @@ export {
     GetEmployeeAllowanceDetail,
     GetEmployeeDeductionDetail,
     GetEmployeeActualSalaryDetail,
+    CreateAndEditPersonalReward,
+    CreateAndUpdateSpecialOccasion,
+    CreateAndUpdateCompanyRerward,
 };
