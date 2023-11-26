@@ -23,13 +23,24 @@
   }
   .modal-head-employee {
     h3 {
-      font-size: 35px !important;
+      font-size: 30px !important;
     }
+  }
+  .modal-add-roleyee-employee .body-add-role-employee table thead td,
+  .modal-add-roleyee-employee
+    .body-add-role-employee
+    table
+    .body-table
+    tr
+    .ant-select
+    .ant-select-selector
+    .ant-select-selection-item {
+    font-size: 18px !important;
   }
   .div-modal-child2,
   .box-child-employee1 {
     p {
-      font-size: 20px !important;
+      font-size: 18px !important;
       width: 133px !important;
     }
   }
@@ -37,7 +48,7 @@
     textarea,
     span,
     button {
-      font-size: 20px !important;
+      font-size: 18px !important;
     }
   }
   .modal-child-body2 .div-modal-child2 .fix-input {
@@ -53,8 +64,9 @@
 
   .div-modal-child2 Input,
   .modal-child-body2 .div-modal-child2 .ant-select {
+    height: 48px;
     width: 242px !important;
-    font-size: 20px !important;
+    font-size: 18px !important;
   }
   .div1-modal-cn {
     flex: unset !important;
@@ -63,13 +75,15 @@
     }
     input {
       padding: 10px 20px !important;
-      font-size: 20px !important;
+      font-size: 18px !important;
       width: 180px !important;
     }
   }
-  .modal-child-body2 .div1-modal-child2 {
-    width: unset !important;
+
+  .modal-employee-box2 .modal-box2-child {
+    padding: 10px 50px !important;
   }
+
   .modal-child-body2 .div-modal-child2 .radio-employee {
     width: 302px;
   }
@@ -78,9 +92,10 @@
   }
   .modal-child-body2 {
     gap: 20px !important;
+    padding-bottom: unset !important;
   }
   .ant-input {
-    font-size: 20px !important;
+    font-size: 18px !important;
     padding: 10px 20px !important;
   }
   .radio-employee span {
@@ -101,15 +116,24 @@
     padding: 20px 65px !important;
   }
   .img-body1 {
+    padding: 20px 0 !important;
+    margin: unset !important;
     img {
       max-width: 67%;
     }
   }
   .modal-head h3 {
-    font-size: 35px !important;
+    font-size: 30px !important;
   }
   .modal-add-employee-all,
   .modal-employee-box1 {
     flex: unset !important;
   }
+}
+.body-modal-add-contract table .thead-first,
+.salary-contract {
+  font-size: 18px !important;
+}
+.ant-select-selector .ant-select-selection-item {
+  font-size: 18px !important;
 }
