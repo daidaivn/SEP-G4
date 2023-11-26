@@ -284,11 +284,21 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var mainsalary = await _context.HoursWorkDays
                                         .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
                                         .SumAsync(h => h.DailyRate.GetValueOrDefault());
+            var totaldaywork = await _context.HoursWorkDays
+                                        .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
+                                        .CountAsync();
+            var totalhour = await _context.HoursWorkDays
+                                        .Where(h => h.EmployeeId == employeeid && h.Day.HasValue && h.Day.Value.Month == month && h.Day.Value.Year == year)
+                                        .SumAsync(h => h.Hour.GetValueOrDefault());
             var result = new Object();
             result = new
             {
                 MainSalaryName = "Lương chính",
-                Amounts = mainsalary
+                Amounts = mainsalary,
+                TotalWorkDay = "Số ngày làm trong tháng",
+                WorkDayAmount = totaldaywork,
+                TotalWorkHour= "Số giờ làm trong tháng",
+                WorkHourAmount = totalhour, 
             };
             return result;
         }

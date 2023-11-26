@@ -10,6 +10,7 @@ namespace CarpentryWorkshopAPI.Models
         public string? OccasionType { get; set; }
         public decimal? Amount { get; set; }
         public DateTime? OccasionDate { get; set; }
+        public string? OccasionNote { get; set; }
 
         public virtual Employee? Employee { get; set; }
     }
