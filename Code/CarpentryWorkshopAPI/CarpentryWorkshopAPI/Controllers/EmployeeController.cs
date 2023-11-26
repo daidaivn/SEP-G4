@@ -333,37 +333,93 @@ namespace CarpentryWorkshopAPI.Controllers
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpPost]
-        public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
+        public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
         {
             try
             {
-                var employee = _context.Employees
+                var allemployeesexcept = await _context.Employees
+                    .Include(emp => emp.RolesEmployees)
+                      .ThenInclude(roleemp => roleemp.Role)
+                      .ThenInclude(role => role.RolesEmployees)
+                  .Include(emp => emp.RolesEmployees)
+                      .ThenInclude(roleemp => roleemp.Department)
+                      .Where(e => e.EmployeeId != updateEmployeeDTO.EmployeeId)
+                    .ToListAsync();
+                var employee = await _context.Employees
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Role)
                       .ThenInclude(role => role.RolesEmployees)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
-                      .FirstOrDefault(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
+                      .FirstOrDefaultAsync(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
+                
                 if (employee == null)
                 {
                     return NotFound();
                 }
 
-                employee.Image = updateEmployeeDTO.Image;
-                employee.FirstName = updateEmployeeDTO.FirstName;
-                employee.LastName = updateEmployeeDTO.LastName;
-                employee.Email = updateEmployeeDTO.Email;
-                employee.Address = updateEmployeeDTO.Address;
-                employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",            
-                               System.Globalization.CultureInfo.InvariantCulture);
-                employee.Gender = updateEmployeeDTO.Gender;
-                employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
-                employee.TaxId = updateEmployeeDTO.TaxId;
-                employee.Status = updateEmployeeDTO.Status;
-                employee.Cic = updateEmployeeDTO.Cic;
-                employee.CountryId = updateEmployeeDTO.CountryId;
-                employee.Status = updateEmployeeDTO.Status;
-                _context.Employees.Update(employee);
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
+                {
+                    return StatusCode(501, "Email already exists.");
+                }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
+                {
+                    return StatusCode(503, "Phone Number already exists.");
+                }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
+                {
+                    return StatusCode(504, "Tax ID already exists.");
+                }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
+                {
+                    return StatusCode(502, "CIC already exists.");
+                }
+
+                var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
+                if (checkEmail == true) {
+                    employee.Image = updateEmployeeDTO.Image;
+                    employee.FirstName = updateEmployeeDTO.FirstName;
+                    employee.LastName = updateEmployeeDTO.LastName;
+                    employee.Email = updateEmployeeDTO.Email;
+                    employee.Address = updateEmployeeDTO.Address;
+                    employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                    employee.Gender = updateEmployeeDTO.Gender;
+                    employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
+                    employee.TaxId = updateEmployeeDTO.TaxId;
+                    employee.Status = updateEmployeeDTO.Status;
+                    employee.Cic = updateEmployeeDTO.Cic;
+                    employee.CountryId = updateEmployeeDTO.CountryId;
+                    employee.Status = updateEmployeeDTO.Status;
+                    _context.Employees.Update(employee);
+                }
+                else
+                {
+                    return StatusCode(550, "Authentication is Required for Relay");
+                }
+                var username = _accountService.GenerateRandomString(8);
+                var pass = _accountService.GenerateRandomString(8);
+                string htmlBody = "<p>Xin chào,</p>" +
+                  "<p>Dưới đây là nội dung email của bạn:</p>" +
+                  "<p><strong>Đây là tài khoản của bạn</strong></p>" +
+                  "<h3>Tài khoản: </h3>" + $"<h4>{username}</h4>" +
+                  "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
+                  "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
+                  "<p>Cảm ơn bạn đã đọc email này.</p>";
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
+                email.To.Add(MailboxAddress.Parse($"{employee.Email}"));
+                email.Subject = "Tài khoản mới của nhân viên";
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = htmlBody
+                };
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                smtp.Dispose();
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = employee.EmployeeId,

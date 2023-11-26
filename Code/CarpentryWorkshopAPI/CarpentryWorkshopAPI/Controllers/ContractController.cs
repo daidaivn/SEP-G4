@@ -23,42 +23,6 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "SystemManager")]
-        [HttpGet]
-        public IActionResult GetAllContract()
-        {
-            try
-            {
-                var contracts = _context.Contracts
-                    .Where(x => x.Status == true)
-                    .Include(emp => emp.Employee)
-                    .Include(ctt => ctt.ContractType)
-                    .Select(c => new ContractDTO
-                    {
-                        ContractId = c.ContractId,
-                        ContractTypeId = c.ContractTypeId,
-                        ContractTypeName = c.ContractType.ContractName,
-                        EmployeeName = c.Employee.FirstName + " " + c.Employee.LastName,
-                        StartDate = c.StartDate.Value.ToString("dd'-'MM'-'yyyy"),
-                        EndDate = c.EndDate.Value.ToString("dd'-'MM'-'yyyy"),
-                        LinkDoc = c.LinkDoc,
-                        Status= c.Status,
-                        ContractCode= c.ContractCode,
-                        Image = c.Image,
-                        Amount= c.Amount,
-                    }).ToList();
-                if (contracts == null)
-                {
-                    return NotFound();
-                }
-                return Ok(contracts);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
         [HttpGet]
         public IActionResult GetEmployeeContract(int eid)
         {
