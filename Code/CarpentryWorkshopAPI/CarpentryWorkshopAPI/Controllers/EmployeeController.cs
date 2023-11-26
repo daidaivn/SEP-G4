@@ -233,15 +233,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
                     {
-                        return StatusCode(503, "PhoneNumber already exists.");
+                        return StatusCode(503);
                     }
                     else if (employee.Email == createEmployeeDTO.Email)
                     {
-                        return StatusCode(501, "Email already exists.");
+                        return StatusCode(501);
                     }
                     else if (employee.Cic == createEmployeeDTO.Cic)
                     {
-                        return StatusCode(502, "Cic already exists.");
+                        return StatusCode(502);
                     }
                 }
                 Employee newemp = new Employee();
@@ -259,7 +259,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        return StatusCode(550, "Authentication is Required for Relay");
+                        return StatusCode(550);
                     }              
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
@@ -354,19 +354,19 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
                 {
-                    return StatusCode(501, "Email already exists.");
+                    return StatusCode(501);
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
                 {
-                    return StatusCode(503, "Phone Number already exists.");
+                    return StatusCode(503);
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
                 {
-                    return StatusCode(504, "Tax ID already exists.");
+                    return StatusCode(504);
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
                 {
-                    return StatusCode(502, "CIC already exists.");
+                    return StatusCode(502);
                 }
 
                 var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
@@ -389,7 +389,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(550, "Authentication is Required for Relay");
+                    return StatusCode(550);
                 }
                 string htmlBody = "<p>Xin chào,</p>" +
                     "<p>Dưới đây là nội dung email của bạn:</p>" +
