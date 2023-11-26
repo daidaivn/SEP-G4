@@ -357,36 +357,24 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                if (!employee.PhoneNumber.ToLower().Equals(updateEmployeeDTO.PhoneNumber.ToLower()))
+
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
                 {
-                    foreach (var item in allemployeesexcept)
-                    {
-                        if (item.PhoneNumber.ToLower().Equals(updateEmployeeDTO.PhoneNumber.ToLower()))
-                        {
-                            return StatusCode(503, "PhoneNumber already exists.");
-                        }
-                    }
+                    return StatusCode(501, "Email already exists.");
                 }
-                if (!employee.Cic.ToLower().Equals(updateEmployeeDTO.Cic.ToLower()))
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
                 {
-                    foreach (var item in allemployeesexcept)
-                    {
-                        if (item.Cic.ToLower().Equals(updateEmployeeDTO.Cic.ToLower()))
-                        {
-                            return StatusCode(502, "Cic already exists.");
-                        }
-                    }
+                    return StatusCode(503, "Phone Number already exists.");
                 }
-                if (!employee.Email.ToLower().Equals(updateEmployeeDTO.Email.ToLower()))
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
                 {
-                    foreach (var item in allemployeesexcept)
-                    {
-                        if (item.Email.ToLower().Equals(updateEmployeeDTO.Email.ToLower()))
-                        {
-                            return StatusCode(501, "Email already exists.");
-                        }
-                    }
+                    return StatusCode(504, "Tax ID already exists.");
                 }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
+                {
+                    return StatusCode(502, "CIC already exists.");
+                }
+
                 var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
                 if (checkEmail == true) {
                     employee.Image = updateEmployeeDTO.Image;
