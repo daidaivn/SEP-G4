@@ -123,7 +123,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     {
                         OccasionId = ps.OccasionId,
                         EmployeeId = ps.EmployeeId,
-                        Beneficiary =ps.Employee.LastName +" "+ps.Employee.FirstName,
+                        Beneficiary =ps.Employee.LastName + " " +ps.Employee.FirstName,
                         OccasionType = ps.OccasionType,
                         Amount = ps.Amount,
                         OccasionDateString = ps.OccasionDate.Value.ToString("dd'-'MM'-'yyyy"),
