@@ -39,7 +39,6 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
             {
                 OccasionId = se.OccasionId,
                 EmployeeId = se.EmployeeId,
-                EmployeeName = se.Employee.FirstName + " " + se.Employee.LastName,
                 OccasionType = se.OccasionType,
                 Amount = se.Amount,
                 OccasionDateString = se.OccasionDate.Value.ToString("dd'-'MM'-'yyyy")
