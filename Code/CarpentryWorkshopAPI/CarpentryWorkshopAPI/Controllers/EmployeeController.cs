@@ -345,6 +345,7 @@ namespace CarpentryWorkshopAPI.Controllers
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
                       .FirstOrDefaultAsync(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
+                var employeeEmail = employee.Email;
                 
                 if (employee == null)
                 {
@@ -390,19 +391,14 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(550, "Authentication is Required for Relay");
                 }
-                var username = employee.UserAccount.UserName;
-                var pass = employee.UserAccount.Password;
                 string htmlBody = "<p>Xin chào,</p>" +
-                  "<p>Dưới đây là nội dung email của bạn:</p>" +
-                  "<p><strong>Đây là tài khoản của bạn</strong></p>" +
-                  "<h3>Tài khoản: </h3>" + $"<h4>{username}</h4>" +
-                  "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
-                  "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
-                  "<p>Cảm ơn bạn đã đọc email này.</p>";
+                    "<p>Dưới đây là nội dung email của bạn:</p>" +
+                    "<p>Thông tin email của bạn đã được thay đổi.</p>" +
+                    "<p>Cảm ơn bạn đã đọc email này.</p>";
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
-                email.To.Add(MailboxAddress.Parse($"{employee.Email}"));
-                email.Subject = "Tài khoản mới của nhân viên";
+                email.To.Add(MailboxAddress.Parse($"{employeeEmail}"));
+                email.Subject = "Thông tin email đã được cập nhật";
                 email.Body = new TextPart(TextFormat.Html)
                 {
                     Text = htmlBody
@@ -413,7 +409,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = employee.EmployeeId,
