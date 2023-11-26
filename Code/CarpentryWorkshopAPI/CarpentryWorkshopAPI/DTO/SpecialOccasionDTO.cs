@@ -7,5 +7,7 @@
         public string? OccasionType { get; set; }
         public decimal? Amount { get; set; }
         public string? OccasionDateString { get; set; }
+        public string? OccasionNote { get; set; }
+
     }
 }

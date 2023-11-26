@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.IBonus;
 using CarpentryWorkshopAPI.Models;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
@@ -29,8 +30,14 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 return " Add personal reward successful";
             }
             else
-            {
+            {                
                 var newPR = _mapper.Map<BonusDetail>(personalRewardDTO);
+                newPR.BonusDate = !string.IsNullOrEmpty(personalRewardDTO.BonusDatestring) &&
+                DateTime.TryParseExact(personalRewardDTO.BonusDatestring, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture,
+                                       System.Globalization.DateTimeStyles.None, out var parsedDate)
+                ? parsedDate
+                : newPR.BonusDate;
                 _context.BonusDetails.Update(newPR);
                 _context.SaveChanges();
                 return " Update personal reward successful";
@@ -69,10 +76,16 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         EmployeeId = item.EmployeeId,
                         BonusAmount = companyRewardDTO.BonusAmount,
                         BonusName = companyRewardDTO.BonusName,
-                        BonusDate = DateTime.ParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture),
                         BonusReason = companyRewardDTO.BonusReason,
                     };
+                    if( !string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
+                                       DateTime.TryParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture,
+                                       System.Globalization.DateTimeStyles.None, out var parsedDate))
+                    {
+                        newCR.BonusDate = parsedDate;
+                    }
+                                       
                     _context.CompanyWideBonus.Update(newCR);
                     _context.SaveChanges();
                 }
@@ -91,14 +104,14 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 return " Add SpecialOccasions";
             }
             else
-            {
-                if (!DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
+            {                
+                var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
+                if (DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture,
                                        System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
                 {
-                    return "date is  not format";
+                    newPR.OccasionDate = parsedDate;
                 }
-                var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
                 newPR.OccasionDate = parsedDate;
                 _context.SpecialOccasions.Update(newPR);
                 _context.SaveChanges();

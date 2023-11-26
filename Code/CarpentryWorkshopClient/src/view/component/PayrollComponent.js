@@ -28,7 +28,10 @@ import {
   fetchAllReward,
   GetEmployeeAllowanceDetail,
   GetEmployeeDeductionDetail,
-  GetEmployeeActualSalaryDetail
+  GetEmployeeActualSalaryDetail,
+  CreateAndEditPersonalReward,
+  CreateAndUpdateSpecialOccasion,
+  CreateAndUpdateCompanyRerward,
 } from "../../sevices/PayrollSevice";
 import {
   fetchAllEmplyee,
@@ -44,7 +47,7 @@ const PayrollComponent = () => {
   const [date, setDate] = useState(new Date().getFullYear());
 
   const monthOptions = getMonthsInYear(date);
-  const currentMonth = new Date().getMonth();
+  const currentMonth = (new Date().getMonth()) + 1;
   const [months, setMonths] = useState(currentMonth.toString());
   const [iText, setIText] = useState("");
   const [dataAllowance, setDataAllowance] = useState([]);
@@ -53,7 +56,12 @@ const PayrollComponent = () => {
 
   //personal reward
   const [employees, setEmployees] = useState([]);
-  const [employeeID, setEmployeesID] = useState([]);
+  const [employeeID, setEmployeesID] = useState("");
+  const [bonusAmount, setBonusAmount] = useState("");
+  const [bonusName, setBonusName] = useState("");
+  const [bonusDate, setBonusDate] = useState("");
+  const [bonusReason, setBonusReason] = useState("");
+
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
@@ -73,6 +81,35 @@ const PayrollComponent = () => {
       return dobstring;
     }
     return dobstring;
+  };
+
+  const handleBonusAmountChange = (e) => {
+    const formattedValue = e.target.value.replace(/\D/g, "");
+    setBonusAmount(formattedValue);
+  };
+
+  const validateData = () => {
+    const errors = [];
+
+    if (!bonusName) {
+      errors.push("Vui lòng nhập tên");
+    }
+
+    if (!bonusAmount) {
+      errors.push("Vui lòng nhập số tiền.");
+    }
+
+    if (!bonusReason) {
+      errors.push("Vui lòng nhập note.");
+    }
+
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
+    }
+    return true;
   };
 
   //modal Excel
@@ -126,8 +163,9 @@ const PayrollComponent = () => {
   //modal Thưởng công ty
   const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
     useState(false);
-  const dataConver = months + "-" + date
-  const showModalRewardCompany = () => {
+  const dataConver = months + "-" + date;
+  console.log('date', dataConver);
+  const featchDataReward = () => {
     toast.promise(
       new Promise((resolve) => {
         fetchAllReward(dataConver)
@@ -145,6 +183,9 @@ const PayrollComponent = () => {
         error: "Lỗi tải dữ liệu",
       }
     );
+  }
+  const showModalRewardCompany = () => {
+    featchDataReward();
     setIsModalOpenRewardCompany(true);
   };
 
@@ -154,36 +195,39 @@ const PayrollComponent = () => {
   const handleCancelRewardCompany = () => {
     setIsModalOpenRewardCompany(false);
   };
-
+  const fetchEmployeeData = () => {
+    toast.promise(
+      new Promise((resolve) => {
+        fetchAllEmplyee()
+          .then((data) => {
+            setEmployees(data);
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        error: "Lỗi tải dữ liệu",
+      }
+    );
+  };
   //modal Thưởng cá nhân
   const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
     useState(false);
   const showModalRewardPersonal = () => {
-    const fetchEmployeeData = () => {
-      toast.promise(
-        new Promise((resolve) => {
-          fetchAllEmplyee()
-            .then((data) => {
-              setEmployees(data);
-              resolve(data);
-            })
-            .catch((error) => {
-              resolve(Promise.reject(error));
-            });
-        }),
-        {
-          pending: "Đang tải dữ liệu",
-          error: "Lỗi tải dữ liệu",
-        }
-      );
-    };
+    fetchEmployeeData();
     setIsModalOpenRewardPersonal(true);
+    console.log('employee',employees);
   };
-  const handleOkRewardPersonal = () => {
-    setIsModalOpenRewardPersonal(false);
-  };
-  const handleCancelRewardPersonal = () => {
-    setIsModalOpenRewardPersonal(false);
+  
+  
+  const resetPersonDetail = () => {
+    setBonusAmount("");
+    setBonusReason("");
+    setEmployeesID("");
+    setBonusName("");
   };
 
   //modal Thưởng toàn thể công ty
@@ -191,12 +235,7 @@ const PayrollComponent = () => {
   const showModalRewardAll = () => {
     setIsModalOpenRewardAll(true);
   };
-  const handleOkRewardAll = () => {
-    setIsModalOpenRewardAll(false);
-  };
-  const handleCancelRewardAll = () => {
-    setIsModalOpenRewardAll(false);
-  };
+  
 
   //modal Các loại thưởng
   const [isModalOpenTypeReward, setIsModalOpenTypeReward] = useState(false);
@@ -225,14 +264,10 @@ const PayrollComponent = () => {
 
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
   const showModalHoliday = () => {
+    fetchEmployeeData();
     setIsModalOpenHoliday(true);
   };
-  const handleOkHoliday = () => {
-    setIsModalOpenHoliday(false);
-  };
-  const handleCancelHoliday = () => {
-    setIsModalOpenHoliday(false);
-  };
+  
 
   const fetchEmployeeActualSalaryDetail= (employeeId) => {
     toast.promise(
@@ -376,9 +411,17 @@ const PayrollComponent = () => {
 
         <RewardAll
           isModalOpenRewardAll={isModalOpenRewardAll}
-          handleOkRewardAll={handleOkRewardAll}
-          handleCancelRewardAll={handleCancelRewardAll}
           handleChange={handleChange}
+          bonusAmount={bonusAmount}
+          bonusReason={bonusReason}
+          bonusName={bonusName}
+          handleBonusAmountChange={handleBonusAmountChange}
+          setBonusName={setBonusName}
+          setBonusReason={setBonusReason}
+          resetPersonDetail={resetPersonDetail}
+          featchDataReward={featchDataReward}
+          setIsModalOpenRewardAll={setIsModalOpenRewardAll}
+          validateData={validateData}
         />
 
         <TypeReward
@@ -396,17 +439,37 @@ const PayrollComponent = () => {
 
         <RewardPersonal
           isModalOpenRewardPersonal={isModalOpenRewardPersonal}
-          handleOkRewardPersonal={handleOkRewardPersonal}
-          handleCancelRewardPersonal={handleCancelRewardPersonal}
           handleChange={handleChange}
           employees={employees}
+          employeeID={employeeID}
+          bonusAmount={bonusAmount}
+          bonusReason={bonusReason}
+          bonusName={bonusName}
           setEmployeesID={setEmployeesID}
+          handleBonusAmountChange={handleBonusAmountChange}
+          setBonusName={setBonusName}
+          setBonusReason={setBonusReason}
+          resetPersonDetail={resetPersonDetail}
+          featchDataReward={featchDataReward}
+          setIsModalOpenRewardPersonal={setIsModalOpenRewardPersonal}
+          validateData={validateData}
         />
         <Holiday
           isModalOpenHoliday={isModalOpenHoliday}
-          handleOkHoliday={handleOkHoliday}
-          handleCancelHoliday={handleCancelHoliday}
           handleChange={handleChange}
+          employees={employees}
+          employeeID={employeeID}
+          bonusAmount={bonusAmount}
+          bonusReason={bonusReason}
+          bonusName={bonusName}
+          setEmployeesID={setEmployeesID}
+          handleBonusAmountChange={handleBonusAmountChange}
+          setBonusName={setBonusName}
+          setBonusReason={setBonusReason}
+          resetPersonDetail={resetPersonDetail}
+          featchDataReward={featchDataReward}
+          setIsModalOpenHoliday={setIsModalOpenHoliday}
+          validateData={validateData}
         />
         {/* Modal Sửa tên thưởng */}
         <Modal
