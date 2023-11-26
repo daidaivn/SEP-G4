@@ -19,9 +19,11 @@ namespace CarpentryWorkshopAPI.Services.Bonus
 
         public dynamic CreateAndUpdatePersonalReward(PersonalRewardDTO personalRewardDTO)
         {
+
             if (personalRewardDTO.BonusId == 0)
             {
                 var newPR = _mapper.Map<BonusDetail>(personalRewardDTO);
+                newPR.BonusDate = DateTime.Now.Date;
                 _context.BonusDetails.Add(newPR);
                 _context.SaveChanges();
                 return " Add personal reward successful";
@@ -49,8 +51,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         EmployeeId = item.EmployeeId,
                         BonusAmount = companyRewardDTO.BonusAmount,
                         BonusName = companyRewardDTO.BonusName,
-                        BonusDate = DateTime.ParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture),
+                        BonusDate = DateTime.Now.Date,
                         BonusReason = companyRewardDTO.BonusReason,
                     };
                     _context.CompanyWideBonus.Add(newCR);
@@ -80,22 +81,23 @@ namespace CarpentryWorkshopAPI.Services.Bonus
         }
         public dynamic CreateAndUpdateSpecialOccasion(SpecialOccasionDTO specialOccasionDTO)
         {
-            if(!DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture,
-                                       System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
-            {
-                return "date is  not format";
-            }
+            
             if (specialOccasionDTO.OccasionId == 0)
             {
                 var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
-                newPR.OccasionDate = parsedDate;
+                newPR.OccasionDate = DateTime.Now.Date;
                 _context.SpecialOccasions.Add(newPR);
                 _context.SaveChanges();
                 return " Add SpecialOccasions";
             }
             else
             {
+                if (!DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture,
+                                       System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                {
+                    return "date is  not format";
+                }
                 var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
                 newPR.OccasionDate = parsedDate;
                 _context.SpecialOccasions.Update(newPR);
