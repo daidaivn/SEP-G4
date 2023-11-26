@@ -128,9 +128,7 @@ namespace CarpentryWorkshopAPI.Mapper
                 .ReverseMap();
             //Bonus
             CreateMap<PersonalRewardDTO, BonusDetail>()
-               
-               .ForMember(de => de.BonusDate, option => option.MapFrom(d => DateTime.ParseExact(d.BonusDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture)));
+               .ReverseMap();
             CreateMap<BonusDetail, DTO.AllRewardDTO.PR>()
               .ForMember(de => de.BonusDatestring, option => option.MapFrom(d => d.BonusDate.Value.ToString("dd'-'MM'-'yyyy")))
               .ForMember(de => de.Beneficiary, option => option.MapFrom(d => d.Employee.LastName + " " + d.Employee.FirstName))
