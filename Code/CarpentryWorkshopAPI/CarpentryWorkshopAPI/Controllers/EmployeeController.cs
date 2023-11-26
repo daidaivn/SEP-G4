@@ -337,15 +337,8 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var allemployeesexcept = await _context.Employees
-                    .Include(emp => emp.RolesEmployees)
-                      .ThenInclude(roleemp => roleemp.Role)
-                      .ThenInclude(role => role.RolesEmployees)
-                  .Include(emp => emp.RolesEmployees)
-                      .ThenInclude(roleemp => roleemp.Department)
-                      .Where(e => e.EmployeeId != updateEmployeeDTO.EmployeeId)
-                    .ToListAsync();
                 var employee = await _context.Employees
+                    .Include(emp => emp.UserAccount)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Role)
                       .ThenInclude(role => role.RolesEmployees)
@@ -397,8 +390,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(550, "Authentication is Required for Relay");
                 }
-                var username = _accountService.GenerateRandomString(8);
-                var pass = _accountService.GenerateRandomString(8);
+                var username = employee.UserAccount.UserName;
+                var pass = employee.UserAccount.Password;
                 string htmlBody = "<p>Xin chào,</p>" +
                   "<p>Dưới đây là nội dung email của bạn:</p>" +
                   "<p><strong>Đây là tài khoản của bạn</strong></p>" +
@@ -420,6 +413,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
+
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = employee.EmployeeId,
