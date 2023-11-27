@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.IServices.Account;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -8,13 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
+using MimeKit.Encodings;
+using MimeKit.Text;
 using NuGet.Protocol.Plugins;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
+using MailKit.Net.Smtp;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,12 +32,14 @@ namespace CarpentryWorkshopAPI.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly SEPG4CCMSContext _context;
+        private readonly IAccountService _accountService;
         private IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public AccountsController(SEPG4CCMSContext context, IMapper mapper, IConfiguration configuration)
+        public AccountsController(SEPG4CCMSContext context, IMapper mapper, IConfiguration configuration, IAccountService accountService)
         {
             _context = context;
             _mapper = mapper;
+            _accountService = accountService;
             _configuration = configuration;
         }
         [HttpPost("gettoken")]
@@ -145,58 +154,109 @@ namespace CarpentryWorkshopAPI.Controllers
             return Ok(passwordHash);
         }
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync();
             return Ok("Logout successful.");
         }
-        // GET api/<AccountsController>/5
-        //[HttpPut("hello")]
-        //public IActionResult Get(int id)
-        //{
-
-        //    var role = _context.Roles.Where(re => re.RoleId == id).Include(r => r.RolePages).Select(p => p.RoleId.Select(pa => pa.PageName)).ToList();
-
-        //    return Ok(role);
-        //}
-
-        // POST api/<AccountsController>
-        [Authorize(Roles = "AccountsPage")]
-        [HttpGet]
-        public IActionResult Get()
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string emailInput)
         {
-            if(_context == null)
-            {
-                return NotFound();
-            }
-            
-            var role = _context.Roles.Include(ro=>ro.Pages).Where(ro => ro.RoleId == 3).FirstOrDefault();
-            var page = _context.Pages.Where(pa => pa.PageId == 1).FirstOrDefault();
-            role.Pages.Remove(page);
-            //page.Roles.Remove(role);
             try
             {
-                
+                if (string.IsNullOrEmpty(emailInput))
+                {
+                    return BadRequest("not have data");
+                }
+                var account = await _context.UserAccounts.Include(ua => ua.Employee).Where(ua => ua.Employee.Email == emailInput).FirstOrDefaultAsync();
+                if (account == null)
+                {
+                    return BadRequest("not have this account");
+                }
+                var user = account.UserName;
+                var pass = _accountService.GenerateRandomString(8);
+                account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
+                _context.UserAccounts.Update(account);
                 _context.SaveChanges();
+                string htmlBody = "<p>Xin chào,</p>" +
+                      "<p>Dưới đây là nội dung email của bạn:</p>" +
+                      "<p><strong>Đây là tài khoản của bạn sau khi thay đổi</strong></p>" +
+                      "<h3>Tài khoản:</h3>" + $"<h4>{user}</h4>" +
+                      "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
+                      "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
+                      "<p>Cảm ơn bạn đã đọc email này.</p>";
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
+                email.To.Add(MailboxAddress.Parse($"{emailInput}"));
+                email.Subject = "Tài khoản của nhân viên";
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = htmlBody
+                };
+                using var smtp = new MailKit.Net.Smtp.SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                smtp.Dispose();
+                return Ok("forgot success");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
             
-            return Ok();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserNameAndPassWord([FromBody]ChangeUserAccountDTO loginRequest)
+        {
+            try
+            {                
+                var account = await _context.UserAccounts.Include(ua=>ua.Employee).Where(ua => ua.EmployeeId == loginRequest.Id).FirstOrDefaultAsync();
+                if (account == null)
+                {
+                    
+                    return BadRequest("useraname or password not right");
+                }
+                if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, account.Password))
+                {
+                    return BadRequest("useraname or password not right");
+                }
+                var user = loginRequest.UserName;
+                var pass = loginRequest.Password;
+                account.UserName = user;
+                account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
+                _context.UserAccounts.Update(account);
+                _context.SaveChanges();
+                string htmlBody = "<p>Xin chào,</p>" +
+                      "<p>Dưới đây là nội dung email của bạn:</p>" +
+                      "<p><strong>Đây là tài khoản của bạn sau khi thay đổi</strong></p>" +
+                      "<h3>Tài khoản:</h3>" + $"<h4>{user}</h4>" +
+                      "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
+                      "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
+                      "<p>Cảm ơn bạn đã đọc email này.</p>";
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
+                email.To.Add(MailboxAddress.Parse($"{account.Employee.Email}"));
+                email.Subject = "Tài khoản của nhân viên";
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = htmlBody
+                };
+                using var smtp = new MailKit.Net.Smtp.SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                smtp.Dispose();
+                return Ok("change success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
-        // PUT api/<AccountsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AccountsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
