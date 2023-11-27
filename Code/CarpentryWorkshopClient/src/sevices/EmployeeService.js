@@ -1,5 +1,4 @@
 import axios from "./customize-axios";
-import { toast } from "react-toastify";
 
 const fetchAllEmplyee = () => {
   return axios.get("/CCMSapi/Employee/GetAllEmployee");
@@ -54,40 +53,10 @@ const UpdateEmployee = (
     email: Email,
     image: Image,
   };
+  console.log(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 
-  return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody)
-    .then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      if (axios.isCancel(error)) {
-      } else if (error.response) {
-        const status = error.response.status;
-        switch (status) {
-          case 550:
-            toast.error("Email chưa được đăng kí");
-            break;
-          case 501:
-            toast.error("Email đã tồn tại");
-            break;
-          case 502:
-            toast.error("Mã định danh đã tồn tại");
-            break;
-          case 503:
-            toast.error("Số điện thoại đã tồn tại");
-            break;
-          default:
-            toast.error("Tạo nhân viên không thành công");
-            break;
-        }
-      } else {
-        toast.error("Có lỗi xảy ra khi gửi yêu cầu");
-      }
-      return Promise.reject(error);
-    });
+  return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 };
-
-
 
 const CreateEmployee = (
   originalLastName,

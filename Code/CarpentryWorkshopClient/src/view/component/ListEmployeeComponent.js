@@ -149,16 +149,16 @@ function ListEmployeeComponent() {
   };
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
-        const updatedValue = {};
-        if (value) {
-          updatedValue.roleID = value.roleID;
-          updatedValue.departmentID = value.departmentID;
-        } else {
-          updatedValue.roleID = null;
-          updatedValue.departmentID = null;
-        }
-        return updatedValue;
-      })
+      const updatedValue = {};
+      if (value) {
+        updatedValue.roleID = value.roleID;
+        updatedValue.departmentID = value.departmentID;
+      } else {
+        updatedValue.roleID = null;
+        updatedValue.departmentID = null;
+      }
+      return updatedValue;
+    })
     : [];
 
   const handleEdit = () => {
@@ -479,11 +479,9 @@ function ListEmployeeComponent() {
 
   const UpdateEditEmployee = () => {
     const isDataValid = validateData();
-  
     if (!isDataValid) {
       return;
     }
-  
     toast.promise(
       UpdateEmployee(
         id,
@@ -501,35 +499,26 @@ function ListEmployeeComponent() {
         originalImage
       )
         .then((data) => {
-          // Handle success actions here
           setIsEditing(false);
           handlelDetail(id);
           handleSave();
           fetchData();
-          return data; // Return data for toast.promise to handle
+          return data;
         })
         .catch((error) => {
-          // Handle error actions here
-          if (error.response && error.response.status === 550) {
-            toast.error("Email chưa được đăng kí");
-          } else if (error.response && error.response.status === 501) {
-            toast.error("Email đã tồn tại");
-          } else if (error.response && error.response.status === 502) {
-            toast.error("Mã định danh đã tồn tại");
-          } else if (error.response && error.response.status === 503) {
-            toast.error("Số điện thoại đã tồn tại");
-          } else {
-            throw error; 
+          if (error.response && error.response.status === 409) {
+            throw toast.error(error.response.data);
+          }
+          else {
+            throw toast.error(error.response.data);
           }
         }),
       {
         pending: "Đang xử lý",
         success: "Cập nhật nhân viên thành công",
-        error: "Lỗi cập nhật nhân viên",
       }
     );
   };
-  
 
   const AddEmployee = () => {
     const isDataValid = validateData();
@@ -541,47 +530,39 @@ function ListEmployeeComponent() {
     }
 
     toast.promise(
-      new Promise((resolve) => {
-        CreateEmployee(
-          originalLastName,
-          originalFirstName,
-          originalPhoneNumber,
-          originalGender,
-          originalNationality,
-          originalAddress,
-          originalCIC,
-          originalTaxId,
-          originalDOB,
-          originalStatus,
-          updatedRoleDepartmentsAdd,
-          originalEmail,
-          originalImage
-        )
-          .then((data) => {
-            fetchData();
-            handleCancelAdd();
-            AddContract(data);
-            console.log(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            if (error.response && error.response.status === 550) {
-              toast.error("Email chưa được đăng kí");
-            } else if (error.response && error.response.status === 501) {
-              toast.error("Email đã tồn tại");
-            } else if (error.response && error.response.status === 502) {
-              toast.error("Mã định danh đã tồn tại");
-            } else if (error.response && error.response.status === 503) {
-              toast.error("Số điện thoại đã tồn tại");
-            } else {
-              toast.error("Tạo nhân viên không thành công");
-            }
-            resolve(error);
-          });
-      }),
+      CreateEmployee(
+        originalLastName,
+        originalFirstName,
+        originalPhoneNumber,
+        originalGender,
+        originalNationality,
+        originalAddress,
+        originalCIC,
+        originalTaxId,
+        originalDOB,
+        originalStatus,
+        updatedRoleDepartmentsAdd,
+        originalEmail,
+        originalImage
+      )
+        .then((data) => {
+          fetchData();
+          handleCancelAdd();
+          AddContract(data);
+          console.log(data);
+
+          return data;
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 409) {
+            throw toast.error(error.response.data);
+          }
+          else {
+            throw toast.error(error.response.data);
+          }
+        }),
       {
         pending: "Đang xử lý",
-        warning: "Thông tin nhân viên đã tồn",
         success: "Thêm nhân viên thành công",
       }
     );
@@ -623,7 +604,7 @@ function ListEmployeeComponent() {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleSave = () => {
@@ -695,7 +676,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -724,7 +705,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchData = () => {
@@ -795,11 +776,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
