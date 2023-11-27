@@ -233,15 +233,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
                     {
-                        return StatusCode(503, "PhoneNumber already exists.");
+                        return StatusCode(503, "Số điện thoại đã tồn tại");
                     }
                     else if (employee.Email == createEmployeeDTO.Email)
                     {
-                        return StatusCode(501, "Email already exists.");
+                        return StatusCode(501, "Email đã tồn tại");
                     }
                     else if (employee.Cic == createEmployeeDTO.Cic)
                     {
-                        return StatusCode(502, "Cic already exists.");
+                        return StatusCode(502, "Mã định danh đã tồn tại");
                     }
                 }
                 Employee newemp = new Employee();
@@ -259,7 +259,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        return StatusCode(550, "Authentication is Required for Relay");
+                        return StatusCode(550);
                     }              
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
@@ -333,37 +333,82 @@ namespace CarpentryWorkshopAPI.Controllers
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpPost]
-        public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
+        public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
         {
             try
             {
-                var employee = _context.Employees
+                var employee = await _context.Employees
+                    .Include(emp => emp.UserAccount)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Role)
                       .ThenInclude(role => role.RolesEmployees)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
-                      .FirstOrDefault(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
+                      .FirstOrDefaultAsync(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
+                var employeeEmail = employee.Email;
+                
                 if (employee == null)
                 {
                     return NotFound();
                 }
 
-                employee.Image = updateEmployeeDTO.Image;
-                employee.FirstName = updateEmployeeDTO.FirstName;
-                employee.LastName = updateEmployeeDTO.LastName;
-                employee.Email = updateEmployeeDTO.Email;
-                employee.Address = updateEmployeeDTO.Address;
-                employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",            
-                               System.Globalization.CultureInfo.InvariantCulture);
-                employee.Gender = updateEmployeeDTO.Gender;
-                employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
-                employee.TaxId = updateEmployeeDTO.TaxId;
-                employee.Status = updateEmployeeDTO.Status;
-                employee.Cic = updateEmployeeDTO.Cic;
-                employee.CountryId = updateEmployeeDTO.CountryId;
-                employee.Status = updateEmployeeDTO.Status;
-                _context.Employees.Update(employee);
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
+                {
+                    return StatusCode(501,"");
+                }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
+                {
+                    return StatusCode(503, "");
+                }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
+                {
+                    return StatusCode(504, "");
+                }
+                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
+                {
+                    return StatusCode(502,"");
+                }
+
+                var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
+                if (checkEmail == true) {
+                    employee.Image = updateEmployeeDTO.Image;
+                    employee.FirstName = updateEmployeeDTO.FirstName;
+                    employee.LastName = updateEmployeeDTO.LastName;
+                    employee.Email = updateEmployeeDTO.Email;
+                    employee.Address = updateEmployeeDTO.Address;
+                    employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                    employee.Gender = updateEmployeeDTO.Gender;
+                    employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
+                    employee.TaxId = updateEmployeeDTO.TaxId;
+                    employee.Status = updateEmployeeDTO.Status;
+                    employee.Cic = updateEmployeeDTO.Cic;
+                    employee.CountryId = updateEmployeeDTO.CountryId;
+                    employee.Status = updateEmployeeDTO.Status;
+                    _context.Employees.Update(employee);
+                }
+                else
+                {
+                    return StatusCode(550);
+                }
+                string htmlBody = "<p>Xin chào,</p>" +
+                    "<p>Dưới đây là nội dung email của bạn:</p>" +
+                    "<p>Thông tin email của bạn đã được thay đổi.</p>" +
+                    "<p>Cảm ơn bạn đã đọc email này.</p>";
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
+                email.To.Add(MailboxAddress.Parse($"{employeeEmail}"));
+                email.Subject = "Thông tin email đã được cập nhật";
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = htmlBody
+                };
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                smtp.Dispose();
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = employee.EmployeeId,
@@ -377,7 +422,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
         [Authorize(Roles = "ListEmployee")]
