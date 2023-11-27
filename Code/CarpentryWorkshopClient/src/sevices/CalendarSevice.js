@@ -7,11 +7,10 @@ const GetTeamForSchedule = (id) => {
     );
 };
 const GetAllWorks = (id,) => {
-    
     const  employeeId = id
     
   return axios.post(
-    `/CCMSapi/Works/GetAllWorks`
+    `/CCMSapi/Works/GetAllWorks?employeeId=${employeeId}`
   );
 };
 

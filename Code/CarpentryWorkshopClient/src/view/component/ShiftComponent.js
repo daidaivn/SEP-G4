@@ -7,7 +7,6 @@ import ListUserHeader from "./componentUI/ListUserHeader";
 import { Input, Modal, Select } from "antd";
 import { useState } from "react";
 import DetailsEmployee from "./ComponentShift/DetailsEmployee";
-import EditEmployee from "./ComponentShift/EditEmployee";
 const ShiftComponent = () => {
   // Modal chi tiet thanh vien
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
@@ -527,12 +526,7 @@ const ShiftComponent = () => {
           </tbody>
         </table>
         {isEditing ? (
-          <EditEmployee
-            isModalOpenListEmployee={isModalOpenListEmployee}
-            handleSave={handleSave}
-            handleCancelListEmployee={handleCancelListEmployee}
-            handleCancel={handleCancel}
-          />
+          <></>
         ) : (
           <DetailsEmployee
             isModalOpenListEmployee={isModalOpenListEmployee}
