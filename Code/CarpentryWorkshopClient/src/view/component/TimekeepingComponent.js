@@ -14,7 +14,9 @@ import {
   addAllCheckInOut,
   fetchAllDataWorks,
   updateDataWorks,
+  GetDataCheckInOutByDateAndEmployeeId,
 } from "../../sevices/TimekeepingService";
+import { el } from "date-fns/locale";
 const TimekeepingComponent = () => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -22,21 +24,45 @@ const TimekeepingComponent = () => {
   const [checksInOut, setChecksInOut] = useState([]);
   const [work, setWork] = useState([]);
   const [number, setNumber] = useState(null);
+  const [employeeId, setEmployeeId] = useState("");
+  const [date, setDate] = useState("");
+  const [employCheckInOut, setEmployCheckInOut] = useState([]);
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
 
-    const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
-    const showModalListEmployee = () => {
-      setIsModalOpenListEmployee(true);
-    };
-    const handleOkListEmployee = () => {
-      setIsModalOpenListEmployee(false);
-    };
-    const handleCancelListEmployee = () => {
-      setIsModalOpenListEmployee(false);
-    };
-  
+  const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
+  const showModalListEmployee = (id, date1) => {
+    console.log("id", id);
+    console.log("date", date1);
+    toast.promise(
+      GetDataCheckInOutByDateAndEmployeeId(id, date1)
+        .then((data) => {
+          setEmployCheckInOut(data);
+          fetchData();
+          setIsModalOpenListEmployee(true);
+          console.log("employ", data);
+          return data;
+        })
+        .catch((error) => {
+          if(error.response && error.response.status === 404){
+            throw toast.error(error.response.data);
+          }else{
+            throw toast.error(error.response.data);
+          }
+        }),
+      {
+        pending: "Đang xử lý",
+        success: "Cập nhật nhân viên thành công",
+      }
+    );
+  };
+  const handleOkListEmployee = () => {
+    setIsModalOpenListEmployee(false);
+  };
+  const handleCancelListEmployee = () => {
+    setIsModalOpenListEmployee(false);
+  };
 
   const handleCheckInOut = (employeeID, action) => {
     console.log("employeeID", employeeID);
@@ -64,7 +90,7 @@ const TimekeepingComponent = () => {
       }
     );
   };
-  //Convert number 
+  //Convert number
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
       const parts = dobstring.split("-");
@@ -145,6 +171,7 @@ const TimekeepingComponent = () => {
         fetchAllDataWorks(userEmployeeID)
           .then((data) => {
             setWork(data);
+
             resolve(data);
           })
           .catch((error) => {
@@ -626,7 +653,18 @@ const TimekeepingComponent = () => {
                         </>
                       )}
                     </td>
-                    <td onClick={showModalListEmployee}>Chỉnh sửa</td>
+                    <td
+                      onClick={() => {
+                        checksInOut.map((dateString, index) =>
+                          showModalListEmployee(
+                            employee.employeeId,
+                            dateString.date
+                          )
+                        );
+                      }}
+                    >
+                      Chỉnh sửa
+                    </td>
                     <td>
                       {employee.checkStatus === "CheckIn" ? (
                         <span
@@ -675,7 +713,11 @@ const TimekeepingComponent = () => {
 
                 <div className="item-modal">
                   <p>Số sản phẩm đã hoàn thành</p>
-                  <Input type="text" value={number != null ? number : work.numberOFProductToday} onChange={(e) => setNumber(e.target.value)}></Input>
+                  <Input
+                    type="text"
+                    value={number != null ? number : work.numberOFProductToday}
+                    onChange={(e) => setNumber(e.target.value)}
+                  ></Input>
                 </div>
 
                 <div className="item-modal">
@@ -737,7 +779,7 @@ const TimekeepingComponent = () => {
                 </div>
                 <div className="item-modal">
                   <p>Đơn giá 1 sản phẩm</p>
-                  <Input type="text" value={work.cost} ></Input>
+                  <Input type="text" value={work.cost}></Input>
                 </div>
                 <div className="item-modal">
                   <p>Số sản phẩm đã hoàn thành</p>
