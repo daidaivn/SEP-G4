@@ -233,15 +233,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
                     {
-                        return StatusCode(503);
+                        return StatusCode(503, "");
                     }
                     else if (employee.Email == createEmployeeDTO.Email)
                     {
-                        return StatusCode(501);
+                        return StatusCode(501, "");
                     }
                     else if (employee.Cic == createEmployeeDTO.Cic)
                     {
-                        return StatusCode(502);
+                        return StatusCode(502, "");
                     }
                 }
                 Employee newemp = new Employee();
@@ -354,19 +354,19 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
                 {
-                    return StatusCode(501);
+                    return StatusCode(501,"");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
                 {
-                    return StatusCode(503);
+                    return StatusCode(503, "");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
                 {
-                    return StatusCode(504);
+                    return StatusCode(504, "");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
                 {
-                    return StatusCode(502);
+                    return StatusCode(502, "");
                 }
 
                 var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
@@ -422,7 +422,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
         [Authorize(Roles = "ListEmployee")]

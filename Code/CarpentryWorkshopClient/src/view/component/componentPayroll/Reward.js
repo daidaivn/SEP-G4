@@ -20,7 +20,7 @@ const Reward = ({
         <div className="modal-payroll payroll-fix">
           <div className="modal-head">
             <div className="body-payroll1">
-              <p>Chi tiết thưởng</p>
+              <p>Lương thực nhận</p>
             </div>
             <div className="close">
               <svg

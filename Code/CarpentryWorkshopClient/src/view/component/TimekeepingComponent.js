@@ -8,6 +8,7 @@ import "../scss/index.scss";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import "../scss/DepartmentComponent.scss";
+import { EditEmployee } from "./componentCheckIn-Out";
 import {
   fetchAllCheckInOut,
   addAllCheckInOut,
@@ -24,7 +25,19 @@ const TimekeepingComponent = () => {
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
+
+    const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
+    const showModalListEmployee = () => {
+      setIsModalOpenListEmployee(true);
+    };
+    const handleOkListEmployee = () => {
+      setIsModalOpenListEmployee(false);
+    };
+    const handleCancelListEmployee = () => {
+      setIsModalOpenListEmployee(false);
+    };
   
+
   const handleCheckInOut = (employeeID, action) => {
     console.log("employeeID", employeeID);
     const actionText = action === "start" ? "Bắt đầu" : "Ngưng";
@@ -68,14 +81,14 @@ const TimekeepingComponent = () => {
   //validate data number
   const validateData = () => {
     const errors = [];
-    if(!number || isNaN(number)) {
-        errors.push("Please enter a valid number");
+    if (!number || isNaN(number)) {
+      errors.push("Please enter a valid number");
     }
     if (errors.length > 0) {
-        errors.forEach((error) => {
-            toast.warning(error);
-        });
-        return false;
+      errors.forEach((error) => {
+        toast.warning(error);
+      });
+      return false;
     }
     return true;
   };
@@ -153,27 +166,27 @@ const TimekeepingComponent = () => {
   };
   const handleSave = () => {
     const check = validateData();
-    if(!check){
+    if (!check) {
       return;
-    }     
-      toast.promise(
-        new Promise((resolve) => {
-          updateDataWorks(work.teamWorkId,number)
-            .then((data) => {
-              resolve(data);
-              fetchDataWorkPerDay();
-            })
-            .catch((error) => {
-              resolve(Promise.reject(error));
-            });
-        }),
-        {
-          pending: "Đang xử lý",
-          success: "Update success",
-          error: "Lỗi",
-        }
-      );
-    
+    }
+    toast.promise(
+      new Promise((resolve) => {
+        updateDataWorks(work.teamWorkId, number)
+          .then((data) => {
+            resolve(data);
+            fetchDataWorkPerDay();
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang xử lý",
+        success: "Update success",
+        error: "Lỗi",
+      }
+    );
+
     setIsEditing(false);
   };
   const handleCancel = () => {
@@ -397,6 +410,7 @@ const TimekeepingComponent = () => {
               <td>Tên nhân viên</td>
               <td>Mã nhân viên</td>
               <td>Trạng thái</td>
+              <td>Chi tiết điểm danh</td>
               <td>Hành động</td>
             </tr>
           </thead>
@@ -612,7 +626,7 @@ const TimekeepingComponent = () => {
                         </>
                       )}
                     </td>
-
+                    <td onClick={showModalListEmployee}>Chỉnh sửa</td>
                     <td>
                       {employee.checkStatus === "CheckIn" ? (
                         <span
@@ -661,7 +675,7 @@ const TimekeepingComponent = () => {
 
                 <div className="item-modal">
                   <p>Số sản phẩm đã hoàn thành</p>
-                  <Input type="text" value={number!= null ? number : work.numberOFProductToday} onChange={(e) => setNumber(e.target.value)}></Input>
+                  <Input type="text" value={number != null ? number : work.numberOFProductToday} onChange={(e) => setNumber(e.target.value)}></Input>
                 </div>
 
                 <div className="item-modal">
@@ -750,6 +764,13 @@ const TimekeepingComponent = () => {
             </div>
           </Modal>
         )}
+
+        <EditEmployee
+          isModalOpenListEmployee={isModalOpenListEmployee}
+          handleSave={handleSave}
+          handleCancelListEmployee={handleCancelListEmployee}
+          handleCancel={handleCancel}
+        />
       </div>
     </>
   );

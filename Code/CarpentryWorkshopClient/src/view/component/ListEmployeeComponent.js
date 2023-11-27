@@ -508,7 +508,18 @@ function ListEmployeeComponent() {
             fetchData();
           })
           .catch((error) => {
-            resolve(Promise.reject(error));
+            if (error.response && error.response.status === 550) {
+              toast.error("Email chưa được đăng kí");
+            } else if (error.response && error.response.status === 501) {
+              toast.error("Email đã tồn tại");
+            } else if (error.response && error.response.status === 502) {
+              toast.error("Mã định danh đã tồn tại");
+            } else if (error.response && error.response.status === 503) {
+              toast.error("Số điện thoại đã tồn tại");
+            } else {
+              toast.error("Tạo nhân viên không thành công");
+            }
+            resolve(error);
           });
       }),
       {
@@ -571,6 +582,7 @@ function ListEmployeeComponent() {
       {
         pending: "Đang xử lý",
         warning: "Thông tin nhân viên đã tồn",
+        success: "Thêm nhân viên thành công",
       }
     );
   };
