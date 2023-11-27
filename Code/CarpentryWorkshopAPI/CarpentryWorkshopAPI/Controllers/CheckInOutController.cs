@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -102,7 +103,11 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound("Team Leader not found");
             }
-            
+            DateTime DateIn = DateTime.Now.Date.Add(teamId.TimeIn ?? TimeSpan.Zero);
+            DateTime DateOut = DateTime.Now.Date.Add(teamId.Timeout ?? TimeSpan.Zero);
+            if(teamId.Timeout < teamId.TimeIn){
+                DateOut = DateOut.AddDays(1);
+            }
             var employees = await _context.EmployeeTeams
                 .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
                 .Select(et => et.Employee)
@@ -130,7 +135,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     .OrderBy(c => c.Date)
                     .ThenBy(c => c.TimeCheckIn)
                     .LastOrDefaultAsync();
-                if(DateTime.Now.TimeOfDay > teamId.Timeout)
+
+                if(DateTime.Now > DateOut && latestCheckOutTime != null && latestCheckOutTime.TimeCheckIn != null)
                 {
                     if(latestCheckOutTime.TimeCheckOut == null)
                     {
@@ -162,7 +168,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else if (checkInTime == null)
                 {
-                    if (DateTime.Now.TimeOfDay > teamId.TimeIn)
+                    if (DateTime.Now > DateIn)
                     {
                         result.Add(new
                         {
@@ -191,7 +197,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }                    
                 else
                 {
-                    if (DateTime.Now.TimeOfDay > teamId.Timeout)
+                    if (DateTime.Now > DateOut)
                     {
                         result.Add(new
                         {
@@ -465,42 +471,28 @@ namespace CarpentryWorkshopAPI.Controllers
         public IActionResult UpdateCheckInOutForEmployee([FromBody] CheckInOutDTO checkInOutDTO)
         {
             try
-            {
-                DateTime date = DateTime.ParseExact(checkInOutDTO.DateForCheckString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
-                if (checkInOutDTO.DateForCheckString != null && checkInOutDTO.employeeId > 0)
+            {               
+                if (checkInOutDTO.Id < 0 )
                 {
-                    var checkInOut = _context.CheckInOuts.Where(a => a.Date.Value.Date == date.Date && a.EmployeeId == checkInOutDTO.employeeId).AsQueryable();
-                    if (checkInOut != null)
+                    var checkInOut = _context.CheckInOuts.Where(a => a.CheckInOutId == checkInOutDTO.Id).FirstOrDefault();
+                    
+                    if(checkInOut != null )
                     {
-                        var checkIn = checkInOut.OrderBy(a => a.TimeCheckIn).FirstOrDefault();
-                        var checkOut = checkInOut.OrderByDescending(a => a.TimeCheckIn).FirstOrDefault();
-                        if(checkIn != null && checkInOutDTO.CheckIn !=null)
+                        checkInOut.TimeCheckOut = !string.IsNullOrEmpty(checkInOutDTO.CheckOut) && TimeSpan.TryParse(checkInOutDTO.CheckOut, out var checkOut) ? checkOut : checkInOut.TimeCheckOut ;
+                        checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutDTO.CheckIn) && TimeSpan.TryParse(checkInOutDTO.CheckIn, out var checkIn) ? checkIn : checkInOut.TimeCheckIn;
+                        if(checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
-                            checkIn.TimeCheckIn = checkInOutDTO.CheckIn.Value;
-                            _context.CheckInOuts.Update(checkIn);
+                            return BadRequest("data can not update");
                         }
-                        if (checkOut != null && checkInOutDTO.CheckOut != null)
-                        {
-                            checkOut.TimeCheckOut = checkInOutDTO.CheckOut.Value;
-                            _context.CheckInOuts.Update(checkOut);
-                        }
+                        
+                        _context.CheckInOuts.Update(checkInOut);
                         _context.SaveChanges();
-                        return Ok("Update success");
+                        return Ok("success");
                     }
                     else
                     {
-                        
-                        var check = new CheckInOut()
-                        {
-                            EmployeeId = checkInOutDTO.employeeId,
-                            Date = date,
-                            TimeCheckIn = checkInOutDTO.CheckIn,
-                            TimeCheckOut= checkInOutDTO.CheckOut,
-                        };
-                        _context.CheckInOuts.Add(check);
-                        return Ok("Update success");
-                    }
+                        return BadRequest("Not have data");
+                    }                        
                 }
                 else
                 {
@@ -508,6 +500,41 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetDataCheckInOutByDateAndEmployeeId(int employeeId, string dateString)
+        {
+            try
+            {
+                if(!DateTime.TryParseExact(dateString, "dd-MM-yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture,
+                                       System.Globalization.DateTimeStyles.None, out var parsedDate))
+                {
+                    return BadRequest("date is not valid");
+                }
+                if(employeeId <= 0 )
+                {
+                    return BadRequest("employee not valid");
+                }
+                var CheckInOut = await _context.CheckInOuts.Include(ci=>ci.Employee).Where(ci=>ci.EmployeeId == employeeId && ci.Date.Value.Date == parsedDate.Date)
+                    .Select(ci => new
+                    {
+                        CheckInOutId = ci.CheckInOutId,
+                        EmployeeId = employeeId,
+                        Date = parsedDate,
+                        TimeIn = ci.TimeCheckIn,
+                        Timeout = ci.TimeCheckOut,
+                        EmployeeName = ci.Employee.LastName + " " + ci.Employee.FirstName,
+                    }).ToListAsync();
+                if(CheckInOut.Count == 0)
+                {
+                    return NotFound("not have data");
+                }
+                return Ok(CheckInOut);
+            }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }

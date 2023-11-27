@@ -2,9 +2,9 @@
 {
     public class CheckInOutDTO
     {
-        public TimeSpan? CheckIn { get; set; }
-        public TimeSpan? CheckOut { get; set; }
-        public string DateForCheckString { get; set;}
-        public int employeeId { get; set;}
+        public int? Id { get; set; }
+        public string? CheckIn { get; set; }
+        public string? CheckOut { get; set; }
+       
     }
 }
