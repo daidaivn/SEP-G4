@@ -4,8 +4,6 @@ import "../scss/responsive/responsive.scss";
 import "../scss/MenuComponent.scss";
 import "../scss/fonts.scss";
 import { Link, NavLink } from "react-router-dom";
-import Home from "./Home";
-import DashboardComponnet from "./DashboardComponnet";
 import React, { useState } from "react";
 import logo from "../assets/images/logo.png";
 const Menucomponent = () => {
@@ -96,20 +94,6 @@ const Menucomponent = () => {
                 <i className="icon-activity"></i>
 
                 <span className="text">Lên lịch làm việc</span>
-              </NavLink>
-            </div>
-          )}
-          {userPages.includes("Shift") && (
-            <div className="item-link">
-              <NavLink
-                to={"/shift"}
-                id="item-menu"
-                onClick={() => handleDivClick("div12")}
-                activeClassName={activeDiv === "div12" ? "active" : ""}
-              >
-                <i className="icon-activity"></i>
-
-                <span className="text">Ca làm việc</span>
               </NavLink>
             </div>
           )}
