@@ -767,7 +767,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500);
+                return StatusCode(409, "Internal Server Error");
             }
         }
         [HttpPost]
@@ -868,7 +868,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500);
+                return StatusCode(409, "Internal Server Error");
             }
         }
 
