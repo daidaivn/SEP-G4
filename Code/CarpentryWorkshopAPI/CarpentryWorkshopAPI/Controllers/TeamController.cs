@@ -819,15 +819,23 @@ namespace CarpentryWorkshopAPI.Controllers
                     var endDate = DateTime.ParseExact(end+ "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
                     var startDate = DateTime.ParseExact(start + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture); ;
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                    var timeShift = team.WorkSchedules.Where(ws=>ws.EndDate == null).Select(t => new
+                    {
+                        TimeIn = t.ShiftType.StartTime,
+                        Timeout = t.ShiftType.EndTime,
+                    }).FirstOrDefault(); 
                     while(startDate <= endDate)
                     {
                         string status;
-                        if (startDate.Date <= DateTime.Now.Date)
+                        if (startDate.Date < DateTime.Now.Date)
                         {
                             status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null;
                         }
-                        else
+                        else if (startDate.Date == DateTime.Now.Date){
+                            status = (timeShift == null || DateTime.Now.TimeOfDay > timeShift.TimeIn) ? "end" : (teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no");
+                        }
+                        else 
                         {
                             status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no";
                         }
