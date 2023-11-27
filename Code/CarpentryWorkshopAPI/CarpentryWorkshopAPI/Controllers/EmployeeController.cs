@@ -233,15 +233,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
                     {
-                        return StatusCode(503, "Số điện thoại đã tồn tại");
+                        return StatusCode(409, "Số điện thoại đã tồn tại");
                     }
                     else if (employee.Email == createEmployeeDTO.Email)
                     {
-                        return StatusCode(501, "Email đã tồn tại");
+                        return StatusCode(409, "Email đã tồn tại");
                     }
                     else if (employee.Cic == createEmployeeDTO.Cic)
                     {
-                        return StatusCode(502, "Mã định danh đã tồn tại");
+                        return StatusCode(409, "Mã định danh đã tồn tại");
                     }
                 }
                 Employee newemp = new Employee();
@@ -259,7 +259,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        return StatusCode(550);
+                        return StatusCode(409, "Email chưa được đăng kí");
                     }              
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
@@ -354,19 +354,19 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
                 {
-                    return StatusCode(501,"Email đã tồn tại");
+                    return StatusCode(409,"Email đã tồn tại");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
                 {
-                    return StatusCode(503, "Số điện thoại đã tồn tại");
+                    return StatusCode(409, "Số điện thoại đã tồn tại");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
                 {
-                    return StatusCode(504, "Mã số thuế đã tồn tại");
+                    return StatusCode(409, "Mã số thuế đã tồn tại");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
                 {
-                    return StatusCode(502,"Mã định danh đã tồn tại");
+                    return StatusCode(409,"Mã định danh đã tồn tại");
                 }
 
                 var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
@@ -389,7 +389,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(550, "Email chưa được đăng kí");
+                    return StatusCode(409, "Email chưa được đăng kí");
                 }
                 string htmlBody = "<p>Xin chào,</p>" +
                     "<p>Dưới đây là nội dung email của bạn:</p>" +
