@@ -479,57 +479,57 @@ function ListEmployeeComponent() {
 
   const UpdateEditEmployee = () => {
     const isDataValid = validateData();
-
+  
     if (!isDataValid) {
       return;
     }
-
+  
     toast.promise(
-      new Promise((resolve) => {
-        UpdateEmployee(
-          id,
-          originalLastName,
-          originalFirstName,
-          originalPhoneNumber,
-          originalGender,
-          originalNationality,
-          originalAddress,
-          originalCIC,
-          originalTaxId,
-          originalDOB,
-          originalStatus,
-          originalEmail,
-          originalImage
-        )
-          .then((data) => {
-            resolve(data);
-            handlelDetail(id);
-            handleSave();
-            fetchData();
-          })
-          .catch((error) => {
-            if (error.response && error.response.status === 550) {
-              toast.error("Email chưa được đăng kí");
-            } else if (error.response && error.response.status === 501) {
-              toast.error("Email đã tồn tại");
-            } else if (error.response && error.response.status === 502) {
-              toast.error("Mã định danh đã tồn tại");
-            } else if (error.response && error.response.status === 503) {
-              toast.error("Số điện thoại đã tồn tại");
-            } else {
-              toast.error("Tạo nhân viên không thành công");
-            }
-            resolve(error);
-          });
-      }),
+      UpdateEmployee(
+        id,
+        originalLastName,
+        originalFirstName,
+        originalPhoneNumber,
+        originalGender,
+        originalNationality,
+        originalAddress,
+        originalCIC,
+        originalTaxId,
+        originalDOB,
+        originalStatus,
+        originalEmail,
+        originalImage
+      )
+        .then((data) => {
+          // Handle success actions here
+          setIsEditing(false);
+          handlelDetail(id);
+          handleSave();
+          fetchData();
+          return data; // Return data for toast.promise to handle
+        })
+        .catch((error) => {
+          // Handle error actions here
+          if (error.response && error.response.status === 550) {
+            toast.error("Email chưa được đăng kí");
+          } else if (error.response && error.response.status === 501) {
+            toast.error("Email đã tồn tại");
+          } else if (error.response && error.response.status === 502) {
+            toast.error("Mã định danh đã tồn tại");
+          } else if (error.response && error.response.status === 503) {
+            toast.error("Số điện thoại đã tồn tại");
+          } else {
+            throw error; 
+          }
+        }),
       {
         pending: "Đang xử lý",
         success: "Cập nhật nhân viên thành công",
         error: "Lỗi cập nhật nhân viên",
       }
     );
-    setIsEditing(false);
   };
+  
 
   const AddEmployee = () => {
     const isDataValid = validateData();

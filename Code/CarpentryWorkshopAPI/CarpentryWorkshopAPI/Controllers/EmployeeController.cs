@@ -233,15 +233,15 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     if (employee.PhoneNumber == createEmployeeDTO.PhoneNumber)
                     {
-                        return StatusCode(503, "");
+                        return StatusCode(503, "PhoneNumber already exists.");
                     }
                     else if (employee.Email == createEmployeeDTO.Email)
                     {
-                        return StatusCode(501, "");
+                        return StatusCode(501, "Email already exists.");
                     }
                     else if (employee.Cic == createEmployeeDTO.Cic)
                     {
-                        return StatusCode(502, "");
+                        return StatusCode(502, "Cic already exists.");
                     }
                 }
                 Employee newemp = new Employee();
@@ -259,7 +259,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        return StatusCode(550);
+                        return StatusCode(550, "Authentication is Required for Relay");
                     }              
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
@@ -333,82 +333,37 @@ namespace CarpentryWorkshopAPI.Controllers
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpPost]
-        public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
+        public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
         {
             try
             {
-                var employee = await _context.Employees
-                    .Include(emp => emp.UserAccount)
+                var employee = _context.Employees
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Role)
                       .ThenInclude(role => role.RolesEmployees)
                   .Include(emp => emp.RolesEmployees)
                       .ThenInclude(roleemp => roleemp.Department)
-                      .FirstOrDefaultAsync(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
-                var employeeEmail = employee.Email;
-                
+                      .FirstOrDefault(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
                 if (employee == null)
                 {
                     return NotFound();
                 }
 
-                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
-                {
-                    return StatusCode(501,"");
-                }
-                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
-                {
-                    return StatusCode(503, "");
-                }
-                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.TaxId == updateEmployeeDTO.TaxId))
-                {
-                    return StatusCode(504, "");
-                }
-                if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
-                {
-                    return StatusCode(502, "");
-                }
-
-                var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
-                if (checkEmail == true) {
-                    employee.Image = updateEmployeeDTO.Image;
-                    employee.FirstName = updateEmployeeDTO.FirstName;
-                    employee.LastName = updateEmployeeDTO.LastName;
-                    employee.Email = updateEmployeeDTO.Email;
-                    employee.Address = updateEmployeeDTO.Address;
-                    employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture);
-                    employee.Gender = updateEmployeeDTO.Gender;
-                    employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
-                    employee.TaxId = updateEmployeeDTO.TaxId;
-                    employee.Status = updateEmployeeDTO.Status;
-                    employee.Cic = updateEmployeeDTO.Cic;
-                    employee.CountryId = updateEmployeeDTO.CountryId;
-                    employee.Status = updateEmployeeDTO.Status;
-                    _context.Employees.Update(employee);
-                }
-                else
-                {
-                    return StatusCode(550);
-                }
-                string htmlBody = "<p>Xin chào,</p>" +
-                    "<p>Dưới đây là nội dung email của bạn:</p>" +
-                    "<p>Thông tin email của bạn đã được thay đổi.</p>" +
-                    "<p>Cảm ơn bạn đã đọc email này.</p>";
-                var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
-                email.To.Add(MailboxAddress.Parse($"{employeeEmail}"));
-                email.Subject = "Thông tin email đã được cập nhật";
-                email.Body = new TextPart(TextFormat.Html)
-                {
-                    Text = htmlBody
-                };
-                using var smtp = new SmtpClient();
-                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
-                smtp.Send(email);
-                smtp.Disconnect(true);
-                smtp.Dispose();
+                employee.Image = updateEmployeeDTO.Image;
+                employee.FirstName = updateEmployeeDTO.FirstName;
+                employee.LastName = updateEmployeeDTO.LastName;
+                employee.Email = updateEmployeeDTO.Email;
+                employee.Address = updateEmployeeDTO.Address;
+                employee.Dob = DateTime.ParseExact(updateEmployeeDTO.Dobstring, "dd-MM-yyyy",            
+                               System.Globalization.CultureInfo.InvariantCulture);
+                employee.Gender = updateEmployeeDTO.Gender;
+                employee.PhoneNumber = updateEmployeeDTO.PhoneNumber;
+                employee.TaxId = updateEmployeeDTO.TaxId;
+                employee.Status = updateEmployeeDTO.Status;
+                employee.Cic = updateEmployeeDTO.Cic;
+                employee.CountryId = updateEmployeeDTO.CountryId;
+                employee.Status = updateEmployeeDTO.Status;
+                _context.Employees.Update(employee);
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = employee.EmployeeId,
@@ -422,7 +377,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         [Authorize(Roles = "ListEmployee")]
