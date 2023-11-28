@@ -29,7 +29,7 @@ const GetDataCheckInOutByDateAndEmployeeId = (employeeId, dateString) => {
 const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
 
   const requestBody = {
-    teamWorkId: id,
+    id: id,
     checkIn: checkIn,
     checkOut: checkOut,
   };

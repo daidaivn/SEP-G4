@@ -16,28 +16,28 @@ const EditEmployee = ({
   employeeId,
 }) => {
   const handleTimeInputChange = (timeIn, timeOut, id) => {
-    if(timeIn === 1){
-      timeIn ="";
+    if (timeIn === 1) {
+      timeIn = "";
     }
-    if(timeOut === 1){
-      timeOut=""
+    if (timeOut === 1) {
+      timeOut = "";
     }
     toast.promise(
-      UpdateCheckInOutForEmployee(id,timeIn, timeOut)
+      UpdateCheckInOutForEmployee(id, timeIn, timeOut)
         .then((data) => {
-          showModalListEmployee(employeeId,date);
+          showModalListEmployee(employeeId, date);
           return data;
         })
         .catch((error) => {
-          if(error.response && error.response.status === 404){
+          if (error.response && error.response.status === 404) {
             throw toast.error(error.response.data);
-          }else{
+          } else {
             throw toast.error(error.response.data);
           }
         }),
       {
         pending: "Đang xử lý",
-        success: "Cập nhật nhân viên thành công",
+        success: "Cập nhật thoi gian thành công",
       }
     );
   };
@@ -80,19 +80,41 @@ const EditEmployee = ({
                 className="body-table body-table-edit scrollbar"
                 id="style-15"
               >
-                {employCheckInOut.map((employee,index)=>(
+                {employCheckInOut.map((employee, index) => (
                   <tr>
-                  <td>{index + 1}</td>
-                  <td>
-                    <Input type="time" value={convertTimeToInputFormat(employee.timeIn)} onChange={(e) => handleTimeInputChange(e.target.value,1 , employee.checkInOutId)}></Input>
-                  </td>
-                  <td>
-                    <Input type="time" value={convertTimeToInputFormat(employee.timeout)} onChange={(e) => handleTimeInputChange(1,e.target.value, employee.checkInOutId)}></Input>
-                  </td>
-                </tr>
+                    <td>{index + 1}</td>
+                    <td>
+                      <Input
+                        type="time"
+                        value={convertTimeToInputFormat(employee.timeIn)}
+                        onChange={(e) =>
+                          handleTimeInputChange(
+                            e.target.value,
+                            1,
+                            employee.checkInOutId
+                          )
+                        }
+                      ></Input>
+                    </td>
+                    <td>
+                      <Input
+                        type="time"
+                        
+                        value={convertTimeToInputFormat(employee.timeout)}
+                        onChange={(e) =>
+                          handleTimeInputChange(
+                            1,
+                            e.target.value,
+                            employee.checkInOutId
+                          )
+                        }
+                      ></Input>
+                    </td>
+                  </tr>
                 ))}
+                
+                <tr></tr>
               </div>
-
               <thead className="thead-last"></thead>
             </table>
           </div>
