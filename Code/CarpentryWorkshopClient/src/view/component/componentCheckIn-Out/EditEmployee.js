@@ -1,12 +1,46 @@
 import React from "react";
 import { Input, Modal } from "antd";
-
+import { toast } from "react-toastify";
 const EditEmployee = ({
   isModalOpenListEmployee,
   handleSave,
   handleCancelListEmployee,
   handleCancel,
+  employCheckInOut,
+  convertDobToISO,
+  convertTimeToInputFormat,
+  handleOkListEmployee,
+  UpdateCheckInOutForEmployee,
+  showModalListEmployee,
+  date,
+  employeeId,
 }) => {
+  const handleTimeInputChange = (timeIn, timeOut, id) => {
+    if(timeIn === 1){
+      timeIn ="";
+    }
+    if(timeOut === 1){
+      timeOut=""
+    }
+    toast.promise(
+      UpdateCheckInOutForEmployee(id,timeIn, timeOut)
+        .then((data) => {
+          showModalListEmployee(employeeId,date);
+          return data;
+        })
+        .catch((error) => {
+          if(error.response && error.response.status === 404){
+            throw toast.error(error.response.data);
+          }else{
+            throw toast.error(error.response.data);
+          }
+        }),
+      {
+        pending: "Đang xử lý",
+        success: "Cập nhật nhân viên thành công",
+      }
+    );
+  };
   return (
     <>
       {/* //chinh sua nhan vien */}
@@ -46,25 +80,17 @@ const EditEmployee = ({
                 className="body-table body-table-edit scrollbar"
                 id="style-15"
               >
-                <tr>
-                  <td>1</td>
+                {employCheckInOut.map((employee,index)=>(
+                  <tr>
+                  <td>{index + 1}</td>
                   <td>
-                    <Input type="date"></Input>
+                    <Input type="time" value={convertTimeToInputFormat(employee.timeIn)} onChange={(e) => handleTimeInputChange(e.target.value,1 , employee.checkInOutId)}></Input>
                   </td>
                   <td>
-                    <Input type="date"></Input>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>
-                    <Input type="date"></Input>
-                  </td>
-                  <td>
-                    <Input type="date"></Input>
+                    <Input type="time" value={convertTimeToInputFormat(employee.timeout)} onChange={(e) => handleTimeInputChange(1,e.target.value, employee.checkInOutId)}></Input>
                   </td>
                 </tr>
-                
+                ))}
               </div>
 
               <thead className="thead-last"></thead>
