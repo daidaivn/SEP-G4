@@ -15,6 +15,7 @@ import {
   fetchAllDataWorks,
   updateDataWorks,
   GetDataCheckInOutByDateAndEmployeeId,
+  UpdateCheckInOutForEmployee,
 } from "../../sevices/TimekeepingService";
 import { el } from "date-fns/locale";
 const TimekeepingComponent = () => {
@@ -27,6 +28,8 @@ const TimekeepingComponent = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [date, setDate] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
+  const [timeIn, setTimeIn] = useState(""); 
+  const [timeOut, setTimeOut] = useState(""); 
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -35,6 +38,8 @@ const TimekeepingComponent = () => {
   const showModalListEmployee = (id, date1) => {
     console.log("id", id);
     console.log("date", date1);
+    setDate(date1);
+    setEmployeeId(id);
     toast.promise(
       GetDataCheckInOutByDateAndEmployeeId(id, date1)
         .then((data) => {
@@ -104,6 +109,30 @@ const TimekeepingComponent = () => {
     }
     return dobstring;
   };
+  //Convert time 
+  const convertTimeToInputFormat = (timeString) => {
+    if (timeString) {
+      const parts = timeString.split(":");
+      
+      if (parts.length >= 2 && parts.length <= 3) {
+        const hours = parts[0].padStart(2, '0');
+        const minutes = parts[1].padStart(2, '0');
+        
+        // If seconds are present, extract and remove fractional seconds
+        const seconds = parts.length === 3 ? parts[2].split(".")[0].padStart(2, '0') : '00';
+  
+        return `${hours}:${minutes}:${seconds}`;
+      }
+      
+      return timeString;
+    }
+    
+    return timeString;
+  };
+  
+  
+ 
+  
   //validate data number
   const validateData = () => {
     const errors = [];
@@ -812,6 +841,14 @@ const TimekeepingComponent = () => {
           handleSave={handleSave}
           handleCancelListEmployee={handleCancelListEmployee}
           handleCancel={handleCancel}
+          employCheckInOut={employCheckInOut}
+          convertDobToISO={convertDobToISO}
+          convertTimeToInputFormat={convertTimeToInputFormat}
+          handleOkListEmployee={handleOkListEmployee}
+          UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
+          showModalListEmployee={showModalListEmployee}
+          date={date}
+          employeeId={employeeId}
         />
       </div>
     </>

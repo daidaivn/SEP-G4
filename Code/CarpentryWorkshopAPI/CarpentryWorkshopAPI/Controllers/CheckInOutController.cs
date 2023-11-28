@@ -404,7 +404,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return Ok(new
                     {
                         checkIn = checkIn != null ? checkIn.TimeCheckIn.ToString() : "not yet",
-                        checkOut =checkOut.TimeCheckOut != null ? checkOut.TimeCheckOut.ToString() : "not yet",
+                        checkOut = checkOut.TimeCheckOut != null ? checkOut.TimeCheckOut.ToString() : "not yet",
                     });
                 }
                 else
@@ -473,7 +473,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {               
-                if (checkInOutDTO.Id < 0 )
+                if (checkInOutDTO.Id > 0 )
                 {
                     var checkInOut = _context.CheckInOuts.Where(a => a.CheckInOutId == checkInOutDTO.Id).FirstOrDefault();
                     
@@ -529,7 +529,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         TimeIn = ci.TimeCheckIn,
                         Timeout = ci.TimeCheckOut,
                         EmployeeName = ci.Employee.LastName + " " + ci.Employee.FirstName,
-                    }).ToListAsync();
+                    })
+                    .ToListAsync();
                 if(CheckInOut.Count == 0)
                 {
                     return NotFound("not have data");

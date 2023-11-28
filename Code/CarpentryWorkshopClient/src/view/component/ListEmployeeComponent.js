@@ -700,6 +700,24 @@ function ListEmployeeComponent() {
     }
     return dobstring;
   };
+  const convertTimeToInputFormat = (timeString) => {
+    if (timeString) {
+      const parts = timeString.split(":");
+      
+      if (parts.length === 3) {
+        const hours = parts[0];
+        const minutes = parts[1];
+        
+        // Extract seconds and remove fractional seconds
+        const secondsWithFraction = parts[2];
+        const seconds = secondsWithFraction.split(".")[0];
+        
+        return `${hours}:${minutes}:${seconds}`;
+      }      
+      return timeString;
+    }  
+    return timeString;
+  };
   const fetDataDepartment = () => {
     fetchAllDepadment()
       .then((data) => {
