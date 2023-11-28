@@ -26,4 +26,14 @@ const GetDataCheckInOutByDateAndEmployeeId = (employeeId, dateString) => {
     `/CCMSapi/CheckInOut/GetDataCheckInOutByDateAndEmployeeId?employeeId=${employeeId}&dateString=${dateString}`
   );
 };
-export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks, GetDataCheckInOutByDateAndEmployeeId};
+const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
+
+  const requestBody = {
+    teamWorkId: id,
+    checkIn: checkIn,
+    checkOut: checkOut,
+  };
+  console.log('update',requestBody);
+  return axios.post(`/CCMSapi/CheckInOut/UpdateCheckInOutForEmployee`, requestBody);
+};
+export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks, GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee};
