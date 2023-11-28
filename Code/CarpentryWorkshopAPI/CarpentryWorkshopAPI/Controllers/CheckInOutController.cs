@@ -256,10 +256,11 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var teamId = await _context.Teams
                 .Where(t=>t.TeamId == Id)
-                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work).Select(et => new
+                .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work)
+                .Select(et => new
                 {
-                    TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
-                    Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
+                    TimeIn = et.WorkSchedules.Where(ws=>ws.EndDate == null).Select(ws => ws.ShiftType.StartTime).Single(),
+                    Timeout = et.WorkSchedules.Where(ws => ws.EndDate == null).Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
                     WorkId = et.TeamWorks.Select(w => w.WorkId)
                 })
@@ -491,7 +492,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        return BadRequest("Not have data");
+                        return StatusCode(403, "Not have data checkInOut today");
                     }                        
                 }
                 else
