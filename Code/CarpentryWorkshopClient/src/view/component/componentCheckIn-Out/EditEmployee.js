@@ -87,31 +87,19 @@ const EditEmployee = ({
                       <TimePicker
                         disableClock
                         format="HH:mm"
-                        onChange={(e) =>
-                          handleTimeInputChange(
-                            e.target.value,
-                            1,
-                            employee.checkInOutId
-                          )
-                        }
+                        onChange={(newTime) => handleTimeInputChange(newTime, 1, employee.checkInOutId)}
                       />
                     </td>
                     <td>
                       <TimePicker
                         disableClock
                         format="HH:mm"
-                        onChange={(e) =>
-                          handleTimeInputChange(
-                            1,
-                            e.target.value,
-                            employee.checkInOutId
-                          )
-                        }
+                        onChange={(newTime) => handleTimeInputChange(newTime, 2, employee.checkInOutId)}
                       />
                     </td>
                   </tr>
                 ))}
-                
+
                 <tr></tr>
               </div>
               <thead className="thead-last"></thead>
