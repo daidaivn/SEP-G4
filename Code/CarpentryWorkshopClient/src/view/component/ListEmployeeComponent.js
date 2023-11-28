@@ -709,23 +709,28 @@ function ListEmployeeComponent() {
   };
 
   const fetchData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllEmplyee()
-          .then((data) => {
-            setEmployees(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
+    let isDataReceived = false; 
+    const fetchDataPromise = new Promise((resolve) => {
+      fetchAllEmplyee()
+        .then((data) => {
+          setEmployees(data);
+          isDataReceived = true;
+          resolve(data);
+        })
+        .catch((error) => {
+          resolve(Promise.reject(error));
+        });
+    });
+    setTimeout(() => {
+      if (!isDataReceived) {
+        toast.promise(fetchDataPromise, {
+          pending: "Đang tải dữ liệu",
+          error: "Lỗi tải dữ liệu",
+        });
       }
-    );
+    }, 1000);
   };
+  
   const handlelDetail = (value) => {
     toast.promise(
       new Promise((resolve) => {
