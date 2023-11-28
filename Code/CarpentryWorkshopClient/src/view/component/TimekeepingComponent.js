@@ -115,12 +115,12 @@ const TimekeepingComponent = () => {
       const parts = timeString.split(":");
       
       if (parts.length >= 2 && parts.length <= 3) {
-        const hours = parts[0];
-        const minutes = parts[1];
+        const hours = parts[0].padStart(2, '0');
+        const minutes = parts[1].padStart(2, '0');
         
         // If seconds are present, extract and remove fractional seconds
-        const seconds = parts.length === 3 ? parts[2].split(".")[0] : '00';
-        console.log('timeFormat', `${hours}:${minutes}:${seconds}`);
+        const seconds = parts.length === 3 ? parts[2].split(".")[0].padStart(2, '0') : '00';
+  
         return `${hours}:${minutes}:${seconds}`;
       }
       
@@ -129,6 +129,7 @@ const TimekeepingComponent = () => {
     
     return timeString;
   };
+  
   
  
   
