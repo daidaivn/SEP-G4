@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Modal } from "antd";
+import { Input, Modal, TimePicker } from "antd";
 import { toast } from "react-toastify";
 const EditEmployee = ({
   isModalOpenListEmployee,
@@ -84,9 +84,9 @@ const EditEmployee = ({
                   <tr>
                     <td>{index + 1}</td>
                     <td>
-                      <Input
-                        type="time"
-                        value={convertTimeToInputFormat(employee.timeIn)}
+                      <TimePicker
+                        disableClock
+                        format="HH:mm"
                         onChange={(e) =>
                           handleTimeInputChange(
                             e.target.value,
@@ -94,13 +94,12 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
-                      ></Input>
+                      />
                     </td>
                     <td>
-                      <Input
-                        type="time"
-                        
-                        value={convertTimeToInputFormat(employee.timeout)}
+                      <TimePicker
+                        disableClock
+                        format="HH:mm"
                         onChange={(e) =>
                           handleTimeInputChange(
                             1,
@@ -108,7 +107,7 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
-                      ></Input>
+                      />
                     </td>
                   </tr>
                 ))}

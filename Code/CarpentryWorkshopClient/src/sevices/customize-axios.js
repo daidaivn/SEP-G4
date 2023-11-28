@@ -5,7 +5,7 @@ const localToken = localStorage.getItem('userToken');
 const userToken = sessionToken || localToken;
 
 const instance = axios.create({
-  baseURL: "https://sep-g4-api.zurewebsites.net",
+  baseURL: "https://sep-g4-api.azurewebsites.net",
 });
 
 instance.interceptors.request.use((config) => {
