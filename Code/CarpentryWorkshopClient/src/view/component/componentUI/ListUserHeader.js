@@ -10,6 +10,7 @@ import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
 import { DetailID } from "../../../sevices/EmployeeService";
+import { ChangePass, Role, Salary } from "../ComponentUser";
 // import avt from ".../";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
@@ -348,257 +349,23 @@ function ListUserHeader() {
         </Modal>
       </div>
 
-      <Modal
-        className="modal"
-        open={isModalOpenPayroll}
-        on
-        Ok={handleOkPayroll}
-        onCancel={handleCancelPayroll}
-      >
-        <div className="modal-payroll payroll-fix">
-          <div className="modal-head">
-            <div className="body-payroll1">
-              <p>Bảng lương</p>
-              <Input type="date"></Input>
-            </div>
-            <div className="close">
-              <svg
-                onClick={handleCancelPayroll}
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 30 30"
-                fill="none"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="body-payroll">
-            <div className="body-child1 scrollbar" id="style-15">
-              <div className="body-child1-cn">
-                <div className="item-chil1">
-                  <div className="item-chil1-cn">
-                    <p className="text1">1.</p>
-                    <p>Lương chính</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="item-child1-col">
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">2.</p>
-                    <p>Phụ cấp</p>
-                    <div className="money"></div>
-                  </div>
-                </div>
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">-</p>
-                    <p>Trách nhiệm</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">-</p>
-                    <p>Ăn trưa</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">-</p>
-                    <p>Điện thoại</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">-</p>
-                    <p>Xăng xe</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="item-child1-col">
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">3.</p>
-                    <p>Thưởng</p>
-                    <div className="money"></div>
-                  </div>
-                </div>
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">-</p>
-                    <p>Tết dương lịch</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="child1-col">
-                  <div className="child1-text">
-                    <p className="text1">-</p>
-                    <p>Tết âm lịch</p>
-                    <div className="money">
-                      <p>9.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="body-child2">
-              <div className="body-child1-cn">
-                <div className="item-chil1">
-                  <div className="item-chil1-cn">
-                    <p>Tổng số tiền nhận được</p>
-                    <div className="money">
-                      <p>19.000.000 VND</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Modal>
-      <Modal
-        className="modal"
-        open={isModalOpenUserRole}
-        onOk={handleOkUserRole}
-        onCancel={handleCancelUserRole}
-      >
-        <div className="modal-add-roleyee-employee">
-          <div className="modal-head-employee">
-            <h3>Chức vụ / phòng ban</h3>
-          </div>
-          <div className="body-add-role-employee">
-            <table>
-              <thead>
-                <td>Chức vụ</td>
-                <td>Phòng ban</td>
-              </thead>
-              <div className="body-table">
-                {employee && employee.roleDepartments && (
-                  <div className="show-role">
-                    <div className="show-item-role">
-                      <tr>
-                        <p>Chức vụ chính:</p>
-                      </tr>
-                      {employee.roleDepartments.length > 0 && (
-                        <tr>
-                          <div className="tr-child">
-                            <Input
-                              type="text"
-                              value={employee.roleDepartments[0].roleName}
-                            ></Input>
-                          </div>
+      <Salary
+        isModalOpenPayroll={isModalOpenPayroll}
+        handleOkPayroll={handleOkPayroll}
+        handleCancelPayroll={handleCancelPayroll}
+      />
+      <Role
+        isModalOpenUserRole={isModalOpenUserRole}
+        handleOkUserRole={handleOkUserRole}
+        handleCancelUserRole={handleCancelUserRole}
+        employee={employee}
+      />
 
-                          <div className="tr-child">
-                            <Input
-                              type="text"
-                              value={employee.roleDepartments[0].departmentName}
-                            ></Input>
-                          </div>
-                        </tr>
-                      )}
-                    </div>
-                    <div className="show-item-role role-fix">
-                      <tr>
-                        <p>Kiêm chức vụ:</p>
-                      </tr>
-                      {employee.roleDepartments
-                        .slice(1)
-                        .map((roleDept, index) => (
-                          <tr key={index}>
-                            <div className="tr-child">
-                              <Input
-                                type="text"
-                                value={roleDept.roleName}
-                              ></Input>
-                            </div>
-                            <div className="tr-child">
-                              <Input
-                                type="text"
-                                value={roleDept.departmentName}
-                              ></Input>
-                            </div>
-                          </tr>
-                        ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <thead className="thead-last"></thead>
-            </table>
-          </div>
-        </div>
-      </Modal>
-
-      {/* modal doi mat khau */}
-      <Modal
-        className="modal"
-        open={isModalOpenChange}
-        onOk={handleOkChange}
-        onCancel={handleCancelChange}
-      >
-        <div className="change-all">
-          <div className="change-head">Tài khoản / mật khẩu</div>
-          <div className="change-body">
-            <div className="item-change-body">
-              <p>Tài khoản:</p>
-              <Input type="text" placeholder="Nhập tài khoản"></Input>
-            </div>
-            <div className="item-change-body">
-              <p>Mật khẩu:</p>
-              <Input type="text" placeholder="Nhập mật khẩu"></Input>
-            </div>
-            <div className="item-change-body">
-              <p>Nhập mật khẩu</p>
-              <Input type="text" placeholder="Nhập mật khẩu"></Input>
-            </div>
-            <div className="item-change-body">
-              <p>Capcha</p>
-              <div className="capcha" type="text">
-                I O Q R 4 M T
-              </div>
-            </div>
-            <div className="item-change-body">
-              <p>Xác nhận Capcha</p>
-              <Input type="text" placeholder="Nhập capcha"></Input>
-            </div>
-            <div className="change-footer">
-              <button className="cancel" onClick={handleCancelChange}>
-                Hủy bỏ
-              </button>
-              <button className="edit" onClick={handleCancelChange}>
-                Sửa
-              </button>
-              <button className="save" onClick={handleOkChange}>
-                Lưu
-              </button>
-            </div>
-          </div>
-        </div>
-      </Modal>
+      <ChangePass
+        isModalOpenChange={isModalOpenChange}
+        handleOkChange={handleOkChange}
+        handleCancelChange={handleCancelChange}
+      />
     </>
   );
 }
