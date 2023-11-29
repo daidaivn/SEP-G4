@@ -101,6 +101,17 @@ function ListUserHeader() {
   const handleCancelPayroll = () => {
     setIsModalOpenPayroll(false);
   };
+
+  const [isModalOpenChange, setIsModalOpenChange] = useState(false);
+  const showModalChange = () => {
+    setIsModalOpenChange(true);
+  };
+  const handleOkChange = () => {
+    setIsModalOpenChange(false);
+  };
+  const handleCancelChange = () => {
+    setIsModalOpenChange(false);
+  };
   return (
     <>
       <div className="list-user-header">
@@ -180,6 +191,49 @@ function ListUserHeader() {
               </defs>
             </svg>
             <p>Xem lương</p>
+          </div>
+          <div className="view-info" onClick={showModalChange}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+            >
+              <path
+                d="M11.25 27.5H18.75C25 27.5 27.5 25 27.5 18.75V11.25C27.5 5 25 2.5 18.75 2.5H11.25C5 2.5 2.5 5 2.5 11.25V18.75C2.5 25 5 27.5 11.25 27.5Z"
+                stroke="#F7F7F7"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20.35 17.0133C18.9375 18.4258 16.9125 18.8633 15.125 18.3008L11.8875 21.5258C11.6625 21.7633 11.2 21.9133 10.8625 21.8633L9.3625 21.6633C8.8625 21.6008 8.4125 21.1258 8.3375 20.6383L8.1375 19.1383C8.0875 18.8133 8.25 18.3508 8.475 18.1133L11.7 14.8883C11.15 13.1008 11.575 11.0758 12.9875 9.66328C15.0125 7.63828 18.3125 7.63828 20.35 9.66328C22.375 11.6758 22.375 14.9758 20.35 17.0133Z"
+                stroke="#F7F7F7"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M13.0625 20.3504L12 19.2754"
+                stroke="#F7F7F7"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16.7431 13.375H16.7544"
+                stroke="#F7F7F7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <div className="change-pass">
+              <p>Đổi tài khỏa mật khẩu</p>
+            </div>
           </div>
         </div>
       )}
@@ -495,6 +549,53 @@ function ListUserHeader() {
               </div>
               <thead className="thead-last"></thead>
             </table>
+          </div>
+        </div>
+      </Modal>
+
+      {/* modal doi mat khau */}
+      <Modal
+        className="modal"
+        open={isModalOpenChange}
+        onOk={handleOkChange}
+        onCancel={handleCancelChange}
+      >
+        <div className="change-all">
+          <div className="change-head">Tài khoản / mật khẩu</div>
+          <div className="change-body">
+            <div className="item-change-body">
+              <p>Tài khoản:</p>
+              <Input type="text" placeholder="Nhập tài khoản"></Input>
+            </div>
+            <div className="item-change-body">
+              <p>Mật khẩu:</p>
+              <Input type="text" placeholder="Nhập mật khẩu"></Input>
+            </div>
+            <div className="item-change-body">
+              <p>Nhập mật khẩu</p>
+              <Input type="text" placeholder="Nhập mật khẩu"></Input>
+            </div>
+            <div className="item-change-body">
+              <p>Capcha</p>
+              <div className="capcha" type="text">
+                I O Q R 4 M T
+              </div>
+            </div>
+            <div className="item-change-body">
+              <p>Xác nhận Capcha</p>
+              <Input type="text" placeholder="Nhập capcha"></Input>
+            </div>
+            <div className="change-footer">
+              <button className="cancel" onClick={handleCancelChange}>
+                Hủy bỏ
+              </button>
+              <button className="edit" onClick={handleCancelChange}>
+                Sửa
+              </button>
+              <button className="save" onClick={handleOkChange}>
+                Lưu
+              </button>
+            </div>
           </div>
         </div>
       </Modal>
