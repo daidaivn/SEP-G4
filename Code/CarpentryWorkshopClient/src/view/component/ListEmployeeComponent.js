@@ -736,7 +736,7 @@ function ListEmployeeComponent() {
           resolve(data);
         })
         .catch((error) => {
-          resolve(Promise.reject(error));
+          throw toast.error(error.response.data);
         });
     });
     setTimeout(() => {

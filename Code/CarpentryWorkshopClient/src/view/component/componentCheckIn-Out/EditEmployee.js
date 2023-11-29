@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Modal, TimePicker } from "antd";
 import { toast } from "react-toastify";
+import dayjs from 'dayjs';
 const EditEmployee = ({
   isModalOpenListEmployee,
   handleSave,
@@ -37,7 +38,7 @@ const EditEmployee = ({
         }),
       {
         pending: "Đang xử lý",
-        success: "Cập nhật thoi gian thành công",
+        success: "Thành công",
       }
     );
   };
@@ -86,6 +87,7 @@ const EditEmployee = ({
                     <td>
                       <TimePicker
                         disableClock
+                        defaultValue={dayjs(convertTimeToInputFormat(employee.timeIn), 'HH:mm')}
                         format="HH:mm"
                         onChange={(newTime) => handleTimeInputChange(newTime, 1, employee.checkInOutId)}
                       />
@@ -93,8 +95,9 @@ const EditEmployee = ({
                     <td>
                       <TimePicker
                         disableClock
+                        defaultValue={dayjs(convertTimeToInputFormat(employee.timeout), 'HH:mm')}
                         format="HH:mm"
-                        onChange={(newTime) => handleTimeInputChange(newTime, 2, employee.checkInOutId)}
+                        onChange={(newTime) => handleTimeInputChange(1, newTime, employee.checkInOutId)}
                       />
                     </td>
                   </tr>
