@@ -70,16 +70,13 @@ const EditEmployee = ({
             </svg>
           </div>
           <div className="body-add-role-employee">
-            <table className="table-modal-shift">
+            <table className="table-modal-checkin">
               <thead>
                 <td>STT</td>
                 <td>Giờ bắt đầu</td>
                 <td>Giờ kết thúc</td>
               </thead>
-              <div
-                className="body-table body-table-edit scrollbar"
-                id="style-15"
-              >
+              <div className="body-table-edit scrollbar" id="style-15">
                 {employCheckInOut.map((employee, index) => (
                   <tr>
                     <td>{index + 1}</td>
@@ -87,14 +84,26 @@ const EditEmployee = ({
                       <TimePicker
                         disableClock
                         format="HH:mm"
-                        onChange={(newTime) => handleTimeInputChange(newTime, 1, employee.checkInOutId)}
+                        onChange={(newTime) =>
+                          handleTimeInputChange(
+                            newTime,
+                            1,
+                            employee.checkInOutId
+                          )
+                        }
                       />
                     </td>
                     <td>
                       <TimePicker
                         disableClock
                         format="HH:mm"
-                        onChange={(newTime) => handleTimeInputChange(newTime, 2, employee.checkInOutId)}
+                        onChange={(newTime) =>
+                          handleTimeInputChange(
+                            newTime,
+                            2,
+                            employee.checkInOutId
+                          )
+                        }
                       />
                     </td>
                   </tr>
