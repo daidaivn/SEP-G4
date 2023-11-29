@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, Modal, TimePicker } from "antd";
 import { toast } from "react-toastify";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 const EditEmployee = ({
   isModalOpenListEmployee,
   handleSave,
@@ -71,33 +71,48 @@ const EditEmployee = ({
             </svg>
           </div>
           <div className="body-add-role-employee">
-            <table className="table-modal-shift">
+            <table className="table-modal-checkin">
               <thead>
                 <td>STT</td>
                 <td>Giờ bắt đầu</td>
                 <td>Giờ kết thúc</td>
               </thead>
-              <div
-                className="body-table body-table-edit scrollbar"
-                id="style-15"
-              >
+              <div className="body-table-edit scrollbar" id="style-15">
                 {employCheckInOut.map((employee, index) => (
                   <tr>
                     <td>{index + 1}</td>
                     <td>
                       <TimePicker
                         disableClock
-                        defaultValue={dayjs(convertTimeToInputFormat(employee.timeIn), 'HH:mm')}
+                        defaultValue={dayjs(
+                          convertTimeToInputFormat(employee.timeIn),
+                          "HH:mm"
+                        )}
                         format="HH:mm"
-                        onChange={(newTime) => handleTimeInputChange(newTime, 1, employee.checkInOutId)}
+                        onChange={(newTime) =>
+                          handleTimeInputChange(
+                            1,
+                            newTime,
+                            employee.checkInOutId
+                          )
+                        }
                       />
                     </td>
                     <td>
                       <TimePicker
                         disableClock
-                        defaultValue={dayjs(convertTimeToInputFormat(employee.timeout), 'HH:mm')}
+                        defaultValue={dayjs(
+                          convertTimeToInputFormat(employee.timeout),
+                          "HH:mm"
+                        )}
                         format="HH:mm"
-                        onChange={(newTime) => handleTimeInputChange(1, newTime, employee.checkInOutId)}
+                        onChange={(newTime) =>
+                          handleTimeInputChange(
+                            newTime,
+                            1,
+                            employee.checkInOutId
+                          )
+                        }
                       />
                     </td>
                   </tr>

@@ -13,7 +13,7 @@ const ListSearchFilterAdd = ({
   yearOptions,
   setActionWork,
   iText,
-  setIText
+  setIText,
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -78,9 +78,10 @@ const ListSearchFilterAdd = ({
             </g>
           </svg>
         </i>
-        <Input placeholder="Tìm kiếm"
+        <Input
+          placeholder="Tìm kiếm"
           value={iText}
-          onChange={(e)=> setIText(e.target.value)}
+          onChange={(e) => setIText(e.target.value)}
         ></Input>
       </div>
       <div className="list-filter">
@@ -93,7 +94,7 @@ const ListSearchFilterAdd = ({
           placeholder="Chọn tuần"
         />
       </div>
-      <div className="list-filter">
+      <div className="list-filter year">
         <Select
           className="select-input"
           value={selectedYear}
@@ -103,10 +104,13 @@ const ListSearchFilterAdd = ({
           placeholder="Chọn năm"
         />
       </div>
-      <div className="ListWork" onClick={() => {
-        fetchAllWorks();
-        setActionWork("detailWork")
-      }}>
+      <div
+        className="ListWork"
+        onClick={() => {
+          fetchAllWorks();
+          setActionWork("detailWork");
+        }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="36"

@@ -866,3 +866,83 @@
     }
   }
 }
+.table-modal-checkin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+  thead {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    background: #3a5a40;
+    td {
+      color: #fff;
+      text-align: center;
+      font-family: Noto Sans;
+      font-size: 21px;
+      font-weight: 400;
+      flex: 1 0 0;
+    }
+    td:nth-child(1) {
+      width: 92px;
+      flex: unset !important;
+    }
+  }
+  .body-table-edit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1 0 0;
+    align-self: stretch;
+    tr {
+      display: flex;
+      padding: 10px;
+      align-items: center;
+      gap: 20px;
+      flex: 1 0 0;
+      align-self: stretch;
+      border-radius: unset !important;
+      background: unset !important;
+      box-shadow: unset !important;
+      td {
+        color: #000;
+        text-align: center;
+        font-family: Noto Sans;
+        font-size: 21px;
+        font-weight: 400;
+        flex: 1 0 0;
+        .ant-picker {
+          display: flex;
+          padding: 10px 20px;
+          align-items: center;
+          gap: 10px;
+          flex: 1 0 0;
+          border-radius: 60px;
+          border: 1px solid #e6e5ea;
+          background: #fff;
+          font-size: 21px;
+
+          input {
+            color: #000;
+            font-family: Noto Sans;
+            font-size: 21px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+        }
+      }
+      td:first-child {
+        width: 92px;
+        flex: unset;
+      }
+    }
+  }
+}
