@@ -1,7 +1,8 @@
 import { Input, Modal, Select } from "antd";
 import React, { useState, useEffect, useMemo } from "react";
-import { toast } from "react-toastify";
 
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import "../scss/TimekeepingComponent.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
@@ -28,8 +29,8 @@ const TimekeepingComponent = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [date, setDate] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
-  const [timeIn, setTimeIn] = useState(""); 
-  const [timeOut, setTimeOut] = useState(""); 
+  const [timeIn, setTimeIn] = useState("");
+  const [timeOut, setTimeOut] = useState("");
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -50,15 +51,15 @@ const TimekeepingComponent = () => {
           return data;
         })
         .catch((error) => {
-          if(error.response && error.response.status === 404){
+          if (error.response && error.response.status === 404) {
             throw toast.error(error.response.data);
-          }else{
+          } else {
             throw toast.error(error.response.data);
           }
         }),
       {
         pending: "Đang xử lý",
-        success: "Cập nhật nhân viên thành công",
+        success: "Thanh cong",
       }
     );
   };
@@ -109,30 +110,31 @@ const TimekeepingComponent = () => {
     }
     return dobstring;
   };
-  //Convert time 
+  dayjs.locale("vn");
+  //Convert time
   const convertTimeToInputFormat = (timeString) => {
     if (timeString) {
       const parts = timeString.split(":");
-      
+
       if (parts.length >= 2 && parts.length <= 3) {
-        const hours = parts[0].padStart(2, '0');
-        const minutes = parts[1].padStart(2, '0');
-        
+        const hours = parts[0];
+        const minutes = parts[1];
+
         // If seconds are present, extract and remove fractional seconds
-        const seconds = parts.length === 3 ? parts[2].split(".")[0].padStart(2, '0') : '00';
-  
+        const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
+        const parsedTime = dayjs(`${hours}:${minutes}:${seconds}`, "HH:mm");
+
+        // Format the parsed time as desired
+        const formattedTime = parsedTime.format("HH:mm");
         return `${hours}:${minutes}:${seconds}`;
       }
-      
+
       return timeString;
     }
-    
+
     return timeString;
   };
-  
-  
- 
-  
+
   //validate data number
   const validateData = () => {
     const errors = [];
@@ -157,22 +159,25 @@ const TimekeepingComponent = () => {
   };
 
   const fetchData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllCheckInOut(userEmployeeID)
-          .then((data) => {
-            setChecksInOut(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang xử lý",
-        error: "Lỗi dữ liệu",
+    let isDataReceived = false;
+    const fetchDataPromise = new Promise((resolve) => {
+      fetchAllCheckInOut(userEmployeeID)
+        .then((data) => {
+          setChecksInOut(data);
+          resolve(data);
+        })
+        .catch((error) => {
+          resolve(Promise.reject(error));
+        });
+    });
+    setTimeout(() => {
+      if (!isDataReceived) {
+        toast.promise(fetchDataPromise, {
+          pending: "Đang tải dữ liệu",
+          error: "Lỗi tải dữ liệu",
+        });
       }
-    );
+    }, 1000);
   };
   console.log("userEmployeeID:", userEmployeeID);
 
