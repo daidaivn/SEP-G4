@@ -3,6 +3,7 @@ import { Checkbox, Input } from "antd";
 import "../scss/Decentralization.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
+import "../scss/responsive/Decentralization.scss";
 import { fetchAllRole } from "../../sevices/RoleService";
 import { fetchAllPages } from "../../sevices/PageService";
 import {
@@ -55,16 +56,16 @@ const Decentralization = () => {
         });
     }
   };
-  const featchDataPage=()=>{
+  const featchDataPage = () => {
     fetchAllPages()
-    .then((data) => {
-      setPages(data);
-    })
-    .catch((error) => {
-      console.error("Lỗi khi tải dữ liệu RolePage", error);
-    });
-  }
-  const featchDatarole=()=>{
+      .then((data) => {
+        setPages(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tải dữ liệu RolePage", error);
+      });
+  };
+  const featchDatarole = () => {
     fetchAllRole()
       .then((data) => {
         setRoles(data);
@@ -72,7 +73,7 @@ const Decentralization = () => {
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu phòng ban:", error);
       });
-  }
+  };
   const fetchData = () => {
     fetchAllDecentralization()
       .then((data) => {
@@ -84,8 +85,8 @@ const Decentralization = () => {
   };
 
   useEffect(() => {
-    featchDataPage()
-    featchDatarole()
+    featchDataPage();
+    featchDatarole();
     fetchData();
   }, []);
   return (
@@ -226,13 +227,15 @@ const Decentralization = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        {decentralizations.length === 0 || roles.length === 0 || pages.length === 0 ? (
+        {decentralizations.length === 0 ||
+        roles.length === 0 ||
+        pages.length === 0 ? (
           <p>
             {decentralizations.length === 0
               ? "Thông tin chi tiết về vai trò chưa sẵn sàng hoặc không tồn tại."
               : roles.length === 0
-                ? "Không có vai trò nào để hiển thị."
-                : "Không có trang nào để hiển thị."}
+              ? "Không có vai trò nào để hiển thị."
+              : "Không có trang nào để hiển thị."}
           </p>
         ) : (
           <table className="table-Decent">
