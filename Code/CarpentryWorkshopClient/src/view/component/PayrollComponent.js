@@ -21,6 +21,9 @@ import {
   ExcelModal,
   ListTable,
   ListSearchFilterAdd,
+  AllowanceAll,
+  DeductionsAll,
+  SalaryReceived,
 } from "./componentPayroll";
 
 import {
@@ -33,9 +36,8 @@ import {
   CreateAndUpdateSpecialOccasion,
   CreateAndUpdateCompanyRerward,
 } from "../../sevices/PayrollSevice";
-import {
-  fetchAllEmplyee,
-} from "../../sevices/EmployeeService";
+import { fetchAllEmplyee } from "../../sevices/EmployeeService";
+
 const PayrollComponent = () => {
   const [salaries, setSalaries] = useState([]);
   const [reward, setReward] = useState([]);
@@ -47,7 +49,7 @@ const PayrollComponent = () => {
   const [date, setDate] = useState(new Date().getFullYear());
 
   const monthOptions = getMonthsInYear(date);
-  const currentMonth = (new Date().getMonth()) + 1;
+  const currentMonth = new Date().getMonth() + 1;
   const [months, setMonths] = useState(currentMonth.toString());
   const [iText, setIText] = useState("");
   const [dataAllowance, setDataAllowance] = useState([]);
@@ -61,7 +63,6 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
-
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
@@ -161,10 +162,11 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng công ty
-  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
-    useState(false);
+  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] = useState(
+    false
+  );
   const dataConver = months + "-" + date;
-  console.log('date', dataConver);
+  console.log("date", dataConver);
   const featchDataReward = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -183,7 +185,7 @@ const PayrollComponent = () => {
         error: "Lỗi tải dữ liệu",
       }
     );
-  }
+  };
   const showModalRewardCompany = () => {
     featchDataReward();
     setIsModalOpenRewardCompany(true);
@@ -214,15 +216,15 @@ const PayrollComponent = () => {
     );
   };
   //modal Thưởng cá nhân
-  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
-    useState(false);
+  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
+    false
+  );
   const showModalRewardPersonal = () => {
     fetchEmployeeData();
     setIsModalOpenRewardPersonal(true);
-    console.log('employee',employees);
+    console.log("employee", employees);
   };
-  
-  
+
   const resetPersonDetail = () => {
     setBonusAmount("");
     setBonusReason("");
@@ -235,7 +237,6 @@ const PayrollComponent = () => {
   const showModalRewardAll = () => {
     setIsModalOpenRewardAll(true);
   };
-  
 
   //modal Các loại thưởng
   const [isModalOpenTypeReward, setIsModalOpenTypeReward] = useState(false);
@@ -248,8 +249,8 @@ const PayrollComponent = () => {
   const handleCancelTypeReward = () => {
     setIsModalOpenTypeReward(false);
   };
-  console.log('data1',dataActualSalary);
-  
+  console.log("data1", dataActualSalary);
+
   //modal Sửa tên thưởng
   const [isModalOpenEditReward, setIsModalOpenEditReward] = useState(false);
   const showModalEditReward = () => {
@@ -262,20 +263,57 @@ const PayrollComponent = () => {
     setIsModalOpenEditReward(false);
   };
 
+  //modal hiển thị tất cả danh sách phụ cấp
+  const [isModalOpenAllowanceAll, setIsModalOpenAllowanceAll] = useState(false);
+  const showModalAllowanceAll = () => {
+    setIsModalOpenAllowanceAll(true);
+  };
+  const handleOkAllowanceAll = () => {
+    setIsModalOpenAllowanceAll(false);
+  };
+  const handleCancelAllowanceAll = () => {
+    setIsModalOpenAllowanceAll(false);
+  };
+
+  //modal hiển thị tất cả danh sách các khoản trừ
+  const [isModalOpenDeductions, setIsModalOpenDeductions] = useState(false);
+  const showModalDeductions = () => {
+    setIsModalOpenDeductions(true);
+  };
+  const handleOkDeductions = () => {
+    setIsModalOpenDeductions(false);
+  };
+  const handleCancelDeductions = () => {
+    setIsModalOpenDeductions(false);
+  };
+
+  //modal hiển thị tất cả danh sách lương thực nhận
+  const [isModalOpenSalaryReceived, setIsModalOpenSalaryReceived] = useState(
+    false
+  );
+  const showModalSalaryReceived = () => {
+    setIsModalOpenSalaryReceived(true);
+  };
+  const handleOkSalaryReceived = () => {
+    setIsModalOpenSalaryReceived(false);
+  };
+  const handleCancelSalaryReceived = () => {
+    setIsModalOpenSalaryReceived(false);
+  };
+
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
   const showModalHoliday = () => {
     fetchEmployeeData();
     setIsModalOpenHoliday(true);
   };
-  
 
-  const fetchEmployeeActualSalaryDetail= (employeeId) => {
+  const fetchEmployeeActualSalaryDetail = (employeeId) => {
     toast.promise(
       new Promise((resolve) => {
         GetEmployeeActualSalaryDetail(employeeId, months, date)
           .then((data) => {
-            showModalReward()
-            setActualSalary(data)
+            showModalReward();
+            setActualSalary(data);
             resolve(data);
           })
           .catch((error) => {
@@ -294,8 +332,8 @@ const PayrollComponent = () => {
       new Promise((resolve) => {
         GetEmployeeDeductionDetail(employeeId, months, date)
           .then((data) => {
-            showModalSubsidies()
-            setDataDeduction(data)
+            showModalSubsidies();
+            setDataDeduction(data);
             resolve(data);
           })
           .catch((error) => {
@@ -314,8 +352,8 @@ const PayrollComponent = () => {
       new Promise((resolve) => {
         GetEmployeeAllowanceDetail(employeeId, months, date)
           .then((data) => {
-            showModalAllowance()
-            setDataAllowance(data)
+            showModalAllowance();
+            setDataAllowance(data);
             resolve(data);
           })
           .catch((error) => {
@@ -330,21 +368,20 @@ const PayrollComponent = () => {
   };
 
   const fetData = () => {
-        fetchAllSalaries(iText, months, date)
-          .then((data) => {
-            setSalaries(data);
-            console.log("data", data);
-          })
-          .catch((error) => {
-            console.log('error',error);
-            
-          });
+    fetchAllSalaries(iText, months, date)
+      .then((data) => {
+        setSalaries(data);
+        console.log("data", data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
   console.log("Salary", salaries);
 
   useEffect(() => {
     fetData();
-  }, [iText,date, months]);
+  }, [iText, date, months]);
 
   return (
     <>
@@ -380,7 +417,9 @@ const PayrollComponent = () => {
           fetchEmployeeAllowanceDetail={fetchEmployeeAllowanceDetail}
           fetchEmployeeDeductionDetail={fetchEmployeeDeductionDetail}
           fetchEmployeeActualSalaryDetail={fetchEmployeeActualSalaryDetail}
-         
+          showModalAllowanceAll={showModalAllowanceAll}
+          showModalDeductions={showModalDeductions}
+          showModalSalaryReceived={showModalSalaryReceived}
         />
 
         <SubsidiesDetail
@@ -512,6 +551,27 @@ const PayrollComponent = () => {
           monthOptions={monthOptions}
           setDate={setDate}
           yearOptions={yearOptions}
+        />
+
+        {/* Modal hiển thị tất cả danh sách phụ cấp */}
+        <AllowanceAll
+          isModalOpenAllowanceAll={isModalOpenAllowanceAll}
+          handleOkAllowanceAll={handleCancelAllowanceAll}
+          handleCancelAllowanceAll={handleCancelAllowanceAll}
+        />
+
+        {/* Modal hiển thị tất cả danh sách các khoản trừ */}
+        <DeductionsAll
+          isModalOpenDeductions={isModalOpenDeductions}
+          handleOkDeductions={handleOkDeductions}
+          handleCancelDeductions={handleCancelDeductions}
+        />
+
+        {/* Modal hiển thị tất cả danh sách lương thực nhận */}
+        <SalaryReceived
+          isModalOpenSalaryReceived={isModalOpenSalaryReceived}
+          handleOkSalaryReceived={handleOkSalaryReceived}
+          handleCancelSalaryReceived={handleCancelSalaryReceived}
         />
       </div>
     </>

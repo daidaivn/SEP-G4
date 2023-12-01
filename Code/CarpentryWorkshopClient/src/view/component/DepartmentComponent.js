@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
+import "../scss/responsive/Department.scss";
 import { Switch, Form, Input } from "antd";
 import { toast } from "react-toastify";
 import {
@@ -99,8 +100,10 @@ function ListDepartmentComponent() {
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
   };
-  const [isModalOpenChangeDepartment, setIsModalOpenChangeDepartment] =
-    useState(false);
+  const [
+    isModalOpenChangeDepartment,
+    setIsModalOpenChangeDepartment,
+  ] = useState(false);
 
   const showModalChangeDepartment = () => {
     setIsModalOpenChangeDepartment(true);
@@ -424,272 +427,293 @@ function ListDepartmentComponent() {
             </tbody>
           )}
         </table>
-        <Modal
-          open={isModalOpenDetail}
-          className="modal-group"
-          on
-          Ok={handleOkDetail}
-          onCancel={handleCancelDetail}
-          width={566}
-        >
-          <div className="modal-dependent modal-detail-group">
-            <div className="modal-head">
-              {" "}
-              <h3>{departmentName}</h3>
-            </div>
-            <div className=" modal-group">
-              <div className="info-detail-group">
-                <div className="info-body-group">
-                  <>
-                    <div className="box1-modal-group">
-                      <div className="box1-child">
-                        <p className="child1-group">STT</p>
+        <div className="detail-depart-all">
+          <Modal
+            open={isModalOpenDetail}
+            className="modal-group modal-detail-depart"
+            on
+            Ok={handleOkDetail}
+            onCancel={handleCancelDetail}
+            width={566}
+          >
+            <div className="modal-dependent modal-detail-group">
+              <div className="modal-head">
+                {" "}
+                <h3>{departmentName}</h3>
+              </div>
+              <div className=" modal-group">
+                <div className="info-detail-group">
+                  <div className="info-body-group">
+                    <>
+                      <div className="box1-modal-group">
+                        <div className="box1-child">
+                          <p className="child1-group">STT</p>
+                        </div>
+                        <div className="box2-child">
+                          <p className="child2-group">Chức vụ</p>
+                        </div>
+                        <div className="box3-child">
+                          <p className="child3-group">Họ và tên</p>
+                        </div>
+                        <div className="box5-child">
+                          <p className="child5-group">Đổi chức vụ</p>
+                        </div>
                       </div>
-                      <div className="box2-child">
-                        <p className="child2-group">Chức vụ</p>
-                      </div>
-                      <div className="box3-child">
-                        <p className="child3-group">Họ và tên</p>
-                      </div>
-                      <div className="box5-child">
-                        <p className="child5-group">Đổi chức vụ</p>
-                      </div>
-                    </div>
-                    <div className="box2-modal-group"></div>
-                    <div className="department-scroll scrollbar" id="style-15">
-                      {employees.length === 0 ? (
-                        <p>
-                          Thông tin nhân viên chưa sẵn sàng hoặc không tồn tại.
-                        </p>
-                      ) : (
-                        employees.map((employee, index) => (
-                          <div className="box1-modal-group box3-group">
-                            <div className="box1-child">
-                              <p className="child1-group">{index + 1}</p>
-                            </div>
-                            <div className="box2-child">
-                              <p className="child2-group">{employee.roles}</p>
-                            </div>
-                            <div className="box3-child">
-                              <div className="child3-group">
-                                <p>{employee.fullName}</p>
+                      <div className="box2-modal-group"></div>
+                      <div
+                        className="department-scroll scrollbar"
+                        id="style-15"
+                      >
+                        {employees.length === 0 ? (
+                          <p>
+                            Thông tin nhân viên chưa sẵn sàng hoặc không tồn
+                            tại.
+                          </p>
+                        ) : (
+                          employees.map((employee, index) => (
+                            <div className="box1-modal-group box3-group">
+                              <div className="box1-child">
+                                <p className="child1-group">{index + 1}</p>
+                              </div>
+                              <div className="box2-child">
+                                <p className="child2-group">{employee.roles}</p>
+                              </div>
+                              <div className="box3-child">
+                                <div className="child3-group">
+                                  <p>{employee.fullName}</p>
+                                </div>
+                              </div>
+                              <div className="box5-child">
+                                <p className="child5-group">
+                                  <svg
+                                    onClick={showModalChangeDepartment}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="30"
+                                    height="30"
+                                    viewBox="0 0 30 30"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M20.2375 2.5H9.7625C5.2125 2.5 2.5 5.2125 2.5 9.7625V20.225C2.5 24.7875 5.2125 27.5 9.7625 27.5H20.225C24.775 27.5 27.4875 24.7875 27.4875 20.2375V9.7625C27.5 5.2125 24.7875 2.5 20.2375 2.5ZM22.3125 17.625C22.2625 17.7375 22.2 17.8375 22.1125 17.925L18.3125 21.725C18.125 21.9125 17.8875 22 17.65 22C17.4125 22 17.175 21.9125 16.9875 21.725C16.625 21.3625 16.625 20.7625 16.9875 20.4L19.1875 18.2H8.5625C8.05 18.2 7.625 17.775 7.625 17.2625C7.625 16.75 8.05 16.325 8.5625 16.325H21.45C21.575 16.325 21.6875 16.35 21.8125 16.4C22.0375 16.5 22.225 16.675 22.325 16.9125C22.4 17.1375 22.4 17.4 22.3125 17.625ZM21.4375 13.6625H8.5625C8.4375 13.6625 8.325 13.6375 8.2 13.5875C7.975 13.4875 7.7875 13.3125 7.6875 13.075C7.5875 12.85 7.5875 12.5875 7.6875 12.3625C7.7375 12.25 7.8 12.15 7.8875 12.0625L11.6875 8.2625C12.05 7.9 12.65 7.9 13.0125 8.2625C13.375 8.625 13.375 9.225 13.0125 9.5875L10.825 11.7875H21.45C21.9625 11.7875 22.3875 12.2125 22.3875 12.725C22.3875 13.2375 21.9625 13.6625 21.4375 13.6625Z"
+                                      fill="#3A5A40"
+                                    />
+                                  </svg>
+                                </p>
                               </div>
                             </div>
-                            <div className="box5-child">
-                              <p className="child5-group">
-                                <svg
-                                  onClick={showModalChangeDepartment}
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="30"
-                                  height="30"
-                                  viewBox="0 0 30 30"
-                                  fill="none"
-                                >
-                                  <path
-                                    d="M20.2375 2.5H9.7625C5.2125 2.5 2.5 5.2125 2.5 9.7625V20.225C2.5 24.7875 5.2125 27.5 9.7625 27.5H20.225C24.775 27.5 27.4875 24.7875 27.4875 20.2375V9.7625C27.5 5.2125 24.7875 2.5 20.2375 2.5ZM22.3125 17.625C22.2625 17.7375 22.2 17.8375 22.1125 17.925L18.3125 21.725C18.125 21.9125 17.8875 22 17.65 22C17.4125 22 17.175 21.9125 16.9875 21.725C16.625 21.3625 16.625 20.7625 16.9875 20.4L19.1875 18.2H8.5625C8.05 18.2 7.625 17.775 7.625 17.2625C7.625 16.75 8.05 16.325 8.5625 16.325H21.45C21.575 16.325 21.6875 16.35 21.8125 16.4C22.0375 16.5 22.225 16.675 22.325 16.9125C22.4 17.1375 22.4 17.4 22.3125 17.625ZM21.4375 13.6625H8.5625C8.4375 13.6625 8.325 13.6375 8.2 13.5875C7.975 13.4875 7.7875 13.3125 7.6875 13.075C7.5875 12.85 7.5875 12.5875 7.6875 12.3625C7.7375 12.25 7.8 12.15 7.8875 12.0625L11.6875 8.2625C12.05 7.9 12.65 7.9 13.0125 8.2625C13.375 8.625 13.375 9.225 13.0125 9.5875L10.825 11.7875H21.45C21.9625 11.7875 22.3875 12.2125 22.3875 12.725C22.3875 13.2375 21.9625 13.6625 21.4375 13.6625Z"
-                                    fill="#3A5A40"
-                                  />
-                                </svg>
-                              </p>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </>
+                          ))
+                        )}
+                      </div>
+                    </>
+                  </div>
                 </div>
               </div>
+              <div className="modal-footer modal-footer-deparment modal-footer-group">
+                <button className="btn-cancel" onClick={handleCancelDetail}>
+                  Thoát
+                </button>
+                <button
+                  className="btn-edit btn-fix-group"
+                  onClick={showModalEditDepartment}
+                >
+                  Đổi tên phòng ban
+                </button>
+              </div>
             </div>
-            <div className="modal-footer modal-footer-deparment modal-footer-group">
-              <button className="btn-cancel" onClick={handleCancelDetail}>
-                Thoát
-              </button>
-              <button
-                className="btn-edit btn-fix-group"
-                onClick={showModalEditDepartment}
-              >
-                Đổi tên phòng ban
-              </button>
+          </Modal>
+        </div>
+
+        <div className="modal-add-department-all">
+          <Modal
+            className="modal-add-dp"
+            open={isModalOpenDepartment}
+            on
+            Ok={handleOkDepartment}
+            onCancel={handleCancelDepartment}
+            width={566}
+          >
+            <div className="modal-add-department">
+              <div className="modal-head">
+                {" "}
+                <h3>Thêm phòng - ban</h3>
+              </div>
+              <div className="modal-body modal-body-department">
+                <div className="info-add-department">
+                  <div className="text-department">Tên phòng - ban</div>
+                  <Input
+                    value={departmentName}
+                    onChange={(e) => setDepartmentName(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer modal-footer-deparment footer-deparment-fix">
+                <button className="btn-cancel" onClick={handleCancelDepartment}>
+                  Hủy bỏ
+                </button>
+                <button className="btn-edit btn-save" onClick={newDepartment}>
+                  Lưu
+                </button>
+              </div>
             </div>
-          </div>
-        </Modal>
-        <Modal
-          className="modal"
-          open={isModalOpenDepartment}
-          on
-          Ok={handleOkDepartment}
-          onCancel={handleCancelDepartment}
-          width={566}
-        >
-          <div className="modal-head">
-            {" "}
-            <h3>Thêm phòng - ban</h3>
-          </div>
-          <div className="modal-body modal-body-department">
-            <div className="info-add-department">
-              <div className="text-department">Tên phòng - ban</div>
-              <Input
-                value={departmentName}
-                onChange={(e) => setDepartmentName(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="modal-footer modal-footer-deparment footer-deparment-fix">
-            <button className="btn-cancel" onClick={handleCancelDepartment}>
-              Hủy bỏ
-            </button>
-            <button className="btn-edit btn-save" onClick={newDepartment}>
-              Lưu
-            </button>
-          </div>
-        </Modal>
-        <Modal
-          className="modal"
-          open={isModalEditDepartment}
-          on
-          Ok={handleOkEditDepartment}
-          onCancel={handleCancelEditDepartment}
-          width={566}
-        >
-          <div className="modal-head">
-            {" "}
-            <h3>Đổi tên phòng - ban</h3>
-          </div>
-          <div className="modal-body modal-body-department">
-            <div className="info-add-department">
-              <div className="text-department">Tên phòng - ban</div>
-              <Input
-                value={departmentNameUpdate}
-                onChange={(e) => setDepartmentNameUpdate(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="modal-footer modal-footer-deparment footer-deparment-fix">
-            <button className="btn-cancel" onClick={handleCancelEditDepartment}>
-              Hủy bỏ
-            </button>
-            <button
-              className="btn-edit btn-save"
-              onClick={handleOkEditDepartment}
-            >
-              Lưu
-            </button>
-          </div>
-        </Modal>
-        <Modal
-          className="modal"
-          open={isModalOpenChangeDepartment}
-          on
-          Ok={handleOkChangeDepartment}
-          onCancel={handleCancelChangeDepartment}
-          width={566}
-        >
-          <div className="modal-all-group">
+          </Modal>
+        </div>
+
+        <div className="change-name">
+          {" "}
+          <Modal
+            className="modal"
+            open={isModalEditDepartment}
+            on
+            Ok={handleOkEditDepartment}
+            onCancel={handleCancelEditDepartment}
+            width={566}
+          >
             <div className="modal-head">
               {" "}
-              <h3>Đổi chéo chức vụ phòng kế toán</h3>
+              <h3>Đổi tên phòng - ban</h3>
             </div>
-            <div className="modal-end-group">
-              <div className="body-modal-end-group">
-                <div className="modal1">
-                  <div className="modal1-child">
-                    <p>Nhân viên: </p>
-                    <p>Nguyễn Thị Lan</p>
-                  </div>
-                  <div className="modal1-child">
-                    <p>Mã số nhân viên: </p>
-                    <p>1</p>
-                  </div>
-                  <div className="modal1-child">
-                    <p>Chức vụ hiện tại:</p>
-                    <p>Ca trưởng</p>
-                  </div>
-                </div>
-                <div className="modal2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="53"
-                    height="46"
-                    viewBox="0 0 53 46"
-                    fill="none"
-                  >
-                    <g clip-path="url(#clip0_1026_1197)">
-                      <path
-                        d="M41.7951 33.4236L51.5451 24.9861C52.8147 23.8875 52.8147 22.1033 51.5451 21.0046L41.7951 12.5671C40.5256 11.4685 38.4639 11.4685 37.1943 12.5671C35.9248 13.6658 35.9248 15.45 37.1943 16.5486L41.399 20.1873H11.5904L15.7951 16.5486C17.0646 15.45 17.0646 13.6658 15.7951 12.5671C14.5256 11.4685 12.4639 11.4685 11.1943 12.5671L1.44434 21.0046C0.174805 22.1033 0.174805 23.8875 1.44434 24.9861L11.1943 33.4236C12.4639 34.5222 14.5256 34.5222 15.7951 33.4236C17.0646 32.325 17.0646 30.5408 15.7951 29.4421L11.6006 25.8123H41.4092L37.2045 29.4509C35.935 30.5496 35.935 32.3337 37.2045 33.4324C38.474 34.531 40.5357 34.531 41.8053 33.4324L41.7951 33.4236Z"
-                        fill="#FC1E1E"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_1026_1197">
-                        <rect
-                          width="52"
-                          height="45"
-                          fill="white"
-                          transform="translate(0.5 0.5)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </div>
-                <div className="modal3">
-                  <div className="modal3-child">
-                    <p>Nhân viên: </p>
-                    <div className="list-filter select-modal-end">
-                      <Select
-                        className="select-input"
-                        defaultValue="lucy"
-                        style={{
-                          width: 120,
-                        }}
-                        onChange={handleChange}
-                        options={[
-                          {
-                            value: "jack",
-                            label: "Jack",
-                          },
-                          {
-                            value: "lucy",
-                            label: "Lucy",
-                          },
-                          {
-                            value: "Yiminghe",
-                            label: "yiminghe",
-                          },
-                          {
-                            value: "disabled",
-                            label: "Disabled",
-                          },
-                        ]}
-                      />
-                    </div>
-                  </div>
-                  <div className="modal3-child modal3-child1">
-                    <p>Mã số nhân viên: </p>
-                    <p>1</p>
-                  </div>
-                  <div className="modal3-child modal3-child1">
-                    <p>Chức vụ hiện tại: </p>
-                    <p>Nhân viên</p>
-                  </div>
-                </div>
+            <div className="modal-body modal-body-department">
+              <div className="info-add-department">
+                <div className="text-department">Tên phòng - ban</div>
+                <Input
+                  value={departmentNameUpdate}
+                  onChange={(e) => setDepartmentNameUpdate(e.target.value)}
+                />
               </div>
             </div>
-            <div className="modal-footer modal-footer-group">
+            <div className="modal-footer modal-footer-deparment footer-deparment-fix">
               <button
                 className="btn-cancel"
-                onClick={handleCancelChangeDepartment}
+                onClick={handleCancelEditDepartment}
               >
                 Hủy bỏ
               </button>
               <button
                 className="btn-edit btn-save"
-                onClick={handleOkChangeDepartment}
+                onClick={handleOkEditDepartment}
               >
                 Lưu
               </button>
             </div>
-          </div>
-        </Modal>
+          </Modal>
+        </div>
+
+        <div className="change-role">
+          <Modal
+            className="modal modal-change-role"
+            open={isModalOpenChangeDepartment}
+            on
+            Ok={handleOkChangeDepartment}
+            onCancel={handleCancelChangeDepartment}
+            width={566}
+          >
+            <div className="modal-all-group">
+              <div className="modal-head">
+                {" "}
+                <h3>Đổi chéo chức vụ phòng kế toán</h3>
+              </div>
+              <div className="modal-end-group">
+                <div className="body-modal-end-group">
+                  <div className="modal1">
+                    <div className="modal1-child">
+                      <p>Nhân viên: </p>
+                      <p>Nguyễn Thị Lan</p>
+                    </div>
+                    <div className="modal1-child">
+                      <p>Mã số nhân viên: </p>
+                      <p>1</p>
+                    </div>
+                    <div className="modal1-child">
+                      <p>Chức vụ hiện tại:</p>
+                      <p>Ca trưởng</p>
+                    </div>
+                  </div>
+                  <div className="modal2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="53"
+                      height="46"
+                      viewBox="0 0 53 46"
+                      fill="none"
+                    >
+                      <g clip-path="url(#clip0_1026_1197)">
+                        <path
+                          d="M41.7951 33.4236L51.5451 24.9861C52.8147 23.8875 52.8147 22.1033 51.5451 21.0046L41.7951 12.5671C40.5256 11.4685 38.4639 11.4685 37.1943 12.5671C35.9248 13.6658 35.9248 15.45 37.1943 16.5486L41.399 20.1873H11.5904L15.7951 16.5486C17.0646 15.45 17.0646 13.6658 15.7951 12.5671C14.5256 11.4685 12.4639 11.4685 11.1943 12.5671L1.44434 21.0046C0.174805 22.1033 0.174805 23.8875 1.44434 24.9861L11.1943 33.4236C12.4639 34.5222 14.5256 34.5222 15.7951 33.4236C17.0646 32.325 17.0646 30.5408 15.7951 29.4421L11.6006 25.8123H41.4092L37.2045 29.4509C35.935 30.5496 35.935 32.3337 37.2045 33.4324C38.474 34.531 40.5357 34.531 41.8053 33.4324L41.7951 33.4236Z"
+                          fill="#FC1E1E"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_1026_1197">
+                          <rect
+                            width="52"
+                            height="45"
+                            fill="white"
+                            transform="translate(0.5 0.5)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                  <div className="modal3">
+                    <div className="modal3-child">
+                      <p>Nhân viên: </p>
+                      <div className="list-filter select-modal-end">
+                        <Select
+                          className="select-input"
+                          defaultValue="lucy"
+                          style={{
+                            width: 120,
+                          }}
+                          onChange={handleChange}
+                          options={[
+                            {
+                              value: "jack",
+                              label: "Jack",
+                            },
+                            {
+                              value: "lucy",
+                              label: "Lucy",
+                            },
+                            {
+                              value: "Yiminghe",
+                              label: "yiminghe",
+                            },
+                            {
+                              value: "disabled",
+                              label: "Disabled",
+                            },
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="modal3-child modal3-child1">
+                      <p>Mã số nhân viên: </p>
+                      <p>1</p>
+                    </div>
+                    <div className="modal3-child modal3-child1">
+                      <p>Chức vụ hiện tại: </p>
+                      <p>Nhân viên</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer modal-footer-group">
+                <button
+                  className="btn-cancel"
+                  onClick={handleCancelChangeDepartment}
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  className="btn-edit btn-save"
+                  onClick={handleOkChangeDepartment}
+                >
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </Modal>
+        </div>
       </div>
     </>
   );
