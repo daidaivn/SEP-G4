@@ -50,7 +50,7 @@ const EditEmployee = ({
         onOk={handleSave}
         onCancel={handleCancelListEmployee}
       >
-        <div className="modal-add-roleyee-employee modal-shift-all">
+        <div className="modal-add-roleyee-employee modal-shift-all modal-edit-dd">
           <div className="modal-head-employee modal-shift-head ">
             <h3>Chỉnh sửa điểm danh</h3>
             <svg

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "../scss/TimekeepingComponent.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
+import "../scss/responsive/Timekeeping.scss";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import "../scss/DepartmentComponent.scss";
@@ -28,8 +29,8 @@ const TimekeepingComponent = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [date, setDate] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
-  const [timeIn, setTimeIn] = useState(""); 
-  const [timeOut, setTimeOut] = useState(""); 
+  const [timeIn, setTimeIn] = useState("");
+  const [timeOut, setTimeOut] = useState("");
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -50,9 +51,9 @@ const TimekeepingComponent = () => {
           return data;
         })
         .catch((error) => {
-          if(error.response && error.response.status === 404){
+          if (error.response && error.response.status === 404) {
             throw toast.error(error.response.data);
-          }else{
+          } else {
             throw toast.error(error.response.data);
           }
         }),
@@ -109,30 +110,28 @@ const TimekeepingComponent = () => {
     }
     return dobstring;
   };
-  //Convert time 
+  //Convert time
   const convertTimeToInputFormat = (timeString) => {
     if (timeString) {
       const parts = timeString.split(":");
-      
+
       if (parts.length >= 2 && parts.length <= 3) {
-        const hours = parts[0].padStart(2, '0');
-        const minutes = parts[1].padStart(2, '0');
-        
+        const hours = parts[0].padStart(2, "0");
+        const minutes = parts[1].padStart(2, "0");
+
         // If seconds are present, extract and remove fractional seconds
-        const seconds = parts.length === 3 ? parts[2].split(".")[0].padStart(2, '0') : '00';
-  
+        const seconds =
+          parts.length === 3 ? parts[2].split(".")[0].padStart(2, "0") : "00";
+
         return `${hours}:${minutes}:${seconds}`;
       }
-      
+
       return timeString;
     }
-    
+
     return timeString;
   };
-  
-  
- 
-  
+
   //validate data number
   const validateData = () => {
     const errors = [];
@@ -459,7 +458,7 @@ const TimekeepingComponent = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        <table className="list-table">
+        <table className="list-table table-timkeeping">
           <thead>
             <tr>
               <td>STT</td>
@@ -476,7 +475,7 @@ const TimekeepingComponent = () => {
               tồn tại.
             </p>
           ) : (
-            <tbody>
+            <tbody className="scrollbar" id="style-15">
               {checksInOut.length > 0 &&
                 checksInOut[0].result.map((employee, index) => (
                   <tr key={employee.employeeId}>
@@ -724,7 +723,7 @@ const TimekeepingComponent = () => {
             onOk={handleSave}
             onCancel={handleCancelDetailShift}
           >
-            <div className="modal-detail-shift">
+            <div className="modal-detail-shift ">
               <div className="modal-head">
                 <div className="text-head">
                   <p>Chi tiết công việc trong ngày</p>

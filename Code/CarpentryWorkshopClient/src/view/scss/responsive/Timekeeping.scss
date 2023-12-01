@@ -1,0 +1,47 @@
+@media (min-width: 768px) and (max-width: 1536px) {
+  .ListWork {
+    svg {
+      width: 25px !important;
+      height: 25px !important;
+    }
+  }
+  .list-table td .enter p {
+    font-size: 18px !important;
+  }
+  .table-timkeeping tbody {
+    max-height: 230px !important;
+  }
+  .ant-picker-input {
+    input {
+      font-size: 18px !important;
+    }
+  }
+  .modal-edit-dd {
+    width: 800px !important;
+  }
+  .modal-detail-shift .modal-head .text-head p {
+    font-size: 35px !important;
+  }
+  .modal-detail-shift {
+    width: 700px !important;
+  }
+  .body-edit p {
+    font-size: 18px !important;
+  }
+  .body-edit {
+    gap: 15px !important;
+  }
+  .footer-modal .edit,
+  .footer-modal .back {
+    font-size: 18px !important;
+  }
+  .body-edit .item-modal Input {
+    height: 49px !important;
+  }
+  .modal-detail-shift {
+    gap: 15px !important;
+  }
+  .footer-modal {
+    padding: 13px !important;
+  }
+}
