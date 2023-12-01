@@ -44,6 +44,8 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<HistoryChangeCheckInOut> HistoryChangeCheckInOuts { get; set; } = null!;
         public virtual DbSet<HistoryChangeShiftType> HistoryChangeShiftTypes { get; set; } = null!;
         public virtual DbSet<HistoryChangeTeam> HistoryChangeTeams { get; set; } = null!;
+        public virtual DbSet<Holiday> Holidays { get; set; } = null!;
+        public virtual DbSet<HolidaysDetail> HolidaysDetails { get; set; } = null!;
         public virtual DbSet<HourWorkTeam> HourWorkTeams { get; set; } = null!;
         public virtual DbSet<HoursWorkDay> HoursWorkDays { get; set; } = null!;
         public virtual DbSet<Page> Pages { get; set; } = null!;
@@ -93,6 +95,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.AdvancesSalaries)
                     .HasForeignKey(d => d.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_AdvancesSalary_Employees");
             });
 
@@ -602,6 +605,26 @@ namespace CarpentryWorkshopAPI.Models
                     .HasConstraintName("FK_HistoryChangeTeams_Teams");
             });
 
+            modelBuilder.Entity<Holiday>(entity =>
+            {
+                entity.Property(e => e.HolidayName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<HolidaysDetail>(entity =>
+            {
+                entity.HasKey(e => e.HolidayDetailId);
+
+                entity.ToTable("HolidaysDetail");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Holiday)
+                    .WithMany(p => p.HolidaysDetails)
+                    .HasForeignKey(d => d.HolidayId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_HolidaysDetail_Holidays");
+            });
+
             modelBuilder.Entity<HourWorkTeam>(entity =>
             {
                 entity.ToTable("HourWorkTeam");
@@ -1014,6 +1037,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.WorkplaceFines)
                     .HasForeignKey(d => d.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_WorkplaceFines_Employees");
             });
 
