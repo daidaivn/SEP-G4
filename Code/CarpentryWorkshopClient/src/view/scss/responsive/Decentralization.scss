@@ -1,0 +1,25 @@
+@media (min-width: 768px) and (max-width: 1536px) {
+  .list-input-search {
+    padding: 18px !important;
+  }
+  .table-Decent thead tr td {
+    font-size: 16px !important;
+    p {
+      font-size: 16px !important;
+    }
+  }
+  tbody tr td {
+    font-size: 16px !important;
+  }
+  .table-Decent thead tr td:nth-child(1),
+  .tbody-decent tbody tr td:nth-child(1) {
+    flex-basis: 100px !important;
+  }
+  .tbody-decent tbody tr {
+    padding: 15px 25px 15px 12px !important;
+  }
+  .tbody-decent tbody {
+    padding: 0 5px !important;
+    max-height: 215px !important;
+  }
+}

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
+import "../scss/responsive/Group.scss";
 import { Switch, Form, Input, Select, Modal, Space } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -30,7 +31,7 @@ import {
   ChangeTeamModule,
   ChangeNameTeamModal,
   ListTableGroup,
-  ListSearchAndFilter
+  ListSearchAndFilter,
 } from "./componentGroups";
 const GroupComponent = () => {
   const [roles, setRoles] = useState([]);
@@ -56,16 +57,15 @@ const GroupComponent = () => {
   const [inputSearch, setInputSearch] = useState([]);
   const [teamName, setTeamName] = useState("");
   const userEmployeeID =
-  localStorage.getItem("userEmployeeID") ||
-  sessionStorage.getItem("userEmployeeID");
+    localStorage.getItem("userEmployeeID") ||
+    sessionStorage.getItem("userEmployeeID");
 
-  console.log('userEmployeeID',userEmployeeID);
-  const log = () =>{
-    console.log('leader',selectedChangeid);
-    console.log('Subleader',selectedChangeid1);
-    console.log('TeamName',newTeamName);
-    
-  }
+  console.log("userEmployeeID", userEmployeeID);
+  const log = () => {
+    console.log("leader", selectedChangeid);
+    console.log("Subleader", selectedChangeid1);
+    console.log("TeamName", newTeamName);
+  };
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
   };
@@ -421,8 +421,8 @@ const GroupComponent = () => {
       };
     }
   });
-  console.log('getStaffsNoTeam',getStaffsNoTeam);
-  
+  console.log("getStaffsNoTeam", getStaffsNoTeam);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -440,7 +440,10 @@ const GroupComponent = () => {
           </div>
           <ListUserHeader />
         </div>
-        <ListSearchAndFilter searchForData={searchForData} showModalGroup={showModalGroup} />
+        <ListSearchAndFilter
+          searchForData={searchForData}
+          showModalGroup={showModalGroup}
+        />
 
         <ListTableGroup roles={roles} handleDetailGroup={handleDetailGroup} />
 

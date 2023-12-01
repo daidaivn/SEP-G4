@@ -3,6 +3,7 @@ import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/DependentPerson.scss";
 import "../scss/fonts.scss";
+import "../scss/responsive/Dependent.scss";
 import { Switch, Form } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -90,7 +91,7 @@ function DependentPerson() {
       new Promise((resolve) => {
         GetDependentPeopleById(value)
           .then((data) => {
-            showModalDependent()
+            showModalDependent();
             resolve(data);
             const {
               dependentId,
@@ -138,14 +139,13 @@ function DependentPerson() {
         )
           .then((data) => {
             handleSave();
-            fetchDepartmentById(dependentId)
-            fetchData()
-            resolve(data)
+            fetchDepartmentById(dependentId);
+            fetchData();
+            resolve(data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
           });
-
       }),
       {
         pending: "Đang tải dữ liệu",
@@ -341,9 +341,9 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
@@ -400,9 +400,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -538,209 +538,217 @@ function DependentPerson() {
           )}
         </table>
         {isEditing ? (
-          <Modal
-            className="modal-dependent"
-            open={isModalOpenDependent}
-            on
-            Ok={handleOkDependent}
-            onCancel={handleCancelDependent}
-            width={566}
-          >
-            <div className="modal-head">
-              {" "}
-              <h3>Thay đổi thông tin người phụ thuộc</h3>
-            </div>
-            <div className="modal-body modal-body-dependent">
-              <div className="name-person-dependent">
-                <h3>{guardian}</h3>
+          <div className="modal-dependent-all">
+            {" "}
+            <Modal
+              className="modal-dependent"
+              open={isModalOpenDependent}
+              on
+              Ok={handleOkDependent}
+              onCancel={handleCancelDependent}
+              width={566}
+            >
+              <div className="modal-head">
+                {" "}
+                <h3>Thay đổi thông tin người phụ thuộc</h3>
               </div>
+              <div className="modal-body modal-body-dependent">
+                <div className="name-person-dependent">
+                  <h3>{guardian}</h3>
+                </div>
 
-              <div className="info-detail-dependent">
-                <Row>
-                  <Col span={24}>
-                    <table className="table-info-detail">
-                      <tbody>
-                        <tr>
-                          <th className="text">Người giám hộ:</th>
-                          <td className="input-text">
-                            <select
-                              name="employeeId"
-                              id="employeeId"
-                              className="select"
-                              onChange={(e) => setEmployeeId(e.target.value)}
-                              value={employeeId}
-                            >
-                              {employees.map((employee) => (
-                                <option
-                                  key={employee.employeeID}
-                                  value={employee.employeeID}
-                                >
-                                  {employee.fullName}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Mối quan hệ:</th>
-                          <td className="input-text">
-                            <select
-                              name="Relationship"
-                              id="Relationship"
-                              className="select"
-                              onChange={(e) => setRelationship(e.target.value)}
-                              value={Relationship}
-                            >
-                              {!Relationship && (
-                                <option value="" disabled>
-                                  Chọn quan hệ
-                                </option>
-                              )}
-                              {relationshipsType.map((type) => (
-                                <option
-                                  key={type.relationshipId}
-                                  value={type.relationshipId}
-                                >
-                                  {type.relationshipName}
-                                </option>
-                              ))}
-                              {Relationship && (
-                                <option value="">Bỏ chọn</option>
-                              )}
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Mã định danh:</th>
-                          <td className="input-text">
-                            <Input
-                              placeholder="Basic usage"
-                              value={Identifier}
-                              onChange={(e) => setIdentifier(e.target.value)}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Ngày sinh:</th>
-                          <td className="input-text">
-                            <Input
-                              type="date"
-                              placeholder="yyyy-MM-dd"
-                              value={convertDateFormat(date)}
-                              onChange={(e) =>
-                                setDate(convertDateFormat(e.target.value))
-                              }
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Trạng thái:</th>
-                          <td className="input-text">
-                            <Form.Item valuePropName={status}>
-                              <Switch
-                                checked={isChecked}
-                                onChange={handleSwitchChange}
+                <div className="info-detail-dependent">
+                  <Row>
+                    <Col span={24}>
+                      <table className="table-info-detail">
+                        <tbody>
+                          <tr>
+                            <th className="text">Người giám hộ:</th>
+                            <td className="input-text">
+                              <select
+                                name="employeeId"
+                                id="employeeId"
+                                className="select"
+                                onChange={(e) => setEmployeeId(e.target.value)}
+                                value={employeeId}
+                              >
+                                {employees.map((employee) => (
+                                  <option
+                                    key={employee.employeeID}
+                                    value={employee.employeeID}
+                                  >
+                                    {employee.fullName}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Mối quan hệ:</th>
+                            <td className="input-text">
+                              <select
+                                name="Relationship"
+                                id="Relationship"
+                                className="select"
+                                onChange={(e) =>
+                                  setRelationship(e.target.value)
+                                }
+                                value={Relationship}
+                              >
+                                {!Relationship && (
+                                  <option value="" disabled>
+                                    Chọn quan hệ
+                                  </option>
+                                )}
+                                {relationshipsType.map((type) => (
+                                  <option
+                                    key={type.relationshipId}
+                                    value={type.relationshipId}
+                                  >
+                                    {type.relationshipName}
+                                  </option>
+                                ))}
+                                {Relationship && (
+                                  <option value="">Bỏ chọn</option>
+                                )}
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Mã định danh:</th>
+                            <td className="input-text">
+                              <Input
+                                placeholder="Basic usage"
+                                value={Identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
                               />
-                            </Form.Item>
-                            Còn phụ thuộc
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </Col>
-                </Row>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Ngày sinh:</th>
+                            <td className="input-text">
+                              <Input
+                                type="date"
+                                placeholder="yyyy-MM-dd"
+                                value={convertDateFormat(date)}
+                                onChange={(e) =>
+                                  setDate(convertDateFormat(e.target.value))
+                                }
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Trạng thái:</th>
+                            <td className="input-text">
+                              <Form.Item valuePropName={status}>
+                                <Switch
+                                  checked={isChecked}
+                                  onChange={handleSwitchChange}
+                                />
+                              </Form.Item>
+                              Còn phụ thuộc
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Col>
+                  </Row>
+                </div>
               </div>
-            </div>
-            <div className="modal-footer modal-footer-dependent ">
-              <button className="btn-cancel" onClick={handleCancelDependent}>
-                Hủy bỏ
-              </button>
-              <button className="btn-save" onClick={update}>
-                Lưu
-              </button>
-            </div>
-          </Modal>
+              <div className="modal-footer modal-footer-dependent ">
+                <button className="btn-cancel" onClick={handleCancelDependent}>
+                  Hủy bỏ
+                </button>
+                <button className="btn-save" onClick={update}>
+                  Lưu
+                </button>
+              </div>
+            </Modal>
+          </div>
         ) : (
-          <Modal
-            className="modal-dependent"
-            open={isModalOpenDependent}
-            on
-            Ok={handleOkDependent}
-            onCancel={handleCancelDependent}
-            width={566}
-          >
-            <div className="modal-head">
-              {" "}
-              <h3>Thông tin người phụ thuộc</h3>
-            </div>
-            <div className="modal-body modal-body-dependent">
-              <div className="name-person-dependent">
-                <h3>{guardian}</h3>
+          <div className="modal-dependent-all">
+            {" "}
+            <Modal
+              className="modal-dependent"
+              open={isModalOpenDependent}
+              on
+              Ok={handleOkDependent}
+              onCancel={handleCancelDependent}
+              width={566}
+            >
+              <div className="modal-head">
+                {" "}
+                <h3>Thông tin người phụ thuộc</h3>
               </div>
+              <div className="modal-body modal-body-dependent">
+                <div className="name-person-dependent">
+                  <h3>{guardian}</h3>
+                </div>
 
-              <div className="info-detail-dependent">
-                <Row>
-                  <Col span={24}>
-                    <table className="table-info-detail">
-                      <tbody>
-                        <tr>
-                          <th className="text">Người giám hộ:</th>
-                          <td className="input-text">
-                            <Input
-                              placeholder="Người phục thuộc"
-                              value={employeesName}
-                            ></Input>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Mối quan hệ:</th>
-                          <td className="input-text">
-                            <Input
-                              placeholder="Mối quan hệ"
-                              value={relationshipName}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Mã định danh:</th>
-                          <td className="input-text">
-                            <Input
-                              placeholder="Mã định danh"
-                              value={Identifier}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Ngày sinh:</th>
-                          <td className="input-text">
-                            <Input placeholder="Ngày sinh" value={date} />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th className="text">Trạng thái:</th>
-                          <td className="input-text">
-                            {" "}
-                            <Form.Item valuePropName={status}>
-                              <Switch checked={status} />
-                            </Form.Item>
-                            Phụ thuộc
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </Col>
-                </Row>
+                <div className="info-detail-dependent">
+                  <Row>
+                    <Col span={24}>
+                      <table className="table-info-detail">
+                        <tbody>
+                          <tr>
+                            <th className="text">Người giám hộ:</th>
+                            <td className="input-text">
+                              <Input
+                                placeholder="Người phục thuộc"
+                                value={employeesName}
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Mối quan hệ:</th>
+                            <td className="input-text">
+                              <Input
+                                placeholder="Mối quan hệ"
+                                value={relationshipName}
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Mã định danh:</th>
+                            <td className="input-text">
+                              <Input
+                                placeholder="Mã định danh"
+                                value={Identifier}
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Ngày sinh:</th>
+                            <td className="input-text">
+                              <Input placeholder="Ngày sinh" value={date} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th className="text">Trạng thái:</th>
+                            <td className="input-text">
+                              {" "}
+                              <Form.Item valuePropName={status}>
+                                <Switch checked={status} />
+                              </Form.Item>
+                              Phụ thuộc
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Col>
+                  </Row>
+                </div>
               </div>
-            </div>
-            <div className="modal-footer modal-footer-dependent">
-              <button className="btn-cancel" onClick={handleCancelDependent}>
-                Hủy bỏ
-              </button>
-              <button className="btn-edit" onClick={fetchRelationshipsType}>
-                Chỉnh sửa
-              </button>
-            </div>
-          </Modal>
+              <div className="modal-footer modal-footer-dependent">
+                <button className="btn-cancel" onClick={handleCancelDependent}>
+                  Hủy bỏ
+                </button>
+                <button className="btn-edit" onClick={fetchRelationshipsType}>
+                  Chỉnh sửa
+                </button>
+              </div>
+            </Modal>
+          </div>
         )}
       </div>
     </>
