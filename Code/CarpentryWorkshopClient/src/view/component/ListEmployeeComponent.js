@@ -746,7 +746,7 @@ function ListEmployeeComponent() {
           error: "Lỗi tải dữ liệu",
         });
       }
-    }, 1000);
+    }, 1500);
   };
   
   const handlelDetail = (value) => {

@@ -1,7 +1,6 @@
 import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
-import "../scss/responsive/Calendar.scss";
 import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
@@ -41,7 +40,6 @@ const CalendarComponent = () => {
   const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
-  const [saveWork, setSaveWork] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
   const [iText, setIText] = useState("");
 
@@ -257,27 +255,31 @@ const CalendarComponent = () => {
   };
 
   const FetchDataForSchedule = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear, iText)
-          .then((data) => {
-            setDataForSchedule(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi lịch làm việc ",
+    let isDataReceived = false;
+    const fetchDataPromise = new Promise((resolve) => {
+      GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear, iText)
+        .then((data) => {
+          setDataForSchedule(data);
+          isDataReceived = true;
+          resolve(data);
+        })
+        .catch((error) => {
+          resolve(Promise.reject(error));
+        });
+    });
+    setTimeout(() => {
+      if (!isDataReceived) {
+        toast.promise(fetchDataPromise, {
+          pending: "Đang tải dữ liệu",
+          error: "Lỗi lịch làm việc",
+        });
       }
-    );
+    }, 1000);
   };
 
   useEffect(() => {
     FetchDataForSchedule();
-  }, [iText, selectedWeek]);
+  }, [iText, selectedWeek, selectedYear]);
   useEffect(() => {
     fetchAllUnitCosts();
     fetchAllWorkAreas();
@@ -349,7 +351,6 @@ const CalendarComponent = () => {
           fetchWorkDetailById={fetchWorkDetailById}
           workidDetail={workidDetail}
           FetchDataForSchedule={FetchDataForSchedule}
-          setSaveWork={setSaveWork}
         />
 
         <ModalGroup

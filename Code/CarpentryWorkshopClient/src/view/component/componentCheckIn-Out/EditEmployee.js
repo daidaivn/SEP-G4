@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Modal, TimePicker } from "antd";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 const EditEmployee = ({
   isModalOpenListEmployee,
   handleSave,
@@ -37,7 +38,7 @@ const EditEmployee = ({
         }),
       {
         pending: "Đang xử lý",
-        success: "Cập nhật thoi gian thành công",
+        success: "Thành công",
       }
     );
   };
@@ -50,7 +51,7 @@ const EditEmployee = ({
         onOk={handleSave}
         onCancel={handleCancelListEmployee}
       >
-        <div className="modal-add-roleyee-employee modal-shift-all modal-edit-dd">
+        <div className="modal-add-roleyee-employee modal-shift-all">
           <div className="modal-head-employee modal-shift-head ">
             <h3>Chỉnh sửa điểm danh</h3>
             <svg
@@ -83,11 +84,15 @@ const EditEmployee = ({
                     <td>
                       <TimePicker
                         disableClock
+                        defaultValue={dayjs(
+                          convertTimeToInputFormat(employee.timeIn),
+                          "HH:mm"
+                        )}
                         format="HH:mm"
                         onChange={(newTime) =>
                           handleTimeInputChange(
-                            newTime,
                             1,
+                            newTime,
                             employee.checkInOutId
                           )
                         }
@@ -96,11 +101,15 @@ const EditEmployee = ({
                     <td>
                       <TimePicker
                         disableClock
+                        defaultValue={dayjs(
+                          convertTimeToInputFormat(employee.timeout),
+                          "HH:mm"
+                        )}
                         format="HH:mm"
                         onChange={(newTime) =>
                           handleTimeInputChange(
                             newTime,
-                            2,
+                            1,
                             employee.checkInOutId
                           )
                         }

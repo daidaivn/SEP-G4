@@ -1,11 +1,11 @@
 import { Input, Modal, Select } from "antd";
 import React, { useState, useEffect, useMemo } from "react";
-import { toast } from "react-toastify";
 
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import "../scss/TimekeepingComponent.scss";
 import "../scss/fonts.scss";
 import "../scss/index.scss";
-import "../scss/responsive/Timekeeping.scss";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import "../scss/DepartmentComponent.scss";
@@ -59,7 +59,7 @@ const TimekeepingComponent = () => {
         }),
       {
         pending: "Đang xử lý",
-        success: "Cập nhật nhân viên thành công",
+        success: "Thanh cong",
       }
     );
   };
@@ -110,19 +110,22 @@ const TimekeepingComponent = () => {
     }
     return dobstring;
   };
+  dayjs.locale("vn");
   //Convert time
   const convertTimeToInputFormat = (timeString) => {
     if (timeString) {
       const parts = timeString.split(":");
 
       if (parts.length >= 2 && parts.length <= 3) {
-        const hours = parts[0].padStart(2, "0");
-        const minutes = parts[1].padStart(2, "0");
+        const hours = parts[0];
+        const minutes = parts[1];
 
         // If seconds are present, extract and remove fractional seconds
-        const seconds =
-          parts.length === 3 ? parts[2].split(".")[0].padStart(2, "0") : "00";
+        const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
+        const parsedTime = dayjs(`${hours}:${minutes}:${seconds}`, "HH:mm");
 
+        // Format the parsed time as desired
+        const formattedTime = parsedTime.format("HH:mm");
         return `${hours}:${minutes}:${seconds}`;
       }
 
@@ -156,22 +159,25 @@ const TimekeepingComponent = () => {
   };
 
   const fetchData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllCheckInOut(userEmployeeID)
-          .then((data) => {
-            setChecksInOut(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang xử lý",
-        error: "Lỗi dữ liệu",
+    let isDataReceived = false;
+    const fetchDataPromise = new Promise((resolve) => {
+      fetchAllCheckInOut(userEmployeeID)
+        .then((data) => {
+          setChecksInOut(data);
+          resolve(data);
+        })
+        .catch((error) => {
+          resolve(Promise.reject(error));
+        });
+    });
+    setTimeout(() => {
+      if (!isDataReceived) {
+        toast.promise(fetchDataPromise, {
+          pending: "Đang tải dữ liệu",
+          error: "Lỗi tải dữ liệu",
+        });
       }
-    );
+    }, 1000);
   };
   console.log("userEmployeeID:", userEmployeeID);
 
@@ -458,7 +464,7 @@ const TimekeepingComponent = () => {
           <h2>Phân quyền</h2>
           <span>Phân chia quyền truy cập theo chức vụ</span>
         </div>
-        <table className="list-table table-timkeeping">
+        <table className="list-table">
           <thead>
             <tr>
               <td>STT</td>
@@ -475,7 +481,7 @@ const TimekeepingComponent = () => {
               tồn tại.
             </p>
           ) : (
-            <tbody className="scrollbar" id="style-15">
+            <tbody>
               {checksInOut.length > 0 &&
                 checksInOut[0].result.map((employee, index) => (
                   <tr key={employee.employeeId}>
@@ -723,7 +729,7 @@ const TimekeepingComponent = () => {
             onOk={handleSave}
             onCancel={handleCancelDetailShift}
           >
-            <div className="modal-detail-shift ">
+            <div className="modal-detail-shift">
               <div className="modal-head">
                 <div className="text-head">
                   <p>Chi tiết công việc trong ngày</p>

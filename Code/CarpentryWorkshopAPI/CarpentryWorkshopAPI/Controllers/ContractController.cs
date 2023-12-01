@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.IServices.ILink;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,12 @@ namespace CarpentryWorkshopAPI.Controllers
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public ContractController(SEPG4CCMSContext context, IMapper mapper)
+        private readonly ILinkService _linkService;
+        public ContractController(SEPG4CCMSContext context, IMapper mapper, ILinkService linkService)
         {
             _context = context;
             _mapper = mapper;
+            _linkService = linkService;
         }
         [HttpGet]
         public IActionResult GetEmployeeContract(int eid)
@@ -114,22 +117,38 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CreateContract([FromBody] CreateContractDTO createContractDTO, int employeeid)
+        public async Task<IActionResult> CreateContract([FromBody] CreateContractDTO createContractDTO, int employeeid)
         {
             try
             {
                 var emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
-                var newct = _mapper.Map<Models.Contract>(createContractDTO);
-                if (newct == null)
+                var newct = new Models.Contract();
+                if (await _context.Contracts.AnyAsync(x => x.ContractCode.ToLower().Equals(createContractDTO.ContractCode.ToLower())))
                 {
-                    return NotFound();
+                    return StatusCode(409, "Mã hợp đồng đã tồn tại");
                 }
-                newct.EmployeeId = emp.EmployeeId;
-                newct.Status = true;
+                if (await _context.Contracts.AnyAsync(x => x.LinkDoc.ToLower().Equals(createContractDTO.LinkDoc.ToLower()))) 
+                {
+                    return StatusCode(409, "Đường dẫn hợp đồng đã tồn tại");
+                }
+                if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
+                {
+                    return StatusCode(409, "Đường dẫn chưa được triển khai");
+                }
+                else
+                {
+                    newct = _mapper.Map<Models.Contract>(createContractDTO);
+                    if (newct == null)
+                    {
+                        return NotFound();
+                    }
+                    newct.EmployeeId = emp.EmployeeId;
+                    newct.Status = true;
+                    _context.Contracts.Add(newct);
+                    _context.SaveChanges();
+                }
                 emp.Status = true;
                 _context.Employees.Update(emp);
-                _context.Contracts.Add(newct);
-                _context.SaveChanges();
                 EmployeesStatusHistory ehistory = new EmployeesStatusHistory
                 {
                     EmployeeId = emp.EmployeeId,
@@ -154,16 +173,32 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPut] 
-        public IActionResult UpdateContract([FromBody] CreateContractDTO createContractDTO)
+        public async Task<IActionResult> UpdateContract([FromBody] CreateContractDTO createContractDTO)
         {
             try
             {
-                var updatect = _mapper.Map<Models.Contract>(createContractDTO);
-                if (updatect == null)
+                var updatect = new Models.Contract();
+                if (await _context.Contracts.AnyAsync(x => x.ContractId != createContractDTO.ContractId && x.ContractCode.ToLower().Equals(createContractDTO.ContractCode.ToLower())))
                 {
-                    return NotFound();
+                    return StatusCode(409, "Mã hợp đồng đã tồn tại");
                 }
-                _context.Contracts.Update(updatect);
+                if (await _context.Contracts.AnyAsync(x => x.ContractId != createContractDTO.ContractId && x.LinkDoc.ToLower().Equals(createContractDTO.LinkDoc.ToLower())))
+                {
+                    return StatusCode(409, "Đường dẫn hợp đồng đã tồn tại");
+                }
+                if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
+                {
+                    return StatusCode(409, "Đường dẫn chưa được triển khai");
+                }
+                else
+                {
+                    updatect = _mapper.Map<Models.Contract>(createContractDTO);
+                    if (updatect == null)
+                    {
+                        return NotFound();
+                    }
+                    _context.Contracts.Update(updatect);
+                }
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
                     ContractId= updatect.ContractId,
