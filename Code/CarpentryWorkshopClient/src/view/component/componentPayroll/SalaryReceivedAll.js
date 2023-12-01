@@ -1,26 +1,26 @@
 import React from "react";
 import { Modal } from "antd";
-const AllowanceAll = ({
-  isModalOpenAllowanceAll,
-  handleOkAllowanceAll,
-  handleCancelAllowanceAll,
+const SalaryReceived = ({
+  isModalOpenSalaryReceived,
+  handleOkSalaryReceived,
+  handleCancelSalaryReceived,
 }) => {
   return (
     <>
-      {/* Modal hiển thị tất cả danh sách phụ cấp */}
+      {/* Modal hiển thị tất cả danh sách lương thực nhận */}
       <div className="AllowanceAll">
         <Modal
           className="modal-AllowanceAll"
-          open={isModalOpenAllowanceAll}
-          onOk={handleOkAllowanceAll}
-          onCancel={handleCancelAllowanceAll}
+          open={isModalOpenSalaryReceived}
+          onOk={handleOkSalaryReceived}
+          onCancel={handleCancelSalaryReceived}
         >
-          <div className="modal-allowance-all">
+          <div className="modal-allowance-all modal-salary-revice">
             <div className="head-allowance-all">
               <div className="text-head">
-                <p>Chi tiết danh sách phụ cấp</p>
+                <p>Chi tiết danh sách lương thực nhận</p>
                 <svg
-                  onClick={handleCancelAllowanceAll}
+                  onClick={handleCancelSalaryReceived}
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
                   height="30"
@@ -41,10 +41,14 @@ const AllowanceAll = ({
                 <tr>
                   <div className="child1">MNV</div>
                   <div className="item-child">Họ và tên</div>
-                  <div className="item-child">Ăn sáng</div>
-                  <div className="item-child">Trang phục</div>
-                  <div className="item-child">Xăng xe</div>
-                  <div className="item-child">Tổng</div>
+                  <div className="item-child">Lương chính</div>
+                  <div className="item-child">Khoản giảm trừ</div>
+                  <div className="item-child">Phụ cấp</div>
+                  <div className="item-child">Hiếu hỉ</div>
+                  <div className="item-child">Thuế TNCN</div>
+                  <div className="item-child">Thưởng</div>
+                  <div className="item-child">Ứng</div>
+                  <div className="item-child">Thực nhận</div>
                 </tr>
               </thead>
               <div className="tbody scrollbar" id="style-15">
@@ -54,12 +58,8 @@ const AllowanceAll = ({
                   <div className="item-child-body">800.000 VNĐ</div>
                   <div className="item-child-body">200.000 VNĐ</div>
                   <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">200.000 VNĐ</div>
                   <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">1.700.000 VNĐ</div>
@@ -70,12 +70,8 @@ const AllowanceAll = ({
                   <div className="item-child-body">800.000 VNĐ</div>
                   <div className="item-child-body">200.000 VNĐ</div>
                   <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">200.000 VNĐ</div>
                   <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">1.700.000 VNĐ</div>
@@ -86,12 +82,44 @@ const AllowanceAll = ({
                   <div className="item-child-body">800.000 VNĐ</div>
                   <div className="item-child-body">200.000 VNĐ</div>
                   <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">1.700.000 VNĐ</div>
                 </div>
                 <div className="item-body">
                   <div className="item-first">01</div>
                   <div className="item-second">Nguyễn Văn An</div>
                   <div className="item-child-body">800.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">1.700.000 VNĐ</div>
+                </div>
+                <div className="item-body">
+                  <div className="item-first">01</div>
+                  <div className="item-second">Nguyễn Văn An</div>
+                  <div className="item-child-body">800.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">1.700.000 VNĐ</div>
+                </div>
+                <div className="item-body">
+                  <div className="item-first">01</div>
+                  <div className="item-second">Nguyễn Văn An</div>
+                  <div className="item-child-body">800.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
+                  <div className="item-child-body">200.000 VNĐ</div>
+                  <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">200.000 VNĐ</div>
                   <div className="item-child-body">700.000 VNĐ</div>
                   <div className="item-child-body">1.700.000 VNĐ</div>
@@ -104,4 +132,4 @@ const AllowanceAll = ({
     </>
   );
 };
-export default AllowanceAll;
+export default SalaryReceived;
