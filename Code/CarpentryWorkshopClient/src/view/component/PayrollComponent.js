@@ -33,9 +33,7 @@ import {
   CreateAndUpdateSpecialOccasion,
   CreateAndUpdateCompanyRerward,
 } from "../../sevices/PayrollSevice";
-import {
-  fetchAllEmplyee,
-} from "../../sevices/EmployeeService";
+import { fetchAllEmplyee } from "../../sevices/EmployeeService";
 const PayrollComponent = () => {
   const [salaries, setSalaries] = useState([]);
   const [reward, setReward] = useState([]);
@@ -47,7 +45,7 @@ const PayrollComponent = () => {
   const [date, setDate] = useState(new Date().getFullYear());
 
   const monthOptions = getMonthsInYear(date);
-  const currentMonth = (new Date().getMonth()) + 1;
+  const currentMonth = new Date().getMonth() + 1;
   const [months, setMonths] = useState(currentMonth.toString());
   const [iText, setIText] = useState("");
   const [dataAllowance, setDataAllowance] = useState([]);
@@ -61,7 +59,6 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
-
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
@@ -161,10 +158,11 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng công ty
-  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
-    useState(false);
+  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] = useState(
+    false
+  );
   const dataConver = months + "-" + date;
-  console.log('date', dataConver);
+  console.log("date", dataConver);
   const featchDataReward = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -183,7 +181,7 @@ const PayrollComponent = () => {
         error: "Lỗi tải dữ liệu",
       }
     );
-  }
+  };
   const showModalRewardCompany = () => {
     featchDataReward();
     setIsModalOpenRewardCompany(true);
@@ -214,15 +212,15 @@ const PayrollComponent = () => {
     );
   };
   //modal Thưởng cá nhân
-  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
-    useState(false);
+  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
+    false
+  );
   const showModalRewardPersonal = () => {
     fetchEmployeeData();
     setIsModalOpenRewardPersonal(true);
-    console.log('employee',employees);
+    console.log("employee", employees);
   };
-  
-  
+
   const resetPersonDetail = () => {
     setBonusAmount("");
     setBonusReason("");
@@ -235,7 +233,6 @@ const PayrollComponent = () => {
   const showModalRewardAll = () => {
     setIsModalOpenRewardAll(true);
   };
-  
 
   //modal Các loại thưởng
   const [isModalOpenTypeReward, setIsModalOpenTypeReward] = useState(false);
@@ -248,8 +245,8 @@ const PayrollComponent = () => {
   const handleCancelTypeReward = () => {
     setIsModalOpenTypeReward(false);
   };
-  console.log('data1',dataActualSalary);
-  
+  console.log("data1", dataActualSalary);
+
   //modal Sửa tên thưởng
   const [isModalOpenEditReward, setIsModalOpenEditReward] = useState(false);
   const showModalEditReward = () => {
@@ -262,20 +259,31 @@ const PayrollComponent = () => {
     setIsModalOpenEditReward(false);
   };
 
+  //modal hiển thị tất cả danh sách phụ cấp
+  const [isModalOpenAllowanceAll, setIsModalOpenAllowanceAll] = useState(false);
+  const showModalAllowanceAll = () => {
+    setIsModalOpenAllowanceAll(true);
+  };
+  const handleOkAllowanceAll = () => {
+    setIsModalOpenAllowanceAll(false);
+  };
+  const handleCancelAllowanceAll = () => {
+    setIsModalOpenAllowanceAll(false);
+  };
+
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
   const showModalHoliday = () => {
     fetchEmployeeData();
     setIsModalOpenHoliday(true);
   };
-  
 
-  const fetchEmployeeActualSalaryDetail= (employeeId) => {
+  const fetchEmployeeActualSalaryDetail = (employeeId) => {
     toast.promise(
       new Promise((resolve) => {
         GetEmployeeActualSalaryDetail(employeeId, months, date)
           .then((data) => {
-            showModalReward()
-            setActualSalary(data)
+            showModalReward();
+            setActualSalary(data);
             resolve(data);
           })
           .catch((error) => {
@@ -294,8 +302,8 @@ const PayrollComponent = () => {
       new Promise((resolve) => {
         GetEmployeeDeductionDetail(employeeId, months, date)
           .then((data) => {
-            showModalSubsidies()
-            setDataDeduction(data)
+            showModalSubsidies();
+            setDataDeduction(data);
             resolve(data);
           })
           .catch((error) => {
@@ -314,8 +322,8 @@ const PayrollComponent = () => {
       new Promise((resolve) => {
         GetEmployeeAllowanceDetail(employeeId, months, date)
           .then((data) => {
-            showModalAllowance()
-            setDataAllowance(data)
+            showModalAllowance();
+            setDataAllowance(data);
             resolve(data);
           })
           .catch((error) => {
@@ -330,21 +338,20 @@ const PayrollComponent = () => {
   };
 
   const fetData = () => {
-        fetchAllSalaries(iText, months, date)
-          .then((data) => {
-            setSalaries(data);
-            console.log("data", data);
-          })
-          .catch((error) => {
-            console.log('error',error);
-            
-          });
+    fetchAllSalaries(iText, months, date)
+      .then((data) => {
+        setSalaries(data);
+        console.log("data", data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
   console.log("Salary", salaries);
 
   useEffect(() => {
     fetData();
-  }, [iText,date, months]);
+  }, [iText, date, months]);
 
   return (
     <>
@@ -380,7 +387,7 @@ const PayrollComponent = () => {
           fetchEmployeeAllowanceDetail={fetchEmployeeAllowanceDetail}
           fetchEmployeeDeductionDetail={fetchEmployeeDeductionDetail}
           fetchEmployeeActualSalaryDetail={fetchEmployeeActualSalaryDetail}
-         
+          showModalAllowanceAll={showModalAllowanceAll}
         />
 
         <SubsidiesDetail
@@ -513,6 +520,101 @@ const PayrollComponent = () => {
           setDate={setDate}
           yearOptions={yearOptions}
         />
+
+        {/* Modal Sửa tên thưởng */}
+        <div className="AllowanceAll">
+          <Modal
+            className="modal-AllowanceAll"
+            open={isModalOpenAllowanceAll}
+            onOk={handleOkAllowanceAll}
+            onCancel={handleCancelAllowanceAll}
+          >
+            <div className="modal-allowance-all">
+              <div className="head-allowance-all">
+                <div className="text-head">
+                  <p>Chi tiết danh sách phụ cấp</p>
+                  <svg
+                    onClick={handleCancelAllowanceAll}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 30 30"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M30 2.30769L17.3077 15L30 27.6923L27.6923 30L15 17.3077L2.30769 30L0 27.6923L12.6923 15L0 2.30769L2.30769 0L15 12.6923L27.6923 0L30 2.30769Z"
+                      fill="white"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="body-allowance-all">
+                <thead>
+                  <tr>
+                    <div className="item-child">MNV</div>
+                    <div className="item-child">Họ và tên</div>
+                    <div className="item-child">Ăn sáng</div>
+                    <div className="item-child">Trang phục</div>
+                    <div className="item-child">Xăng xe</div>
+                    <div className="item-child">Tổng</div>
+                  </tr>
+                </thead>
+                <div className="tbody scrollbar" id="style-15">
+                  <div className="item-body">
+                    <div className="item-child-body">01</div>
+                    <div className="item-child-body">Nguyễn Văn An</div>
+                    <div className="item-child-body">800.000 VNĐ</div>
+                    <div className="item-child-body">200.000 VNĐ</div>
+                    <div className="item-child-body">700.000 VNĐ</div>
+                    <div className="item-child-body">1.700.000 VNĐ</div>
+                  </div>
+                  <div className="item-body">
+                    <div className="item-child-body">01</div>
+                    <div className="item-child-body">Nguyễn Văn An</div>
+                    <div className="item-child-body">800.000 VNĐ</div>
+                    <div className="item-child-body">200.000 VNĐ</div>
+                    <div className="item-child-body">700.000 VNĐ</div>
+                    <div className="item-child-body">1.700.000 VNĐ</div>
+                  </div>
+                  <div className="item-body">
+                    <div className="item-child-body">01</div>
+                    <div className="item-child-body">Nguyễn Văn An</div>
+                    <div className="item-child-body">800.000 VNĐ</div>
+                    <div className="item-child-body">200.000 VNĐ</div>
+                    <div className="item-child-body">700.000 VNĐ</div>
+                    <div className="item-child-body">1.700.000 VNĐ</div>
+                  </div>
+                  <div className="item-body">
+                    <div className="item-child-body">01</div>
+                    <div className="item-child-body">Nguyễn Văn An</div>
+                    <div className="item-child-body">800.000 VNĐ</div>
+                    <div className="item-child-body">200.000 VNĐ</div>
+                    <div className="item-child-body">700.000 VNĐ</div>
+                    <div className="item-child-body">1.700.000 VNĐ</div>
+                  </div>
+                  <div className="item-body">
+                    <div className="item-child-body">01</div>
+                    <div className="item-child-body">Nguyễn Văn An</div>
+                    <div className="item-child-body">800.000 VNĐ</div>
+                    <div className="item-child-body">200.000 VNĐ</div>
+                    <div className="item-child-body">700.000 VNĐ</div>
+                    <div className="item-child-body">1.700.000 VNĐ</div>
+                  </div>
+                  <div className="item-body">
+                    <div className="item-child-body">01</div>
+                    <div className="item-child-body">Nguyễn Văn An</div>
+                    <div className="item-child-body">800.000 VNĐ</div>
+                    <div className="item-child-body">200.000 VNĐ</div>
+                    <div className="item-child-body">700.000 VNĐ</div>
+                    <div className="item-child-body">1.700.000 VNĐ</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal>
+        </div>
       </div>
     </>
   );

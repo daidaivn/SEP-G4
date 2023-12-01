@@ -1,6 +1,7 @@
 import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
+import "../scss/responsive/Calendar.scss";
 import "../scss/CalendarComponent.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
@@ -83,15 +84,14 @@ const CalendarComponent = () => {
     sessionStorage.getItem("userEmployeeID");
   // Get the userPages string from localStorage or sessionStorage
   const userPagesString =
-    localStorage.getItem('userPages') || sessionStorage.getItem('userPages');
+    localStorage.getItem("userPages") || sessionStorage.getItem("userPages");
 
   const userPagesArray = JSON.parse(userPagesString);
 
-  if (Array.isArray(userPagesArray) && userPagesArray.includes('Calendar')) {
-    var calendarPageName = 'Calendar';
+  if (Array.isArray(userPagesArray) && userPagesArray.includes("Calendar")) {
+    var calendarPageName = "Calendar";
   }
-  console.log('calendarPageName',calendarPageName);
-  
+  console.log("calendarPageName", calendarPageName);
 
   const handleChangeUnitCostId = (value) => {
     setWorkDetailById({
@@ -149,7 +149,7 @@ const CalendarComponent = () => {
     setIsModalOpenDetailShift(true);
   };
 
-  const handleCancelDetailShift = () => { };
+  const handleCancelDetailShift = () => {};
 
   const handleEditWork = () => {
     if (workDetailById.status === "WorkNotStart") {
@@ -276,8 +276,8 @@ const CalendarComponent = () => {
   };
 
   useEffect(() => {
-      FetchDataForSchedule();
-  }, [iText,selectedWeek]);
+    FetchDataForSchedule();
+  }, [iText, selectedWeek]);
   useEffect(() => {
     fetchAllUnitCosts();
     fetchAllWorkAreas();
