@@ -196,8 +196,26 @@
     }
   }
   .modal-payroll {
-    width: 833px;
-    height: 700px !important;
+    width: 751px;
+    height: 660px !important;
+  }
+  .change-all .change-head {
+    font-size: 35px !important;
+  }
+  .change-all .item-change-body p {
+    font-size: 18px !important;
+  }
+  .change-all {
+    width: 600px !important;
+  }
+  .change-footer {
+    .cancel {
+      width: 199px !important;
+      padding: 15px 0px 16px 0px !important;
+    }
+    button {
+      font-size: 18px !important;
+    }
   }
   .modal-payroll .body-payroll .body-child1 {
     max-height: 380px;
