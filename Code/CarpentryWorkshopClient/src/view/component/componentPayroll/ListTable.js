@@ -11,6 +11,7 @@ const ListTable = ({
   fetchEmployeeActualSalaryDetail,
   showModalAllowanceAll,
   showModalDeductions,
+  showModalSalaryReceived,
 }) => {
   return (
     <table className="list-table ">
@@ -104,7 +105,7 @@ const ListTable = ({
           </td>
           <td>
             Lương thực nhận{" "}
-            <div className="detail-icon">
+            <div className="detail-icon" onClick={showModalSalaryReceived}>
               Chi tiết
               <svg
                 xmlns="http://www.w3.org/2000/svg"

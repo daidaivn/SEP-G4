@@ -496,28 +496,25 @@
           font-weight: 800;
           text-align: center;
         }
-        .item-child:nth-child(1) {
+        .child1 {
           display: flex;
           width: 92px;
           padding: 0px 29px;
           justify-content: center;
           align-items: center;
           gap: 10px;
+          color: #fff;
+          font-family: Noto Sans;
+          font-size: 20px;
+          font-weight: 800;
         }
-        .item-child:nth-child(2),
-        .item-child:nth-child(3),
-        .item-child:nth-child(4) {
+        .item-child {
           display: flex;
           justify-content: center;
           align-items: center;
           flex: 1 0 0;
         }
-        .item-child:nth-child(5),
-        .item-child:nth-child(6) {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex: 1 0 0;
+        .item-child:last-child {
           align-self: stretch;
         }
       }
@@ -543,7 +540,7 @@
         font-family: Noto Sans;
         font-size: 20px;
         font-weight: 400;
-        .item-child-body:nth-child(1) {
+        .item-first {
           display: flex;
           width: 92px;
           justify-content: center;
@@ -551,7 +548,7 @@
           gap: 10px;
           align-self: stretch;
         }
-        .item-child-body:nth-child(2) {
+        .item-second {
           display: flex;
           justify-content: center;
           align-items: center;
@@ -559,10 +556,7 @@
           flex: 1 0 0;
           align-self: stretch;
         }
-        .item-child-body:nth-child(3),
-        .item-child-body:nth-child(4),
-        .item-child-body:nth-child(5),
-        .item-child-body:nth-child(6) {
+        .item-child-body {
           display: flex;
           padding: 12px 0px;
           justify-content: center;
@@ -582,4 +576,26 @@
   position: absolute;
   top: 100px;
   right: 290px;
+}
+.item-child-edit:nth-child(1) {
+  display: flex;
+  width: 92px;
+  padding: 0px 29px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-child-edit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1 0 0;
+  color: #fff;
+  font-family: Noto Sans;
+  font-size: 20px;
+  font-weight: 800;
+}
+.modal-salary-revice .body-allowance-all {
+  padding: 20px 40px 20px 40px;
 }
