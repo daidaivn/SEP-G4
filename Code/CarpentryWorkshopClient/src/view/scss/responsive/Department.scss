@@ -1,0 +1,77 @@
+// Tablet
+@media (min-width: 768px) and (max-width: 1536px) {
+  .modal-add-department-all,
+  .detail-depart-all {
+    position: relative;
+  }
+  .modal-add-dp {
+    position: absolute;
+    top: 100px;
+    left: 300px;
+  }
+  .modal-detail-depart {
+    position: absolute;
+    top: 150px;
+    right: 500px;
+  }
+  .text-department {
+    font-size: 18px !important;
+  }
+  .modal-add-department {
+    width: 500px;
+  }
+  .info-add-department Input {
+    width: 70%;
+  }
+  .modal-body-department {
+    width: unset;
+  }
+  .modal-head {
+    height: 120px !important;
+    h3 {
+      padding-left: unset !important;
+    }
+  }
+  .box1-modal-group p {
+    font-size: 18px;
+  }
+  .modal-detail-group {
+    width: 900px !important;
+  }
+  .modal-group {
+    width: unset !important;
+    padding: 20px !important;
+
+    background: unset !important;
+  }
+  .modal-all-group {
+    width: unset !important;
+  }
+  .modal1-child p,
+  .modal3-child p {
+    font-size: 18px !important;
+  }
+  .modal-end-group {
+    padding: 20px 35px 0 35px;
+  }
+  .modal2 {
+    svg {
+      width: 30px !important;
+      height: 30px !important;
+    }
+  }
+  .modal-end-group .body-modal-end-group .modal1 {
+    padding: unset !important;
+  }
+  .modal-footer {
+    .btn-cancel,
+    .btn-edit,
+    .btn-save {
+      padding: 15px !important;
+      width: 190px !important;
+    }
+  }
+  .modal-footer {
+    padding: 20px 65px !important;
+  }
+}

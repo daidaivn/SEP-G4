@@ -40,7 +40,6 @@ const CalendarComponent = () => {
   const [isModalOpenDetailShift, setIsModalOpenDetailShift] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
-  const [saveWork, setSaveWork] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
   const [iText, setIText] = useState("");
 
@@ -83,15 +82,14 @@ const CalendarComponent = () => {
     sessionStorage.getItem("userEmployeeID");
   // Get the userPages string from localStorage or sessionStorage
   const userPagesString =
-    localStorage.getItem('userPages') || sessionStorage.getItem('userPages');
+    localStorage.getItem("userPages") || sessionStorage.getItem("userPages");
 
   const userPagesArray = JSON.parse(userPagesString);
 
-  if (Array.isArray(userPagesArray) && userPagesArray.includes('Calendar')) {
-    var calendarPageName = 'Calendar';
+  if (Array.isArray(userPagesArray) && userPagesArray.includes("Calendar")) {
+    var calendarPageName = "Calendar";
   }
-  console.log('calendarPageName',calendarPageName);
-  
+  console.log("calendarPageName", calendarPageName);
 
   const handleChangeUnitCostId = (value) => {
     setWorkDetailById({
@@ -149,7 +147,7 @@ const CalendarComponent = () => {
     setIsModalOpenDetailShift(true);
   };
 
-  const handleCancelDetailShift = () => { };
+  const handleCancelDetailShift = () => {};
 
   const handleEditWork = () => {
     if (workDetailById.status === "WorkNotStart") {
@@ -257,27 +255,31 @@ const CalendarComponent = () => {
   };
 
   const FetchDataForSchedule = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear, iText)
-          .then((data) => {
-            setDataForSchedule(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi lịch làm việc ",
+    let isDataReceived = false;
+    const fetchDataPromise = new Promise((resolve) => {
+      GetDataForSchedule(userEmployeeID, selectedWeek, selectedYear, iText)
+        .then((data) => {
+          setDataForSchedule(data);
+          isDataReceived = true;
+          resolve(data);
+        })
+        .catch((error) => {
+          resolve(Promise.reject(error));
+        });
+    });
+    setTimeout(() => {
+      if (!isDataReceived) {
+        toast.promise(fetchDataPromise, {
+          pending: "Đang tải dữ liệu",
+          error: "Lỗi lịch làm việc",
+        });
       }
-    );
+    }, 1000);
   };
 
   useEffect(() => {
-      FetchDataForSchedule();
-  }, [iText,selectedWeek]);
+    FetchDataForSchedule();
+  }, [iText, selectedWeek, selectedYear]);
   useEffect(() => {
     fetchAllUnitCosts();
     fetchAllWorkAreas();
@@ -349,7 +351,6 @@ const CalendarComponent = () => {
           fetchWorkDetailById={fetchWorkDetailById}
           workidDetail={workidDetail}
           FetchDataForSchedule={FetchDataForSchedule}
-          setSaveWork={setSaveWork}
         />
 
         <ModalGroup

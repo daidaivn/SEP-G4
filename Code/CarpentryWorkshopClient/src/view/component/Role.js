@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import "../scss/index.scss";
 import "../scss/DepartmentComponent.scss";
 import "../scss/fonts.scss";
+import "../scss/responsive/Role.scss";
 import { Switch, Form, Modal, Space } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import MenuResponsive from "./componentUI/MenuResponsive";
@@ -100,9 +101,9 @@ function Role() {
             showModalDetail();
             setroleDetail(data);
             resolve();
-            console.log('data', roleDetail);
-            console.log('id', RoleID);
-            console.log('name', RoleName);
+            console.log("data", roleDetail);
+            console.log("id", RoleID);
+            console.log("name", RoleName);
           })
           .catch((error) => {
             resolve(error);
@@ -113,7 +114,6 @@ function Role() {
       }
     );
   };
-  
 
   const UpdateNameRole = () => {
     toast.promise(
@@ -445,83 +445,90 @@ function Role() {
             </button>
           </div>
         </Modal>
-        <Modal
-          open={isModalOpenDetail}
-          className="modal-group"
-          on
-          Ok={handleOkDetail}
-          onCancel={handleCancelDetail}
-          width={566}
-        >
-          <div className="modal-dependent modal-detail-group">
-            <div className="modal-head">
-              {" "}
-              <h3>Danh sách {roleDetail.roleName}</h3>
-            </div>
-            <div className=" modal-group">
-              <div className="info-detail-group">
-                <div className="info-body-group">
-                  <div className="box1-modal-group">
-                    <div className="box1-child">
-                      <p className="child1-group">STT</p>
+        <div className="modal-role-all">
+          {" "}
+          <Modal
+            open={isModalOpenDetail}
+            className="modal-detail-role"
+            on
+            Ok={handleOkDetail}
+            onCancel={handleCancelDetail}
+            width={566}
+          >
+            <div className="detail-role">
+              <div className="modal-head">
+                {" "}
+                <h3>Danh sách {roleDetail.roleName}</h3>
+              </div>
+              <div className=" modal-group">
+                <div className="info-detail-group">
+                  <div className="info-body-group">
+                    <div className="box1-modal-group">
+                      <div className="box1-child">
+                        <p className="child1-group">STT</p>
+                      </div>
+                      <div className="box2-child">
+                        <p className="child1-group">MSNV</p>
+                      </div>
+                      <div className="box3-child">
+                        <p className="child3-group">Họ và tên</p>
+                      </div>
+                      <div className="box3-child">
+                        <p className="child3-group">Phòng ban</p>
+                      </div>
                     </div>
-                    <div className="box2-child">
-                      <p className="child1-group">MSNV</p>
-                    </div>
-                    <div className="box3-child">
-                      <p className="child3-group">Họ và tên</p>
-                    </div>
-                    <div className="box3-child">
-                      <p className="child3-group">Phòng ban</p>
-                    </div>
-                  </div>
-                  <div className="box2-modal-group"></div>
-                  <div className="department-scroll scrollbar" id="style-15">
-                    {roleDetail &&
-                    roleDetail.employees &&
-                    roleDetail.employees.length > 0 ? (
-                      roleDetail.employees.map((employee, index) => (
-                        <div
-                          className="box1-modal-group box3-group"
-                          key={employee.employeeId}
-                        >
-                          <div className="box1-child">
-                            <p className="child1-group">{index + 1}</p>
-                          </div>
-                          <div className="box1-child">
-                            <p className="child1-group">{employee.employeeId}</p>
-                          </div>
-                          <div className="box3-child">
-                            <div className="child3-group">
-                              <p>{employee.employeeName}</p>
+                    <div className="box2-modal-group"></div>
+                    <div className="department-scroll scrollbar" id="style-15">
+                      {roleDetail &&
+                      roleDetail.employees &&
+                      roleDetail.employees.length > 0 ? (
+                        roleDetail.employees.map((employee, index) => (
+                          <div
+                            className="box1-modal-group box3-group"
+                            key={employee.employeeId}
+                          >
+                            <div className="box1-child">
+                              <p className="child1-group">{index + 1}</p>
+                            </div>
+                            <div className="box1-child">
+                              <p className="child1-group">
+                                {employee.employeeId}
+                              </p>
+                            </div>
+                            <div className="box3-child">
+                              <div className="child3-group">
+                                <p>{employee.employeeName}</p>
+                              </div>
+                            </div>
+                            <div className="box3-child">
+                              <div className="child3-group">
+                                <p>{employee.departmentName}</p>
+                              </div>
                             </div>
                           </div>
-                          <div className="box3-child">
-                            <div className="child3-group">
-                              <p>{employee.departmentName}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p>
-                        Không có nhân viên trong chức vụ {roleDetail.roleName}.
-                      </p>
-                    )}
+                        ))
+                      ) : (
+                        <p>
+                          Không có nhân viên trong chức vụ {roleDetail.roleName}
+                          .
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+              <div className="modal-footer modal-footer-deparment modal-footer-group">
+                <button className="btn-cancel" onClick={handleCancelDetail}>
+                  Thoát
+                </button>
+                <button className="btn-edit" onClick={showModalAdd}>
+                  Sửa
+                </button>
+              </div>
             </div>
-            <div className="modal-footer modal-footer-deparment modal-footer-group">
-              <button className="btn-cancel" onClick={handleCancelDetail}>
-                Thoát
-              </button>
-              <button className="btn-edit" onClick={showModalAdd}>
-                Sửa
-              </button>
-            </div>
-          </div>
-        </Modal>
+          </Modal>
+        </div>
+
         <Modal
           className="modal"
           open={isModalOpenAdd}
