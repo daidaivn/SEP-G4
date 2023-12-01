@@ -1,0 +1,40 @@
+@media (min-width: 768px) and (max-width: 1536px) {
+  .detail-group-all {
+    position: relative;
+  }
+  .modal-detail-group {
+    position: absolute;
+    top: 100px;
+    right: 500px;
+  }
+  .box1-modal-group .child2-group {
+    width: 113px !important;
+  }
+  .box1-modal-group .child4-group {
+    width: 106px !important;
+  }
+  .modal-end-group
+    .body-modal-end-group
+    .modal3
+    .modal3-child
+    .select-modal-end {
+    padding: 10px !important;
+  }
+  .modal1-change p {
+    font-size: 18px !important;
+  }
+  .modal1-change .select-all-change {
+    width: 200px !important;
+  }
+  .child3-group {
+    p {
+      width: 150px;
+    }
+  }
+  .box1-modal-group .box3-child {
+    padding: unset !important;
+  }
+  .box1-modal-group .box4-child {
+    width: unset !important;
+  }
+}
