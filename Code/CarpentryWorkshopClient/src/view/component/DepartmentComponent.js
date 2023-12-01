@@ -142,8 +142,8 @@ function ListDepartmentComponent() {
   };
 
   const fetData = () => {
-    toast.promise(
-      new Promise((resolve) => {
+    let isDataReceived = false; 
+    const fetchDataPromise =new Promise((resolve) => {
         fetchAllDepadment()
           .then((data) => {
             setDepartments(data);
@@ -152,12 +152,15 @@ function ListDepartmentComponent() {
           .catch((error) => {
             resolve(Promise.reject(error));
           });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
-      }
-    );
+      });
+      setTimeout(() => {
+        if (!isDataReceived) {
+          toast.promise(fetchDataPromise, {
+            pending: "Đang tải dữ liệu",
+            error: "Lỗi tải dữ liệu",
+          });
+        }
+      }, 1000);
   };
 
   useEffect(() => {
