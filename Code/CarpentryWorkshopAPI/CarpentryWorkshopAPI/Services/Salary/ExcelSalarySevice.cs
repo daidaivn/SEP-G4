@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OfficeOpenXml.Style;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Runtime.CompilerServices;
 
 namespace CarpentryWorkshopAPI.Services.Salary
 {
@@ -32,6 +33,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var holidays = await FetchHolidaysAsync(startDate, endDate);
             var employees = await _context.Employees
                         .Include(e => e.Contracts)
+                        .Include(e => e.EmployeesAllowances)
+                        .ThenInclude(ea => ea.AllowanceType)
+                        .ThenInclude(at => at.Allowance)
                 .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
@@ -40,42 +44,180 @@ namespace CarpentryWorkshopAPI.Services.Salary
             int sequence = 1;
             var maxEmployeeId = _context.Employees.Max(e => e.EmployeeId);
 
-            return employees.Select(e =>
+            return employees.Select(async e =>
             {
                 var latestContract = GetLatestContract(e);
                 var actualWorkDays = CalculateActualWorkingDays(e, startDate, endDate, holidays, timeZone);
                 var overtimeWorkDays = CalculateOvertimeWorkingDays(e, startDate, endDate, holidays, timeZone);
-                var workDaysOnHolidays = CalculateWorkingDaysOnHolidays(e, startDate, endDate, holidays, timeZone); // Ensure this method exists and is correctly implemented
+                var workDaysOnHolidays = CalculateWorkingDaysOnHolidays(e, startDate, endDate, holidays, timeZone); 
                 var workingDaysInMonth = CalculateWorkingDaysInMonth(month, year, holidays, timeZone);
+                var workDayBonus = CalculateWorkDayBonus(e, startDate, endDate);
+                var bussinessSalary = CalculateBusinessSalary(e, startDate, endDate);
+                if (bussinessSalary == null)
+                {
+                    bussinessSalary = 0;
+                }
+                var totalOT = e.HoursWorkDays
+                .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+                .Sum(h => h.DailyRate) * 2;
+                var totalHolidaySalary = e.HoursWorkDays
+                .Where(hwd => hwd.Day.HasValue &&
+                              holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
+                .Sum(ths => ths.DailyRate) * 3;
+                if (totalHolidaySalary == null)
+                {
+                    totalHolidaySalary= 0;
+                }
+                if (totalOT == null)
+                {
+                    totalOT = 0;
+                }
 
                 decimal basicSalary = 0;
                 decimal dailyWage = 0;
                 decimal actualWorkdaySalary = 0;
 
-                if (latestContract != null && (bool)latestContract.IsOffice)
+                string meal = "Tiền ăn ca";
+                var mealAllowance = e.EmployeesAllowances
+                   .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null 
+                   && ea.AllowanceType.Allowance.Name.ToLower().Equals(meal.ToLower()))
+                   .Select(ea => ea.AllowanceType.Amount)
+                   .FirstOrDefault();
+                string clother = "Quần áo";
+                var clotherAllowance = e.EmployeesAllowances
+                   .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
+                   && ea.AllowanceType.Allowance.Name.ToLower().Equals(clother.ToLower()))
+                   .Select(ea => ea.AllowanceType.Amount)
+                   .FirstOrDefault();
+                string car = "Xăng xe";
+                var carAllowance = e.EmployeesAllowances
+                   .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
+                   && ea.AllowanceType.Allowance.Name.ToLower().Equals(car.ToLower()))
+                   .Select(ea => ea.AllowanceType.Amount)
+                   .FirstOrDefault();
+                string social = "BHXH";
+                var socialInsurance = await _context.DeductionsDetails
+                                     .Include(x => x.DeductionType)
+                                     .Where(x => x.DeductionType.Name.ToLower().Equals(social.ToLower()))
+                                     .Select(x => x.Percentage)
+                                     .FirstOrDefaultAsync();
+                string health = "BHYT";
+                var healthInsurance = await _context.DeductionsDetails
+                                     .Include(x => x.DeductionType)
+                                     .Where(x => x.DeductionType.Name.ToLower().Equals(health.ToLower()))
+                                     .Select(x => x.Percentage)
+                                     .FirstOrDefaultAsync();
+                string unemployment = "BHTT";
+                var unemploymentInsurance = await _context.DeductionsDetails
+                                     .Include(x => x.DeductionType)
+                                     .Where(x => x.DeductionType.Name.ToLower().Equals(unemployment.ToLower()))
+                                     .Select(x => x.Percentage)
+                                     .FirstOrDefaultAsync();
+                string union = "BHTT";
+                var unionFees = await _context.DeductionsDetails
+                                     .Include(x => x.DeductionType)
+                                     .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
+                                     .Select(x => x.Percentage)
+                                     .FirstOrDefaultAsync();
+                var advances = e.AdvancesSalaries
+                         .Where(x => x.EmployeeId == e.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
+                         .Sum(x => x.Amount);
+                if (latestContract != null && (bool)latestContract.IsOffice == true)
                 {
                     basicSalary = latestContract.Amount ?? 0;
                     dailyWage = basicSalary / workingDaysInMonth;
                     actualWorkdaySalary = actualWorkDays * dailyWage;
                 }
-
+                if(latestContract!= null && (bool)latestContract.IsOffice == false)
+                {
+                    basicSalary = latestContract.Amount ?? 0;
+                    actualWorkdaySalary = e.HoursWorkDays
+                    .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == e.EmployeeId)
+                    .Sum(h => (decimal)(h.DailyRate ?? 0) );
+                    
+                }
+               
+                var personalRelief = 11000000.00;
+                var totaldependent = e.Dependents.Where(x => x.EmployeeId == e.EmployeeId).Count();
+                var dependentRelief = 4400000.00 * totaldependent;
+                var totalActualSalary = actualWorkdaySalary + totalHolidaySalary + totalOT + mealAllowance + clotherAllowance + carAllowance + bussinessSalary;
+                var taxableIncome = totalActualSalary - mealAllowance - clotherAllowance;
+                var totalInsurance = (decimal)(socialInsurance + healthInsurance + unemploymentInsurance) * basicSalary;
+                var totalRelief = (decimal)personalRelief + (decimal)dependentRelief;
+                var incometax = taxableIncome - totalInsurance - totalRelief;
+                if (incometax < 0)
+                {
+                    incometax = 0;
+                }
+                var personIncome = CalculatePersonalIncomeTax((decimal)incometax);
+                if (personIncome == null)
+                {
+                    personIncome = 0;
+                }
                 return new
                 {
-                    EmployeeCode = e.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
-                    Sequence = sequence++,
+                    EmployeeId = e.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
+                    OrderNumber = sequence++,
                     FullName = e.LastName + " " + e.FirstName,
-                    HighestRole = e.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                    Position = e.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                    Location = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
                     Gender = (bool)e.Gender ? "Nam" : "Nữ",
-                    WorkLocation = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
-                    WorkDaysOnHolidays = workDaysOnHolidays,
-                    ActualWorkDays = actualWorkDays,
+                    ActualWork = actualWorkDays,
+                    HolidayWork = workDaysOnHolidays,
+                    Overtime = workDayBonus,                   
                     BasicSalary = basicSalary,
-                    DailyWage = dailyWage,
-                    ActualWorkdaySalary = actualWorkdaySalary
+                    InsuranceSalary = basicSalary,
+                    ActualDaySalary = actualWorkdaySalary,
+                    OverTimeSalary = totalHolidaySalary + totalOT,
+                    Allowances = new
+                    {
+                        Meal = mealAllowance,
+                        Uniform = clotherAllowance,
+                        Petrol = carAllowance
+                    },
+                    BusinessSalary = bussinessSalary,
+                    TotalActualSalary = totalActualSalary,
+                    Deductions = new
+                    {
+                        SocialInsurance = (decimal)socialInsurance * basicSalary,
+                        HealthInsurance = (decimal)healthInsurance * basicSalary,
+                        UnemploymentInsurance = (decimal)unemploymentInsurance * basicSalary,
+                        UnionFees = (decimal)unionFees * basicSalary
+                    },
+                    TaxableIncome = taxableIncome,
+                    TaxDeductions = new
+                    {
+                        PersonalRelief = personalRelief,
+                        DependentRelief = dependentRelief,
+                        Insurance = totalInsurance
+                    },
+                    IncomeTax = incometax, 
+                    PersonalIncomeTax = personIncome,
+                    Advances = advances,
+                    ActualReceived = totalActualSalary - totalInsurance - personIncome - (decimal)unionFees * basicSalary
+
                 };
             });
         }
 
+        private int CalculateWorkDayBonus(Employee employee, DateTime startDate, DateTime endDate)
+        {
+            var workDaysOnSundays = employee.HoursWorkDays
+                .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+                .Count();
+
+            return workDaysOnSundays;
+        }
+        private decimal? CalculateBusinessSalary(Employee employee, DateTime startDate, DateTime endDate)
+        {
+            var business = employee.HoursWorkDays
+                .Where(h => h.Day >= startDate && h.Day <= endDate)
+                .Sum(h => h.DailyRate);
+
+            return business;
+        }
         private int CalculateWorkingDaysInMonth(int month, int year, List<DateTime> holidays, TimeZoneInfo timeZone)
         {
             var startDate = new DateTime(year, month, 1);
@@ -143,7 +285,23 @@ namespace CarpentryWorkshopAPI.Services.Salary
         }
 
 
-
+        private decimal CalculatePersonalIncomeTax(decimal income)
+        {
+            if (income <= 5000000)
+                return income * 0.05m;
+            else if (income <= 10000000)
+                return income * 0.10m;
+            else if (income <= 18000000)
+                return income * 0.15m;
+            else if (income <= 32000000)
+                return income * 0.20m;
+            else if (income <= 52000000)
+                return income * 0.25m;
+            else if (income <= 80000000)
+                return income * 0.30m;
+            else
+                return income * 0.35m;
+        }
 
         public async Task<MemoryStream> GenerateSalaryExcel(int month, int year)
         {
@@ -509,23 +667,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             }
 
-            decimal CalculatePersonalIncomeTax(decimal income)
-            {
-                if (income <= 5000000)
-                    return income * 0.05m;
-                else if (income <= 10000000)
-                    return income * 0.10m;
-                else if (income <= 18000000)
-                    return income * 0.15m;
-                else if (income <= 32000000)
-                    return income * 0.20m;
-                else if (income <= 52000000)
-                    return income * 0.25m;
-                else if (income <= 80000000)
-                    return income * 0.30m;
-                else
-                    return income * 0.35m;
-            }
+            
 
             var stream = new MemoryStream();
             package.SaveAs(stream);
