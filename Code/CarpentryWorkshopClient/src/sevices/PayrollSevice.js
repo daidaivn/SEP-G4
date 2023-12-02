@@ -20,6 +20,15 @@ const ExportSalaryExcel = (month, year) => {
     );
 };
 
+const fakeApiInstance = axios.create({
+    baseURL: "http://localhost:3001"
+  });
+  
+  
+  const ExcelSalary = () => {
+    return fakeApiInstance.get(`/export`);
+  };
+  
 const GetEmployeeAllowanceDetail = (eid, EMonth, EYear) => {
     const employeeid = eid;
     const month = EMonth;
@@ -92,4 +101,5 @@ export {
     CreateAndEditPersonalReward,
     CreateAndUpdateSpecialOccasion,
     CreateAndUpdateCompanyRerward,
+    ExcelSalary
 };
