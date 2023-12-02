@@ -23,6 +23,128 @@ namespace CarpentryWorkshopAPI.Services.Salary
             _mapper = mapper;
         }
 
+
+        public async Task<IEnumerable<object>> GetEmployeesByContractDateAsync(int month, int year)
+        {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); 
+            var startDate = new DateTime(year, month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            var holidays = await FetchHolidaysAsync(startDate, endDate);
+            var employees = await _context.Employees
+                        .Include(e => e.Contracts)
+                .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
+                .Include(e => e.HoursWorkDays)
+                .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
+                .ToListAsync();
+
+            int sequence = 1;
+            var maxEmployeeId = _context.Employees.Max(e => e.EmployeeId);
+
+            return employees.Select(e =>
+            {
+                var latestContract = GetLatestContract(e);
+                var actualWorkDays = CalculateActualWorkingDays(e, startDate, endDate, holidays, timeZone);
+                var overtimeWorkDays = CalculateOvertimeWorkingDays(e, startDate, endDate, holidays, timeZone);
+                var workDaysOnHolidays = CalculateWorkingDaysOnHolidays(e, startDate, endDate, holidays, timeZone); // Ensure this method exists and is correctly implemented
+                var workingDaysInMonth = CalculateWorkingDaysInMonth(month, year, holidays, timeZone);
+
+                decimal basicSalary = 0;
+                decimal dailyWage = 0;
+                decimal actualWorkdaySalary = 0;
+
+                if (latestContract != null && (bool)latestContract.IsOffice)
+                {
+                    basicSalary = latestContract.Amount ?? 0;
+                    dailyWage = basicSalary / workingDaysInMonth;
+                    actualWorkdaySalary = actualWorkDays * dailyWage;
+                }
+
+                return new
+                {
+                    EmployeeCode = e.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
+                    Sequence = sequence++,
+                    FullName = e.LastName + " " + e.FirstName,
+                    HighestRole = e.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                    Gender = (bool)e.Gender ? "Nam" : "Nữ",
+                    WorkLocation = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
+                    WorkDaysOnHolidays = workDaysOnHolidays,
+                    ActualWorkDays = actualWorkDays,
+                    BasicSalary = basicSalary,
+                    DailyWage = dailyWage,
+                    ActualWorkdaySalary = actualWorkdaySalary
+                };
+            });
+        }
+
+        private int CalculateWorkingDaysInMonth(int month, int year, List<DateTime> holidays, TimeZoneInfo timeZone)
+        {
+            var startDate = new DateTime(year, month, 1);
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            int workingDays = 0;
+
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                var zonedDate = TimeZoneInfo.ConvertTimeFromUtc(date, timeZone);
+
+                // Check if the day is not a Sunday and not a holiday
+                if (zonedDate.DayOfWeek != DayOfWeek.Sunday && !holidays.Any(holiday => TimeZoneInfo.ConvertTimeFromUtc(holiday, timeZone).Date == zonedDate.Date))
+                {
+                    workingDays++;
+                }
+            }
+
+            return workingDays;
+        }
+
+
+        private Contract GetLatestContract(Employee employee)
+        {
+            return employee.Contracts.OrderByDescending(c => c.EndDate).FirstOrDefault();
+        }
+        private int CalculateWorkingDays(Employee employee, DateTime startDate, DateTime endDate, List<DateTime> holidays)
+        {
+            return employee.HoursWorkDays
+                .Count(hwd => hwd.Day.HasValue &&
+                              hwd.Day.Value >= startDate && hwd.Day.Value <= endDate &&
+                              hwd.Day.Value.DayOfWeek != DayOfWeek.Sunday &&
+                              !holidays.Contains(hwd.Day.Value));
+        }
+        private async Task<List<DateTime>> FetchHolidaysAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _context.HolidaysDetails
+                                 .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
+                                 .Select(h => h.Date.Value)
+                                 .ToListAsync();
+        }
+
+        private int CalculateWorkingDaysOnHolidays(Employee employee, DateTime startDate, DateTime endDate, List<DateTime> holidays, TimeZoneInfo timeZone)
+        {
+            return employee.HoursWorkDays
+                .Count(hwd => hwd.Day.HasValue &&
+                              holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate);
+        }
+
+        private int CalculateActualWorkingDays(Employee employee, DateTime startDate, DateTime endDate, List<DateTime> holidays, TimeZoneInfo timeZone)
+        {
+            return employee.HoursWorkDays
+                .Count(hwd => hwd.Day.HasValue &&
+                              TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
+                              !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
+        }
+
+        private int CalculateOvertimeWorkingDays(Employee employee, DateTime startDate, DateTime endDate, List<DateTime> holidays, TimeZoneInfo timeZone)
+        {
+            return employee.HoursWorkDays
+                .Count(hwd => hwd.Day.HasValue &&
+                              TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek == DayOfWeek.Sunday &&
+                              !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
+        }
+
+
+
+
         public async Task<MemoryStream> GenerateSalaryExcel(int month, int year)
         {
 
@@ -77,7 +199,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var basicSalaries = await _context.Contracts
                                 .Where(c => c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
                                 .ToDictionaryAsync(c => c.EmployeeId, c => c.Amount.GetValueOrDefault());
-           
+
             //Truy vấn các khoản phụ cấp
             var allowanceData = await _context.EmployeesAllowances
                                 .Include(ea => ea.AllowanceType)
@@ -133,7 +255,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .SelectMany(a => a.Allowances)
                 .Select(a => a.AllowanceName)
                 .Distinct()
-                .OrderBy(name => name) 
+                .OrderBy(name => name)
                 .ToList();
 
             using var package = new ExcelPackage();
@@ -161,7 +283,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             worksheet.Cells["J1"].Value = "Lương thực tế";
 
             // bắt đầu từ cột kí tự K trong bảng Excel
-            int allowanceHeaderStart = 11; 
+            int allowanceHeaderStart = 11;
             int allowanceHeaderEnd = 10 + uniqueAllowanceTypes.Count;
             worksheet.Cells[1, allowanceHeaderStart, 1, allowanceHeaderEnd].Merge = true;
             worksheet.Cells[1, allowanceHeaderStart].Value = "Phụ cấp";
@@ -177,16 +299,16 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             if (deductionHeaderEnd < deductionHeaderStart)
             {
-                deductionHeaderEnd = deductionHeaderStart; 
+                deductionHeaderEnd = deductionHeaderStart;
             }
 
-            int reductionHeaderStart = deductionHeaderEnd + 1; 
+            int reductionHeaderStart = deductionHeaderEnd + 1;
             int reductionHeaderEnd = reductionHeaderStart + 2;
 
 
             worksheet.Cells[2, deductionHeaderStart].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             worksheet.Cells[2, deductionHeaderStart].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-           
+
             worksheet.Cells[1, reductionHeaderStart, 1, reductionHeaderEnd].Merge = true;
             worksheet.Cells[1, reductionHeaderStart].Value = "Các Khoản Giảm Trừ";
             worksheet.Cells[1, reductionHeaderStart].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -259,7 +381,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             using (var headerRange = worksheet.Cells[1, 1, 2, ActualSalaryColumnIndex])
             {
                 headerRange.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue); 
+                headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
                 headerRange.Style.Font.Bold = true;
                 headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -288,7 +410,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
 
                 const decimal familyAllowance = 11000000;
-                
+
                 // Tính Người phụ thuộc
                 int numberOfDependents = _context.Dependents.Count(d => d.EmployeeId == data.EmployeeId && (d.EndDate == null || d.EndDate >= DateTime.Today));
                 decimal dependentAllowance = numberOfDependents * 4400000;
@@ -411,5 +533,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             return stream;
         }
+
+
+
     }
 }

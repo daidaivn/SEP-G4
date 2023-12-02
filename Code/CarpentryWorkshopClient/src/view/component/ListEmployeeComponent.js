@@ -703,19 +703,19 @@ function ListEmployeeComponent() {
   const convertTimeToInputFormat = (timeString) => {
     if (timeString) {
       const parts = timeString.split(":");
-      
+
       if (parts.length === 3) {
         const hours = parts[0];
         const minutes = parts[1];
-        
+
         // Extract seconds and remove fractional seconds
         const secondsWithFraction = parts[2];
         const seconds = secondsWithFraction.split(".")[0];
-        
+
         return `${hours}:${minutes}:${seconds}`;
-      }      
+      }
       return timeString;
-    }  
+    }
     return timeString;
   };
   const fetDataDepartment = () => {
@@ -727,28 +727,31 @@ function ListEmployeeComponent() {
   };
 
   const fetchData = () => {
-    let isDataReceived = false; 
-    const fetchDataPromise = new Promise((resolve) => {
-      fetchAllEmplyee()
-        .then((data) => {
-          setEmployees(data);
-          isDataReceived = true;
-          resolve(data);
-        })
-        .catch((error) => {
-          resolve(Promise.reject(error));
-        });
-    });
+    let isDataLoaded = false;
+    let toastId = null;
+  
+    fetchAllEmplyee()
+      .then((data) => {
+        isDataLoaded = true;
+        setEmployees(data);
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error('Lỗi không có nhân viên'); // Hiển thị thông báo lỗi ngay lập tức
+      });
+  
     setTimeout(() => {
-      if (!isDataReceived) {
-        toast.promise(fetchDataPromise, {
-          pending: "Đang tải dữ liệu",
-          error: "Lỗi tải dữ liệu",
-        });
+      if (!isDataLoaded) {
+        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
   };
-  
   const handlelDetail = (value) => {
     toast.promise(
       new Promise((resolve) => {
