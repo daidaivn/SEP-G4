@@ -1,0 +1,118 @@
+{
+  "export": [
+    {
+      "employeeId": "NV001",
+      "orderNumber": 1,
+      "fullName": "Nguyễn Văn A",
+      "position": "Nhân viên",
+      "location": "Văn phòng",
+      "gender": "Nam",
+      "actualWork": 20,
+      "holidayWork": 2,
+      "overtime": 5,
+      "basicSalary": 5000000,
+      "insuranceSalary": 4800000,
+      "actualDaySalary": 4000000,
+      "overtimeSalary": 1000000,
+      "allowances": {
+        "meal": 500000,
+        "uniform": 200000,
+        "petrol": 300000
+      },
+      "businessSalary": 0,
+      "totalActualSalary": 8000000,
+      "deductions": {
+        "socialInsurance": 400000,
+        "healthInsurance": 120000,
+        "unemploymentInsurance": 50000,
+        "unionFees": 50000
+      },
+      "taxableIncome": 7000000,
+      "taxDeductions": {
+        "personalRelief": 1100000,
+        "dependentRelief": 4400000,
+        "insurance": 520000
+      },
+      "incomeTax": 50000,
+      "personalIncomeTax": 10000000,
+      "advances": 2000000,
+      "actualReceived": 5800000
+    },
+    {
+      "employeeId": "NV002",
+      "orderNumber": 1,
+      "fullName": "Nguyễn Văn A",
+      "position": "Nhân viên",
+      "location": "Văn phòng",
+      "gender": "Nam",
+      "actualWork": 20,
+      "holidayWork": 2,
+      "overtime": 5,
+      "basicSalary": 5000000,
+      "insuranceSalary": 4800000,
+      "actualDaySalary": 4000000,
+      "overtimeSalary": 1000000,
+      "allowances": {
+        "meal": 500000,
+        "uniform": 200000,
+        "petrol": 300000
+      },
+      "businessSalary": 0,
+      "totalActualSalary": 8000000,
+      "deductions": {
+        "socialInsurance": 400000,
+        "healthInsurance": 120000,
+        "unemploymentInsurance": 50000,
+        "unionFees": 50000
+      },
+      "taxableIncome": 7000000,
+      "taxDeductions": {
+        "personalRelief": 1100000,
+        "dependentRelief": 4400000,
+        "insurance": 520000
+      },
+      "incomeTax": 50000,
+      "personalIncomeTax": 10000000,
+      "advances": 2000000,
+      "actualReceived": 5800000
+    },
+    {
+      "employeeId": "NV003",
+      "orderNumber": 1,
+      "fullName": "Nguyễn Văn A",
+      "position": "Nhân viên",
+      "location": "Văn phòng",
+      "gender": "Nam",
+      "actualWork": 20,
+      "holidayWork": 2,
+      "overtime": 5,
+      "basicSalary": 5000000,
+      "insuranceSalary": 4800000,
+      "actualDaySalary": 4000000,
+      "overtimeSalary": 1000000,
+      "allowances": {
+        "meal": 500000,
+        "uniform": 200000,
+        "petrol": 300000
+      },
+      "businessSalary": 0,
+      "totalActualSalary": 8000000,
+      "deductions": {
+        "socialInsurance": 400000,
+        "healthInsurance": 120000,
+        "unemploymentInsurance": 50000,
+        "unionFees": 50000
+      },
+      "taxableIncome": 7000000,
+      "taxDeductions": {
+        "personalRelief": 1100000,
+        "dependentRelief": 4400000,
+        "insurance": 520000
+      },
+      "incomeTax": 50000,
+      "personalIncomeTax": 10000000,
+      "advances": 2000000,
+      "actualReceived": 5800000
+    }
+  ]
+}

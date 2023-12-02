@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@azure/storage-blob": "^12.17.0",
-    "react-window": "^1.8.9"
+    "react-window": "^1.8.9",
+    "xlsx-populate": "^1.21.0"
   }
 }
