@@ -218,22 +218,29 @@ const GroupComponent = () => {
   };
 
   const fetchData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllTeam(userEmployeeID)
-          .then((data) => {
-            setRoles(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
+    let isDataLoaded = false;
+    let toastId = null;
+  
+    fetchAllTeam(userEmployeeID)
+      .then((data) => {
+        isDataLoaded = true;
+        setRoles(data);
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error('Lỗi không có team'); // Hiển thị thông báo lỗi ngay lập tức
+      });
+    setTimeout(() => {
+      if (!isDataLoaded) {
+        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
-    );
+    }, 1500);
   };
   const searchForData = (Inputvalue) => {
     setInputSearch(Inputvalue);

@@ -75,7 +75,6 @@ const TimekeepingComponent = () => {
       action === "start"
         ? "Bắt đầu tính thời gian làm việc"
         : "Ngưng tính thời gian làm việc";
-
     toast.promise(
       new Promise((resolve) => {
         addAllCheckInOut(employeeID)
@@ -157,25 +156,28 @@ const TimekeepingComponent = () => {
   };
 
   const fetchData = () => {
-    let isDataReceived = false;
-    const fetchDataPromise = new Promise((resolve) => {
-      fetchAllCheckInOut(userEmployeeID)
-        .then((data) => {
-          setChecksInOut(data);
-          resolve(data);
-        })
-        .catch((error) => {
-          resolve(Promise.reject(error));
-        });
-    });
+    let isDataLoaded = false;
+    let toastId = null;
+    fetchAllCheckInOut(userEmployeeID)
+      .then((data) => {
+        setChecksInOut(data);
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error("Lỗi không có data điểm danh"); // Hiển thị thông báo lỗi ngay lập tức
+      });
     setTimeout(() => {
-      if (!isDataReceived) {
-        toast.promise(fetchDataPromise, {
-          pending: "Đang tải dữ liệu",
-          error: "Lỗi tải dữ liệu",
-        });
+      if (!isDataLoaded) {
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
-    }, 1000);
+    }, 1500);
   };
   console.log("userEmployeeID:", userEmployeeID);
 
@@ -198,23 +200,28 @@ const TimekeepingComponent = () => {
   };
   //Load data for work day
   const fetchDataWorkPerDay = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllDataWorks(userEmployeeID)
-          .then((data) => {
-            setWork(data);
-
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang xử lý",
-        error: "Lỗi dữ liệu",
+    let isDataLoaded = false;
+    let toastId = null; 
+    fetchAllDataWorks(userEmployeeID)
+      .then((data) => {
+        isDataLoaded = true;
+        setWork(data);
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error('Nhóm hiện không có công việc'); // Hiển thị thông báo lỗi ngay lập tức
+      });  
+    setTimeout(() => {
+      if (!isDataLoaded) {
+        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
-    );
+    }, 1500);
   };
   console.log("data:", work);
   //Thay doi trang thai công việc trong ngày
@@ -228,24 +235,28 @@ const TimekeepingComponent = () => {
     if (!check) {
       return;
     }
-    toast.promise(
-      new Promise((resolve) => {
-        updateDataWorks(work.teamWorkId, number)
-          .then((data) => {
-            resolve(data);
-            fetchDataWorkPerDay();
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang xử lý",
-        success: "Update success",
-        error: "Lỗi",
+    let isDataLoaded = false;
+    let toastId = null; 
+    updateDataWorks(work.teamWorkId, number)
+      .then((data) => {
+        isDataLoaded = true;
+        fetchDataWorkPerDay();
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error('Thay đổi dữ liệu không thành công'); // Hiển thị thông báo lỗi ngay lập tức
+      });  
+    setTimeout(() => {
+      if (!isDataLoaded) {
+        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
-    );
-
+    }, 1500);
     setIsEditing(false);
   };
   const handleCancel = () => {
