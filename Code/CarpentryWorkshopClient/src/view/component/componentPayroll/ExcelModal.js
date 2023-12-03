@@ -4,6 +4,7 @@ import { createYearOptions, getMonthsInYear } from "../../logicTime/getWeeDays";
 import { ExportSalaryExcel, ExcelSalary } from "../../../sevices/PayrollSevice";
 import { toast } from "react-toastify";
 import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 import FileSaver from 'file-saver';
 
@@ -20,57 +21,78 @@ const ExcelModal = ({
     yearOptions
 }) => {
 
+
     const readTemplate = async () => {
-        try {
-          const response = await fetch('/SalaryData.xlsx'); // Update the filename to match the actual filename
-          if (!response.ok) {
+        const response = await fetch('/SalaryData (1).xlsx');
+        if (!response.ok) {
             throw new Error(`Failed to fetch the template: ${response.statusText}`);
-          }
-          const arrayBuffer = await response.arrayBuffer();
-      
-          // Use arrayBuffer instead of buffer for the type
-          const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-          return workbook;
-        } catch (error) {
-          console.error('Error reading template:', error);
-          throw error; // Re-throw the error to be caught by the caller
         }
-      };
-      
-      const fillDataToTemplate = (workbook, jsonData) => {
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        return workbook;
+    };
+
+
+    const fillDataToTemplate = (workbook, jsonData, formatReference) => {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const startingRow = 10;
-      
+
         jsonData.forEach((item, index) => {
-          const row = startingRow + index;
-      
-          // Fill the data directly
-          worksheet[`C${row}`] = { v: item.employeeId };
-          worksheet[`D${row}`] = { v: item.orderNumber };
-          // ... Fill in other fields
-      
-          // Handle nested fields
-          worksheet[`X${row}`] = { v: item.allowances.meal };
-          // ... Continue with other nested fields
+            const row = startingRow + index;
+            // Copy formatting and set value for each cell
+            copyCellFormat(worksheet, formatReference.employeeId, `C${row}`, { v: item.employeeId });
+            copyCellFormat(worksheet, formatReference.orderNumber, `D${row}`, { v: item.orderNumber });
+            // ... Điền các trường khác và sao chép định dạng
+            for (let col = 66; col <= 77; col++) { // 66 là mã ASCII cho 'B', 77 là mã ASCII cho 'M'
+                const colRef = String.fromCharCode(col);
+                copyCellFormat(worksheet, 'B8', `${colRef}${row}`, { v: item.someData }); // Thay someData bằng dữ liệu thích hợp
+            }
         });
-      
+
         return workbook;
-      };
-      
-      const exportToExcel = (workbook) => {
-        XLSX.writeFile(workbook, 'ExportedData.xlsx');
-      };
-      
-      const handleExport = async () => {
-        try {
-          const salaryData = await ExcelSalary(); // Assuming ExcelSalary is the function to fetch the salary data
-          const workbook = await readTemplate();
-          const filledWorkbook = fillDataToTemplate(workbook, salaryData.data);
-          exportToExcel(filledWorkbook);
-        } catch (error) {
-          console.error('Error exporting Excel:', error);
+    };
+
+    const copyCellFormat = (worksheet, sourceCellRef, targetCellRef, newData) => {
+        const sourceCell = worksheet[sourceCellRef];
+        const targetCell = worksheet[targetCellRef];
+        
+        if (sourceCell && targetCell) {
+            targetCell.s = { ...sourceCell.s, fill: { ...sourceCell.s.fill } };
+            targetCell.v = newData.v;
+        } else if (!targetCell) {
+            worksheet[targetCellRef] = {
+                ...newData,
+                s: sourceCell ? { ...sourceCell.s, fill: { ...sourceCell.s.fill } } : { fill: { fgColor: { rgb: 'd9e2f3' } } },
+            };
         }
-      };
+    };
+    
+
+    const formatReference = {
+        employeeId: 'C10',  // Reference format cell for employeeId
+        orderNumber: 'D10', // Reference format cell for orderNumber
+        // ... Other format references
+    };
+
+    const exportToExcel = (workbook) => {
+        const bookType = "xlsx";
+        const wopts = { bookType, bookSST: false, type: "array" };
+        const wbout = XLSX.write(workbook, wopts);
+        FileSaver.saveAs(new Blob([wbout], { type: "application/octet-stream" }), "ExportedData.xlsx");
+    };
+
+    const handleExport = async () => {
+        try {
+            const salaryData = await ExcelSalary();
+            const workbook = await readTemplate();
+            const filledWorkbook = fillDataToTemplate(workbook, salaryData.data, formatReference);
+            exportToExcel(filledWorkbook);
+        } catch (error) {
+            console.error('Error exporting Excel:', error);
+        }
+    };
 
     const handleExportSalaryExcel = () => {
         ExportSalaryExcel(months, date)
