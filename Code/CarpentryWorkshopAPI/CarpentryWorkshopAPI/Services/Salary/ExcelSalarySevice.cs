@@ -173,6 +173,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .Include(e => e.EmployeesAllowances)
                         .ThenInclude(ea => ea.AllowanceType)
                         .ThenInclude(at => at.Allowance)
+                        .Include(e => e.BonusDetails)
+                        .Include(e => e.SpecialOccasions)
                 .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
@@ -226,6 +228,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
                 .Sum(ths => ths.DailyRate) * 3;
+                var bonus = e.BonusDetails
+                .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
+                .Sum(bd => bd.BonusAmount);
+                var special = e.SpecialOccasions
+                .Where(so => so.OccasionDate >= startDate && so.OccasionDate <= endDate)
+                .Sum(so => so.Amount);
+                var totalBs = bonus + special;
+                if (totalBs == null)
+                {
+                    totalBs= 0;
+                }
                 if (totalHolidaySalary == null)
                 {
                     totalHolidaySalary = 0;
@@ -333,7 +346,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     IncomeTax = (decimal)incometax,
                     PersonalIncomeTax = personIncome,
                     Advances = (decimal)advances,
-                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - (decimal)unionFees * basicSalary)
+                    JobIncentives = (decimal)totalBs,
+                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - (decimal)unionFees * basicSalary + totalBs)
 
                 };
             });
