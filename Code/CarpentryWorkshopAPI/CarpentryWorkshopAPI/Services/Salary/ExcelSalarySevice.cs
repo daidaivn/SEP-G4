@@ -43,8 +43,31 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             int sequence = 1;
             var maxEmployeeId = _context.Employees.Max(e => e.EmployeeId);
-
-            return employees.Select(async e =>
+            string social = "BHXH";
+            var socialInsurance = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(social.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            string health = "BHYT";
+            var healthInsurance = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(health.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            string unemployment = "BHTT";
+            var unemploymentInsurance = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(unemployment.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            string union = "BHTT";
+            var unionFees = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            var resultTask = employees.Select(async e =>
             {
                 var latestContract = GetLatestContract(e);
                 var actualWorkDays = CalculateActualWorkingDays(e, startDate, endDate, holidays, timeZone);
@@ -97,30 +120,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                    && ea.AllowanceType.Allowance.Name.ToLower().Equals(car.ToLower()))
                    .Select(ea => ea.AllowanceType.Amount)
                    .FirstOrDefault();
-                string social = "BHXH";
-                var socialInsurance = await _context.DeductionsDetails
-                                     .Include(x => x.DeductionType)
-                                     .Where(x => x.DeductionType.Name.ToLower().Equals(social.ToLower()))
-                                     .Select(x => x.Percentage)
-                                     .FirstOrDefaultAsync();
-                string health = "BHYT";
-                var healthInsurance = await _context.DeductionsDetails
-                                     .Include(x => x.DeductionType)
-                                     .Where(x => x.DeductionType.Name.ToLower().Equals(health.ToLower()))
-                                     .Select(x => x.Percentage)
-                                     .FirstOrDefaultAsync();
-                string unemployment = "BHTT";
-                var unemploymentInsurance = await _context.DeductionsDetails
-                                     .Include(x => x.DeductionType)
-                                     .Where(x => x.DeductionType.Name.ToLower().Equals(unemployment.ToLower()))
-                                     .Select(x => x.Percentage)
-                                     .FirstOrDefaultAsync();
-                string union = "BHTT";
-                var unionFees = await _context.DeductionsDetails
-                                     .Include(x => x.DeductionType)
-                                     .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
-                                     .Select(x => x.Percentage)
-                                     .FirstOrDefaultAsync();
+               
                 var advances = e.AdvancesSalaries
                          .Where(x => x.EmployeeId == e.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
                          .Sum(x => x.Amount);
@@ -200,6 +200,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
                 };
             });
+            var results = await Task.WhenAll(resultTask);
+
+            return results.Where(result => result != null);
         }
 
         private int CalculateWorkDayBonus(Employee employee, DateTime startDate, DateTime endDate)
