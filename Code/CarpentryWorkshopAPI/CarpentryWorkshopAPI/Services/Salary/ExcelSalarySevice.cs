@@ -27,159 +27,157 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             try
             {
-                using (var httpClient = new HttpClient())
+                using (var templateWorkbook = new XLWorkbook("Sample.xlsx"))
                 {
-                    var templateUrl = "https://docs.google.com/spreadsheets/d/1UpVg-UHm7Km6L91BEn9uPiHLQPFUxCN0/edit?usp=drive_link&ouid=106719340337883972795&rtpof=true&sd=true";
-                    var templateStream = await httpClient.GetStreamAsync(templateUrl);
-                    using (var templateWorkbook = new XLWorkbook("Sample.xlsx"))
+                    var templateWorksheet = templateWorkbook.Worksheet(1);
+                     
+
+                     
+                    // Tạo workbook mới
+                    var newWorkbook = new XLWorkbook();
+                    var newWorksheet = newWorkbook.Worksheets.Add("Sheet1");
+                     
+                    // Sao chép định dạng cơ bản của từng cột
+                    foreach (var column in templateWorksheet.ColumnsUsed())
                     {
-                        var templateWorksheet = templateWorkbook.Worksheet(1);
-
-                        // Tạo workbook mới
-                        var newWorkbook = new XLWorkbook();
-                        var newWorksheet = newWorkbook.Worksheets.Add("Sheet1");
-
-                        // Sao chép định dạng cơ bản của từng cột
-                        foreach (var column in templateWorksheet.ColumnsUsed())
-                        {
-                            newWorksheet.Column(column.ColumnNumber()).Width = column.Width;
-                        }
-
-                        // Sao chép định dạng và cấu trúc hợp nhất ô của hàng từ 1 đến 9
-                        for (int i = 1; i <= 9; i++)
-                        {
-                            var templateRow = templateWorksheet.Row(i);
-                            var newRow = newWorksheet.Row(i);
-
-                            newRow.Height = templateRow.Height;
-                            newRow.Style = templateRow.Style;
-
-                            foreach (var cell in templateRow.CellsUsed())
-                            {
-                                var newCell = newRow.Cell(cell.Address.ColumnNumber);
-                                newCell.Style = cell.Style;
-                                newCell.Value = cell.Value;
-                            }
-                        }
-
-                        // Sao chép các ô hợp nhất từ hàng 1 đến 9
-                        foreach (var mergedRange in templateWorksheet.MergedRanges)
-                        {
-                            if (mergedRange.FirstRow().RowNumber() <= 9 && mergedRange.LastRow().RowNumber() <= 9)
-                            {
-                                newWorksheet.Range(mergedRange.RangeAddress.ToString()).Merge();
-                            }
-                        }
-
-                        // Sao chép định dạng của từng ô từ file mẫu
-                        foreach (var cell in templateWorksheet.CellsUsed())
-                        {
-                            var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                            newCell.Style = cell.Style;
-                            newCell.Value = cell.Value;
-                        }
-
-                        foreach (var mergedRange in templateWorksheet.MergedRanges)
-                        {
-                            if (mergedRange.FirstRow().RowNumber() >= 10)
-                            {
-                                var sourceRange = templateWorksheet.Range(mergedRange.RangeAddress.ToString());
-                                var destinationRange = newWorksheet.Range(mergedRange.RangeAddress.ToString());
-
-                                // Sao chép định dạng từ ô nguồn sang ô đích
-                                sourceRange.CopyTo(destinationRange);
-                            }
-                        }
-
-                        // Thêm dữ liệu nhân viên từ hàng 10 trở đi
-                        int startRow = 10;
-                        foreach (var employee in employeesData)
-                        {
-                            newWorksheet.Cell(startRow, "B").Value = employee.EmployeeId;
-                            newWorksheet.Cell(startRow, "C").Value = employee.OrderNumber;
-                            newWorksheet.Cell(startRow, "D").Value = employee.FullName;
-                            newWorksheet.Cell(startRow, "E").Value = employee.Position;
-                            newWorksheet.Cell(startRow, "F").Value = employee.Location;
-                            newWorksheet.Cell(startRow, "G").Value = employee.Gender;
-                            newWorksheet.Cell(startRow, "H").Value = employee.ActualWork;
-                            newWorksheet.Cell(startRow, "I").Value = employee.HolidayWork;
-                            newWorksheet.Cell(startRow, "J").Value = employee.Overtime;
-                            newWorksheet.Cell(startRow, "K").Value = employee.BasicSalary.ToString();
-                            newWorksheet.Cell(startRow, "M").Value = employee.InsuranceSalary.ToString();
-                            newWorksheet.Cell(startRow, "N").Value = employee.ActualDaySalary.ToString();
-                            newWorksheet.Cell(startRow, "O").Value = employee.OvertimeSalary.ToString();
-
-                            newWorksheet.Cell(startRow, "P").Value = employee.Allowances.Meal.ToString();
-                            newWorksheet.Cell(startRow, "Q").Value = employee.Allowances.Uniform.ToString();
-                            newWorksheet.Cell(startRow, "R").Value = employee.Allowances.Petrol.ToString();
-
-                            newWorksheet.Cell(startRow, "S").Value = employee.BusinessSalary.ToString();
-                            newWorksheet.Cell(startRow, "T").Value = employee.TotalActualSalary.ToString();
-
-                            newWorksheet.Cell(startRow, "U").Value = employee.Deductions.SocialInsurance.ToString();
-                            newWorksheet.Cell(startRow, "V").Value = employee.Deductions.HealthInsurance.ToString();
-                            newWorksheet.Cell(startRow, "W").Value = employee.Deductions.UnemploymentInsurance.ToString();
-                            newWorksheet.Cell(startRow, "X").Value = employee.Deductions.UnionFees.ToString();
-
-                            newWorksheet.Cell(startRow, "Y").Value = employee.TaxableIncome.ToString();
-
-                            newWorksheet.Cell(startRow, "Z").Value = employee.TaxDeductions.PersonalRelief.ToString();
-                            newWorksheet.Cell(startRow, "AA").Value = employee.TaxDeductions.DependentRelief.ToString();
-                            newWorksheet.Cell(startRow, "AB").Value = employee.TaxDeductions.Insurance.ToString();
-
-                            newWorksheet.Cell(startRow, "AC").Value = employee.IncomeTax.ToString();
-                            newWorksheet.Cell(startRow, "AD").Value = employee.PersonalIncomeTax.ToString();
-                            newWorksheet.Cell(startRow, "AE").Value = employee.Advances.ToString();
-                            newWorksheet.Cell(startRow, "AF").Value = employee.JobIncentives.ToString();
-                            newWorksheet.Cell(startRow, "AG").Value = employee.ActualReceived.ToString();
-
-                            startRow++;
-                        }
-
-                        // Sao chép định dạng của từng ô từ file mẫu
-                        foreach (var cell in templateWorksheet.CellsUsed())
-                        {
-                            var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                            newCell.Style = cell.Style;
-                            newCell.Value = cell.Value;
-                        }
-
-                        // Định dạng hàng từ 1 đến 6 và từ 10 trở xuống
-                        var borderStyle = XLBorderStyleValues.Thin;
-                        var borderColor = XLColor.White;
-                        var fontColor = XLColor.Black; // Màu chữ
-                        var fontBold = false; // Chữ in đậm
-                        var backgorundBoderColor = XLColor.Gray;
-
-                        for (int i = 1; i <= 6; i++)
-                        {
-                            var rowStyle = newWorksheet.Row(i).Style;
-                            rowStyle
-                                .Border.SetOutsideBorder(borderStyle)
-                                .Border.SetInsideBorder(borderStyle)
-                                .Border.SetOutsideBorderColor(borderColor)
-                                .Border.SetInsideBorderColor(borderColor)
-                                .Fill.SetBackgroundColor(XLColor.White);
-
-                            // Định dạng chữ
-                            rowStyle.Font.FontColor = fontColor;
-                            rowStyle.Font.Bold = fontBold;
-                            // Định dạng căn chữ
-                            rowStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        }
-
-                        // Lưu workbook mới vào memory stream
-                        newWorkbook.SaveAs(memoryStream);
-                        memoryStream.Position = 0;
+                        newWorksheet.Column(column.ColumnNumber()).Width = column.Width;
                     }
-                    return memoryStream;
+
+                    // Sao chép định dạng và cấu trúc hợp nhất ô của hàng từ 1 đến 9
+                    for (int i = 1; i <= 9; i++)
+                    {
+                        var templateRow = templateWorksheet.Row(i);
+                        var newRow = newWorksheet.Row(i);
+
+                        newRow.Height = templateRow.Height;
+                        newRow.Style = templateRow.Style;
+
+                        foreach (var cell in templateRow.CellsUsed())
+                        {
+                            var newCell = newRow.Cell(cell.Address.ColumnNumber);
+                            newCell.Style = cell.Style;
+                            newCell.Value = cell.Value;
+                        }
+                    }
+
+                    // Sao chép các ô hợp nhất từ hàng 1 đến 9
+                    foreach (var mergedRange in templateWorksheet.MergedRanges)
+                    {
+                        if (mergedRange.FirstRow().RowNumber() <= 9 && mergedRange.LastRow().RowNumber() <= 9)
+                        {
+                            newWorksheet.Range(mergedRange.RangeAddress.ToString()).Merge();
+                        }
+                    }
+
+                    // Sao chép định dạng của từng ô từ file mẫu
+                    foreach (var cell in templateWorksheet.CellsUsed())
+                    {
+                        var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
+                        newCell.Style = cell.Style;
+                        newCell.Value = cell.Value;
+                    }
+
+                    foreach (var mergedRange in templateWorksheet.MergedRanges)
+                    {
+                        if (mergedRange.FirstRow().RowNumber() >= 10)
+                        {
+                            var sourceRange = templateWorksheet.Range(mergedRange.RangeAddress.ToString());
+                            var destinationRange = newWorksheet.Range(mergedRange.RangeAddress.ToString());
+
+                            // Sao chép định dạng từ ô nguồn sang ô đích
+                            sourceRange.CopyTo(destinationRange);
+                        }
+                    }
+
+                    // Thêm dữ liệu nhân viên từ hàng 10 trở đi
+                    int startRow = 10;
+                    foreach (var employee in employeesData)
+                    {
+                        newWorksheet.Cell(startRow, "B").Value = employee.EmployeeId;
+                        newWorksheet.Cell(startRow, "C").Value = employee.OrderNumber;
+                        newWorksheet.Cell(startRow, "D").Value = employee.FullName;
+                        newWorksheet.Cell(startRow, "E").Value = employee.Position;
+                        newWorksheet.Cell(startRow, "F").Value = employee.Location;
+                        newWorksheet.Cell(startRow, "G").Value = employee.Gender;
+                        newWorksheet.Cell(startRow, "H").Value = employee.ActualWork;
+                        newWorksheet.Cell(startRow, "I").Value = employee.HolidayWork;
+                        newWorksheet.Cell(startRow, "J").Value = employee.Overtime;
+                        newWorksheet.Cell(startRow, "K").Value = employee.BasicSalary.ToString();
+                        newWorksheet.Cell(startRow, "M").Value = employee.InsuranceSalary.ToString();
+                        newWorksheet.Cell(startRow, "N").Value = employee.ActualDaySalary.ToString();
+                        newWorksheet.Cell(startRow, "O").Value = employee.OvertimeSalary.ToString();
+
+                        newWorksheet.Cell(startRow, "P").Value = employee.Allowances.Meal.ToString();
+                        newWorksheet.Cell(startRow, "Q").Value = employee.Allowances.Uniform.ToString();
+                        newWorksheet.Cell(startRow, "R").Value = employee.Allowances.Petrol.ToString();
+
+                        newWorksheet.Cell(startRow, "S").Value = employee.BusinessSalary.ToString();
+                        newWorksheet.Cell(startRow, "T").Value = employee.TotalActualSalary.ToString();
+
+                        newWorksheet.Cell(startRow, "U").Value = employee.Deductions.SocialInsurance.ToString();
+                        newWorksheet.Cell(startRow, "V").Value = employee.Deductions.HealthInsurance.ToString();
+                        newWorksheet.Cell(startRow, "W").Value = employee.Deductions.UnemploymentInsurance.ToString();
+                        newWorksheet.Cell(startRow, "X").Value = employee.Deductions.UnionFees.ToString();
+
+                        newWorksheet.Cell(startRow, "Y").Value = employee.TaxableIncome.ToString();
+
+                        newWorksheet.Cell(startRow, "Z").Value = employee.TaxDeductions.PersonalRelief.ToString();
+                        newWorksheet.Cell(startRow, "AA").Value = employee.TaxDeductions.DependentRelief.ToString();
+                        newWorksheet.Cell(startRow, "AB").Value = employee.TaxDeductions.Insurance.ToString();
+
+                        newWorksheet.Cell(startRow, "AC").Value = employee.IncomeTax.ToString();
+                        newWorksheet.Cell(startRow, "AD").Value = employee.PersonalIncomeTax.ToString();
+                        newWorksheet.Cell(startRow, "AE").Value = employee.Advances.ToString();
+                        newWorksheet.Cell(startRow, "AF").Value = employee.JobIncentives.ToString();
+                        newWorksheet.Cell(startRow, "AG").Value = employee.ActualReceived.ToString();
+
+                        startRow++;
+                    }
+
+                    // Sao chép định dạng của từng ô từ file mẫu
+                    foreach (var cell in templateWorksheet.CellsUsed())
+                    {
+                        var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
+                        newCell.Style = cell.Style;
+                        newCell.Value = cell.Value;
+                    }
+
+                    // Định dạng hàng từ 1 đến 6 và từ 10 trở xuống
+                    var borderStyle = XLBorderStyleValues.Thin;
+                    var borderColor = XLColor.White;
+                    var fontColor = XLColor.Black; // Màu chữ
+                    var fontBold = false; // Chữ in đậm
+                    var backgorundBoderColor = XLColor.Gray; 
+
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        var rowStyle = newWorksheet.Row(i).Style;
+                        rowStyle
+                            .Border.SetOutsideBorder(borderStyle)
+                            .Border.SetInsideBorder(borderStyle)
+                            .Border.SetOutsideBorderColor(borderColor)
+                            .Border.SetInsideBorderColor(borderColor)
+                            .Fill.SetBackgroundColor(XLColor.White);
+
+                        // Định dạng chữ
+                        rowStyle.Font.FontColor = fontColor;
+                        rowStyle.Font.Bold = fontBold;
+                        // Định dạng căn chữ
+                        rowStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    }
+
+                    // Lưu workbook mới vào memory stream
+                    newWorkbook.SaveAs(memoryStream);
+                    memoryStream.Position = 0;
                 }
+                return memoryStream;
             }
             catch (Exception ex)
             {
                 throw;
             }
         }
+
 
 
 
@@ -373,7 +371,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
                 };
             });
-            var results =  await Task.WhenAll(resultTask);
+            var results = await Task.WhenAll(resultTask);
 
             return results.Where(result => result != null);
         }
