@@ -53,10 +53,12 @@ jobs:
 
       - name: Copy Excel file to wwwroot
         run: |
-          cp $GITHUB_WORKSPACE/Sample.xlsx $WEBAPP_DIR/wwwroot/Sample.xlsx
-        working-directory: ${{ github.workspace }}
+          Copy-Item -Path $env:GITHUB_WORKSPACE\Code\CarpentryWorkshopAPI\CarpentryWorkshopAPI\Sample.xlsx -Destination $env:WEBAPP_DIR\wwwroot\Sample.xlsx
+        shell: pwsh
         env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
           WEBAPP_DIR: ${{ steps.deploy-to-webapp.outputs.webapp-dir }}
+
 
 
       - name: Deploy to Azure Web App
