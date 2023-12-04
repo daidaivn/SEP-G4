@@ -62,6 +62,6 @@ jobs:
 
       - name: Copy Excel file to wwwroot
         run: |
-          cp ./Code/CarpentryWorkshopAPI/Sample.xlsx $WEBAPP_DIR/wwwroot/Sample.xlsx
+          cp ./Code/CarpentryWorkshopAPI/CarpentryWorkshopAPI/Sample.xlsx $WEBAPP_DIR/wwwroot/Sample.xlsx
         env:
           WEBAPP_DIR: ${{ steps.deploy-to-webapp.outputs.webapp-dir }}
