@@ -40,7 +40,6 @@ jobs:
           name: .net-app
           path: |
             Code/CarpentryWorkshopAPI/publish
-            Code/CarpentryWorkshopAPI/Sample.xlsx  
 
   deploy:
     runs-on: windows-latest
