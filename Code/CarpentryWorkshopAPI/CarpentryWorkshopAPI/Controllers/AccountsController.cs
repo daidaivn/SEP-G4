@@ -63,7 +63,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var roles = user.Employee.RolesEmployees.Where(re=>re.EndDate == null).Select(u=>u.Role.RoleName).ToArray();
            
             var claims = new List<Claim>
-    {
+             {
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim("Name", employee.FirstName + " " + employee.LastName)
             };
@@ -122,12 +122,54 @@ namespace CarpentryWorkshopAPI.Controllers
             return userAccount;
         }
 
+        
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout(string token)
         {
-            await HttpContext.SignOutAsync();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"])),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+            };
+
+            SecurityToken validatedToken;
+            try
+            {
+                var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+
+                // Remove a specific claim (e.g., "YourClaimType")
+                var identity = (ClaimsIdentity)claimsPrincipal.Identity;
+                Claim claimToRemove = identity.FindFirst(claim => claim.Type == "Role");
+
+                if (claimToRemove != null)
+                {
+                    identity.RemoveClaim(claimToRemove);
+                    Console.WriteLine($"Claim 'YourClaimType' removed successfully.");
+                }
+                else
+                {
+                    Console.WriteLine($"Claim 'YourClaimType' not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Token validation failed
+                Console.WriteLine($"Token validation failed: {ex.Message}");
+                return BadRequest("Logout failed");
+            }
+
+            // Here, you can implement additional logic to invalidate the token (e.g., blacklist)
+            // For simplicity, we assume that removing the claim is sufficient for "logout"
+
             return Ok("Logout successful.");
         }
+
+
         [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateAccount([FromBody] CreateAccount request)

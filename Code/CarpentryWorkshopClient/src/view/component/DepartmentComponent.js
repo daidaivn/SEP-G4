@@ -145,22 +145,29 @@ function ListDepartmentComponent() {
   };
 
   const fetData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllDepadment()
-          .then((data) => {
-            setDepartments(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
+    let isDataLoaded = false;
+    let toastId = null;
+  
+    fetchAllDepadment()
+      .then((data) => {
+        isDataLoaded = true;
+        setDepartments(data);
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error('Lỗi không có phòng ban'); // Hiển thị thông báo lỗi ngay lập tức
+      });
+    setTimeout(() => {
+      if (!isDataLoaded) {
+        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
-    );
+    }, 1500);
   };
 
   useEffect(() => {

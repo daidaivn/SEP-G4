@@ -745,7 +745,6 @@ function ListEmployeeComponent() {
         }
         toast.error('Lỗi không có nhân viên'); // Hiển thị thông báo lỗi ngay lập tức
       });
-  
     setTimeout(() => {
       if (!isDataLoaded) {
         toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
