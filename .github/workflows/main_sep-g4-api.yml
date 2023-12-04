@@ -38,7 +38,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: Code/CarpentryWorkshopAPI/publish 
+          path: |
+            Code/CarpentryWorkshopAPI/publish
+            Code/CarpentryWorkshopAPI/Sample.xlsx  
 
   deploy:
     runs-on: windows-latest
@@ -61,3 +63,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34A1F774D87146B7819FE77F5D5D7538 }}
           package: .
+
