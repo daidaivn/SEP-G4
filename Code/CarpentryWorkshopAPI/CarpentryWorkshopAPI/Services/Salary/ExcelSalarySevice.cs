@@ -27,7 +27,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             try
             {
-                using (var templateWorkbook = new XLWorkbook("Sample.xlsx"))
+                using (var templateWorkbook = new XLWorkbook("Samle.xlsx"))
                 {
                     var templateWorksheet = templateWorkbook.Worksheet(1);
 
@@ -176,16 +176,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
             }
         }
 
-        private void CopyCellFormat(IXLWorksheet fromSheet, IXLWorksheet toSheet, int rowNumber, string column)
-        {
-            var fromCell = fromSheet.Cell(rowNumber, column);
-            var toCell = toSheet.Cell(rowNumber, column);
-
-            toCell.Style.Border.TopBorder = fromCell.Style.Border.TopBorder;
-            toCell.Style.Border.BottomBorder = fromCell.Style.Border.BottomBorder;
-            toCell.Style.Border.LeftBorder = fromCell.Style.Border.LeftBorder;
-            toCell.Style.Border.RightBorder = fromCell.Style.Border.RightBorder;
-        }
 
 
 
