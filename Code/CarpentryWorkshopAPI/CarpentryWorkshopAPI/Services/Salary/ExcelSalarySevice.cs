@@ -27,7 +27,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             try
             {
-                using (var templateWorkbook = new XLWorkbook("https://docs.google.com/spreadsheets/d/1UpVg-UHm7Km6L91BEn9uPiHLQPFUxCN0/edit?usp=drive_link&ouid=106719340337883972795&rtpof=true&sd=true"))
+                using (var templateWorkbook = new XLWorkbook("Sample.xlsx"))
                 {
                     var templateWorksheet = templateWorkbook.Worksheet(1);
 
