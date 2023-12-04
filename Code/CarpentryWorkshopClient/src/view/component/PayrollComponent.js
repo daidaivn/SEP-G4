@@ -35,6 +35,7 @@ import {
   CreateAndEditPersonalReward,
   CreateAndUpdateSpecialOccasion,
   CreateAndUpdateCompanyRerward,
+  fetchAllSalaryDetail,
 } from "../../sevices/PayrollSevice";
 import { fetchAllEmplyee } from "../../sevices/EmployeeService";
 
@@ -63,6 +64,9 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
+  
+  //salary detail
+  const [salaryDetail, setSalaryDetail] = useState([]);
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
@@ -112,6 +116,8 @@ const PayrollComponent = () => {
     }
     return true;
   };
+
+  
 
   //modal Excel
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
@@ -377,10 +383,37 @@ const PayrollComponent = () => {
         console.log("error", error);
       });
   };
-  console.log("Salary", salaries);
+  
+  //featchData SalaryDetail
+  const fetDataSalaryDetail = () => {
+    let isDataLoaded = false;
+    let toastId = null;
+    fetchAllSalaryDetail(currentMonth,currentYear)
+      .then((data) => {
+        isDataLoaded = true;
+        setSalaryDetail(data);
+        console.log('salaryDetail', data);
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+      })
+      .catch((error) => {
+        isDataLoaded = true;
+        if (toastId) {
+          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
+        }
+        toast.error('Lỗi không có nhân viên'); // Hiển thị thông báo lỗi ngay lập tức
+      });
+    setTimeout(() => {
+      if (!isDataLoaded) {
+        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+      }
+    }, 1500);
 
+  }
   useEffect(() => {
     fetData();
+    fetDataSalaryDetail();
   }, [iText, date, months]);
 
   return (
@@ -558,6 +591,7 @@ const PayrollComponent = () => {
           isModalOpenAllowanceAll={isModalOpenAllowanceAll}
           handleOkAllowanceAll={handleCancelAllowanceAll}
           handleCancelAllowanceAll={handleCancelAllowanceAll}
+          salaryDetail={salaryDetail}
         />
 
         {/* Modal hiển thị tất cả danh sách các khoản trừ */}
@@ -565,6 +599,7 @@ const PayrollComponent = () => {
           isModalOpenDeductions={isModalOpenDeductions}
           handleOkDeductions={handleOkDeductions}
           handleCancelDeductions={handleCancelDeductions}
+          salaryDetail={salaryDetail}
         />
 
         {/* Modal hiển thị tất cả danh sách lương thực nhận */}
@@ -572,6 +607,7 @@ const PayrollComponent = () => {
           isModalOpenSalaryReceived={isModalOpenSalaryReceived}
           handleOkSalaryReceived={handleOkSalaryReceived}
           handleCancelSalaryReceived={handleCancelSalaryReceived}
+          salaryDetail={salaryDetail}
         />
       </div>
     </>

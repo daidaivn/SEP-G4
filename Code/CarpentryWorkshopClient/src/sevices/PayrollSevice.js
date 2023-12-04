@@ -12,7 +12,9 @@ const fetchAllSalaries = (iText, month, year) => {
 const fetchAllReward = (date) => {
     return axios.get(`/CCMSapi/Reward/GetAllRewards?date=${date}`);
 };
-
+const fetchAllSalaryDetail = (month,year) => {
+    return axios.get(`/CCMSapi/ExcelSalary/GetEmployeesByContractDate/ContractsByDate/${month}/${year}`);
+};
 const ExportSalaryExcel = (month, year) => {
     return axios.get(
         `/CCMSapi/ExcelSalary/ExportSalaryExcel/export/${month}/${year}`,
@@ -93,6 +95,7 @@ const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusRea
 
 export {
     fetchAllSalaries,
+    fetchAllSalaryDetail,
     fetchAllReward,
     ExportSalaryExcel,
     GetEmployeeAllowanceDetail,

@@ -1,9 +1,11 @@
 import React from "react";
 import { Modal } from "antd";
+import { formatMoney } from "../../logicTime/formatAll";
 const AllowanceAll = ({
   isModalOpenAllowanceAll,
   handleOkAllowanceAll,
   handleCancelAllowanceAll,
+  salaryDetail,
 }) => {
   return (
     <>
@@ -48,54 +50,51 @@ const AllowanceAll = ({
                 </tr>
               </thead>
               <div className="tbody scrollbar" id="style-15">
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
+              {salaryDetail.length === 0 ? (
+                  <p>Thông tin chưa sẵn sàng hoặc không tồn tại.</p>
+                ) : (
+                  <React.Fragment>
+                    {Array.isArray(salaryDetail) &&
+                      salaryDetail.map((item, index) => (
+                        <div className="item-body">
+                          <div className="item-first">{index + 1}</div>
+                          <div className="item-second">{item.fullName}</div>
+                          <div className="item-child-body">
+                            {item.allowances.meal === 0
+                              ? "0"
+                              : formatMoney(item.allowances.meal)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.allowances.uniform === 0
+                              ? "0"
+                              : formatMoney(item.allowances.uniform)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.allowances.petrol === 0
+                              ? "0"
+                              : formatMoney(item.allowances.petrol)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.allowances.meal +
+                              item.allowances.uniform +
+                              item.allowances.petrol ===
+                            0
+                              ? "0"
+                              : formatMoney(
+                                  item.allowances.meal +
+                                    item.allowances.uniform +
+                                    item.allowances.petrol
+                                )}{" "}
+                            VNĐ
+                          </div>
+                        </div>
+                      ))}
+                  </React.Fragment>
+                )}
+                
               </div>
             </div>
           </div>

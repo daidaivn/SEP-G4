@@ -1,9 +1,11 @@
 import React from "react";
 import { Modal } from "antd";
+import { formatMoney } from "../../logicTime/formatAll";
 const SalaryReceived = ({
   isModalOpenSalaryReceived,
   handleOkSalaryReceived,
   handleCancelSalaryReceived,
+  salaryDetail,
 }) => {
   return (
     <>
@@ -44,86 +46,84 @@ const SalaryReceived = ({
                   <div className="item-child">Lương chính</div>
                   <div className="item-child">Khoản giảm trừ</div>
                   <div className="item-child">Phụ cấp</div>
-                  <div className="item-child">Hiếu hỉ</div>
                   <div className="item-child">Thuế TNCN</div>
-                  <div className="item-child">Thưởng</div>
+                  <div className="item-child">Các khoản phúc lợi khác</div>
                   <div className="item-child">Ứng</div>
                   <div className="item-child">Thực nhận</div>
                 </tr>
               </thead>
               <div className="tbody scrollbar" id="style-15">
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
-                <div className="item-body">
-                  <div className="item-first">01</div>
-                  <div className="item-second">Nguyễn Văn An</div>
-                  <div className="item-child-body">800.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">200.000 VNĐ</div>
-                  <div className="item-child-body">700.000 VNĐ</div>
-                  <div className="item-child-body">1.700.000 VNĐ</div>
-                </div>
+                {salaryDetail.length === 0 ? (
+                  <p>Thông tin chưa sẵn sàng hoặc không tồn tại.</p>
+                ) : (
+                  <React.Fragment>
+                    {Array.isArray(salaryDetail) &&
+                      salaryDetail.map((item, index) => (
+                        <div className="item-body">
+                          <div className="item-first">{index + 1}</div>
+                          <div className="item-second">{item.fullName}</div>
+                          <div className="item-child-body">
+                            {item.actualDaySalary === 0
+                              ? "0"
+                              : formatMoney(item.actualDaySalary)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.deductions.socialInsurance +
+                              item.deductions.healthInsurance +
+                              item.deductions.unemploymentInsurance +
+                              item.deductions.unionFees ===
+                            0
+                              ? "0"
+                              : formatMoney(
+                                  item.deductions.socialInsurance +
+                                    item.deductions.healthInsurance +
+                                    item.deductions.unemploymentInsurance +
+                                    item.deductions.unionFees
+                                )}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.allowances.meal +
+                              item.allowances.uniform +
+                              item.allowances.petrol ===
+                            0
+                              ? "0"
+                              : formatMoney(
+                                  item.allowances.meal +
+                                    item.allowances.uniform +
+                                    item.allowances.petrol
+                                )}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.personalIncomeTax === 0
+                              ? "0"
+                              : formatMoney(item.personalIncomeTax)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.jobIncentives === 0
+                              ? "0"
+                              : formatMoney(item.jobIncentives)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.advances === 0
+                              ? "0"
+                              : formatMoney(item.advances)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.actualReceived === 0
+                              ? "0"
+                              : formatMoney(item.actualReceived)}{" "}
+                            VNĐ
+                          </div>
+                        </div>
+                      ))}
+                  </React.Fragment>
+                )}
               </div>
             </div>
           </div>
