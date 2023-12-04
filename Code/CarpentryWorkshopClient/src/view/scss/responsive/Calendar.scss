@@ -2,4 +2,84 @@
   .list-table-calendar {
     width: 1020px !important;
   }
+  .list-table-calendar .body-calendar tbody tr td svg {
+    width: 23px;
+    height: 23px;
+  }
+  .list-table-calendar .body-calendar tbody tr td:nth-child(1) {
+    flex-basis: 242px !important;
+  }
+  .ListWork svg {
+    width: 25px;
+    height: 25px;
+  }
+  .modal-detail-all .head-modal p,
+  .head-title p {
+    font-size: 30px !important;
+  }
+  .modal-detail-all .head-modal {
+    svg {
+      width: 25px;
+      height: 25px;
+    }
+    padding: 23px 40px;
+  }
+  .modal-detail-all .body-modal .item-modal p {
+    font-size: 18px !important;
+  }
+  .item-modal .ant-select .ant-select-selector {
+    font-size: 18px !important;
+  }
+  .item-modal .ant-select .ant-select-selector .ant-select-selection-search {
+    input {
+      font-size: 18px !important;
+    }
+  }
+  .modal-detail-all {
+    width: 600px !important;
+  }
+  .footer-modal {
+    padding: unset !important;
+    .back,
+    .save {
+      justify-content: center !important;
+      font-size: 18px !important;
+      width: 165px;
+      padding: 12px 0px 16px 0px;
+    }
+  }
+  .modal-group {
+    padding: unset !important;
+  }
+  .head-modal .close {
+    svg {
+      width: 25px;
+      height: 25px;
+    }
+  }
+  .group-all .time,
+  .group-all .shift .shift-detail p,
+  .group-all .table .table-child .head .item p,
+  .body p {
+    font-size: 18px !important;
+  }
+  .head-modal {
+    padding: 33px 30px;
+  }
+  .group-all {
+    padding: 30px 35px;
+  }
+  .body-all {
+    max-height: 298px !important;
+  }
+  .group-all .table .table-child {
+    padding: 20px 0 !important;
+    gap: 10px !important;
+  }
+  .group-all .shift .shift-detail .box {
+    padding: 10px 24px !important;
+  }
+  .list-table-calendar thead tr td {
+    font-size: 18px !important;
+  }
 }
