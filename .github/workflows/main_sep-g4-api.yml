@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy ASP.Net Core app to Azure Web App - SEP-G4-API
 
 on:
@@ -35,8 +38,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: |
-            Code/CarpentryWorkshopAPI/publish
+          path: Code/CarpentryWorkshopAPI/publish 
 
   deploy:
     runs-on: windows-latest
@@ -50,16 +52,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-
-      - name: Copy Excel file to wwwroot
-        run: |
-          Copy-Item -Path $env:GITHUB_WORKSPACE\Code\CarpentryWorkshopAPI\CarpentryWorkshopAPI\Sample.xlsx -Destination $env:WEBAPP_DIR\wwwroot\Sample.xlsx
-        shell: pwsh
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
-          WEBAPP_DIR: ${{ steps.deploy-to-webapp.outputs.webapp-dir }}
-
-
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
