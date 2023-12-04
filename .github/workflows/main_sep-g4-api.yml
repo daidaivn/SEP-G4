@@ -51,6 +51,12 @@ jobs:
         with:
           name: .net-app
 
+      - name: Copy Excel file to wwwroot
+        run: |
+          cp ./Code/CarpentryWorkshopAPI/CarpentryWorkshopAPI/Sample.xlsx $WEBAPP_DIR/wwwroot/Sample.xlsx
+        env:
+          WEBAPP_DIR: ${{ steps.deploy-to-webapp.outputs.webapp-dir }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -59,9 +65,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34A1F774D87146B7819FE77F5D5D7538 }}
           package: .
-
-      - name: Copy Excel file to wwwroot
-        run: |
-          cp ./Code/CarpentryWorkshopAPI/CarpentryWorkshopAPI/Sample.xlsx $WEBAPP_DIR/wwwroot/Sample.xlsx
-        env:
-          WEBAPP_DIR: ${{ steps.deploy-to-webapp.outputs.webapp-dir }}
