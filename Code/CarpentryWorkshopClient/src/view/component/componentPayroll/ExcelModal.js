@@ -100,16 +100,16 @@ const ExcelModal = ({
                 handleOkExcel();
                 const fileName = `Bảng lương ${months}-${date}.xlsx`;
                 const url = window.URL.createObjectURL(new Blob([data]));
-
+    
                 // Tạo một thẻ a để tạo link tải xuống và kích thước nó
                 const link = document.createElement('a');
                 link.href = url;
                 link.setAttribute('download', fileName);
                 document.body.appendChild(link);
-
+    
                 // Simulate click để bắt đầu tải xuống
                 link.click();
-
+    
                 // Xóa thẻ và URL sau khi đã tải xuống
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
