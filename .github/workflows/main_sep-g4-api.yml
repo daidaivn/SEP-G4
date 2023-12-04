@@ -16,30 +16,29 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
-  
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-        include-prerelease: true
-  
-    - name: Build with dotnet
-      run: |
-        cd Code/CarpentryWorkshopAPI
-        dotnet build --configuration Release
-  
-    - name: dotnet publish
-      run: |
-        cd Code/CarpentryWorkshopAPI
-        dotnet publish -c Release -o ./publish
-  
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v3
-      with:
-        name: .net-app
-        path: Code/CarpentryWorkshopAPI/publish 
+      - uses: actions/checkout@v4
 
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+          include-prerelease: true
+
+      - name: Build with dotnet
+        run: |
+          cd Code/CarpentryWorkshopAPI
+          dotnet build --configuration Release
+
+      - name: dotnet publish
+        run: |
+          cd Code/CarpentryWorkshopAPI
+          dotnet publish -c Release -o ./publish
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: Code/CarpentryWorkshopAPI/publish 
 
   deploy:
     runs-on: windows-latest
@@ -49,25 +48,16 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: .net-app
-  
-    - name: Deploy ASP.Net Core app to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'SEP-G4-API'
-        slot-name: 'Production'
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34A1F774D87146B7819FE77F5D5D7538 }}
-        package: ${{ github.workspace }}/Code/CarpentryWorkshopAPI/publish 
-        include-app-settings: true
-  
-    - name: Deploy sample.xlsx to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'SEP-G4-API'
-        slot-name: 'Production'
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34A1F774D87146B7819FE77F5D5D7538 }}
-        package: ${{ github.workspace }}/sample.xlsx  
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'SEP-G4-API'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34A1F774D87146B7819FE77F5D5D7538 }}
+          package: .
