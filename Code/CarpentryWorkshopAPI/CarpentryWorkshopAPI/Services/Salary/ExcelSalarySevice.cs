@@ -228,7 +228,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                  .Where(x => x.DeductionType.Name.ToLower().Equals(unemployment.ToLower()))
                                  .Select(x => x.Percentage)
                                  .FirstOrDefaultAsync();
-            string union = "BHTT";
+            string union = "Phí công đoàn";
             var unionFees = await _context.DeductionsDetails
                                  .Include(x => x.DeductionType)
                                  .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
@@ -375,7 +375,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     PersonalIncomeTax = personIncome,
                     Advances = (decimal)advances,
                     JobIncentives = (decimal)totalBs,
-                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - (decimal)unionFees * basicSalary + totalBs)
+                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
 
                 };
             });
