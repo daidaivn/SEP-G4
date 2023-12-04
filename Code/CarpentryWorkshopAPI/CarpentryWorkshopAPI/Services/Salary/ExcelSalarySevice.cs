@@ -32,7 +32,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     var templateWorksheet = templateWorkbook.Worksheet(1);
 
 
-
                     // Tạo workbook mới
                     var newWorkbook = new XLWorkbook();
                     var newWorksheet = newWorkbook.Worksheets.Add("Sheet1");
