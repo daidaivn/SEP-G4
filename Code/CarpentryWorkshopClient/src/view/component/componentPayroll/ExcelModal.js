@@ -155,7 +155,7 @@ const ExcelModal = ({
                         <span className="back" onClick={handleCancelExcel}>
                             Hủy bỏ
                         </span>
-                        <span className="save" onClick={handleExport}>
+                        <span className="save" onClick={handleExportSalaryExcel}>
                             Tải xuống
                         </span>
                     </div>
