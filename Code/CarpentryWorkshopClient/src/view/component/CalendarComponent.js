@@ -2,6 +2,7 @@ import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
 import "../scss/CalendarComponent.scss";
+import "../scss/responsive/Calendar.scss";
 import MenuResponsive from "./componentUI/MenuResponsive";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import React, { useState, useEffect } from "react";
