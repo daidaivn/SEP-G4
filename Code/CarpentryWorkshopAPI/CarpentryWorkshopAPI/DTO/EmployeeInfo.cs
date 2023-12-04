@@ -44,6 +44,7 @@
         public decimal PersonalIncomeTax { get; set; }
 
         public decimal Advances { get; set; }
+        public decimal JobIncentives { get; set; }
 
         public decimal ActualReceived { get; set; }
     }

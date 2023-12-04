@@ -5,6 +5,7 @@ using AutoMapper;
 using ClosedXML.Excel;
 using CarpentryWorkshopAPI.DTO;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Drawing;
 
 
 namespace CarpentryWorkshopAPI.Services.Salary
@@ -66,6 +67,25 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         }
                     }
 
+                    // Sao chép định dạng của từng ô từ file mẫu
+                    foreach (var cell in templateWorksheet.CellsUsed())
+                    {
+                        var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
+                        newCell.Style = cell.Style;
+                        newCell.Value = cell.Value;
+                    }
+
+                    foreach (var mergedRange in templateWorksheet.MergedRanges)
+                    {
+                        if (mergedRange.FirstRow().RowNumber() >= 10)
+                        {
+                            var sourceRange = templateWorksheet.Range(mergedRange.RangeAddress.ToString());
+                            var destinationRange = newWorksheet.Range(mergedRange.RangeAddress.ToString());
+
+                            // Sao chép định dạng từ ô nguồn sang ô đích
+                            sourceRange.CopyTo(destinationRange);
+                        }
+                    }
 
                     // Thêm dữ liệu nhân viên từ hàng 10 trở đi
                     int startRow = 10;
@@ -106,44 +126,52 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         newWorksheet.Cell(startRow, "AC").Value = employee.IncomeTax.ToString();
                         newWorksheet.Cell(startRow, "AD").Value = employee.PersonalIncomeTax.ToString();
                         newWorksheet.Cell(startRow, "AE").Value = employee.Advances.ToString();
-                        newWorksheet.Cell(startRow, "AF").Value = employee.ActualReceived.ToString();
+                        newWorksheet.Cell(startRow, "AF").Value = employee.JobIncentives.ToString();
+                        newWorksheet.Cell(startRow, "AG").Value = employee.ActualReceived.ToString();
 
                         startRow++;
                     }
 
+                    // Sao chép định dạng của từng ô từ file mẫu
+                    foreach (var cell in templateWorksheet.CellsUsed())
+                    {
+                        var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
+                        newCell.Style = cell.Style;
+                        newCell.Value = cell.Value;
+                    }
+
+                    // Định dạng hàng từ 1 đến 6 và từ 10 trở xuống
                     var borderStyle = XLBorderStyleValues.Thin;
                     var borderColor = XLColor.White;
+                    var fontColor = XLColor.Black; // Màu chữ
+                    var fontBold = false; // Chữ in đậm
+                    var backgorundBoderColor = XLColor.Gray; 
 
                     for (int i = 1; i <= 6; i++)
                     {
-                        newWorksheet.Row(i).Style
+                        var rowStyle = newWorksheet.Row(i).Style;
+                        rowStyle
                             .Border.SetOutsideBorder(borderStyle)
                             .Border.SetInsideBorder(borderStyle)
                             .Border.SetOutsideBorderColor(borderColor)
                             .Border.SetInsideBorderColor(borderColor)
                             .Fill.SetBackgroundColor(XLColor.White);
-                    }
 
-                    for (int i = startRow; i <= newWorksheet.LastRowUsed().RowNumber(); i++)
-                    {
-                        newWorksheet.Row(i).Style
-                            .Border.SetOutsideBorder(borderStyle)
-                            .Border.SetInsideBorder(borderStyle)
-                            .Border.SetOutsideBorderColor(borderColor)
-                            .Border.SetInsideBorderColor(borderColor)
-                            .Fill.SetBackgroundColor(XLColor.White);
+                        // Định dạng chữ
+                        rowStyle.Font.FontColor = fontColor;
+                        rowStyle.Font.Bold = fontBold;
+                        // Định dạng căn chữ
+                        rowStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     }
 
                     // Lưu workbook mới vào memory stream
                     newWorkbook.SaveAs(memoryStream);
+                    memoryStream.Position = 0;
                 }
-                memoryStream.Position = 0;
-
                 return memoryStream;
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi
                 throw;
             }
         }
@@ -173,6 +201,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .Include(e => e.EmployeesAllowances)
                         .ThenInclude(ea => ea.AllowanceType)
                         .ThenInclude(at => at.Allowance)
+                        .Include(e => e.BonusDetails)
+                        .Include(e => e.SpecialOccasions)
                 .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
@@ -226,6 +256,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
                 .Sum(ths => ths.DailyRate) * 3;
+                var bonus = e.BonusDetails
+                .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
+                .Sum(bd => bd.BonusAmount);
+                var special = e.SpecialOccasions
+                .Where(so => so.OccasionDate >= startDate && so.OccasionDate <= endDate)
+                .Sum(so => so.Amount);
+                var totalBs = bonus + special;
+                if (totalBs == null)
+                {
+                    totalBs = 0;
+                }
                 if (totalHolidaySalary == null)
                 {
                     totalHolidaySalary = 0;
@@ -333,7 +374,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     IncomeTax = (decimal)incometax,
                     PersonalIncomeTax = personIncome,
                     Advances = (decimal)advances,
-                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - (decimal)unionFees * basicSalary)
+                    JobIncentives = (decimal)totalBs,
+                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - (decimal)unionFees * basicSalary + totalBs)
 
                 };
             });
