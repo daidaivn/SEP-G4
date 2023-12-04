@@ -82,4 +82,37 @@
   .list-table-calendar thead tr td {
     font-size: 18px !important;
   }
+  .modal-listShift .head-listShift .text-head p {
+    font-size: 30px !important;
+  }
+  .modal-listShift .head-listShift svg {
+    width: 25px;
+    height: 25px;
+  }
+  .modal-listShift .head-listShift {
+    padding: 33px 30px;
+  }
+  .modal-listShift .body-listShift .list-table-all .list-table thead p,
+  .modal-listShift .body-listShift .list-table-all .list-table tbody tr p {
+    font-size: 18px !important;
+  }
+  .modal-listShift .body-listShift {
+    padding: 20px 35px;
+  }
+  .modal-listShift {
+    width: 1155px;
+    height: 700px;
+  }
+  .modal-listShift .body-listShift .list-table-all .list-table tbody tr .item2 {
+    padding: 10px 14px;
+  }
+  .modal-listShift .body-listShift .list-table-all .list-table thead {
+    padding: 0px 33px;
+  }
+  .modal-listShift .body-listShift .list-table-all .list-table tbody {
+    max-height: 450px !important;
+  }
+  .modal-listShift .body-listShift .list-table-all .list-table tbody tr {
+    padding: 8px 20px;
+  }
 }
