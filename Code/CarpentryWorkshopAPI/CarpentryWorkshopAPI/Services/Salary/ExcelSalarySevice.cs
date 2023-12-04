@@ -184,7 +184,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
 
 
-
         public async Task<IEnumerable<EmployeeInfo>> GetEmployeesByContractDateAsync(int month, int year)
         {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
