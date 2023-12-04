@@ -371,7 +371,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
                 };
             });
-            var results = await Task.WhenAll(resultTask);
+            var results =  await Task.WhenAll(resultTask);
 
             return results.Where(result => result != null);
         }
