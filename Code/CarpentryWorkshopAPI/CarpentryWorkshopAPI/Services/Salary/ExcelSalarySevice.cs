@@ -27,150 +27,99 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
             try
             {
-
-                using (var templateWorkbook = new XLWorkbook("Sample.xlsx"))
+                using (var workbook = new XLWorkbook())
                 {
-                    var templateWorksheet = templateWorkbook.Worksheet(1);
-                     
+                    var worksheet = workbook.Worksheets.Add("Sheet1");
 
-                     
-                    // Tạo workbook mới
-                    var newWorkbook = new XLWorkbook();
-                    var newWorksheet = newWorkbook.Worksheets.Add("Sheet1");
-                     
-                    // Sao chép định dạng cơ bản của từng cột
-                    foreach (var column in templateWorksheet.ColumnsUsed())
-                    {
-                        newWorksheet.Column(column.ColumnNumber()).Width = column.Width;
-                    }
-
-                    // Sao chép định dạng và cấu trúc hợp nhất ô của hàng từ 1 đến 9
-                    for (int i = 1; i <= 9; i++)
-                    {
-                        var templateRow = templateWorksheet.Row(i);
-                        var newRow = newWorksheet.Row(i);
-
-                        newRow.Height = templateRow.Height;
-                        newRow.Style = templateRow.Style;
-
-                        foreach (var cell in templateRow.CellsUsed())
-                        {
-                            var newCell = newRow.Cell(cell.Address.ColumnNumber);
-                            newCell.Style = cell.Style;
-                            newCell.Value = cell.Value;
-                        }
-                    }
-
-                    // Sao chép các ô hợp nhất từ hàng 1 đến 9
-                    foreach (var mergedRange in templateWorksheet.MergedRanges)
-                    {
-                        if (mergedRange.FirstRow().RowNumber() <= 9 && mergedRange.LastRow().RowNumber() <= 9)
-                        {
-                            newWorksheet.Range(mergedRange.RangeAddress.ToString()).Merge();
-                        }
-                    }
-
-                    // Sao chép định dạng của từng ô từ file mẫu
-                    foreach (var cell in templateWorksheet.CellsUsed())
-                    {
-                        var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                        newCell.Style = cell.Style;
-                        newCell.Value = cell.Value;
-                    }
-
-                    foreach (var mergedRange in templateWorksheet.MergedRanges)
-                    {
-                        if (mergedRange.FirstRow().RowNumber() >= 10)
-                        {
-                            var sourceRange = templateWorksheet.Range(mergedRange.RangeAddress.ToString());
-                            var destinationRange = newWorksheet.Range(mergedRange.RangeAddress.ToString());
-
-                            // Sao chép định dạng từ ô nguồn sang ô đích
-                            sourceRange.CopyTo(destinationRange);
-                        }
-                    }
+                    // Đặt giá trị và xử lý hợp nhất cho các ô header
+                    SetMergedHeader(worksheet, "B7:B9", "Mã nv");
+                    SetMergedHeader(worksheet, "C7:C9", "STT");
+                    SetMergedHeader(worksheet, "D7:D9", "Họ và tên");
+                    SetMergedHeader(worksheet, "E7:E9", "Chức vụ");
+                    SetMergedHeader(worksheet, "F7:F9", "BP");
+                    SetMergedHeader(worksheet, "G7:G9", "GT");
+                    SetMergedHeader(worksheet, "H7:H9", "Công thực tế");
+                    SetMergedHeader(worksheet, "I7:I9", "Công lễ tết");
+                    SetMergedHeader(worksheet, "J7:J9", "Công làm thêm");
+                    SetMergedHeader(worksheet, "K7:K9", "Lương cơ bản");
+                    SetMergedHeader(worksheet, "L7:L9", "");
+                    SetMergedHeader(worksheet, "M7:M9", "Tổng lương tham gia BHXH");
+                    SetMergedHeader(worksheet, "N7:N9", "Lương ngày công thực tế");
+                    SetMergedHeader(worksheet, "O7:O9", "Lương làm thêm");
+                    SetMergedHeader(worksheet, "P7:P9", "Phụ cấp");
+                    SetMergedHeader(worksheet, "Q7:Q9", "Ăn ca");
+                    SetMergedHeader(worksheet, "R7:R9", "Trang phục");
+                    SetMergedHeader(worksheet, "S7:S9", "Điện thoại, xăng xe");
+                    SetMergedHeader(worksheet, "T7:T9", "Lương kinh doanh/lương sản lượng");
+                    SetMergedHeader(worksheet, "U7:X7", "Các khoản trừ");
+                    SetMergedHeader(worksheet, "U8:U9", "BHXH(8%)");
+                    SetMergedHeader(worksheet, "V8:V9", "BHYT(1,5%)");
+                    SetMergedHeader(worksheet, "W8:W9", "BHTN(1%)");
+                    SetMergedHeader(worksheet, "X8:X9", "Phí công đoàn (1%)");
+                    SetMergedHeader(worksheet, "Y7:Y9", "TN chịu thuế");
+                    SetMergedHeader(worksheet, "Z7:AB7", "Các khoản giảm trừ");
+                    SetMergedHeader(worksheet, "Z8:Z9", "Giảm trừ gia cảnh");
+                    SetMergedHeader(worksheet, "AA8:AA9", "Người phục thuộc");
+                    SetMergedHeader(worksheet, "AB8:AB9", "Bảo hiểm");
+                    SetMergedHeader(worksheet, "AC7:AC9", "TN Tính thuế");
+                    SetMergedHeader(worksheet, "AD7:AD9", "Thuế TNCN");
+                    SetMergedHeader(worksheet, "AE7:AE9", "Tạm ứng");
+                    SetMergedHeader(worksheet, "AF7:AF9", "Các khoản khác");
+                    SetMergedHeader(worksheet, "AG7:AG9", "Thực lĩnh");
 
                     // Thêm dữ liệu nhân viên từ hàng 10 trở đi
                     int startRow = 10;
                     foreach (var employee in employeesData)
                     {
-                        newWorksheet.Cell(startRow, "B").Value = employee.EmployeeId;
-                        newWorksheet.Cell(startRow, "C").Value = employee.OrderNumber;
-                        newWorksheet.Cell(startRow, "D").Value = employee.FullName;
-                        newWorksheet.Cell(startRow, "E").Value = employee.Position;
-                        newWorksheet.Cell(startRow, "F").Value = employee.Location;
-                        newWorksheet.Cell(startRow, "G").Value = employee.Gender;
-                        newWorksheet.Cell(startRow, "H").Value = employee.ActualWork;
-                        newWorksheet.Cell(startRow, "I").Value = employee.HolidayWork;
-                        newWorksheet.Cell(startRow, "J").Value = employee.Overtime;
-                        newWorksheet.Cell(startRow, "K").Value = employee.BasicSalary.ToString();
-                        newWorksheet.Cell(startRow, "M").Value = employee.InsuranceSalary.ToString();
-                        newWorksheet.Cell(startRow, "N").Value = employee.ActualDaySalary.ToString();
-                        newWorksheet.Cell(startRow, "O").Value = employee.OvertimeSalary.ToString();
+                        // Gán dữ liệu nhân viên vào từng ô tương ứng
+                        worksheet.Cell(startRow, 2).Value = employee.EmployeeId;
+                        worksheet.Cell(startRow, 3).Value = employee.OrderNumber;
+                        worksheet.Cell(startRow, 4).Value = employee.FullName;
+                        worksheet.Cell(startRow, 5).Value = employee.Position;
+                        worksheet.Cell(startRow, 6).Value = employee.Location;
+                        worksheet.Cell(startRow, 7).Value = employee.Gender;
+                        worksheet.Cell(startRow, 8).Value = employee.ActualWork;
+                        worksheet.Cell(startRow, 9).Value = employee.HolidayWork;
+                        worksheet.Cell(startRow, 10).Value = employee.Overtime;
+                        worksheet.Cell(startRow, 11).Value = employee.BasicSalary.ToString();
+                        worksheet.Cell(startRow, 13).Value = employee.InsuranceSalary.ToString();
+                        worksheet.Cell(startRow, 14).Value = employee.ActualDaySalary.ToString();
+                        worksheet.Cell(startRow, 15).Value = employee.OvertimeSalary.ToString();
 
-                        newWorksheet.Cell(startRow, "P").Value = employee.Allowances.Meal.ToString();
-                        newWorksheet.Cell(startRow, "Q").Value = employee.Allowances.Uniform.ToString();
-                        newWorksheet.Cell(startRow, "R").Value = employee.Allowances.Petrol.ToString();
+                        worksheet.Cell(startRow, 16).Value = employee.Allowances.Meal.ToString();
+                        worksheet.Cell(startRow, 17).Value = employee.Allowances.Uniform.ToString();
+                        worksheet.Cell(startRow, 18).Value = employee.Allowances.Petrol.ToString();
 
-                        newWorksheet.Cell(startRow, "S").Value = employee.BusinessSalary.ToString();
-                        newWorksheet.Cell(startRow, "T").Value = employee.TotalActualSalary.ToString();
+                        worksheet.Cell(startRow, 19).Value = employee.BusinessSalary.ToString();
+                        worksheet.Cell(startRow, 20).Value = employee.TotalActualSalary.ToString();
 
-                        newWorksheet.Cell(startRow, "U").Value = employee.Deductions.SocialInsurance.ToString();
-                        newWorksheet.Cell(startRow, "V").Value = employee.Deductions.HealthInsurance.ToString();
-                        newWorksheet.Cell(startRow, "W").Value = employee.Deductions.UnemploymentInsurance.ToString();
-                        newWorksheet.Cell(startRow, "X").Value = employee.Deductions.UnionFees.ToString();
+                        worksheet.Cell(startRow, 21).Value = employee.Deductions.SocialInsurance.ToString();
+                        worksheet.Cell(startRow, 22).Value = employee.Deductions.HealthInsurance.ToString();
+                        worksheet.Cell(startRow, 23).Value = employee.Deductions.UnemploymentInsurance.ToString();
+                        worksheet.Cell(startRow, 24).Value = employee.Deductions.UnionFees.ToString();
 
-                        newWorksheet.Cell(startRow, "Y").Value = employee.TaxableIncome.ToString();
+                        worksheet.Cell(startRow, 25).Value = employee.TaxableIncome.ToString();
 
-                        newWorksheet.Cell(startRow, "Z").Value = employee.TaxDeductions.PersonalRelief.ToString();
-                        newWorksheet.Cell(startRow, "AA").Value = employee.TaxDeductions.DependentRelief.ToString();
-                        newWorksheet.Cell(startRow, "AB").Value = employee.TaxDeductions.Insurance.ToString();
+                        worksheet.Cell(startRow, 26).Value = employee.TaxDeductions.PersonalRelief.ToString();
+                        worksheet.Cell(startRow, 27).Value = employee.TaxDeductions.DependentRelief.ToString();
+                        worksheet.Cell(startRow, 28).Value = employee.TaxDeductions.Insurance.ToString();
 
-                        newWorksheet.Cell(startRow, "AC").Value = employee.IncomeTax.ToString();
-                        newWorksheet.Cell(startRow, "AD").Value = employee.PersonalIncomeTax.ToString();
-                        newWorksheet.Cell(startRow, "AE").Value = employee.Advances.ToString();
-                        newWorksheet.Cell(startRow, "AF").Value = employee.JobIncentives.ToString();
-                        newWorksheet.Cell(startRow, "AG").Value = employee.ActualReceived.ToString();
+                        worksheet.Cell(startRow, 29).Value = employee.IncomeTax.ToString();
+                        worksheet.Cell(startRow, 30).Value = employee.PersonalIncomeTax.ToString();
+                        worksheet.Cell(startRow, 31).Value = employee.Advances.ToString();
+                        worksheet.Cell(startRow, 32).Value = employee.JobIncentives.ToString();
+                        worksheet.Cell(startRow, 33).Value = employee.ActualReceived.ToString();
+
+                        // ... (Gán dữ liệu vào các ô khác)
 
                         startRow++;
                     }
 
-                    // Sao chép định dạng của từng ô từ file mẫu
-                    foreach (var cell in templateWorksheet.CellsUsed())
-                    {
-                        var newCell = newWorksheet.Cell(cell.Address.RowNumber, cell.Address.ColumnNumber);
-                        newCell.Style = cell.Style;
-                        newCell.Value = cell.Value;
-                    }
-
-                    // Định dạng hàng từ 1 đến 6 và từ 10 trở xuống
-                    var borderStyle = XLBorderStyleValues.Thin;
-                    var borderColor = XLColor.White;
-                    var fontColor = XLColor.Black; // Màu chữ
-                    var fontBold = false; // Chữ in đậm
-                    var backgorundBoderColor = XLColor.Gray; 
-
-                    for (int i = 1; i <= 6; i++)
-                    {
-                        var rowStyle = newWorksheet.Row(i).Style;
-                        rowStyle
-                            .Border.SetOutsideBorder(borderStyle)
-                            .Border.SetInsideBorder(borderStyle)
-                            .Border.SetOutsideBorderColor(borderColor)
-                            .Border.SetInsideBorderColor(borderColor)
-                            .Fill.SetBackgroundColor(XLColor.White);
-
-                        // Định dạng chữ
-                        rowStyle.Font.FontColor = fontColor;
-                        rowStyle.Font.Bold = fontBold;
-                        // Định dạng căn chữ
-                        rowStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    }
-
                     // Lưu workbook mới vào memory stream
-                    newWorkbook.SaveAs(memoryStream);
+                    workbook.SaveAs(memoryStream);
                     memoryStream.Position = 0;
                 }
+
                 return memoryStream;
             }
             catch (Exception ex)
@@ -178,6 +127,19 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 throw;
             }
         }
+
+        private void SetMergedHeader(IXLWorksheet worksheet, string range, string value)
+        {
+            var mergedRange = worksheet.Range(range);
+            mergedRange.Merge();
+            mergedRange.Value = value;
+            mergedRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            mergedRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            mergedRange.Style.Font.Bold = true;
+            mergedRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+        }
+
+
 
 
 
