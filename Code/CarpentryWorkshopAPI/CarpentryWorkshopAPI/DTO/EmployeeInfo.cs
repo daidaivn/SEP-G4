@@ -20,62 +20,62 @@
 
         public int Overtime { get; set; }
 
-        public decimal BasicSalary { get; set; }
+        public long BasicSalary { get; set; }
 
-        public decimal InsuranceSalary { get; set; }
+        public long InsuranceSalary { get; set; }
 
-        public decimal ActualDaySalary { get; set; }
+        public long ActualDaySalary { get; set; }
 
-        public decimal OvertimeSalary { get; set; }
+        public long OvertimeSalary { get; set; }
 
         public Allowances Allowances { get; set; }
 
-        public decimal BusinessSalary { get; set; }
+        public long BusinessSalary { get; set; }
 
-        public decimal TotalActualSalary { get; set; }
+        public long TotalActualSalary { get; set; }
 
         public Deductions Deductions { get; set; }
 
-        public decimal TaxableIncome { get; set; }
+        public long TaxableIncome { get; set; }
 
         public TaxDeductions TaxDeductions { get; set; }
 
-        public decimal IncomeTax { get; set; }
-        public decimal PersonalIncomeTax { get; set; }
+        public long IncomeTax { get; set; }
+        public long PersonalIncomeTax { get; set; }
 
-        public decimal Advances { get; set; }
-        public decimal JobIncentives { get; set; }
+        public long Advances { get; set; }
+        public long JobIncentives { get; set; }
 
-        public decimal ActualReceived { get; set; }
+        public long ActualReceived { get; set; }
     }
 
     public class Allowances
     {
-        public decimal Meal { get; set; }
+        public long Meal { get; set; }
 
-        public decimal Uniform { get; set; }
+        public long Uniform { get; set; }
 
-        public decimal Petrol { get; set; }
+        public long Petrol { get; set; }
     }
 
     public class Deductions
     {
-        public decimal SocialInsurance { get; set; }
+        public long SocialInsurance { get; set; }
 
-        public decimal HealthInsurance { get; set; }
+        public long HealthInsurance { get; set; }
 
-        public decimal UnemploymentInsurance { get; set; }
+        public long UnemploymentInsurance { get; set; }
 
-        public decimal UnionFees { get; set; }
+        public long UnionFees { get; set; }
     }
 
     public class TaxDeductions
     {
-        public decimal PersonalRelief { get; set; }
+        public long PersonalRelief { get; set; }
 
-        public decimal DependentRelief { get; set; }
+        public long DependentRelief { get; set; }
 
-        public decimal Insurance { get; set; }
+        public long Insurance { get; set; }
     }
 
 }

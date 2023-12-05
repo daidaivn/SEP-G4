@@ -87,7 +87,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         worksheet.Cell(startRow, 8).Value = employee.ActualWork;
                         worksheet.Cell(startRow, 9).Value = employee.HolidayWork;
                         worksheet.Cell(startRow, 10).Value = employee.Overtime;
-                        worksheet.Cell(startRow, 11).Value = employee.BasicSalary.ToString();
+                        worksheet.Cell(startRow, 11).Value = ConvertToFormattedString(employee.BasicSalary.ToString());
                         worksheet.Cell(startRow, 13).Value = employee.InsuranceSalary.ToString();
                         worksheet.Cell(startRow, 14).Value = employee.ActualDaySalary.ToString();
                         worksheet.Cell(startRow, 15).Value = employee.OvertimeSalary.ToString();
@@ -430,37 +430,37 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     ActualWork = actualWorkDays,
                     HolidayWork = workDaysOnHolidays,
                     Overtime = workDayBonus,
-                    BasicSalary = basicSalary,
-                    InsuranceSalary = basicSalary,
-                    ActualDaySalary = actualWorkdaySalary,
-                    OvertimeSalary = (decimal)(totalHolidaySalary + totalOT),
+                    BasicSalary = (long)basicSalary,
+                    InsuranceSalary = (long)basicSalary,
+                    ActualDaySalary = (long)actualWorkdaySalary,
+                    OvertimeSalary = (long)(totalHolidaySalary + totalOT),
                     Allowances = new Allowances
                     {
-                        Meal = (decimal)mealAllowance,
-                        Uniform = (decimal)clotherAllowance,
-                        Petrol = (decimal)carAllowance
+                        Meal = (long)mealAllowance,
+                        Uniform = (long)clotherAllowance,
+                        Petrol = (long)carAllowance
                     },
-                    BusinessSalary = (decimal)bussinessSalary,
-                    TotalActualSalary = (decimal)totalActualSalary,
+                    BusinessSalary = (long)bussinessSalary,
+                    TotalActualSalary = (long)totalActualSalary,
                     Deductions = new Deductions
                     {
-                        SocialInsurance = (decimal)socialInsurance * basicSalary,
-                        HealthInsurance = (decimal)healthInsurance * basicSalary,
-                        UnemploymentInsurance = (decimal)unemploymentInsurance * basicSalary,
-                        UnionFees = (decimal)unionFees * basicSalary
+                        SocialInsurance = (long)((decimal)socialInsurance * basicSalary),
+                        HealthInsurance = (long)((decimal)healthInsurance * basicSalary),
+                        UnemploymentInsurance = (long)((decimal)unemploymentInsurance * basicSalary),
+                        UnionFees = (long)((decimal)unionFees * basicSalary)
                     },
-                    TaxableIncome = (decimal)taxableIncome,
+                    TaxableIncome = (long)taxableIncome,
                     TaxDeductions = new TaxDeductions
                     {
-                        PersonalRelief = (decimal)personalRelief,
-                        DependentRelief = (decimal)dependentRelief,
-                        Insurance = totalInsurance
+                        PersonalRelief = (long)personalRelief,
+                        DependentRelief = (long)dependentRelief,
+                        Insurance = (long)totalInsurance
                     },
-                    IncomeTax = (decimal)incometax,
-                    PersonalIncomeTax = personIncome,
-                    Advances = (decimal)advances,
-                    JobIncentives = (decimal)totalBs,
-                    ActualReceived = (decimal)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
+                    IncomeTax = (long)incometax,
+                    PersonalIncomeTax = (long)personIncome,
+                    Advances = (long)advances,
+                    JobIncentives = (long)totalBs,
+                    ActualReceived = (long)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
 
                 };
             });
@@ -568,7 +568,19 @@ namespace CarpentryWorkshopAPI.Services.Salary
             else
                 return income * 0.35m;
         }
-
+        private string ConvertToFormattedString(string input)
+        {
+            if (int.TryParse(input, out int intValue))
+            {
+                // Format the integer value with commas
+                return intValue.ToString("N0");
+            }
+            else
+            {
+                // Handle invalid input
+                return "Invalid Input";
+            }
+        }
 
 
     }
