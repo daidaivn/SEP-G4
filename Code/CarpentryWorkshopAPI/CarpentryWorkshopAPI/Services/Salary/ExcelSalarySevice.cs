@@ -56,11 +56,11 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     SetColorMergedHeader(worksheet, "Q7:Q9", "Ăn ca");
                     SetColorMergedHeader(worksheet, "R7:R9", "Trang phục");
                     SetColorMergedHeader(worksheet, "S7:S9", "Điện thoại, xăng xe");
-                    SetColorMergedHeader(worksheet, "T7:T9", "Lương kinh doanh/lương sản lượng");
+                    SetColorMergedHeader(worksheet, "T7:T9", "Lương kinh doanh / lương sản lượng");
                     SetColorMergedHeader(worksheet, "U7:X7", "Các khoản trừ");
-                    SetColorMergedHeader(worksheet, "U8:U9", "BHXH(8%)");
-                    SetColorMergedHeader(worksheet, "V8:V9", "BHYT(1,5%)");
-                    SetColorMergedHeader(worksheet, "W8:W9", "BHTN(1%)");
+                    SetColorMergedHeader(worksheet, "U8:U9", "BHXH (8%)");
+                    SetColorMergedHeader(worksheet, "V8:V9", "BHYT (1,5%)");
+                    SetColorMergedHeader(worksheet, "W8:W9", "BHTN (1%)");
                     SetColorMergedHeader(worksheet, "X8:X9", "Phí công đoàn (1%)");
                     SetColorMergedHeader(worksheet, "Y7:Y9", "TN chịu thuế");
                     SetColorMergedHeader(worksheet, "Z7:AB7", "Các khoản giảm trừ");
@@ -88,33 +88,33 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         worksheet.Cell(startRow, 9).Value = employee.HolidayWork;
                         worksheet.Cell(startRow, 10).Value = employee.Overtime;
                         worksheet.Cell(startRow, 11).Value = ConvertToFormattedString(employee.BasicSalary.ToString());
-                        worksheet.Cell(startRow, 13).Value = employee.InsuranceSalary.ToString();
-                        worksheet.Cell(startRow, 14).Value = employee.ActualDaySalary.ToString();
-                        worksheet.Cell(startRow, 15).Value = employee.OvertimeSalary.ToString();
+                        worksheet.Cell(startRow, 13).Value = ConvertToFormattedString(employee.InsuranceSalary.ToString());
+                        worksheet.Cell(startRow, 14).Value = ConvertToFormattedString(employee.ActualDaySalary.ToString());
+                        worksheet.Cell(startRow, 15).Value = ConvertToFormattedString(employee.OvertimeSalary.ToString());
 
-                        worksheet.Cell(startRow, 16).Value = employee.Allowances.Meal.ToString();
-                        worksheet.Cell(startRow, 17).Value = employee.Allowances.Uniform.ToString();
-                        worksheet.Cell(startRow, 18).Value = employee.Allowances.Petrol.ToString();
+                        worksheet.Cell(startRow, 16).Value = ConvertToFormattedString(employee.Allowances.Meal.ToString());
+                        worksheet.Cell(startRow, 17).Value = ConvertToFormattedString(employee.Allowances.Uniform.ToString());
+                        worksheet.Cell(startRow, 18).Value = ConvertToFormattedString(employee.Allowances.Petrol.ToString());
 
-                        worksheet.Cell(startRow, 19).Value = employee.BusinessSalary.ToString();
-                        worksheet.Cell(startRow, 20).Value = employee.TotalActualSalary.ToString();
+                        worksheet.Cell(startRow, 19).Value = ConvertToFormattedString(employee.BusinessSalary.ToString());
+                        worksheet.Cell(startRow, 20).Value = ConvertToFormattedString(employee.TotalActualSalary.ToString());
 
-                        worksheet.Cell(startRow, 21).Value = employee.Deductions.SocialInsurance.ToString();
-                        worksheet.Cell(startRow, 22).Value = employee.Deductions.HealthInsurance.ToString();
-                        worksheet.Cell(startRow, 23).Value = employee.Deductions.UnemploymentInsurance.ToString();
-                        worksheet.Cell(startRow, 24).Value = employee.Deductions.UnionFees.ToString();
+                        worksheet.Cell(startRow, 21).Value = ConvertToFormattedString(employee.Deductions.SocialInsurance.ToString());
+                        worksheet.Cell(startRow, 22).Value = ConvertToFormattedString(employee.Deductions.HealthInsurance.ToString());
+                        worksheet.Cell(startRow, 23).Value = ConvertToFormattedString(employee.Deductions.UnemploymentInsurance.ToString());
+                        worksheet.Cell(startRow, 24).Value = ConvertToFormattedString(employee.Deductions.UnionFees.ToString());
 
-                        worksheet.Cell(startRow, 25).Value = employee.TaxableIncome.ToString();
+                        worksheet.Cell(startRow, 25).Value = ConvertToFormattedString(employee.TaxableIncome.ToString());
 
-                        worksheet.Cell(startRow, 26).Value = employee.TaxDeductions.PersonalRelief.ToString();
-                        worksheet.Cell(startRow, 27).Value = employee.TaxDeductions.DependentRelief.ToString();
-                        worksheet.Cell(startRow, 28).Value = employee.TaxDeductions.Insurance.ToString();
+                        worksheet.Cell(startRow, 26).Value = ConvertToFormattedString(employee.TaxDeductions.PersonalRelief.ToString());
+                        worksheet.Cell(startRow, 27).Value = ConvertToFormattedString(employee.TaxDeductions.DependentRelief.ToString());
+                        worksheet.Cell(startRow, 28).Value = ConvertToFormattedString(employee.TaxDeductions.Insurance.ToString());
 
-                        worksheet.Cell(startRow, 29).Value = employee.IncomeTax.ToString();
-                        worksheet.Cell(startRow, 30).Value = employee.PersonalIncomeTax.ToString();
-                        worksheet.Cell(startRow, 31).Value = employee.Advances.ToString();
-                        worksheet.Cell(startRow, 32).Value = employee.JobIncentives.ToString();
-                        worksheet.Cell(startRow, 33).Value = employee.ActualReceived.ToString();
+                        worksheet.Cell(startRow, 29).Value = ConvertToFormattedString(employee.IncomeTax.ToString());
+                        worksheet.Cell(startRow, 30).Value = ConvertToFormattedString(employee.PersonalIncomeTax.ToString());
+                        worksheet.Cell(startRow, 31).Value = ConvertToFormattedString(employee.Advances.ToString());
+                        worksheet.Cell(startRow, 32).Value = ConvertToFormattedString(employee.JobIncentives.ToString());
+                        worksheet.Cell(startRow, 33).Value = ConvertToFormattedString(employee.ActualReceived.ToString());
 
                         SetStyleBody(worksheet.Cell(startRow, 2));
                         SetStyleBody(worksheet.Cell(startRow, 3));
@@ -235,23 +235,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
         private void SetStyleBody(IXLCell cell)
         {
             double additionalHeight = 0.3;
-            double additionalWidth = 5.0;  // Điều chỉnh giá trị theo cần thiết
 
-            // Tăng chiều cao của dòng chứa cell
+            // Adjust the height of the row containing the cell
             cell.WorksheetRow().Height += additionalHeight;
 
-            // Thiết lập kiểu cho cell
-            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;  // Canh giữa theo chiều dọc
+            // Set the style for the cell
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
             cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
             cell.Style.Border.OutsideBorderColor = XLColor.FromHtml("#bfbfbf");
-            cell.Style.Alignment.WrapText = false;  // Tắt tự động xuống dòng
-
-            // Tăng chiều rộng của cột chứa cell
-            var column = cell.WorksheetColumn();
-            column.Width = column.Width + additionalWidth;
-
-            // Điều chỉnh chiều rộng của dòng để vừa với nội dung
-            cell.WorksheetRow().AdjustToContents();
+            cell.Style.Font.FontName = "Times New Roman";
+            cell.Style.Font.FontSize = 9;
+            cell.Style.Alignment.WrapText = true;
         }
 
         // Hàm để đặt font chữ cho toàn bộ Excel
