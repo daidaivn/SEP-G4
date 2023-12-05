@@ -388,7 +388,7 @@ const PayrollComponent = () => {
   const fetDataSalaryDetail = () => {
     let isDataLoaded = false;
     let toastId = null;
-    fetchAllSalaryDetail(currentMonth,currentYear)
+    fetchAllSalaryDetail(months,date)
       .then((data) => {
         isDataLoaded = true;
         setSalaryDetail(data);
