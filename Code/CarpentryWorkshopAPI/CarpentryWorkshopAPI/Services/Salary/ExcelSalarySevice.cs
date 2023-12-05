@@ -31,41 +31,47 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     var worksheet = workbook.Worksheets.Add("Sheet1");
 
+                    SetMergedHeader(worksheet, "J4:R4", "Bảng tính tiền lương nhân viên");
+                    SetMergedHeader(worksheet, "M5", "Tháng 12");
+                    SetMergedHeader(worksheet, "AJ1:AK1", "Mẫu số: 02 - LĐTL");
+                    SetMergedHeader(worksheet, "AI2:AL2", "(Ban hành theo Thông tư số 200/2014/TT-BTC");
+                    SetMergedHeader(worksheet, "AI3:AL3", "Ngày 22/12/2014 của Bộ Tài chính)");
+
                     // Đặt giá trị và xử lý hợp nhất cho các ô header
-                    SetMergedHeader(worksheet, "B7:B9", "Mã nv");
-                    SetMergedHeader(worksheet, "C7:C9", "STT");
-                    SetMergedHeader(worksheet, "D7:D9", "Họ và tên");
-                    SetMergedHeader(worksheet, "E7:E9", "Chức vụ");
-                    SetMergedHeader(worksheet, "F7:F9", "BP");
-                    SetMergedHeader(worksheet, "G7:G9", "GT");
-                    SetMergedHeader(worksheet, "H7:H9", "Công thực tế");
-                    SetMergedHeader(worksheet, "I7:I9", "Công lễ tết");
-                    SetMergedHeader(worksheet, "J7:J9", "Công làm thêm");
-                    SetMergedHeader(worksheet, "K7:K9", "Lương cơ bản");
-                    SetMergedHeader(worksheet, "L7:L9", "");
-                    SetMergedHeader(worksheet, "M7:M9", "Tổng lương tham gia BHXH");
-                    SetMergedHeader(worksheet, "N7:N9", "Lương ngày công thực tế");
-                    SetMergedHeader(worksheet, "O7:O9", "Lương làm thêm");
-                    SetMergedHeader(worksheet, "P7:P9", "Phụ cấp");
-                    SetMergedHeader(worksheet, "Q7:Q9", "Ăn ca");
-                    SetMergedHeader(worksheet, "R7:R9", "Trang phục");
-                    SetMergedHeader(worksheet, "S7:S9", "Điện thoại, xăng xe");
-                    SetMergedHeader(worksheet, "T7:T9", "Lương kinh doanh/lương sản lượng");
-                    SetMergedHeader(worksheet, "U7:X7", "Các khoản trừ");
-                    SetMergedHeader(worksheet, "U8:U9", "BHXH(8%)");
-                    SetMergedHeader(worksheet, "V8:V9", "BHYT(1,5%)");
-                    SetMergedHeader(worksheet, "W8:W9", "BHTN(1%)");
-                    SetMergedHeader(worksheet, "X8:X9", "Phí công đoàn (1%)");
-                    SetMergedHeader(worksheet, "Y7:Y9", "TN chịu thuế");
-                    SetMergedHeader(worksheet, "Z7:AB7", "Các khoản giảm trừ");
-                    SetMergedHeader(worksheet, "Z8:Z9", "Giảm trừ gia cảnh");
-                    SetMergedHeader(worksheet, "AA8:AA9", "Người phục thuộc");
-                    SetMergedHeader(worksheet, "AB8:AB9", "Bảo hiểm");
-                    SetMergedHeader(worksheet, "AC7:AC9", "TN Tính thuế");
-                    SetMergedHeader(worksheet, "AD7:AD9", "Thuế TNCN");
-                    SetMergedHeader(worksheet, "AE7:AE9", "Tạm ứng");
-                    SetMergedHeader(worksheet, "AF7:AF9", "Các khoản khác");
-                    SetMergedHeader(worksheet, "AG7:AG9", "Thực lĩnh");
+                    SetColorMergedHeader(worksheet, "B7:B9", "Mã nv");
+                    SetColorMergedHeader(worksheet, "C7:C9", "STT");
+                    SetColorMergedHeader(worksheet, "D7:D9", "Họ và tên");
+                    SetColorMergedHeader(worksheet, "E7:E9", "Chức vụ");
+                    SetColorMergedHeader(worksheet, "F7:F9", "BP");
+                    SetColorMergedHeader(worksheet, "G7:G9", "GT");
+                    SetColorMergedHeader(worksheet, "H7:H9", "Công thực tế");
+                    SetColorMergedHeader(worksheet, "I7:I9", "Công lễ tết");
+                    SetColorMergedHeader(worksheet, "J7:J9", "Công làm thêm");
+                    SetColorMergedHeader(worksheet, "K7:K9", "Lương cơ bản");
+                    SetColorMergedHeader(worksheet, "L7:L9", "");
+                    SetColorMergedHeader(worksheet, "M7:M9", "Tổng lương tham gia BHXH");
+                    SetColorMergedHeader(worksheet, "N7:N9", "Lương ngày công thực tế");
+                    SetColorMergedHeader(worksheet, "O7:O9", "Lương làm thêm");
+                    SetColorMergedHeader(worksheet, "P7:P9", "Phụ cấp");
+                    SetColorMergedHeader(worksheet, "Q7:Q9", "Ăn ca");
+                    SetColorMergedHeader(worksheet, "R7:R9", "Trang phục");
+                    SetColorMergedHeader(worksheet, "S7:S9", "Điện thoại, xăng xe");
+                    SetColorMergedHeader(worksheet, "T7:T9", "Lương kinh doanh/lương sản lượng");
+                    SetColorMergedHeader(worksheet, "U7:X7", "Các khoản trừ");
+                    SetColorMergedHeader(worksheet, "U8:U9", "BHXH(8%)");
+                    SetColorMergedHeader(worksheet, "V8:V9", "BHYT(1,5%)");
+                    SetColorMergedHeader(worksheet, "W8:W9", "BHTN(1%)");
+                    SetColorMergedHeader(worksheet, "X8:X9", "Phí công đoàn (1%)");
+                    SetColorMergedHeader(worksheet, "Y7:Y9", "TN chịu thuế");
+                    SetColorMergedHeader(worksheet, "Z7:AB7", "Các khoản giảm trừ");
+                    SetColorMergedHeader(worksheet, "Z8:Z9", "Giảm trừ gia cảnh");
+                    SetColorMergedHeader(worksheet, "AA8:AA9", "Người phục thuộc");
+                    SetColorMergedHeader(worksheet, "AB8:AB9", "Bảo hiểm");
+                    SetColorMergedHeader(worksheet, "AC7:AC9", "TN Tính thuế");
+                    SetColorMergedHeader(worksheet, "AD7:AD9", "Thuế TNCN");
+                    SetColorMergedHeader(worksheet, "AE7:AE9", "Tạm ứng");
+                    SetColorMergedHeader(worksheet, "AF7:AF9", "Các khoản khác");
+                    SetColorMergedHeader(worksheet, "AG7:AG9", "Thực lĩnh");
 
                     // Thêm dữ liệu nhân viên từ hàng 10 trở đi
                     int startRow = 10;
@@ -110,14 +116,65 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         worksheet.Cell(startRow, 32).Value = employee.JobIncentives.ToString();
                         worksheet.Cell(startRow, 33).Value = employee.ActualReceived.ToString();
 
-                        // ... (Gán dữ liệu vào các ô khác)
+                        SetStyleBody(worksheet.Cell(startRow, 2));
+                        SetStyleBody(worksheet.Cell(startRow, 3));
+                        SetStyleBody(worksheet.Cell(startRow, 4));
+                        SetStyleBody(worksheet.Cell(startRow, 5));
+                        SetStyleBody(worksheet.Cell(startRow, 6));
+                        SetStyleBody(worksheet.Cell(startRow, 7));
+                        SetStyleBody(worksheet.Cell(startRow, 8));
+                        SetStyleBody(worksheet.Cell(startRow, 9));
+                        SetStyleBody(worksheet.Cell(startRow, 10));
+                        SetStyleBody(worksheet.Cell(startRow, 11));
+                        SetStyleBody(worksheet.Cell(startRow, 12));
+                        SetStyleBody(worksheet.Cell(startRow, 13));
+                        SetStyleBody(worksheet.Cell(startRow, 14));
+                        SetStyleBody(worksheet.Cell(startRow, 15));
+                        SetStyleBody(worksheet.Cell(startRow, 16));
+                        SetStyleBody(worksheet.Cell(startRow, 17));
+                        SetStyleBody(worksheet.Cell(startRow, 18));
+                        SetStyleBody(worksheet.Cell(startRow, 19));
+                        SetStyleBody(worksheet.Cell(startRow, 20));
+                        SetStyleBody(worksheet.Cell(startRow, 21));
+                        SetStyleBody(worksheet.Cell(startRow, 22));
+                        SetStyleBody(worksheet.Cell(startRow, 23));
+                        SetStyleBody(worksheet.Cell(startRow, 24));
+
+                        SetNumberFormat(worksheet.Cell(startRow, 2));
+                        SetNumberFormat(worksheet.Cell(startRow, 3));
+                        SetNumberFormat(worksheet.Cell(startRow, 4));
+                        SetNumberFormat(worksheet.Cell(startRow, 5));
+                        SetNumberFormat(worksheet.Cell(startRow, 6));
+                        SetNumberFormat(worksheet.Cell(startRow, 7));
+                        SetNumberFormat(worksheet.Cell(startRow, 8));
+                        SetNumberFormat(worksheet.Cell(startRow, 9));
+                        SetNumberFormat(worksheet.Cell(startRow, 10));
+                        SetNumberFormat(worksheet.Cell(startRow, 11));
+                        SetNumberFormat(worksheet.Cell(startRow, 12));
+                        SetNumberFormat(worksheet.Cell(startRow, 13));
+                        SetNumberFormat(worksheet.Cell(startRow, 14));
+                        SetNumberFormat(worksheet.Cell(startRow, 15));
+                        SetNumberFormat(worksheet.Cell(startRow, 16));
+                        SetNumberFormat(worksheet.Cell(startRow, 17));
+                        SetNumberFormat(worksheet.Cell(startRow, 18));
+                        SetNumberFormat(worksheet.Cell(startRow, 19));
+                        SetNumberFormat(worksheet.Cell(startRow, 20));
+                        SetNumberFormat(worksheet.Cell(startRow, 21));
+                        SetNumberFormat(worksheet.Cell(startRow, 22));
+                        SetNumberFormat(worksheet.Cell(startRow, 23));
+                        SetNumberFormat(worksheet.Cell(startRow, 24));
 
                         startRow++;
                     }
 
+                    // Gọi hàm để đặt font chữ cho toàn bộ Excel
+                    SetGlobalFont(worksheet);
+
                     // Lưu workbook mới vào memory stream
                     workbook.SaveAs(memoryStream);
                     memoryStream.Position = 0;
+
+                   
                 }
 
                 return memoryStream;
@@ -126,6 +183,83 @@ namespace CarpentryWorkshopAPI.Services.Salary
             {
                 throw;
             }
+        }
+        void SetNumberFormat(IXLCell cell)
+        {
+            // Đặt định dạng số cho ô
+            cell.Style.NumberFormat.Format = "#,##0";
+        }
+
+        private void SetColorMergedHeader(IXLWorksheet worksheet, string range, string value)
+        {
+            var mergedRange = worksheet.Range(range);
+            mergedRange.Merge();
+            mergedRange.Value = value;
+
+            double additionalHeight = 0.3;
+
+            for (int rowNumber = mergedRange.FirstRow().RowNumber(); rowNumber <= mergedRange.LastRow().RowNumber(); rowNumber++)
+            {
+                worksheet.Row(rowNumber).Height += additionalHeight;
+            }
+
+            mergedRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            mergedRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            mergedRange.Style.Font.Bold = true;
+
+
+            mergedRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#d9e2f3");
+            mergedRange.Style.Font.FontColor = XLColor.FromHtml("#002060");
+
+            // Đặt màu viền bằng cách sử dụng AddBorder
+            mergedRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            mergedRange.Style.Border.OutsideBorderColor = XLColor.FromHtml("#bfbfbf");
+
+            // Đặt màu viền xung quanh
+            foreach (var cell in mergedRange.CellsUsed())
+            {
+                cell.Style.Border.LeftBorder = XLBorderStyleValues.Thin;
+                cell.Style.Border.LeftBorderColor = XLColor.FromHtml("#bfbfbf");
+                cell.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                cell.Style.Border.TopBorderColor = XLColor.FromHtml("#bfbfbf");
+                cell.Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                cell.Style.Border.RightBorderColor = XLColor.FromHtml("#bfbfbf");
+                cell.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                cell.Style.Border.BottomBorderColor = XLColor.FromHtml("#bfbfbf");
+
+                // Cho phép chữ xuống dòng tự động
+                cell.Style.Alignment.WrapText = true;
+            }
+        }
+
+        private void SetStyleBody(IXLCell cell)
+        {
+            double additionalHeight = 0.3;
+            double additionalWidth = 5.0;  // Điều chỉnh giá trị theo cần thiết
+
+            // Tăng chiều cao của dòng chứa cell
+            cell.WorksheetRow().Height += additionalHeight;
+
+            // Thiết lập kiểu cho cell
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;  // Canh giữa theo chiều dọc
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            cell.Style.Border.OutsideBorderColor = XLColor.FromHtml("#bfbfbf");
+            cell.Style.Alignment.WrapText = false;  // Tắt tự động xuống dòng
+
+            // Tăng chiều rộng của cột chứa cell
+            var column = cell.WorksheetColumn();
+            column.Width = column.Width + additionalWidth;
+
+            // Điều chỉnh chiều rộng của dòng để vừa với nội dung
+            cell.WorksheetRow().AdjustToContents();
+        }
+
+        // Hàm để đặt font chữ cho toàn bộ Excel
+        private void SetGlobalFont(IXLWorksheet worksheet)
+        {
+            // Đặt font chữ và kích thước cho toàn bộ Excel
+            worksheet.Style.Font.FontName = "Times New Roman";
+            worksheet.Style.Font.FontSize = 9;
         }
 
         private void SetMergedHeader(IXLWorksheet worksheet, string range, string value)
@@ -138,10 +272,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
             mergedRange.Style.Font.Bold = true;
             mergedRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
         }
-
-
-
-
 
 
 
