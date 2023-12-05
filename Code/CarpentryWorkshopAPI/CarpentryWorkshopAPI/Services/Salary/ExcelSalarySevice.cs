@@ -31,8 +31,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     var worksheet = workbook.Worksheets.Add("Sheet1");
 
+
                     SetMergedHeader(worksheet, "J4:R4", "Bảng tính tiền lương nhân viên");
-                    SetMergedHeader(worksheet, "M5", "Tháng 12");
+                    SetMergedHeader(worksheet, "M5", $"Tháng {month}");
                     SetMergedHeader(worksheet, "AJ1:AK1", "Mẫu số: 02 - LĐTL");
                     SetMergedHeader(worksheet, "AI2:AL2", "(Ban hành theo Thông tư số 200/2014/TT-BTC");
                     SetMergedHeader(worksheet, "AI3:AL3", "Ngày 22/12/2014 của Bộ Tài chính)");
@@ -167,6 +168,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         startRow++;
                     }
 
+                    worksheet.Column(4).Width = 40;
+
                     // Gọi hàm để đặt font chữ cho toàn bộ Excel
                     SetGlobalFont(worksheet);
 
@@ -235,18 +238,23 @@ namespace CarpentryWorkshopAPI.Services.Salary
         private void SetStyleBody(IXLCell cell)
         {
             double additionalHeight = 0.3;
+            double additionalWidth = 5; // Specify the additional width you want
 
             // Adjust the height of the row containing the cell
             cell.WorksheetRow().Height += additionalHeight;
+
+            cell.Style.Alignment.WrapText = false;
+
+            // Adjust the width of the column containing the cell
+            cell.WorksheetColumn().Width += additionalWidth;
 
             // Set the style for the cell
             cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
             cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
             cell.Style.Border.OutsideBorderColor = XLColor.FromHtml("#bfbfbf");
-            cell.Style.Font.FontName = "Times New Roman";
-            cell.Style.Font.FontSize = 9;
-            cell.Style.Alignment.WrapText = true;
+
         }
+
 
         // Hàm để đặt font chữ cho toàn bộ Excel
         private void SetGlobalFont(IXLWorksheet worksheet)
