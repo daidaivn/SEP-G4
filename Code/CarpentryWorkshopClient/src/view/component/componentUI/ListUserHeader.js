@@ -107,12 +107,6 @@ function ListUserHeader() {
   const showModalChange = () => {
     setIsModalOpenChange(true);
   };
-  const handleOkChange = () => {
-    setIsModalOpenChange(false);
-  };
-  const handleCancelChange = () => {
-    setIsModalOpenChange(false);
-  };
   return (
     <>
       <div className="list-user-header">
@@ -363,8 +357,8 @@ function ListUserHeader() {
 
       <ChangePass
         isModalOpenChange={isModalOpenChange}
-        handleOkChange={handleOkChange}
-        handleCancelChange={handleCancelChange}
+        setIsModalOpenChange={setIsModalOpenChange}
+        userEmployeeID={userEmployeeID}
       />
     </>
   );
