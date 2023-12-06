@@ -2,9 +2,21 @@ import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
 import "../scss/HolidayComponent.scss";
-import { Input, Select } from "antd";
+import { Input, Modal, Select } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
+import { useState } from "react";
 const HolidayComponent = () => {
+  //modal tạo lịch nghỉ lễ
+  const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
+  const showModalHoliday = () => {
+    setIsModalOpenHoliday(true);
+  };
+  const handleOkHoliday = () => {
+    setIsModalOpenHoliday(false);
+  };
+  const handleCancelHoliday = () => {
+    setIsModalOpenHoliday(false);
+  };
   return (
     <>
       <div className="col-right-container">
@@ -57,7 +69,7 @@ const HolidayComponent = () => {
           <div className="list-filter year">
             <Select className="select-input" value={2023} />
           </div>
-          <div className="ListWork">
+          <div className="ListWork" onClick={showModalHoliday}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="36"
@@ -140,6 +152,40 @@ const HolidayComponent = () => {
             </tr>
           </tbody>
         </table>
+
+        {/* modal tạo lịch nghỉ lễ */}
+        <Modal
+          className="modal"
+          open={isModalOpenHoliday}
+          onOk={handleOkHoliday}
+          onCancel={handleCancelHoliday}
+        >
+          <div className="modal-add-holiday">
+            <div className="body">
+              <div className="head">
+                <p>Tạo lịch nghỉ lễ</p>
+              </div>
+            </div>
+            <div className="footer">
+              <div className="item-body">
+                <p>Tên ngày nghỉ lễ</p>
+                <Input type="text"></Input>
+              </div>
+              <div className="item-body">
+                <p>Số ngày nghỉ</p>
+                <Input type="text" placeholder="Số ngày nghỉ"></Input>
+              </div>
+              <div className="item-body">
+                <p>Ngày bắt đầu nghỉ</p>
+                <Input type="date"></Input>
+              </div>
+              <div className="btn-footer">
+                <div className="btn cancel">Hủy bỏ</div>
+                <div className="btn save">Lưu</div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );
