@@ -97,6 +97,20 @@ const Menucomponent = () => {
               </NavLink>
             </div>
           )}
+          {userPages.includes("Holiday") && (
+            <div className="item-link">
+              <NavLink
+                to={"/holiday"}
+                id="item-menu"
+                onClick={() => handleDivClick("div11")}
+                activeClassName={activeDiv === "div11" ? "active" : ""}
+              >
+                <i className="icon-activity"></i>
+
+                <span className="text">Quản Lý nghỉ lễ</span>
+              </NavLink>
+            </div>
+          )}
           {userPages.includes("Payroll") && (
             <div className="item-link">
               <NavLink
