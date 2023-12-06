@@ -6,19 +6,91 @@ import "../scss/responsive/Holiday.scss";
 import "../scss/responsive/responsive.scss";
 import { Input, Modal, Select } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GetAllHolidays } from "../../sevices/HolidayService";
+import {
+  createYearOptions,
+  getWeekRange,
+  getMonthsInYear,
+} from "../logicTime/getWeeDays";
+import { da } from "date-fns/locale";
 const HolidayComponent = () => {
   //modal tạo lịch nghỉ lễ
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
-  const showModalHoliday = () => {
-    setIsModalOpenHoliday(true);
-  };
+  const [action, setAction] = useState("");
+
+  
+
+
   const handleOkHoliday = () => {
     setIsModalOpenHoliday(false);
   };
   const handleCancelHoliday = () => {
     setIsModalOpenHoliday(false);
   };
+  const yearOptions = createYearOptions();
+
+  const [months, setMonths] = useState("");
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const monthOptions = getMonthsInYear(months);
+  monthOptions.unshift({ value: null, label: 'Tất cả' });
+  const [fetchAllHolidays, setfetchAllHolidays] = useState([]);
+
+  const initialInputHolidaysState = {
+    nameHoliday: "",
+    startDate: "",
+    endDate: "",
+  };
+
+  const [inputHolidays, setInputHolidays] = useState(initialInputHolidaysState);
+
+  console.log('months', months);
+  console.log('selectedYear', selectedYear);
+
+  const handleChangeYear = (newYear) => {
+    setSelectedYear(newYear);
+  };
+
+  const showModalHoliday = () => {
+    if(action === "add"){
+      setInputHolidays(initialInputHolidaysState)
+    }else{
+
+    }
+    setIsModalOpenHoliday(true);
+  };
+
+  
+
+  const convertDobToISO = (dobstring) => {
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
+    }
+    return dobstring;
+  };
+
+  const FetchAllHolidays = () => {
+    GetAllHolidays(months, selectedYear)
+      .then((data) => {
+        setfetchAllHolidays(data)
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  };
+  useEffect(() => {
+    FetchAllHolidays();
+  }, [months, selectedYear])
+
+  console.log('fetchAllHolidays', fetchAllHolidays);
+
   return (
     <>
       <div className="col-right-container">
@@ -66,12 +138,34 @@ const HolidayComponent = () => {
             <Input placeholder="Tìm kiếm"></Input>
           </div>
           <div className="list-filter">
-            <Select className="select-input" value={"Tháng 1"} />
+            <Select
+              className="select-input"
+              value={months ? `Tháng ${months}` : 'Tất cả'}
+              style={{ width: 120 }}
+              onChange={setMonths}
+              options={monthOptions.map((month) => ({
+                value: month.value,
+                label: month.value ? `Tháng ${month.label}` : 'Tất cả'
+              }))}
+              placeholder="Chọn tháng"
+            />
           </div>
           <div className="list-filter year">
-            <Select className="select-input" value={2023} />
+            <Select
+              className="select-input"
+              value={selectedYear}
+              style={{ width: 120 }}
+              onChange={
+                handleChangeYear
+              }
+              options={yearOptions}
+              placeholder="Chọn năm"
+            />
           </div>
-          <div className="ListWork" onClick={showModalHoliday}>
+          <div className="ListWork" onClick={() => {
+            showModalHoliday();
+            setAction("add");
+          }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="36"
@@ -107,51 +201,19 @@ const HolidayComponent = () => {
               <td>Tên ngày nghỉ</td>
               <td>Ngày bắt đầu nghỉ</td>
               <td>Số ngày nghỉ</td>
+              <td>Chỉnh sửa</td>
             </tr>
           </thead>
-          <tbody className="scrollbar" id="style-15">
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Nghỉ tết</td>
-              <td>31-12-2023</td>
-              <td>5 ngày</td>
-            </tr>
+          <tbody>
+            {fetchAllHolidays.map((holiday, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{holiday.holidayName}</td>
+                <td>{holiday.date}</td>
+                <td>{holiday.numberOfHoliday} ngày</td>
+                <td><p>Chỉnh sửa</p></td>
+              </tr>
+            ))}
           </tbody>
         </table>
 
@@ -171,15 +233,15 @@ const HolidayComponent = () => {
             <div className="footer">
               <div className="item-body">
                 <p>Tên ngày nghỉ lễ</p>
-                <Input type="text"></Input>
+                <input type="text" name="nameHoliday" value={inputHolidays.nameHoliday} onChange={(e) => setInputHolidays({ ...inputHolidays, nameHoliday: e.target.value })} />
               </div>
               <div className="item-body">
-                <p>Số ngày nghỉ</p>
-                <Input type="text" placeholder="Số ngày nghỉ"></Input>
+                <p>Ngày bắt đầu kỳ nghỉ</p>
+                <input type="date" name="startDate" value={inputHolidays.startDate} onChange={(e) => setInputHolidays({ ...inputHolidays, startDate: e.target.value })} />
               </div>
               <div className="item-body">
-                <p>Ngày bắt đầu nghỉ</p>
-                <Input type="date"></Input>
+                <p>Ngày kết thúc kỳ nghỉ</p>
+                <input type="date" name="endDate" value={inputHolidays.endDate} onChange={(e) => setInputHolidays({ ...inputHolidays, endDate: e.target.value })} />
               </div>
               <div className="btn-footer">
                 <div className="btn cancel">Hủy bỏ</div>

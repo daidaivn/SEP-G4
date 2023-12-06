@@ -60,8 +60,6 @@ const CalendarComponent = () => {
   const [allWorkAreas, setAllWorkAreas] = useState([]);
   const [workidDetail, setWorkidDetail] = useState([]);
 
-  console.log("selectedYear", selectedYear);
-
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };

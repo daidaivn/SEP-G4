@@ -127,7 +127,7 @@ const ListModuleDetail3 = ({
         <div className="modal-detail-all">
           <div className="head-modal">
             {
-              actionWork === "addWork" ? (<p>Thêm công việc</p>) : actionWork === "editWork" ? (<p>Thêm công việc</p>) : (<p>Chi tiết công việc</p>)
+              actionWork === "addWork" ? (<p>Thêm công việc</p>) : actionWork === "editWork" ? (<p>Sửa công việc</p>) : (<p>Chi tiết công việc</p>)
             }
             {
               actionWork === "viewWork" || actionWork === "viewWorkList" ? (
