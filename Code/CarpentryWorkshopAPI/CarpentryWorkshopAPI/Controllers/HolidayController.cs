@@ -19,25 +19,50 @@ namespace CarpentryWorkshopAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllHolidays()
+        public async Task<IActionResult> GetAllHolidays(int month, int year)
         {
             try
             {
                 var allholidays = await _context.HolidaysDetails
-                    .Include(x => x.Holiday)
-                    .Select(x => new
-                    {
-                        HolidayDetailID = x.HolidayDetailId,
-                        HolidayID = x.Holiday.HolidayId,
-                        HolidayName = x.Holiday.HolidayName,
-                        Date = x.Date.Value.ToString("dd'-'MM'-'yyyy")
-                    })
-                    .ToListAsync();
+                       .Include(x => x.Holiday)
+                       .Where(x => x.Date.Value.Year == year && x.Date.Value.Month == month)
+                       .GroupBy(x => x.Holiday.HolidayName)
+                       .Select(group => new
+                       {
+                           HolidayDetailID = group.OrderBy(x => x.Date).First().HolidayDetailId,
+                           HolidayID = group.First().Holiday.HolidayId,
+                           HolidayName = group.Key,
+                           Date = group.OrderBy(x => x.Date).First().Date.Value.ToString("dd'-'MM'-'yyyy"),
+                           NumberOfHoliday = (int)(group.OrderByDescending(x => x.Date).First().Date.Value.Day - group.OrderBy(x => x.Date).First().Date.Value.Day) 
+                       })
+                       .ToListAsync();
                 if (allholidays == null)
                 {
                     return NotFound();
                 }
                 return Ok(allholidays);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetHolidays()
+        {
+            try
+            {
+                var holidays = await _context.Holidays
+                    .Select(x => new 
+                    {
+                        HolidayID = x.HolidayId,
+                        HolidayName = x.HolidayName,
+                    })
+                    .ToListAsync();
+                if (holidays == null)
+                {
+                    return NotFound();
+                }
+                return Ok(holidays);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
