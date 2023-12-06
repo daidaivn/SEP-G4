@@ -2,6 +2,8 @@ import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
 import "../scss/HolidayComponent.scss";
+import "../scss/responsive/Holiday.scss";
+import "../scss/responsive/responsive.scss";
 import { Input, Modal, Select } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { useState } from "react";
@@ -163,7 +165,7 @@ const HolidayComponent = () => {
           <div className="modal-add-holiday">
             <div className="body">
               <div className="head">
-                <p>Tạo lịch nghỉ lễ</p>
+                <h3>Tạo lịch nghỉ lễ</h3>
               </div>
             </div>
             <div className="footer">
