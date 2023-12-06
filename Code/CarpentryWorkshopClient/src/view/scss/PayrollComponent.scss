@@ -599,3 +599,8 @@
 .modal-salary-revice .body-allowance-all {
   padding: 20px 40px 20px 40px;
 }
+.body-payroll-scroll {
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 440px !important;
+}
