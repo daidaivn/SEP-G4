@@ -256,14 +256,10 @@ namespace CarpentryWorkshopAPI.Controllers
             {                
                 var account = await _context.UserAccounts.Include(ua=>ua.Employee).Where(ua => ua.EmployeeId == loginRequest.Id).FirstOrDefaultAsync();
                 if (account == null)
-                {
-                    
+                {                     
                     return BadRequest("useraname or password not right");
                 }
-                if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, account.Password))
-                {
-                    return BadRequest("useraname or password not right");
-                }
+                
                 var user = loginRequest.UserName;
                 var pass = loginRequest.Password;
                 account.UserName = user;

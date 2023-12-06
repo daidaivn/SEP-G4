@@ -1,0 +1,24 @@
+// Tablet
+@media (min-width: 768px) and (max-width: 1536px) {
+  .modal-add-holiday {
+    width: 600px !important;
+    .body {
+      padding: 26px 20px;
+      .head h3 {
+        font-size: 35px !important;
+      }
+    }
+  }
+  .modal-add-holiday .footer .item-body p {
+    font-size: 18px !important;
+  }
+
+  .modal-add-holiday .footer .btn-footer .btn {
+    font-size: 18px;
+    width: 150px;
+    padding: 13px 0px 13px 0px;
+  }
+  .modal-add-holiday .footer {
+    padding: 0px 20px 20px 20px;
+  }
+}
