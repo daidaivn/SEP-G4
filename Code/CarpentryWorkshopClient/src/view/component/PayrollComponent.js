@@ -9,7 +9,6 @@ import "../scss/PayrollComponent.scss";
 import { createYearOptions, getMonthsInYear } from "../logicTime/getWeeDays";
 import ListUserHeader from "./componentUI/ListUserHeader";
 
-
 import {
   Reward,
   Holiday,
@@ -25,6 +24,7 @@ import {
   AllowanceAll,
   DeductionsAll,
   SalaryReceived,
+  Salary,
 } from "./componentPayroll";
 
 import {
@@ -65,7 +65,7 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
-  
+
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
 
@@ -118,8 +118,6 @@ const PayrollComponent = () => {
     return true;
   };
 
-  
-
   //modal Excel
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const showModalExcel = () => {
@@ -144,6 +142,17 @@ const PayrollComponent = () => {
     setIsModalOpenSubsidies(false);
   };
 
+  //modal Chi tiết luong chinh
+  const [isModalOpenSalary, setIsModalOpenSalary] = useState(false);
+  const showModalSalary = () => {
+    setIsModalOpenSalary(true);
+  };
+  const handleOkSalary = () => {
+    setIsModalOpenSalary(false);
+  };
+  const handleCancelSalary = () => {
+    setIsModalOpenSalary(false);
+  };
   //modal Chi tiết trợ cấp
   const [isModalOpenAllowance, setIsModalOpenAllowance] = useState(false);
   const showModalAllowance = () => {
@@ -308,9 +317,7 @@ const PayrollComponent = () => {
     setIsModalOpenSalaryReceived(false);
   };
   //hiển thị mainsalary
-  const [isModalOpenMainSalary, setIsModalOpenMainSalary] = useState(
-    false
-  );
+  const [isModalOpenMainSalary, setIsModalOpenMainSalary] = useState(false);
   const showModalMainSalary = () => {
     setIsModalOpenMainSalary(true);
   };
@@ -387,16 +394,15 @@ const PayrollComponent = () => {
     );
   };
 
-  
   //featchData SalaryDetail
   const fetDataSalaryDetail = () => {
     let isDataLoaded = false;
     let toastId = null;
-    fetchAllSalaryDetail(months,date)
+    fetchAllSalaryDetail(months, date)
       .then((data) => {
         isDataLoaded = true;
         setSalaryDetail(data);
-        console.log('salaryDetail', data);
+        console.log("salaryDetail", data);
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
@@ -406,17 +412,15 @@ const PayrollComponent = () => {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Lỗi không có nhân viên'); // Hiển thị thông báo lỗi ngay lập tức
+        toast.error("Lỗi không có nhân viên"); // Hiển thị thông báo lỗi ngay lập tức
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
-
-  }
+  };
   useEffect(() => {
-    
     fetDataSalaryDetail();
   }, [iText, date, months]);
 
@@ -458,6 +462,7 @@ const PayrollComponent = () => {
           showModalDeductions={showModalDeductions}
           showModalSalaryReceived={showModalSalaryReceived}
           showModalMainSalary={showModalMainSalary}
+          showModalSalary={showModalSalary}
         />
 
         <SubsidiesDetail
@@ -619,6 +624,12 @@ const PayrollComponent = () => {
           isModalOpenMainSalary={isModalOpenMainSalary}
           handleOkMainSalary={handleOkMainSalary}
           handleCancelMainSalary={handleCancelMainSalary}
+          salaryDetail={salaryDetail}
+        />
+        <Salary
+          isModalOpenSalary={isModalOpenSalary}
+          handleOkSalary={handleOkSalary}
+          handleCancelSalary={handleCancelSalary}
           salaryDetail={salaryDetail}
         />
       </div>

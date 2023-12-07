@@ -604,3 +604,28 @@
   overflow-y: auto;
   max-height: 440px !important;
 }
+.list-table {
+  width: 2221px;
+  padding-bottom: 20px;
+}
+.list-table-scroll-x {
+  max-width: 1400px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+.body-all::-webkit-scrollbar-thumb {
+  background-color: unset !important;
+  background-image: unset !important;
+}
+.body-all::-webkit-scrollbar-track {
+  background-color: unset !important;
+  -webkit-box-shadow: unset !important;
+}
+.list-table td {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0;
+}
