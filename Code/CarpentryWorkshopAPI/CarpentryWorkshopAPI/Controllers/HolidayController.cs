@@ -66,15 +66,21 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetHolidays()
+        public async Task<IActionResult> GetHolidays(int holidayid)
         {
             try
             {
-                var holidays = await _context.Holidays
-                    .Select(x => new 
+                var holidays = await _context.HolidaysDetails
+                    .Include(x => x.Holiday)
+                    .Where(x => x.HolidayId == holidayid)
+                    .GroupBy(x => x.HolidayId)
+                    .Select(group => new
                     {
-                        HolidayID = x.HolidayId,
-                        HolidayName = x.HolidayName,
+                        HolidayDetailId = group.First().HolidayDetailId,
+                        HolidayID = group.Key, 
+                        HolidayName = group.First().Holiday.HolidayName, 
+                        StartDate = group.Min(x => x.Date).Value.ToString("dd'-'MM'-'yyyy"),
+                        EndDate = group.Max(x => x.Date).Value.ToString("dd'-'MM'-'yyyy")
                     })
                     .ToListAsync();
                 if (holidays == null)
@@ -92,9 +98,9 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {            
-                    var startDate = DateTime.ParseExact(holidayDetailDTO.StartDatestring, "dd/MM/yyyy",
+                    var startDate = DateTime.ParseExact(holidayDetailDTO.StartDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
-                    var endDate = DateTime.ParseExact(holidayDetailDTO.EndDatestring, "dd/MM/yyyy",
+                    var endDate = DateTime.ParseExact(holidayDetailDTO.EndDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
                     Holiday newHoliday = new Holiday()
                     {
@@ -126,9 +132,9 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var startDate = DateTime.ParseExact(holidayDTO.StartDatestring, "dd/MM/yyyy",
+                var startDate = DateTime.ParseExact(holidayDTO.StartDatestring, "dd-MM-yyyy",
                                System.Globalization.CultureInfo.InvariantCulture);
-                var endDate = DateTime.ParseExact(holidayDTO.EndDatestring, "dd/MM/yyyy",
+                var endDate = DateTime.ParseExact(holidayDTO.EndDatestring, "dd-MM-yyyy",
                                System.Globalization.CultureInfo.InvariantCulture);
                 var updateHoliday = await _context.Holidays.Where(x => x.HolidayId == holidayDTO.HolidayId).FirstOrDefaultAsync();
                 updateHoliday.HolidayName = holidayDTO.HolidayName;
