@@ -26,6 +26,7 @@ import {
   SalaryReceived,
   Salary,
   Tax,
+  Other,
 } from "./componentPayroll";
 
 import {
@@ -666,6 +667,13 @@ const PayrollComponent = () => {
           isModalOpenTax={isModalOpenTax}
           handleOkTax={handleOkTax}
           handleCancelTax={handleCancelTax}
+          salaryDetail={salaryDetail}
+        />
+        {/* modal Các khoản phúc lợi khác */}
+        <Other
+          isModalOpenOther={isModalOpenOther}
+          handleOkOther={handleOkOther}
+          handleCancelOther={handleCancelOther}
           salaryDetail={salaryDetail}
         />
       </div>
