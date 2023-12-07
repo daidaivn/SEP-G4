@@ -12,6 +12,7 @@ const ListTable = ({
   showModalAllowanceAll,
   showModalDeductions,
   showModalSalaryReceived,
+  showModalMainSalary,
 }) => {
   return (
     <table className="list-table ">
@@ -21,7 +22,7 @@ const ListTable = ({
           <td>Họ và tên</td>
           <td>
             Lương chính
-            <div className="detail-icon">
+            <div className="detail-icon" onClick={showModalMainSalary}>
               Chi tiết
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -163,9 +164,9 @@ const ListTable = ({
                   fetchEmployeeActualSalaryDetail(Salary.employeeId)
                 }
               >
-                {Salary.jobIncentives === 0
+                {Salary.actualReceived === 0
                   ? "0"
-                  : formatMoney(Salary.jobIncentives)}{" "}
+                  : formatMoney(Salary.actualReceived)}{" "}
                 VNĐ{" "}
               </td>
             </tr>
