@@ -140,9 +140,9 @@ namespace CarpentryWorkshopAPI.Mapper
             CreateMap<SpecialOccasion, SpecialOccasionDTO>()
                 .ReverseMap();
             //Holiday
-            CreateMap<HolidayDetailDTO, HolidaysDetail>()
-                 .ForMember(de => de.Date, option => option.MapFrom(d => DateTime.ParseExact(d.Datestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture)));
+            //CreateMap<HolidayDetailDTO, HolidaysDetail>()
+            //     .ForMember(de => de.Date, option => option.MapFrom(d => DateTime.ParseExact(d.Datestring, "dd-MM-yyyy",
+            //                       System.Globalization.CultureInfo.InvariantCulture)));
             CreateMap<Holiday, HolidayDTO>()
                .ReverseMap();
 
