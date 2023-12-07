@@ -15,3 +15,4 @@ export { default as DeductionsAll } from "./DeductionsAll.js";
 export { default as Salary } from "./Salary.js";
 export { default as Tax } from "./Tax.js";
 export { default as Other } from "./Other.js";
+export { default as Advancesalary } from "./Advancesalary.js";
