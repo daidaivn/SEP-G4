@@ -144,88 +144,20 @@ const ListTable = ({
               <td>
                 {Salary.actualDaySalary === 0 ? "0" : formatMoney(Salary.actualDaySalary)}{" "}
                 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                
               </td>
-              {/* show Modal Chi tiết phụ cấp */}
               <td
                 onClick={() => fetchEmployeeAllowanceDetail(Salary.employeeId)}
               >
                 {Salary.allowances.meal + Salary.allowances.uniform + Salary.allowances.petrol  === 0 ? "0" : formatMoney(Salary.allowances.meal + Salary.allowances.uniform + Salary.allowances.petrol)}{" "}
                 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
               </td>
-              {/* show Modal Chi tiết khoản giảm trừ */}
               <td
                 onClick={() => fetchEmployeeDeductionDetail(Salary.employeeId)}
               >
                 {Salary.deductions.socialInsurance + Salary.deductions.healthInsurance + Salary.deductions.unemploymentInsurance + Salary.deductions.unionFees === 0 ? "0" : formatMoney(Salary.deductions.socialInsurance + Salary.deductions.healthInsurance + Salary.deductions.unemploymentInsurance + Salary.deductions.unionFees)}{" "}
                 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
               </td>
-              {/* show Modal Chi tiết thưởng */}
               <td
                 onClick={() =>
                   fetchEmployeeActualSalaryDetail(Salary.employeeId)
@@ -235,28 +167,6 @@ const ListTable = ({
                   ? "0"
                   : formatMoney(Salary.jobIncentives)}{" "}
                 VNĐ{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="31"
-                  height="30"
-                  viewBox="0 0 31 30"
-                  fill="none"
-                >
-                  <path
-                    d="M19.6749 15.0004C19.6749 17.4754 17.6749 19.4754 15.1999 19.4754C12.7249 19.4754 10.7249 17.4754 10.7249 15.0004C10.7249 12.5254 12.7249 10.5254 15.1999 10.5254C17.6749 10.5254 19.6749 12.5254 19.6749 15.0004Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M15.2 25.3379C19.6125 25.3379 23.725 22.7379 26.5875 18.2379C27.7125 16.4754 27.7125 13.5129 26.5875 11.7504C23.725 7.25039 19.6125 4.65039 15.2 4.65039C10.7875 4.65039 6.675 7.25039 3.8125 11.7504C2.6875 13.5129 2.6875 16.4754 3.8125 18.2379C6.675 22.7379 10.7875 25.3379 15.2 25.3379Z"
-                    stroke="#FF8F19"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
               </td>
             </tr>
           ))}
