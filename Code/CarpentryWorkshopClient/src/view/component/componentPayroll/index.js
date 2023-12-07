@@ -12,3 +12,4 @@ export { default as ListSearchFilterAdd } from "./ListSearchFilterAdd.js";
 export { default as SalaryReceived } from "./SalaryReceivedAll.js";
 export { default as AllowanceAll } from "./AllowanceAll.js";
 export { default as DeductionsAll } from "./DeductionsAll.js";
+export { default as Salary } from "./Salary.js";

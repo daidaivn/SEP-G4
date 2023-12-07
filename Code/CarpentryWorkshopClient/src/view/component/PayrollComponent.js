@@ -24,6 +24,7 @@ import {
   AllowanceAll,
   DeductionsAll,
   SalaryReceived,
+  Salary,
 } from "./componentPayroll";
 
 import {
@@ -141,6 +142,17 @@ const PayrollComponent = () => {
     setIsModalOpenSubsidies(false);
   };
 
+  //modal Chi tiết luong chinh
+  const [isModalOpenSalary, setIsModalOpenSalary] = useState(false);
+  const showModalSalary = () => {
+    setIsModalOpenSalary(true);
+  };
+  const handleOkSalary = () => {
+    setIsModalOpenSalary(false);
+  };
+  const handleCancelSalary = () => {
+    setIsModalOpenSalary(false);
+  };
   //modal Chi tiết trợ cấp
   const [isModalOpenAllowance, setIsModalOpenAllowance] = useState(false);
   const showModalAllowance = () => {
@@ -450,6 +462,7 @@ const PayrollComponent = () => {
           showModalDeductions={showModalDeductions}
           showModalSalaryReceived={showModalSalaryReceived}
           showModalMainSalary={showModalMainSalary}
+          showModalSalary={showModalSalary}
         />
 
         <SubsidiesDetail
@@ -611,6 +624,12 @@ const PayrollComponent = () => {
           isModalOpenMainSalary={isModalOpenMainSalary}
           handleOkMainSalary={handleOkMainSalary}
           handleCancelMainSalary={handleCancelMainSalary}
+          salaryDetail={salaryDetail}
+        />
+        <Salary
+          isModalOpenSalary={isModalOpenSalary}
+          handleOkSalary={handleOkSalary}
+          handleCancelSalary={handleCancelSalary}
           salaryDetail={salaryDetail}
         />
       </div>

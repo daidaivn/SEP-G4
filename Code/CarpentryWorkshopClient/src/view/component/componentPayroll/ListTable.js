@@ -13,6 +13,7 @@ const ListTable = ({
   showModalDeductions,
   showModalSalaryReceived,
   showModalMainSalary,
+  showModalSalary,
 }) => {
   return (
     <div className="list-table-scroll-x scrollbar" id="style-15">
@@ -23,7 +24,7 @@ const ListTable = ({
             <td>Họ và tên</td>
             <td>
               Lương chính
-              <div className="detail-icon" onClick={showModalMainSalary}>
+              <div className="detail-icon" onClick={showModalSalary}>
                 Chi tiết
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
