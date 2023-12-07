@@ -82,7 +82,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         StartDate = group.Min(x => x.Date).Value.ToString("dd'-'MM'-'yyyy"),
                         EndDate = group.Max(x => x.Date).Value.ToString("dd'-'MM'-'yyyy")
                     })
-                    .ToListAsync();
+                    .FirstOrDefaultAsync();
                 if (holidays == null)
                 {
                     return NotFound();
