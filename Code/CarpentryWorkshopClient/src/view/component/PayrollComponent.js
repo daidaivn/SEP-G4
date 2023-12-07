@@ -24,6 +24,7 @@ import {
   AllowanceAll,
   DeductionsAll,
   SalaryReceived,
+  salaryDetailS,
 } from "./componentPayroll";
 
 import {
@@ -306,6 +307,19 @@ const PayrollComponent = () => {
   const handleCancelSalaryReceived = () => {
     setIsModalOpenSalaryReceived(false);
   };
+  //hiển thị mainsalary
+  const [isModalOpenMainSalary, setIsModalOpenMainSalary] = useState(
+    false
+  );
+  const showModalMainSalary = () => {
+    setIsModalOpenMainSalary(true);
+  };
+  const handleOkMainSalary = () => {
+    setIsModalOpenMainSalary(false);
+  };
+  const handleCancelMainSalary = () => {
+    setIsModalOpenMainSalary(false);
+  };
 
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
   const showModalHoliday = () => {
@@ -373,16 +387,6 @@ const PayrollComponent = () => {
     );
   };
 
-  const fetData = () => {
-    fetchAllSalaries(iText, months, date)
-      .then((data) => {
-        setSalaries(data);
-        console.log("data", data);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  };
   
   //featchData SalaryDetail
   const fetDataSalaryDetail = () => {
@@ -412,7 +416,7 @@ const PayrollComponent = () => {
 
   }
   useEffect(() => {
-    fetData();
+    
     fetDataSalaryDetail();
   }, [iText, date, months]);
 
@@ -444,7 +448,7 @@ const PayrollComponent = () => {
         />
 
         <ListTable
-          salaries={salaries}
+          salaryDetail={salaryDetail}
           showModalSubsidies={showModalSubsidies}
           showModalReward={showModalReward}
           fetchEmployeeAllowanceDetail={fetchEmployeeAllowanceDetail}
@@ -607,6 +611,13 @@ const PayrollComponent = () => {
           isModalOpenSalaryReceived={isModalOpenSalaryReceived}
           handleOkSalaryReceived={handleOkSalaryReceived}
           handleCancelSalaryReceived={handleCancelSalaryReceived}
+          salaryDetail={salaryDetail}
+        />
+        {/* Modal hiển thị tất cả danh sách lương chinh */}
+        <salaryDetailS
+          isModalOpenMainSalary={isModalOpenMainSalary}
+          handleOkMainSalary={handleOkMainSalary}
+          handleCancelMainSalary={handleCancelMainSalary}
           salaryDetail={salaryDetail}
         />
       </div>
