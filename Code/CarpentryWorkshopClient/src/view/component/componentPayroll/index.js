@@ -13,3 +13,4 @@ export { default as SalaryReceived } from "./SalaryReceivedAll.js";
 export { default as AllowanceAll } from "./AllowanceAll.js";
 export { default as DeductionsAll } from "./DeductionsAll.js";
 export { default as Salary } from "./Salary.js";
+export { default as Tax } from "./Tax.js";

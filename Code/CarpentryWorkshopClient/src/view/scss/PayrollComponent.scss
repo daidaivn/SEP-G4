@@ -604,12 +604,13 @@
   overflow-y: auto;
   max-height: 440px !important;
 }
-.list-table {
+.table-scroll-x {
   width: 2221px;
   padding-bottom: 20px;
 }
 .list-table-scroll-x {
   max-width: 1400px;
+  height: 600px;
   overflow: hidden;
   overflow-x: auto;
 }
