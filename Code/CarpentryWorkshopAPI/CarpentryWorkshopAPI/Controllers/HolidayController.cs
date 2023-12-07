@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.IServices.IDay;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace CarpentryWorkshopAPI.Controllers
     {
         private readonly SEPG4CCMSContext _context;
         private readonly IMapper _mapper;
-        public HolidayController(SEPG4CCMSContext context, IMapper mapper)
+        private readonly IDayService _dayService;
+        public HolidayController(SEPG4CCMSContext context, IMapper mapper, IDayService dayService)
         {
             _context = context;
             _mapper = mapper;
+            _dayService = dayService;
         }
 
         [HttpPost]
@@ -52,7 +55,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         HolidayID = group.First().Holiday.HolidayId,
                         HolidayName = group.Key,
                         Date = group.OrderBy(x => x.Date).First().Date.Value.ToString("dd'-'MM'-'yyyy"),
-                        NumberOfHoliday = (int)(group.OrderByDescending(x => x.Date).First().Date.Value.Day - group.OrderBy(x => x.Date).First().Date.Value.Day)
+                        NumberOfHoliday = _dayService.CalculateNumberOfHolidays(group)
                     })
                     .ToList();
                 if (allholidays == null)
@@ -80,7 +83,12 @@ namespace CarpentryWorkshopAPI.Controllers
                         HolidayID = group.Key, 
                         HolidayName = group.First().Holiday.HolidayName, 
                         StartDate = group.Min(x => x.Date).Value.ToString("dd'-'MM'-'yyyy"),
-                        EndDate = group.Max(x => x.Date).Value.ToString("dd'-'MM'-'yyyy")
+                        EndDate = group.Max(x => x.Date).Value.ToString("dd'-'MM'-'yyyy"),
+                        //Status = group.Min(x => x.Date).Value.Date > DateTime.Now.Date ? "HolidayNotStart"
+                        //:(group.Min(x => x.Date).Value.Date <= DateTime.Now.Date && group.Max(x => x.Date).Value.Date > DateTime.Now.Date ? "HolidayStartButNotEnd"  
+                        //:(group.Min(x => x.Date).Value.Date <= DateTime.Now.Date && group.Max(x => x.Date).Value.Date <= DateTime.Now.Date ? "HolidayEnd" : "HolidayStartButNotEnd"))
+                        StartDateStatus = group.Min(x => x.Date).Value.Date <= DateTime.Now.Date ? true : false,
+                        EndDateStatus = group.Max(x => x.Date).Value.Date <= DateTime.Now.Date ? true : false
                     })
                     .FirstOrDefaultAsync();
                 if (holidays == null)
