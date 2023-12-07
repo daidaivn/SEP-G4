@@ -53,11 +53,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     SetColorMergedHeader(worksheet, "M7:M9", "Tổng lương tham gia BHXH");
                     SetColorMergedHeader(worksheet, "N7:N9", "Lương ngày công thực tế");
                     SetColorMergedHeader(worksheet, "O7:O9", "Lương làm thêm");
-                    SetColorMergedHeader(worksheet, "P7:P9", "Phụ cấp");
-                    SetColorMergedHeader(worksheet, "Q7:Q9", "Ăn ca");
-                    SetColorMergedHeader(worksheet, "R7:R9", "Trang phục");
-                    SetColorMergedHeader(worksheet, "S7:S9", "Điện thoại, xăng xe");
-                    SetColorMergedHeader(worksheet, "T7:T9", "Lương kinh doanh / lương sản lượng");
+                    SetColorMergedHeader(worksheet, "P7:R7", "Phụ cấp");
+                    SetColorMergedHeader(worksheet, "P8:P9", "Ăn ca");
+                    SetColorMergedHeader(worksheet, "Q8:Q9", "Trang phục");
+                    SetColorMergedHeader(worksheet, "R8:R9", "Điện thoại, xăng xe");
+                    SetColorMergedHeader(worksheet, "S7:S9", "Lương kinh doanh / lương sản lượng");
+                    SetColorMergedHeader(worksheet, "T7:T9", "Tổng lương thực tế");
                     SetColorMergedHeader(worksheet, "U7:X7", "Các khoản trừ");
                     SetColorMergedHeader(worksheet, "U8:U9", "BHXH (8%)");
                     SetColorMergedHeader(worksheet, "V8:V9", "BHYT (1,5%)");

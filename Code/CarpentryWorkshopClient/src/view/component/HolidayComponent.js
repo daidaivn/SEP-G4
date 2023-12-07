@@ -19,9 +19,6 @@ const HolidayComponent = () => {
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
   const [action, setAction] = useState("");
 
-  
-
-
   const handleOkHoliday = () => {
     setIsModalOpenHoliday(false);
   };
@@ -33,8 +30,9 @@ const HolidayComponent = () => {
   const [months, setMonths] = useState("");
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const monthOptions = getMonthsInYear(months);
-  monthOptions.unshift({ value: null, label: 'Tất cả' });
+  monthOptions.unshift({ value: null, label: "Tất cả" });
   const [fetchAllHolidays, setfetchAllHolidays] = useState([]);
+  const [inputSearch, setInputSearch] = useState("");
 
   const initialInputHolidaysState = {
     nameHoliday: "",
@@ -44,23 +42,20 @@ const HolidayComponent = () => {
 
   const [inputHolidays, setInputHolidays] = useState(initialInputHolidaysState);
 
-  console.log('months', months);
-  console.log('selectedYear', selectedYear);
+  console.log("months", months);
+  console.log("selectedYear", selectedYear);
 
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
   };
 
   const showModalHoliday = () => {
-    if(action === "add"){
-      setInputHolidays(initialInputHolidaysState)
-    }else{
-
+    if (action === "add") {
+      setInputHolidays(initialInputHolidaysState);
+    } else {
     }
     setIsModalOpenHoliday(true);
   };
-
-  
 
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
@@ -77,19 +72,19 @@ const HolidayComponent = () => {
   };
 
   const FetchAllHolidays = () => {
-    GetAllHolidays(months, selectedYear)
+    GetAllHolidays(inputSearch, months, selectedYear)
       .then((data) => {
-        setfetchAllHolidays(data)
+        setfetchAllHolidays(data);
       })
       .catch((error) => {
-        console.log('error', error);
+        console.log("error", error);
       });
   };
   useEffect(() => {
     FetchAllHolidays();
-  }, [months, selectedYear])
+  }, [inputSearch, months, selectedYear]);
 
-  console.log('fetchAllHolidays', fetchAllHolidays);
+  console.log("fetchAllHolidays", fetchAllHolidays);
 
   return (
     <>
@@ -135,17 +130,21 @@ const HolidayComponent = () => {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm"></Input>
+            <Input
+              value={inputSearch}
+              onChange={(e) => setInputSearch(e.target.value)}
+              placeholder="Tìm kiếm"
+            ></Input>
           </div>
           <div className="list-filter">
             <Select
               className="select-input"
-              value={months ? `Tháng ${months}` : 'Tất cả'}
+              value={months ? `Tháng ${months}` : "Tất cả"}
               style={{ width: 120 }}
               onChange={setMonths}
               options={monthOptions.map((month) => ({
                 value: month.value,
-                label: month.value ? `Tháng ${month.label}` : 'Tất cả'
+                label: month.value ? `Tháng ${month.label}` : "Tất cả",
               }))}
               placeholder="Chọn tháng"
             />
@@ -155,17 +154,18 @@ const HolidayComponent = () => {
               className="select-input"
               value={selectedYear}
               style={{ width: 120 }}
-              onChange={
-                handleChangeYear
-              }
+              onChange={handleChangeYear}
               options={yearOptions}
               placeholder="Chọn năm"
             />
           </div>
-          <div className="ListWork" onClick={() => {
-            showModalHoliday();
-            setAction("add");
-          }}>
+          <div
+            className="ListWork"
+            onClick={() => {
+              showModalHoliday();
+              setAction("add");
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="36"
@@ -211,7 +211,9 @@ const HolidayComponent = () => {
                 <td>{holiday.holidayName}</td>
                 <td>{holiday.date}</td>
                 <td>{holiday.numberOfHoliday} ngày</td>
-                <td><p>Chỉnh sửa</p></td>
+                <td>
+                  <p>Chỉnh sửa</p>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -233,15 +235,45 @@ const HolidayComponent = () => {
             <div className="footer">
               <div className="item-body">
                 <p>Tên ngày nghỉ lễ</p>
-                <input type="text" name="nameHoliday" value={inputHolidays.nameHoliday} onChange={(e) => setInputHolidays({ ...inputHolidays, nameHoliday: e.target.value })} />
+                <input
+                  type="text"
+                  name="nameHoliday"
+                  value={inputHolidays.nameHoliday}
+                  onChange={(e) =>
+                    setInputHolidays({
+                      ...inputHolidays,
+                      nameHoliday: e.target.value,
+                    })
+                  }
+                />
               </div>
               <div className="item-body">
                 <p>Ngày bắt đầu kỳ nghỉ</p>
-                <input type="date" name="startDate" value={inputHolidays.startDate} onChange={(e) => setInputHolidays({ ...inputHolidays, startDate: e.target.value })} />
+                <input
+                  type="date"
+                  name="startDate"
+                  value={inputHolidays.startDate}
+                  onChange={(e) =>
+                    setInputHolidays({
+                      ...inputHolidays,
+                      startDate: e.target.value,
+                    })
+                  }
+                />
               </div>
               <div className="item-body">
                 <p>Ngày kết thúc kỳ nghỉ</p>
-                <input type="date" name="endDate" value={inputHolidays.endDate} onChange={(e) => setInputHolidays({ ...inputHolidays, endDate: e.target.value })} />
+                <input
+                  type="date"
+                  name="endDate"
+                  value={inputHolidays.endDate}
+                  onChange={(e) =>
+                    setInputHolidays({
+                      ...inputHolidays,
+                      endDate: e.target.value,
+                    })
+                  }
+                />
               </div>
               <div className="btn-footer">
                 <div className="btn cancel">Hủy bỏ</div>
