@@ -14,10 +14,13 @@ const ListTable = ({
   showModalSalaryReceived,
   showModalMainSalary,
   showModalSalary,
+  showModalTax,
+  showModalAdvancesalary,
+  showModalOther,
 }) => {
   return (
     <div className="list-table-scroll-x scrollbar" id="style-15">
-      <table className="list-table ">
+      <table className="list-table table-scroll-x">
         <thead>
           <tr>
             <td>MNV</td>
@@ -79,7 +82,7 @@ const ListTable = ({
               </div>
             </td>
             <td>
-              Khoản giảm trừ(Bảo hiểm và các loại phí){" "}
+              Khoản trừ
               <div className="detail-icon" onClick={showModalDeductions}>
                 Chi tiết
                 <svg
@@ -107,8 +110,8 @@ const ListTable = ({
               </div>
             </td>
             <td>
-              Thuế thu nhập cá nhân{" "}
-              <div className="detail-icon" onClick={showModalSalaryReceived}>
+              Thuế TNCN
+              <div className="detail-icon" onClick={showModalTax}>
                 Chi tiết
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +139,7 @@ const ListTable = ({
             </td>
             <td>
               Các khoản phúc lợi khác{" "}
-              <div className="detail-icon" onClick={showModalSalaryReceived}>
+              <div className="detail-icon" onClick={showModalOther}>
                 Chi tiết
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +167,7 @@ const ListTable = ({
             </td>
             <td>
               Lương ứng{" "}
-              <div className="detail-icon" onClick={showModalSalaryReceived}>
+              <div className="detail-icon" onClick={showModalAdvancesalary}>
                 Chi tiết
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

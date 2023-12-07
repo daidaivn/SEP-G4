@@ -1,10 +1,10 @@
 import React from "react";
 import { Modal } from "antd";
 import { formatMoney } from "../../logicTime/formatAll";
-const AllowanceAll = ({
-  isModalOpenAllowanceAll,
-  handleOkAllowanceAll,
-  handleCancelAllowanceAll,
+const Tax = ({
+  isModalOpenTax,
+  handleOkTax,
+  handleCancelTax,
   salaryDetail,
 }) => {
   return (
@@ -13,16 +13,16 @@ const AllowanceAll = ({
       <div className="AllowanceAll">
         <Modal
           className="modal-AllowanceAll"
-          open={isModalOpenAllowanceAll}
-          onOk={handleOkAllowanceAll}
-          onCancel={handleCancelAllowanceAll}
+          open={isModalOpenTax}
+          onOk={handleOkTax}
+          onCancel={handleCancelTax}
         >
           <div className="modal-allowance-all">
             <div className="head-allowance-all">
               <div className="text-head">
-                <p>Chi tiết danh sách phụ cấp</p>
+                <p>Chi tiết danh sách Thuế TNCN</p>
                 <svg
-                  onClick={handleCancelAllowanceAll}
+                  onClick={handleCancelTax}
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
                   height="30"
@@ -102,4 +102,4 @@ const AllowanceAll = ({
     </>
   );
 };
-export default AllowanceAll;
+export default Tax;
