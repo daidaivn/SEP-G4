@@ -1,28 +1,29 @@
 import React from "react";
-import { Modal } from "antd";
+import { Input, Modal } from "antd";
 import { formatMoney } from "../../logicTime/formatAll";
-const AllowanceAll = ({
-  isModalOpenAllowanceAll,
-  handleOkAllowanceAll,
-  handleCancelAllowanceAll,
+
+const Salary = ({
+  isModalOpenSalary,
+  handleOkSalary,
+  handleCancelSalary,
   salaryDetail,
 }) => {
   return (
     <>
-      {/* Modal hiển thị tất cả danh sách phụ cấp */}
+      {/* Modal Chi tiết Lương chính */}
       <div className="AllowanceAll">
         <Modal
           className="modal-AllowanceAll"
-          open={isModalOpenAllowanceAll}
-          onOk={handleOkAllowanceAll}
-          onCancel={handleCancelAllowanceAll}
+          open={isModalOpenSalary}
+          onOk={handleOkSalary}
+          onCancel={handleCancelSalary}
         >
           <div className="modal-allowance-all">
             <div className="head-allowance-all">
               <div className="text-head">
-                <p>Chi tiết danh sách phụ cấp</p>
+                <p>Chi tiết danh sách lương chính</p>
                 <svg
-                  onClick={handleCancelAllowanceAll}
+                  onClick={handleCancelSalary}
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
                   height="30"
@@ -102,4 +103,4 @@ const AllowanceAll = ({
     </>
   );
 };
-export default AllowanceAll;
+export default Salary;

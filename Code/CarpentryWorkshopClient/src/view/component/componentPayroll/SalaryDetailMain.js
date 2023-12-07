@@ -20,7 +20,7 @@ const SalaryDetailS = ({
           <div className="modal-SalaryDetailS">
             <div className="head-SalaryDetailS">
               <div className="text-head">
-                <p>Chi tiết danh sách phụ cấp</p>
+                <p>Chi tiết lương chính</p>
                 <svg
                   onClick={handleCancelAllowanceAll}
                   xmlns="http://www.w3.org/2000/svg"
