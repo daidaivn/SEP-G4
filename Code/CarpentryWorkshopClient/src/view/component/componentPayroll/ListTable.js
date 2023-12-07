@@ -146,21 +146,18 @@ const ListTable = ({
                 VNĐ{" "}
                 
               </td>
-              {/* show Modal Chi tiết phụ cấp */}
               <td
                 onClick={() => fetchEmployeeAllowanceDetail(Salary.employeeID)}
               >
                 {Salary.allowances === 0 ? "0" : formatMoney(Salary.allowances)}{" "}
                 VNĐ{" "}
               </td>
-              {/* show Modal Chi tiết khoản giảm trừ */}
               <td
                 onClick={() => fetchEmployeeDeductionDetail(Salary.employeeID)}
               >
                 {Salary.deductions === 0 ? "0" : formatMoney(Salary.deductions)}{" "}
                 VNĐ{" "}
               </td>
-              {/* show Modal Chi tiết thưởng */}
               <td
                 onClick={() =>
                   fetchEmployeeActualSalaryDetail(Salary.employeeID)

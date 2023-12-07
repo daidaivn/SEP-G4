@@ -11,4 +11,30 @@ const GetAllHolidays = (inputSearch,month, year) => {
   );
 };
 
-export {GetAllHolidays};
+
+const CreateHolidayDetail = (inputHolidays) => {
+  const {
+    nameHoliday,
+    startDate,
+    endDate
+  } = inputHolidays;
+
+  const requestBody = {
+    holidayName: nameHoliday ,
+    startDatestring: startDate,
+    endDatestring: endDate,
+  };
+
+  return axios.post(
+    `/CCMSapi/Holiday/CreateHolidayDetail`,requestBody
+  );
+};
+
+const GetHolidays = (id) => {
+  const newTeam = id;
+  return axios.get(
+    `/CCMSapi/Holiday/GetHolidays`
+  );
+};
+
+export {GetAllHolidays, CreateHolidayDetail, GetHolidays};

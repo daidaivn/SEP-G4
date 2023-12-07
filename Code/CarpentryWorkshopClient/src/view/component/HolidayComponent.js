@@ -7,7 +7,11 @@ import "../scss/responsive/responsive.scss";
 import { Input, Modal, Select } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { useEffect, useState } from "react";
-import { GetAllHolidays } from "../../sevices/HolidayService";
+import {
+  GetAllHolidays,
+  CreateHolidayDetail,
+  GetHolidays,
+} from "../../sevices/HolidayService";
 import {
   createYearOptions,
   getWeekRange,
@@ -42,6 +46,8 @@ const HolidayComponent = () => {
 
   const [inputHolidays, setInputHolidays] = useState(initialInputHolidaysState);
 
+  console.log("inputHolidays", inputHolidays);
+
   console.log("months", months);
   console.log("selectedYear", selectedYear);
 
@@ -50,10 +56,7 @@ const HolidayComponent = () => {
   };
 
   const showModalHoliday = () => {
-    if (action === "add") {
-      setInputHolidays(initialInputHolidaysState);
-    } else {
-    }
+    setInputHolidays(initialInputHolidaysState);
     setIsModalOpenHoliday(true);
   };
 
@@ -69,6 +72,40 @@ const HolidayComponent = () => {
       return dobstring;
     }
     return dobstring;
+  };
+
+  const FetchHolidays = (id) => {
+    setIsModalOpenHoliday(true);
+    GetHolidays(id)
+      .then((data) => {})
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
+  const handleCreateHolidayDetail = () => {
+    CreateHolidayDetail(inputHolidays)
+      .then((data) => {
+        console.log("data", data);
+        handleCancelHoliday();
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
+  const handleStartDateChange = (e) => {
+    setInputHolidays({
+      ...inputHolidays,
+      startDate: convertDobToISO(e.target.value), // Chuyển đổi ngày tháng sang ISO format và cập nhật giá trị startDate
+    });
+  };
+
+  const handleEndDateChange = (e) => {
+    setInputHolidays({
+      ...inputHolidays,
+      endDate: convertDobToISO(e.target.value), // Chuyển đổi ngày tháng sang ISO format và cập nhật giá trị endDate
+    });
   };
 
   const FetchAllHolidays = () => {
@@ -212,7 +249,14 @@ const HolidayComponent = () => {
                 <td>{holiday.date}</td>
                 <td>{holiday.numberOfHoliday} ngày</td>
                 <td>
-                  <p>Chỉnh sửa</p>
+                  <p
+                    onClick={() => {
+                      FetchHolidays(holiday.holidayID);
+                      setAction("edit");
+                    }}
+                  >
+                    Chỉnh sửa
+                  </p>
                 </td>
               </tr>
             ))}
@@ -229,12 +273,16 @@ const HolidayComponent = () => {
           <div className="modal-add-holiday">
             <div className="body">
               <div className="head">
-                <h3>Tạo lịch nghỉ lễ</h3>
+                {action === "add" ? (
+                  <h3>Thêm ngày nghỉ lễ</h3>
+                ) : (
+                  <h3>Sửa ngày nghỉ lễ</h3>
+                )}
               </div>
             </div>
             <div className="footer">
               <div className="item-body">
-                <p>Tên ngày nghỉ lễ</p>
+                <p>Ngày nghỉ lễ</p>
                 <input
                   type="text"
                   name="nameHoliday"
@@ -251,14 +299,9 @@ const HolidayComponent = () => {
                 <p>Ngày bắt đầu kỳ nghỉ</p>
                 <input
                   type="date"
-                  name="startDate"
-                  value={inputHolidays.startDate}
-                  onChange={(e) =>
-                    setInputHolidays({
-                      ...inputHolidays,
-                      startDate: e.target.value,
-                    })
-                  }
+                  name="endDate"
+                  value={convertDobToISO(inputHolidays.startDate)}
+                  onChange={handleStartDateChange}
                 />
               </div>
               <div className="item-body">
@@ -266,18 +309,15 @@ const HolidayComponent = () => {
                 <input
                   type="date"
                   name="endDate"
-                  value={inputHolidays.endDate}
-                  onChange={(e) =>
-                    setInputHolidays({
-                      ...inputHolidays,
-                      endDate: e.target.value,
-                    })
-                  }
+                  value={convertDobToISO(inputHolidays.endDate)}
+                  onChange={handleEndDateChange}
                 />
               </div>
               <div className="btn-footer">
-                <div className="btn cancel">Hủy bỏ</div>
-                <div className="btn save">Lưu</div>
+                <div className="btn cancel" onClick={handleCancelHoliday}>Hủy bỏ</div>
+                <div className="btn save" onClick={handleCreateHolidayDetail}>
+                  Lưu
+                </div>
               </div>
             </div>
           </div>
