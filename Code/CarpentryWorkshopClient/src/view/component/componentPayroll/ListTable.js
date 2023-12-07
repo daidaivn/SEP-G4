@@ -3,7 +3,7 @@ import { Input } from "antd";
 import { formatMoney } from "../../logicTime/formatAll";
 
 const ListTable = ({
-  salaries,
+  salaryDetail,
   showModalSubsidies,
   showModalReward,
   fetchEmployeeAllowanceDetail,
@@ -133,16 +133,16 @@ const ListTable = ({
           </td>
         </tr>
       </thead>
-      {salaries.length === 0 ? (
+      {salaryDetail.length === 0 ? (
         <p>Thông tin sẵn sàng hoặc không tồn tại.</p>
       ) : (
-        <tbody className="body-payroll-scroll scrollbar" id="style-15">
-          {salaries.map((Salary, index) => (
+        <tbody className="scrollbar" id="style-15">
+          {salaryDetail.map((Salary, index) => (
             <tr>
-              <td>{Salary.employeeIDstring}</td>
-              <td>{Salary.employeeName}</td>
+              <td>{Salary.employeeId}</td>
+              <td>{Salary.fullName}</td>
               <td>
-                {Salary.mainSalary === 0 ? "0" : formatMoney(Salary.mainSalary)}{" "}
+                {Salary.actualDaySalary === 0 ? "0" : formatMoney(Salary.actualDaySalary)}{" "}
                 VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -169,9 +169,9 @@ const ListTable = ({
               </td>
               {/* show Modal Chi tiết phụ cấp */}
               <td
-                onClick={() => fetchEmployeeAllowanceDetail(Salary.employeeID)}
+                onClick={() => fetchEmployeeAllowanceDetail(Salary.employeeId)}
               >
-                {Salary.allowances === 0 ? "0" : formatMoney(Salary.allowances)}{" "}
+                {Salary.allowances.meal + Salary.allowances.uniform + Salary.allowances.petrol  === 0 ? "0" : formatMoney(Salary.allowances.meal + Salary.allowances.uniform + Salary.allowances.petrol)}{" "}
                 VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -198,9 +198,9 @@ const ListTable = ({
               </td>
               {/* show Modal Chi tiết khoản giảm trừ */}
               <td
-                onClick={() => fetchEmployeeDeductionDetail(Salary.employeeID)}
+                onClick={() => fetchEmployeeDeductionDetail(Salary.employeeId)}
               >
-                {Salary.deductions === 0 ? "0" : formatMoney(Salary.deductions)}{" "}
+                {Salary.deductions.socialInsurance + Salary.deductions.healthInsurance + Salary.deductions.unemploymentInsurance + Salary.deductions.unionFees === 0 ? "0" : formatMoney(Salary.deductions.socialInsurance + Salary.deductions.healthInsurance + Salary.deductions.unemploymentInsurance + Salary.deductions.unionFees)}{" "}
                 VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -228,12 +228,12 @@ const ListTable = ({
               {/* show Modal Chi tiết thưởng */}
               <td
                 onClick={() =>
-                  fetchEmployeeActualSalaryDetail(Salary.employeeID)
+                  fetchEmployeeActualSalaryDetail(Salary.employeeId)
                 }
               >
-                {Salary.actualSalary === 0
+                {Salary.jobIncentives === 0
                   ? "0"
-                  : formatMoney(Salary.actualSalary)}{" "}
+                  : formatMoney(Salary.jobIncentives)}{" "}
                 VNĐ{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

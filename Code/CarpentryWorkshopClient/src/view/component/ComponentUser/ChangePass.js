@@ -3,15 +3,19 @@ import { Input, Modal } from "antd";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { ChangeUserNameAndPassWord } from "../../../sevices/AccountService";
+import { set } from "date-fns";
 const ChangePass = ({
   isModalOpenChange,
   setIsModalOpenChange,
   userEmployeeID,
+  capcha,
+  setCapcha,
+  generateCaptcha,
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const [capcha, setCapcha] = useState("");
+  const [reCapcha, setReCapcha] = useState("");
   const validateData = () => {
     const errors = [];
     const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -19,7 +23,6 @@ const ChangePass = ({
     if (!password || (password && !passRegex.test(password))) {
       errors.push("Password không hợp lệ.");
     }
-
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -28,17 +31,30 @@ const ChangePass = ({
     }
     return true;
   };
+  const reset = () => {
+    setUsername("");
+    setPassword("");
+    setReCapcha("");
+  };
   const handleOkChange = () => {
     const vali = validateData();
     if(!vali){
       return;
     }
-    if(password == rePassword){
+    if(password != rePassword){
       toast.warning("Mật khẩu phải giống khi nhập lại");
+      return;
+    }
+    if(reCapcha != capcha){
+      toast.warning("Bạn cần phải nhập đúng capcha");
+      setCapcha(generateCaptcha());
+      return;
     }
     toast.promise(
       ChangeUserNameAndPassWord(userEmployeeID, username, password)
         .then((data) => {
+          reset();
+          setIsModalOpenChange(false);
           return data;
         })
         .catch((error) => {
@@ -46,12 +62,12 @@ const ChangePass = ({
         }),
       {
         pending: "Đang xử lý",
-        success: "Success",
+        success: "Thay đổi thành tài khoản thành công",
       }
     );
-    setIsModalOpenChange(false);
   };
   const handleCancelChange = () => {
+    reset();
     setIsModalOpenChange(false);
   };
   return (
@@ -92,13 +108,13 @@ const ChangePass = ({
             </div>
             <div className="item-change-body">
               <p>Capcha</p>
-              <div className="capcha" type="text">
-                I O Q R 4 M T
+              <div className="capcha" type="text" contentEditable={false}>
+                {capcha.split('').join(' ')}
               </div>
             </div>
             <div className="item-change-body">
               <p>Xác nhận Capcha</p>
-              <Input type="text" placeholder="Nhập capcha"></Input>
+              <Input type="text" placeholder="Nhập capcha" onChange={(e) => setReCapcha(e.target.value)}></Input>
             </div>
             <div className="change-footer">
               <button className="cancel" onClick={handleCancelChange}>

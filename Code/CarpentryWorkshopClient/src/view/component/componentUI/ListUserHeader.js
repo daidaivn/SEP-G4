@@ -16,6 +16,7 @@ function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
   const [gender, setGender] = useState("Nguyễn Văn An");
   const [userName, setUserName] = useState("");
+  const [capcha, setCapcha] = useState("");
   const [userAllVisible, setUserAllVisible] = useState(false);
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
@@ -102,9 +103,22 @@ function ListUserHeader() {
   const handleCancelPayroll = () => {
     setIsModalOpenPayroll(false);
   };
+  function generateCaptcha() {
+    const characters = 'IOQ4MTABCDEFGHIJKLMNPQRSTUVWXYZ56789'; // Excluding characters: 'OUVWXYZ1'
+    const captchaLength = 7;
+  
+    let captcha = '';
+    for (let i = 0; i < captchaLength; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      captcha += characters.charAt(randomIndex);
+    }
+  
+    return captcha;
+  }
 
   const [isModalOpenChange, setIsModalOpenChange] = useState(false);
   const showModalChange = () => {
+    setCapcha(generateCaptcha());
     setIsModalOpenChange(true);
   };
   return (
@@ -359,6 +373,9 @@ function ListUserHeader() {
         isModalOpenChange={isModalOpenChange}
         setIsModalOpenChange={setIsModalOpenChange}
         userEmployeeID={userEmployeeID}
+        capcha={capcha}
+        setCapcha={setCapcha}
+        generateCaptcha={generateCaptcha}
       />
     </>
   );
