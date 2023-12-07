@@ -9,6 +9,7 @@ import "../scss/PayrollComponent.scss";
 import { createYearOptions, getMonthsInYear } from "../logicTime/getWeeDays";
 import ListUserHeader from "./componentUI/ListUserHeader";
 
+
 import {
   Reward,
   Holiday,
@@ -24,7 +25,6 @@ import {
   AllowanceAll,
   DeductionsAll,
   SalaryReceived,
-  salaryDetailS,
 } from "./componentPayroll";
 
 import {
@@ -457,6 +457,7 @@ const PayrollComponent = () => {
           showModalAllowanceAll={showModalAllowanceAll}
           showModalDeductions={showModalDeductions}
           showModalSalaryReceived={showModalSalaryReceived}
+          showModalMainSalary={showModalMainSalary}
         />
 
         <SubsidiesDetail
