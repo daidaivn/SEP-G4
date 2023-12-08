@@ -43,7 +43,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employee = await _advanceService.GetEmployee(employeeidstring);
                 if (employee == null)
                 {
-                    return NotFound();
+                    return BadRequest("Không tìm thấy nhân viên này");
                 }
                 return Ok(employee);
             }catch(Exception ex)
