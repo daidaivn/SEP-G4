@@ -41,18 +41,15 @@ const LoginComponent = () => {
               localStorage.setItem("userRoles", JSON.stringify(response.roles));
               localStorage.setItem("userPages", JSON.stringify(response.pages));
               localStorage.setItem("userEmployeeID", response.employeeID);
+              localStorage.setItem("accountName", response.userAccount);
+
             } else {
               sessionStorage.setItem("userToken", response.token);
               sessionStorage.setItem("userName", response.name);
-              sessionStorage.setItem(
-                "userRoles",
-                JSON.stringify(response.roles)
-              );
-              sessionStorage.setItem(
-                "userPages",
-                JSON.stringify(response.pages)
-              );
+              sessionStorage.setItem("userRoles",JSON.stringify(response.roles));
+              sessionStorage.setItem("userPages",JSON.stringify(response.pages));
               sessionStorage.setItem("userEmployeeID", response.employeeID);
+              sessionStorage.setItem("accountName", response.userAccount);
             }
             navigate("/");
             resolve(response);

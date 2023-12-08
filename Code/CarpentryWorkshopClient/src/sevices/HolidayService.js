@@ -31,9 +31,9 @@ const CreateHolidayDetail = (inputHolidays) => {
 };
 
 const GetHolidays = (id) => {
-  const newTeam = id;
+  const holidayid = id;
   return axios.get(
-    `/CCMSapi/Holiday/GetHolidays`
+    `/CCMSapi/Holiday/GetHolidays?holidayid=${holidayid}`
   );
 };
 
