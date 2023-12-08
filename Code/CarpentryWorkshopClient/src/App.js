@@ -17,6 +17,7 @@ import CalendarComponent from "./view/component/CalendarComponent";
 import PayrollComponent from "./view/component/PayrollComponent";
 import SeeWorkComponent from "./view/component/SeeWorkComponent";
 import HolidayComponent from "./view/component/HolidayComponent";
+import ListAdvanceComponent from "./view/component/ListAdvanceComponent";
 function App() {
   let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
   if (!userPages.length) {
@@ -68,6 +69,9 @@ function App() {
           )}
           {userPages.includes("Holiday") && (
             <Route path="/holiday" element={<HolidayComponent />} />
+          )}
+          {userPages.includes("Advance") && (
+            <Route path="/advance" element={<ListAdvanceComponent />} />
           )}
           <Route
             path="*"

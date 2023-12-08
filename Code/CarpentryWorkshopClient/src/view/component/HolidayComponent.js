@@ -252,7 +252,7 @@ const HolidayComponent = () => {
               <td>Chỉnh sửa</td>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="scrollbar" id="style-15">
             {fetchAllHolidays.map((holiday, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
@@ -325,7 +325,9 @@ const HolidayComponent = () => {
                 />
               </div>
               <div className="btn-footer">
-                <div className="btn cancel" onClick={handleCancelHoliday}>Hủy bỏ</div>
+                <div className="btn cancel" onClick={handleCancelHoliday}>
+                  Hủy bỏ
+                </div>
                 <div className="btn save" onClick={handleCreateHolidayDetail}>
                   Lưu
                 </div>
