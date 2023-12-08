@@ -91,6 +91,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 Pages = pages,
                 Roles = roles,
                 EmployeeID = employee.EmployeeId,
+                UserAccount = user.UserName
             };
 
             return Ok(loginResponse);
