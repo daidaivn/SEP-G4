@@ -50,6 +50,7 @@ namespace CarpentryWorkshopAPI.Services.Advance
                     AdvanceSalaryID = a.AdvanceSalaryId,
                     EmployeeID = a.EmployeeId,
                     EmployeeIdstring = a.EmployeeId.ToString().PadLeft(employeeIdLength, '0'),
+                    EmployeeName = a.Employee.FirstName + " " + a.Employee.LastName,
                     Amount = a.Amount,
                     Date = a.Date.Value.ToString("dd'-'MM'-'yyyy"),
                     Note = a.Note
@@ -93,26 +94,6 @@ namespace CarpentryWorkshopAPI.Services.Advance
         } 
         public async Task<dynamic> CreateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO)
         {
-            //var startDate = new DateTime(createAdvanceDTO.my.Year, createAdvanceDTO.my.Month, 1);
-            //var endDate = startDate.AddMonths(1).AddDays(-1);
-            //var holidays = await _context.HolidaysDetails
-            //                     .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
-            //                     .Select(h => h.Date.Value)
-            //                     .ToListAsync();
-            //var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-            //var employee = await _context.Employees
-            //    .Include(x => x.HoursWorkDays)
-            //    .Where(x => x.EmployeeId == createAdvanceDTO.EmployeeId)
-            //    .FirstOrDefaultAsync();
-            //var employeeWorkingDay = employee.HoursWorkDays
-            //    .Count(hwd => hwd.Day.HasValue &&
-            //                  TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
-            //                  !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
-        
-            //if (employeeWorkingDay < 13)
-            //{
-            //    return StatusCode(409,)
-            //}
             var newAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
             await _context.AdvancesSalaries.AddAsync(newAdvance);
             await _context.SaveChangesAsync();
