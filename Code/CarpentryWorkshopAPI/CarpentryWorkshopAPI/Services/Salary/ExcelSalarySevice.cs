@@ -337,13 +337,13 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 }
                 var totalOT = e.HoursWorkDays
                 .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
-                .Sum(h => h.DailyRate) * 2;
+                .Sum(h => h.DailyRate) * 1;
                 var totalHolidaySalary = e.HoursWorkDays
                 .Where(hwd => hwd.Day.HasValue &&
                               holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
-                .Sum(ths => ths.DailyRate) * 3;
+                .Sum(ths => ths.DailyRate) * 2;
                 var bonus = e.BonusDetails
                 .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
                 .Sum(bd => bd.BonusAmount);
@@ -369,24 +369,26 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 decimal actualWorkdaySalary = 0;
 
                 string meal = "Tiền ăn ca";
-                var mealAllowance = e.EmployeesAllowances
+                var mealAllowanceBasic = e.EmployeesAllowances
                    .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
                    && ea.AllowanceType.Allowance.Name.ToLower().Equals(meal.ToLower()))
                    .Select(ea => ea.AllowanceType.Amount)
                    .FirstOrDefault();
+                var mealAllowance = mealAllowanceBasic / workingDaysInMonth * (actualWorkDays + workDaysOnHolidays + workDayBonus);
                 string clother = "Quần áo";
-                var clotherAllowance = e.EmployeesAllowances
+                var clotherAllowanceBasic = e.EmployeesAllowances
                    .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
                    && ea.AllowanceType.Allowance.Name.ToLower().Equals(clother.ToLower()))
                    .Select(ea => ea.AllowanceType.Amount)
                    .FirstOrDefault();
+                var clotherAllowance = clotherAllowanceBasic / workingDaysInMonth * (actualWorkDays + workDaysOnHolidays + workDayBonus);
                 string car = "Xăng xe";
-                var carAllowance = e.EmployeesAllowances
+                var carAllowanceBasic = e.EmployeesAllowances
                    .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
                    && ea.AllowanceType.Allowance.Name.ToLower().Equals(car.ToLower()))
                    .Select(ea => ea.AllowanceType.Amount)
                    .FirstOrDefault();
-
+                var carAllowance = carAllowanceBasic / workingDaysInMonth * (actualWorkDays + workDaysOnHolidays + workDayBonus);
                 var advances = e.AdvancesSalaries
                          .Where(x => x.EmployeeId == e.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
                          .Sum(x => x.Amount);
@@ -400,7 +402,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     basicSalary = latestContract.Amount ?? 0;
                     actualWorkdaySalary = e.HoursWorkDays
-                    .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == e.EmployeeId)
+                    .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == e.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
                     .Sum(h => (decimal)(h.DailyRate ?? 0));
 
                 }
@@ -463,6 +465,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     PersonalIncomeTax = (long)personIncome,
                     Advances = (long)advances,
                     JobIncentives = (long)totalBs,
+                    Bonus = (long)bonus,
+                    SpecialOccasion = (long)special,
                     ActualReceived = (long)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
 
                 };
@@ -540,7 +544,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
         private int CalculateActualWorkingDays(Employee employee, DateTime startDate, DateTime endDate, List<DateTime> holidays, TimeZoneInfo timeZone)
         {
             return employee.HoursWorkDays
-                .Count(hwd => hwd.Day.HasValue &&
+                .Count(hwd => hwd.Day.HasValue && hwd.Day.Value >= startDate && hwd.Day.Value <= endDate &&
+                              hwd.Day.Value.Month == startDate.Month && hwd.Day.Value.Year == startDate.Year &&
                               TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
                               !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
         }
