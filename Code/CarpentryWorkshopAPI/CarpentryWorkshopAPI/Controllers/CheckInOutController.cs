@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -86,8 +87,11 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
         public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
         {
+            var personCheckInOut = _context.RolesEmployees.Include(re => re.Role).Where(re => re.EmployeeId == teamLeaderId && re.Role.RoleName == "Bảo vệ" && re.EndDate == null).FirstOrDefault();
             
-            var teamId = await _context.Teams
+            if(personCheckInOut == null)
+            {
+                var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
                 .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work)
                 .Select(et => new
@@ -95,158 +99,294 @@ namespace CarpentryWorkshopAPI.Controllers
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
-                    WorkId = et.TeamWorks.Select(w=>w.WorkId),
+                    WorkId = et.TeamWorks.Select(w => w.WorkId),
                 })
                 .FirstOrDefaultAsync();
-            
-            if (teamId.TeamId == 0)
-            {
-                return NotFound("Team Leader not found");
-            }
-            DateTime DateIn = DateTime.Now.Date.Add(teamId.TimeIn ?? TimeSpan.Zero);
-            DateTime DateOut = DateTime.Now.Date.Add(teamId.Timeout ?? TimeSpan.Zero);
-            if(teamId.Timeout < teamId.TimeIn){
-                DateOut = DateOut.AddDays(1);
-            }
-            var employees = await _context.EmployeeTeams
-                .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
-                .Select(et => et.Employee)
-                .ToListAsync();
-            if (employees.Count() == 0)
-            {
-                return NotFound("No employees found in the team with EndDate == null");
-            }
 
-            var result = new List<object>();
-            var time = new List<object>();
-            foreach (var employee in employees)
-            {
-                var currentDate = DateTime.Now.Date;
-                
-                var checkInTime = await _context.CheckInOuts
-                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                    .OrderBy(c=>c.Date)
-                    .ThenBy(c => c.TimeCheckIn)
-                    .Select(c => c.TimeCheckIn)
-                    .FirstOrDefaultAsync();
-
-                var latestCheckOutTime = await _context.CheckInOuts
-                    .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                    .OrderBy(c => c.Date)
-                    .ThenBy(c => c.TimeCheckIn)
-                    .LastOrDefaultAsync();
-
-                if(DateTime.Now > DateOut && latestCheckOutTime != null && latestCheckOutTime.TimeCheckIn != null)
+                if (teamId.TeamId == 0)
                 {
-                    if(latestCheckOutTime.TimeCheckOut == null)
+                    return NotFound("Team Leader not found");
+                }
+                DateTime DateIn = DateTime.Now.Date.Add(teamId.TimeIn ?? TimeSpan.Zero);
+                DateTime DateOut = DateTime.Now.Date.Add(teamId.Timeout ?? TimeSpan.Zero);
+                if (teamId.Timeout < teamId.TimeIn)
+                {
+                    DateOut = DateOut.AddDays(1);
+                }
+                var employees = await _context.EmployeeTeams
+                    .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
+                    .Select(et => et.Employee)
+                    .ToListAsync();
+                if (employees.Count() == 0)
+                {
+                    return NotFound("No employees found in the team with EndDate == null");
+                }
+                var result = new List<object>();
+                var time = new List<object>();
+                foreach (var employee in employees)
+                {
+                    var currentDate = DateTime.Now.Date;
+
+                    var checkInTime = await _context.CheckInOuts
+                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                        .OrderBy(c => c.Date)
+                        .ThenBy(c => c.TimeCheckIn)
+                        .Select(c => c.TimeCheckIn)
+                        .FirstOrDefaultAsync();
+
+                    var latestCheckOutTime = await _context.CheckInOuts
+                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                        .OrderBy(c => c.Date)
+                        .ThenBy(c => c.TimeCheckIn)
+                        .LastOrDefaultAsync();
+
+                    if (DateTime.Now > DateOut && latestCheckOutTime != null && latestCheckOutTime.TimeCheckIn != null)
                     {
-                        var AutoCheck = await _context.CheckInOuts
-                            .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
-                            .OrderBy(c => c.Date)
-                            .ThenBy(c => c.TimeCheckIn)
-                            .LastOrDefaultAsync();
-                        if(AutoCheck != null)
+                        if (latestCheckOutTime.TimeCheckOut == null)
                         {
-                            AutoCheck.TimeCheckOut = teamId.Timeout;
-                            _context.Update(AutoCheck);
-                            _context.SaveChanges();
+                            var AutoCheck = await _context.CheckInOuts
+                                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                                .OrderBy(c => c.Date)
+                                .ThenBy(c => c.TimeCheckIn)
+                                .LastOrDefaultAsync();
+                            if (AutoCheck != null)
+                            {
+                                AutoCheck.TimeCheckOut = teamId.Timeout;
+                                _context.Update(AutoCheck);
+                                _context.SaveChanges();
+                            }
                         }
                     }
-                }
-                if(teamId.WorkId.Count() <= 0)
-                {
-                    result.Add(new
-                    {
-                        EmployeeId = employee.EmployeeId,
-                        Name = employee.FirstName + " " + employee.LastName,
-                        Status = 4, //Chưa có công việc
-                        CheckStatus = "CheckIn",
-                        TimeIn = "",
-                        Timeout = "",
-                        
-                    });
-                }
-                else if (checkInTime == null)
-                {
-                    if (DateTime.Now > DateIn)
+                    if (teamId.WorkId.Count() <= 0)
                     {
                         result.Add(new
                         {
                             EmployeeId = employee.EmployeeId,
                             Name = employee.FirstName + " " + employee.LastName,
-                            Status = 3, //Vắng mặt
+                            Status = 4, //Chưa có công việc
                             CheckStatus = "CheckIn",
                             TimeIn = "",
                             Timeout = "",
-                            
+
                         });
+                    }
+                    else if (checkInTime == null)
+                    {
+                        if (DateTime.Now > DateIn)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 3, //Vắng mặt
+                                CheckStatus = "CheckIn",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
+                        else
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 1, //Checkin
+                                CheckStatus = "CheckIn",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
                     }
                     else
                     {
-                        result.Add(new
+                        if (DateTime.Now > DateOut)
                         {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 1, //Checkin
-                            CheckStatus = "CheckIn",
-                            TimeIn = "",
-                            Timeout = "",
-                            
-                        });
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 6,//tan ca
+                                CheckStatus = "EndCheck",
+                                TimeIn = latestCheckOutTime.TimeCheckOut,
+                                Timeout = DateTime.Now.TimeOfDay,
+
+                            });
+                        }
+                        else if (latestCheckOutTime.TimeCheckOut == null)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 2,// dang co mat
+                                CheckStatus = "CheckOut",
+                                TimeIn = latestCheckOutTime.TimeCheckIn,
+                                Timeout = "",
+
+                            });
+                        }
+                        else
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 5,//tam ngung 
+                                CheckStatus = "CheckIn",
+                                TimeIn = latestCheckOutTime.TimeCheckIn,
+                                Timeout = latestCheckOutTime.TimeCheckOut,
+
+                            });
+                        }
                     }
-                }                    
-                else
-                {
-                    if (DateTime.Now > DateOut)
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 6,//tan ca
-                            CheckStatus = "EndCheck",
-                            TimeIn = latestCheckOutTime.TimeCheckOut,
-                            Timeout = DateTime.Now.TimeOfDay,
-                            
-                        });
-                    }
-                    else if (latestCheckOutTime.TimeCheckOut == null)
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 2,// dang co mat
-                            CheckStatus = "CheckOut",
-                            TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = "",
-                           
-                        });
-                    }
-                    else
-                    {
-                        result.Add(new
-                        {
-                            EmployeeId = employee.EmployeeId,
-                            Name = employee.FirstName + " " + employee.LastName,
-                            Status = 5,//tam ngung 
-                            CheckStatus = "CheckIn",
-                            TimeIn = latestCheckOutTime.TimeCheckIn,
-                            Timeout = latestCheckOutTime.TimeCheckOut,
-                            
-                        });
-                    }                                                
+
                 }
-                
+                time.Add(new
+                {
+                    TimeIn = teamId.TimeIn,
+                    Timeout = teamId.Timeout,
+                    Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
+                    Result = result
+                });
+                return time;
+
             }
-            time.Add(new
+            else
             {
-                TimeIn = teamId.TimeIn,
-                Timeout = teamId.Timeout,
-                Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
-                Result = result
-            });
-            return time;
+                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Where(e => e.Role.RoleName != "Bảo vệ" && e.Role.RoleName != "Nhân viên" && e.EndDate == null).Select(e => e.Employee).Distinct().ToListAsync();
+                if (employees.Count() == 0)
+                {
+                    return NotFound("No employees found in the team with EndDate == null");
+                }
+                var result = new List<object>();
+                var time = new List<object>();
+                foreach (var employee in employees)
+                {
+                    var employeeRole = _context.RolesEmployees.Include(re => re.Role).OrderBy(re=>re.Role.RoleLevel).FirstOrDefault(re => (re.Role.RoleName == "Trưởng ca" || re.Role.RoleName == "Phó ca") && re.EmployeeId == employee.EmployeeId);
+                    TimeSpan timeIn = new TimeSpan(7, 0, 0);
+                    TimeSpan timeOut = new TimeSpan(16, 0, 0);
+                    if (employeeRole != null)
+                    {
+                        var teamId = await _context.Teams
+                            .Where(t => t.TeamLeaderId == employee.EmployeeId || t.TeamSubLeaderId == employee.EmployeeId)
+                            .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work)
+                            .Select(et => new
+                            {
+                                TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
+                                Timeout = et.WorkSchedules.Select(ws => ws.ShiftType.EndTime).Single(),
+                                TeamId = et.TeamId,
+                            })
+                             .FirstOrDefaultAsync();
+                        if(teamId != null)
+                        {
+                            timeIn = teamId.TimeIn ?? TimeSpan.Zero;
+                            timeOut = teamId.Timeout ?? TimeSpan.Zero;
+                        }                        
+                    }
+                    DateTime DateIn = DateTime.Now.Date.Add(timeIn);
+                    DateTime DateOut = DateTime.Now.Date.Add(timeOut);
+                    var currentDate = DateTime.Now.Date;
+                    var checkInTime = await _context.CheckInOuts
+                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                        .OrderBy(c => c.Date)
+                        .ThenBy(c => c.TimeCheckIn)
+                        .Select(c => c.TimeCheckIn)
+                        .FirstOrDefaultAsync();
+
+                    var latestCheckOutTime = await _context.CheckInOuts
+                        .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                        .OrderBy(c => c.Date)
+                        .ThenBy(c => c.TimeCheckIn)
+                        .LastOrDefaultAsync();
+                    if (checkInTime == null)
+                    {
+                        if (DateTime.Now > DateIn)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 3, //Vắng mặt
+                                CheckStatus = "CheckIn",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
+                        else
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 1, //Checkin
+                                CheckStatus = "CheckIn",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
+                    }
+                    else
+                    {
+                        if (DateTime.Now > DateOut)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 6,//tan ca
+                                CheckStatus = "EndCheck",
+                                TimeIn = latestCheckOutTime.TimeCheckOut,
+                                Timeout = DateTime.Now.TimeOfDay,
+
+                            });
+                        }
+                        else if (latestCheckOutTime.TimeCheckOut == null)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 2,// dang co mat
+                                CheckStatus = "CheckOut",
+                                TimeIn = latestCheckOutTime.TimeCheckIn,
+                                Timeout = "",
+
+                            });
+                        }
+                        else
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.FirstName + " " + employee.LastName,
+                                Status = 5,//tam ngung 
+                                CheckStatus = "CheckIn",
+                                TimeIn = latestCheckOutTime.TimeCheckIn,
+                                Timeout = latestCheckOutTime.TimeCheckOut,
+
+                            });
+                        }
+                    }
+                    
+
+
+                }
+                time.Add(new
+                {
+                    TimeIn = "",
+                    Timeout = "",
+                    Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
+                    Result = result
+                });
+                return time;
+            }
+            
+
+            
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
