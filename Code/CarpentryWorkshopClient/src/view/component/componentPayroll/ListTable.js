@@ -226,7 +226,7 @@ const ListTable = ({
         {salaryDetail.length === 0 ? (
           <p>Thông tin sẵn sàng hoặc không tồn tại.</p>
         ) : (
-          <tbody className="scrollbar" id="style-15">
+          <tbody className="tbody-payroll scrollbar" id="style-15">
             {salaryDetail.map((Salary, index) => (
               <tr>
                 <td>{Salary.employeeId}</td>

@@ -467,9 +467,9 @@ const PayrollComponent = () => {
 
   return (
     <>
-      <div className="col-right-container">
+      <div className="col-right-container fix-css-payroll">
         <div className="list-container-header">
-          <div className="list-text-header">
+          <div className="list-text-header fix-css-head-payroll">
             <h2>Lương | Thưởng</h2>
             <span>Chi tiết lương từng tháng</span>
           </div>
