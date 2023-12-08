@@ -44,9 +44,12 @@ const Salary = ({
                 <tr>
                   <div className="child1">MNV</div>
                   <div className="item-child">Họ và tên</div>
-                  <div className="item-child">Ăn sáng</div>
-                  <div className="item-child">Trang phục</div>
-                  <div className="item-child">Xăng xe</div>
+                  <div className="item-child">Công thực tế</div>
+                  <div className="item-child">Công lễ tết</div>
+                  <div className="item-child">Công làm thêm</div>
+                  <div className="item-child">Lương ngày công thực tế</div>
+                  <div className="item-child">Lương làm thêm</div>
+                  <div className="item-child">Lương kinh doanh sản lượng</div>
                   <div className="item-child">Tổng</div>
                 </tr>
               </thead>
@@ -61,33 +64,38 @@ const Salary = ({
                           <div className="item-first">{index + 1}</div>
                           <div className="item-second">{item.fullName}</div>
                           <div className="item-child-body">
-                            {item.allowances.meal === 0
+                            {item.actualWork === 0 ? "0" : item.actualWork} Công
+                          </div>
+                          <div className="item-child-body">
+                            {item.holidayWork === 0 ? "0" : item.holidayWork}{" "}
+                            Công
+                          </div>
+                          <div className="item-child-body">
+                            {item.overtime === 0 ? "0" : item.overtime} Công
+                          </div>
+                          <div className="item-child-body">
+                            {item.actualDaySalary === 0
                               ? "0"
-                              : formatMoney(item.allowances.meal)}{" "}
+                              : formatMoney(item.actualDaySalary)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.uniform === 0
+                            {item.overtimeSalary === 0
                               ? "0"
-                              : formatMoney(item.allowances.uniform)}{" "}
+                              : formatMoney(item.overtimeSalary)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.petrol === 0
+                            {item.businessSalary === 0
                               ? "0"
-                              : formatMoney(item.allowances.petrol)}{" "}
+                              : formatMoney(item.businessSalary)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.meal +
-                              item.allowances.uniform +
-                              item.allowances.petrol ===
-                            0
+                            {item.actualDaySalary + item.overtimeSalary + item.businessSalary === 0
                               ? "0"
                               : formatMoney(
-                                  item.allowances.meal +
-                                    item.allowances.uniform +
-                                    item.allowances.petrol
+                                  item.actualDaySalary + item.overtimeSalary + item.businessSalary
                                 )}{" "}
                             VNĐ
                           </div>
