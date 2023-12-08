@@ -9,7 +9,6 @@ import "../scss/PayrollComponent.scss";
 import { createYearOptions, getMonthsInYear } from "../logicTime/getWeeDays";
 import ListUserHeader from "./componentUI/ListUserHeader";
 
-
 import {
   Reward,
   Holiday,
@@ -25,6 +24,10 @@ import {
   AllowanceAll,
   DeductionsAll,
   SalaryReceived,
+  Salary,
+  Tax,
+  Other,
+  Advancesalary,
 } from "./componentPayroll";
 
 import {
@@ -65,7 +68,7 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
-  
+
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
 
@@ -118,8 +121,6 @@ const PayrollComponent = () => {
     return true;
   };
 
-  
-
   //modal Excel
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const showModalExcel = () => {
@@ -144,6 +145,17 @@ const PayrollComponent = () => {
     setIsModalOpenSubsidies(false);
   };
 
+  //modal Chi tiết luong chinh
+  const [isModalOpenSalary, setIsModalOpenSalary] = useState(false);
+  const showModalSalary = () => {
+    setIsModalOpenSalary(true);
+  };
+  const handleOkSalary = () => {
+    setIsModalOpenSalary(false);
+  };
+  const handleCancelSalary = () => {
+    setIsModalOpenSalary(false);
+  };
   //modal Chi tiết trợ cấp
   const [isModalOpenAllowance, setIsModalOpenAllowance] = useState(false);
   const showModalAllowance = () => {
@@ -166,6 +178,44 @@ const PayrollComponent = () => {
   };
   const handleCancelReward = () => {
     setIsModalOpenReward(false);
+  };
+
+  //modal thuế tncn
+  const [isModalOpenTax, setIsModalOpenTax] = useState(false);
+  const showModalTax = () => {
+    setIsModalOpenTax(true);
+  };
+  const handleOkTax = () => {
+    setIsModalOpenTax(false);
+  };
+  const handleCancelTax = () => {
+    setIsModalOpenTax(false);
+  };
+
+  //modal các khoản khác
+  const [isModalOpenOther, setIsModalOpenOther] = useState(false);
+  const showModalOther = () => {
+    setIsModalOpenOther(true);
+  };
+  const handleOkOther = () => {
+    setIsModalOpenOther(false);
+  };
+  const handleCancelOther = () => {
+    setIsModalOpenOther(false);
+  };
+
+  //modal lương ứng
+  const [isModalOpenAdvancesalary, setIsModalOpenAdvancesalary] = useState(
+    false
+  );
+  const showModalAdvancesalary = () => {
+    setIsModalOpenAdvancesalary(true);
+  };
+  const handleOkAdvancesalary = () => {
+    setIsModalOpenAdvancesalary(false);
+  };
+  const handleCancelAdvancesalary = () => {
+    setIsModalOpenAdvancesalary(false);
   };
 
   //modal Thưởng công ty
@@ -308,9 +358,7 @@ const PayrollComponent = () => {
     setIsModalOpenSalaryReceived(false);
   };
   //hiển thị mainsalary
-  const [isModalOpenMainSalary, setIsModalOpenMainSalary] = useState(
-    false
-  );
+  const [isModalOpenMainSalary, setIsModalOpenMainSalary] = useState(false);
   const showModalMainSalary = () => {
     setIsModalOpenMainSalary(true);
   };
@@ -387,16 +435,15 @@ const PayrollComponent = () => {
     );
   };
 
-  
   //featchData SalaryDetail
   const fetDataSalaryDetail = () => {
     let isDataLoaded = false;
     let toastId = null;
-    fetchAllSalaryDetail(months,date)
+    fetchAllSalaryDetail(months, date)
       .then((data) => {
         isDataLoaded = true;
         setSalaryDetail(data);
-        console.log('salaryDetail', data);
+        console.log("salaryDetail", data);
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
@@ -406,17 +453,15 @@ const PayrollComponent = () => {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Lỗi không có nhân viên'); // Hiển thị thông báo lỗi ngay lập tức
+        toast.error("Lỗi không có nhân viên"); // Hiển thị thông báo lỗi ngay lập tức
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
-
-  }
+  };
   useEffect(() => {
-    
     fetDataSalaryDetail();
   }, [iText, date, months]);
 
@@ -426,13 +471,10 @@ const PayrollComponent = () => {
         <div className="list-container-header">
           <div className="list-text-header">
             <h2>Lương | Thưởng</h2>
-            <span>
-              Lưu thông tin bắt đầu làm việc và ngưng làm việc củ một nhóm
-            </span>
+            <span>Chi tiết lương từng tháng</span>
           </div>
           <ListUserHeader />
         </div>
-
         <ListSearchFilterAdd
           showModalExcel={showModalExcel}
           showModalRewardCompany={showModalRewardCompany}
@@ -446,7 +488,6 @@ const PayrollComponent = () => {
           setIText={setIText}
           iText={iText}
         />
-
         <ListTable
           salaryDetail={salaryDetail}
           showModalSubsidies={showModalSubsidies}
@@ -458,22 +499,23 @@ const PayrollComponent = () => {
           showModalDeductions={showModalDeductions}
           showModalSalaryReceived={showModalSalaryReceived}
           showModalMainSalary={showModalMainSalary}
+          showModalSalary={showModalSalary}
+          showModalTax={showModalTax}
+          showModalAdvancesalary={showModalAdvancesalary}
+          showModalOther={showModalOther}
         />
-
         <SubsidiesDetail
           isModalOpenSubsidies={isModalOpenSubsidies}
           handleOkSubsidies={handleOkSubsidies}
           handleCancelSubsidies={handleCancelSubsidies}
           dataDeduction={dataDeduction}
         />
-
         <AllowanceDetails
           isModalOpenAllowance={isModalOpenAllowance}
           handleOkAllowance={handleOkAllowance}
           handleCancelAllowance={handleCancelAllowance}
           dataAllowance={dataAllowance}
         />
-
         <RewardCompany
           isModalOpenRewardCompany={isModalOpenRewardCompany}
           handleOkRewardCompany={handleOkRewardCompany}
@@ -485,7 +527,6 @@ const PayrollComponent = () => {
           date={date}
           setDate={setDate}
         />
-
         <RewardAll
           isModalOpenRewardAll={isModalOpenRewardAll}
           handleChange={handleChange}
@@ -500,7 +541,6 @@ const PayrollComponent = () => {
           setIsModalOpenRewardAll={setIsModalOpenRewardAll}
           validateData={validateData}
         />
-
         <TypeReward
           isModalOpenTypeReward={isModalOpenTypeReward}
           handleOkTypeReward={handleOkTypeReward}
@@ -513,7 +553,6 @@ const PayrollComponent = () => {
           handleCancelReward={handleCancelReward}
           dataActualSalary={dataActualSalary}
         />
-
         <RewardPersonal
           isModalOpenRewardPersonal={isModalOpenRewardPersonal}
           handleChange={handleChange}
@@ -576,7 +615,6 @@ const PayrollComponent = () => {
             </div>
           </div>
         </Modal>
-
         {/* Modal excel */}
         <ExcelModal
           isModalOpenExcel={isModalOpenExcel}
@@ -590,7 +628,6 @@ const PayrollComponent = () => {
           setDate={setDate}
           yearOptions={yearOptions}
         />
-
         {/* Modal hiển thị tất cả danh sách phụ cấp */}
         <AllowanceAll
           isModalOpenAllowanceAll={isModalOpenAllowanceAll}
@@ -598,7 +635,6 @@ const PayrollComponent = () => {
           handleCancelAllowanceAll={handleCancelAllowanceAll}
           salaryDetail={salaryDetail}
         />
-
         {/* Modal hiển thị tất cả danh sách các khoản trừ */}
         <DeductionsAll
           isModalOpenDeductions={isModalOpenDeductions}
@@ -606,7 +642,6 @@ const PayrollComponent = () => {
           handleCancelDeductions={handleCancelDeductions}
           salaryDetail={salaryDetail}
         />
-
         {/* Modal hiển thị tất cả danh sách lương thực nhận */}
         <SalaryReceived
           isModalOpenSalaryReceived={isModalOpenSalaryReceived}
@@ -619,6 +654,34 @@ const PayrollComponent = () => {
           isModalOpenMainSalary={isModalOpenMainSalary}
           handleOkMainSalary={handleOkMainSalary}
           handleCancelMainSalary={handleCancelMainSalary}
+          salaryDetail={salaryDetail}
+        />
+        {/*modal hien thi tat ca luong chinh */}
+        <Salary
+          isModalOpenSalary={isModalOpenSalary}
+          handleOkSalary={handleOkSalary}
+          handleCancelSalary={handleCancelSalary}
+          salaryDetail={salaryDetail}
+        />
+        {/* modal thuế tncn */}
+        <Tax
+          isModalOpenTax={isModalOpenTax}
+          handleOkTax={handleOkTax}
+          handleCancelTax={handleCancelTax}
+          salaryDetail={salaryDetail}
+        />
+        {/* modal Các khoản phúc lợi khác */}
+        <Other
+          isModalOpenOther={isModalOpenOther}
+          handleOkOther={handleOkOther}
+          handleCancelOther={handleCancelOther}
+          salaryDetail={salaryDetail}
+        />
+        {/* modal lương ứng */}
+        <Advancesalary
+          isModalOpenAdvancesalary={isModalOpenAdvancesalary}
+          handleOkAdvancesalary={handleOkAdvancesalary}
+          handleCancelAdvancesalary={handleCancelAdvancesalary}
           salaryDetail={salaryDetail}
         />
       </div>
