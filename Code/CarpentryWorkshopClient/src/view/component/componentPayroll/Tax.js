@@ -43,10 +43,12 @@ const Tax = ({
                 <tr>
                   <div className="child1">MNV</div>
                   <div className="item-child">Họ và tên</div>
-                  <div className="item-child">Ăn sáng</div>
-                  <div className="item-child">Trang phục</div>
-                  <div className="item-child">Xăng xe</div>
-                  <div className="item-child">Tổng</div>
+                  <div className="item-child">Thu nhập chịu thuế</div>
+                  <div className="item-child">Giảm trừ gia cảnh</div>
+                  <div className="item-child">Người phục thuộc</div>
+                  <div className="item-child">Bảo hiểm</div>
+                  <div className="item-child">Thu nhập tính thuế</div>
+                  <div className="item-child">Thuế TNCN</div>
                 </tr>
               </thead>
               <div className="tbody scrollbar" id="style-15">
@@ -60,34 +62,39 @@ const Tax = ({
                           <div className="item-first">{index + 1}</div>
                           <div className="item-second">{item.fullName}</div>
                           <div className="item-child-body">
-                            {item.allowances.meal === 0
+                            {item.taxableIncome === 0
                               ? "0"
-                              : formatMoney(item.allowances.meal)}{" "}
+                              : formatMoney(item.taxableIncome)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.uniform === 0
+                            {item.taxDeductions.personalRelief === 0
                               ? "0"
-                              : formatMoney(item.allowances.uniform)}{" "}
+                              : formatMoney(item.taxDeductions.personalRelief)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.petrol === 0
+                            {item.taxDeductions.dependentRelief === 0
                               ? "0"
-                              : formatMoney(item.allowances.petrol)}{" "}
+                              : formatMoney(item.taxDeductions.dependentRelief)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.meal +
-                              item.allowances.uniform +
-                              item.allowances.petrol ===
-                            0
+                            {item.taxDeductions.insurance === 0
                               ? "0"
-                              : formatMoney(
-                                  item.allowances.meal +
-                                    item.allowances.uniform +
-                                    item.allowances.petrol
-                                )}{" "}
+                              : formatMoney(item.taxDeductions.insurance)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.incomeTax === 0
+                              ? "0"
+                              : formatMoney(item.incomeTax)}{" "}
+                            VNĐ
+                          </div>
+                          <div className="item-child-body">
+                            {item.personalIncomeTax === 0
+                              ? "0"
+                              : formatMoney(item.personalIncomeTax)}{" "}
                             VNĐ
                           </div>
                         </div>
