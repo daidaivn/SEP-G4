@@ -22,13 +22,20 @@
   .table-scroll-x thead tr {
     padding: 17px 32px 17px 12px;
   }
-  .head-excel {
+  .head-excel,
+  .text-head p {
     font-size: 35px !important;
     padding: 26px 0px !important;
   }
   .modal-excel .body-excel .item p,
   .modal-excel .body-excel .item .ant-select .ant-select-selector,
-  .modal-excel .body-excel .footer {
+  .modal-excel .body-excel .footer,
+  .modal-type-reward-all .modal-body .body-head p,
+  .modal-type-reward-all .modal-body .body-head span,
+  .modal-type-reward-all .modal-body .body-mid thead td,
+  .modal-type-reward-all .modal-body .item p {
     font-size: 18px;
+  }
+  .modal-type-reward-all {
   }
 }
