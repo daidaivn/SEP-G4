@@ -1,6 +1,4 @@
-﻿using CarpentryWorkshopAPI.Models;
-
-namespace CarpentryWorkshopAPI.DTO
+﻿namespace CarpentryWorkshopAPI.DTO
 {
     public class CreateAccount
     {

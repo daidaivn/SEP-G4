@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarpentryWorkshopAPI.Models;
-using AutoMapper;
-using CarpentryWorkshopAPI.DTO;
 using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -51,9 +46,9 @@ namespace CarpentryWorkshopAPI.Controllers
             DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory()
             {
                 Action = "Update",
-                ActionDate= DateTime.Now,
+                ActionDate = DateTime.Now,
                 CurrentEmployeeId = 1,
-                DegreeId= degree.DegreeId,
+                DegreeId = degree.DegreeId,
             };
             _context.DegreesStatusHistories.Add(degreesStatusHistory);
             try
@@ -73,10 +68,10 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost]
         public IActionResult CreateDegree(string degreeName)
         {
-          if (_context.Degrees == null)
-          {
-              return Problem("Entity set 'SEPG4CCMSContext.Degrees'  is null.");
-          }
+            if (_context.Degrees == null)
+            {
+                return Problem("Entity set 'SEPG4CCMSContext.Degrees'  is null.");
+            }
             Degree degree = new Degree()
             {
                 DegreeName = degreeName,
@@ -111,7 +106,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound();
             }
-            if(degree.Status == true)
+            if (degree.Status == true)
             {
                 degreesStatusHistory.DegreeId = id;
                 degreesStatusHistory.Action = "Change status false";
@@ -146,12 +141,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 string text = degreeDTO.DegreeName.ToLower().Normalize(NormalizationForm.FormD);
                 degree = degree.Where(de => de.DegreeName.ToLower().Normalize(NormalizationForm.FormD).Contains(text));
             }
-            if(degreeDTO.Status.HasValue)
+            if (degreeDTO.Status.HasValue)
             {
                 degree = degree.Where(de => de.Status == degreeDTO.Status);
             }
             var degreeListDTO = _mapper.Map<List<DegreeDTO>>(degree);
             return Ok(degreeListDTO);
-        } 
+        }
     }
 }

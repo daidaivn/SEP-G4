@@ -1,5 +1,4 @@
 ﻿using CarpentryWorkshopAPI.DTO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CarpentryWorkshopAPI.IServices.ISalary
 {

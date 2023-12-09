@@ -1,25 +1,18 @@
 ﻿using AutoMapper;
-using CarpentryWorkshopAPI.Attributes;
 using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.IServices.Account;
 using CarpentryWorkshopAPI.Models;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Globalization;
-using System.Diagnostics.Contracts;
-using Org.BouncyCastle.Asn1.Ocsp;
 using MimeKit;
 using MimeKit.Text;
-using MailKit.Net.Smtp;
-using CarpentryWorkshopAPI.IServices.Account;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    
+
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
@@ -66,7 +59,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-           
+
         }
         [HttpGet]
         public async Task<IActionResult> GetEmployeeDetail(int eid)
@@ -89,7 +82,7 @@ namespace CarpentryWorkshopAPI.Controllers
                        Address = emp.Address,
                        Cic = emp.Cic,
                        Country = emp.Country.CountryName,
-                       CountryId= emp.CountryId,
+                       CountryId = emp.CountryId,
                        Genderstring = (bool)emp.Gender ? "Nam" : "Nữ",
                        Gender = emp.Gender,
                        PhoneNumber = emp.PhoneNumber,
@@ -108,7 +101,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             })
                             .ToList()
                    }).FirstOrDefaultAsync();
-                   
+
                 if (employeeDetailBasic == null)
                 {
                     return NotFound();
@@ -117,7 +110,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return Ok(employeeDetailBasic);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -188,7 +181,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var edDTO = _mapper.Map<List<EmployeeDependentDTO>>(employeeDepend);
                 return Ok(edDTO);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -204,10 +198,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound();
                 }
-                _context.Employees.Remove(delete);  
+                _context.Employees.Remove(delete);
                 _context.SaveChanges();
                 return Ok("success");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -225,7 +220,7 @@ namespace CarpentryWorkshopAPI.Controllers
                        .ThenInclude(role => role.RolesEmployees)
                    .Include(emp => emp.RolesEmployees)
                        .ThenInclude(roleemp => roleemp.Department)
-                       .FirstOrDefaultAsync(x => x.PhoneNumber == createEmployeeDTO.PhoneNumber 
+                       .FirstOrDefaultAsync(x => x.PhoneNumber == createEmployeeDTO.PhoneNumber
                        || x.Email == createEmployeeDTO.Email
                        || x.Cic == createEmployeeDTO.Cic);
 
@@ -245,22 +240,22 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                 }
                 Employee newemp = new Employee();
-               
-                    var checkEmail = _accountService.Check_Gmail(createEmployeeDTO.Email);
-                    if (checkEmail == true)
+
+                var checkEmail = _accountService.Check_Gmail(createEmployeeDTO.Email);
+                if (checkEmail == true)
+                {
+                    newemp = _mapper.Map<Employee>(createEmployeeDTO);
+                    if (!newemp.Status.HasValue)
                     {
-                        newemp = _mapper.Map<Employee>(createEmployeeDTO);
-                        if (!newemp.Status.HasValue)
-                        {
-                            newemp.Status = true;
-                        }
-                        _context.Employees.Add(newemp);
-                        _context.SaveChanges();
+                        newemp.Status = true;
                     }
-                    else
-                    {
-                        return StatusCode(409, "Email chưa được đăng kí");
-                    }              
+                    _context.Employees.Add(newemp);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    return StatusCode(409, "Email chưa được đăng kí");
+                }
                 foreach (var rd in createEmployeeDTO.rDs)
                 {
                     RolesEmployee newremp = new RolesEmployee
@@ -287,10 +282,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
                 UserAccountsStatusHistory newUahistory = new UserAccountsStatusHistory()
                 {
-                    EmployeeId= newemp.EmployeeId,
+                    EmployeeId = newemp.EmployeeId,
                     Action = "Create",
                     ActionDate = DateTime.Now,
-                    CurrentEmployeeId= null
+                    CurrentEmployeeId = null
                 };
                 _context.UserAccountsStatusHistories.Add(newUahistory);
                 _context.SaveChanges();
@@ -346,7 +341,7 @@ namespace CarpentryWorkshopAPI.Controllers
                       .ThenInclude(roleemp => roleemp.Department)
                       .FirstOrDefaultAsync(x => x.EmployeeId == updateEmployeeDTO.EmployeeId);
                 var employeeEmail = employee.Email;
-                
+
                 if (employee == null)
                 {
                     return NotFound();
@@ -354,7 +349,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
                 {
-                    return StatusCode(409,"Email đã tồn tại");
+                    return StatusCode(409, "Email đã tồn tại");
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.PhoneNumber == updateEmployeeDTO.PhoneNumber))
                 {
@@ -366,11 +361,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Cic == updateEmployeeDTO.Cic))
                 {
-                    return StatusCode(409,"Mã định danh đã tồn tại");
+                    return StatusCode(409, "Mã định danh đã tồn tại");
                 }
 
                 var checkEmail = _accountService.Check_Gmail(updateEmployeeDTO.Email);
-                if (checkEmail == true) {
+                if (checkEmail == true)
+                {
                     employee.Image = updateEmployeeDTO.Image;
                     employee.FirstName = updateEmployeeDTO.FirstName;
                     employee.LastName = updateEmployeeDTO.LastName;
@@ -475,7 +471,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
-                    EmployeeId= employees.EmployeeId,
+                    EmployeeId = employees.EmployeeId,
                     Action = "Change Status",
                     ActionDate = DateTime.Now,
                     CurrentEmployeeId = null,
@@ -484,12 +480,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
                 return Ok("Change employee status successfully");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-      
+
         }
         [Authorize(Roles = "ListEmployee")]
         [HttpPost]
@@ -502,7 +498,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ThenInclude(roleemp => roleemp.Role)
                     .ToList()
                     .AsQueryable();
-                
+
                 if (!string.IsNullOrEmpty(employeeSearchDTO.InputText))
                 {
                     string input = employeeSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
@@ -596,7 +592,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
                 return Ok("Change role in department successful");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

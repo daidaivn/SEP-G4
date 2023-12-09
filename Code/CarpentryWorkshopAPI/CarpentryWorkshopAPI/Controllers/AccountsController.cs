@@ -9,18 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
-using MimeKit.Encodings;
 using MimeKit.Text;
-using NuGet.Protocol.Plugins;
-using Org.BouncyCastle.Crypto.Generators;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
-using MailKit.Net.Smtp;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -45,7 +38,7 @@ namespace CarpentryWorkshopAPI.Controllers
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
             //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            
+
             var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
             if (user == null)
             {
@@ -58,8 +51,8 @@ namespace CarpentryWorkshopAPI.Controllers
 
             var employee = user.Employee;
 
-            var pages = user.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
-            var roles = user.Employee.RolesEmployees.Where(re=>re.EndDate == null).Select(u=>u.Role.RoleName).ToArray();
+            var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
+            var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
             var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
             var claims = new List<Claim>
              {
@@ -89,7 +82,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 Name = employee.FirstName + " " + employee.LastName,
                 Pages = pages,
                 Roles = roles,
-                Department= departments,
+                Department = departments,
                 EmployeeID = employee.EmployeeId,
                 UserAccount = user.UserName
             };
@@ -126,7 +119,7 @@ namespace CarpentryWorkshopAPI.Controllers
             return userAccount;
         }
 
-        
+
         [HttpPost("logout")]
         public IActionResult Logout(string token)
         {
@@ -179,7 +172,7 @@ namespace CarpentryWorkshopAPI.Controllers
         public IActionResult CreateAccount([FromBody] CreateAccount request)
         {
             var acc = _context.UserAccounts.Where(us => us.UserName == request.UserName).SingleOrDefault();
-            if (acc!=null) 
+            if (acc != null)
             {
                 return BadRequest("acc already have");
             }
@@ -193,7 +186,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 UserName = request.UserName,
                 Password = passwordHash,
                 EmployeeId = request.employeeId,
-                Status= true,
+                Status = true,
             };
             _context.UserAccounts.Add(ua);
             _context.SaveChanges();
@@ -251,19 +244,19 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
         [HttpPost]
-        public async Task<IActionResult> ChangeUserNameAndPassWord([FromBody]ChangeUserAccountDTO loginRequest)
+        public async Task<IActionResult> ChangeUserNameAndPassWord([FromBody] ChangeUserAccountDTO loginRequest)
         {
             try
-            {                
-                var account = await _context.UserAccounts.Include(ua=>ua.Employee).Where(ua => ua.EmployeeId == loginRequest.Id).FirstOrDefaultAsync();
+            {
+                var account = await _context.UserAccounts.Include(ua => ua.Employee).Where(ua => ua.EmployeeId == loginRequest.Id).FirstOrDefaultAsync();
                 if (account == null)
-                {                     
+                {
                     return BadRequest("useraname or password not right");
                 }
-                
+
                 var user = loginRequest.UserName;
                 var pass = loginRequest.Password;
                 account.UserName = user;

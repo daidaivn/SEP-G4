@@ -23,15 +23,16 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var countrys = _context.Countries.Select(c => new
                 {
-                    CountryId= c.CountryId,
-                    CountryName= c.CountryName,
+                    CountryId = c.CountryId,
+                    CountryName = c.CountryName,
                 });
                 if (countrys == null)
                 {
                     return NotFound();
                 }
                 return Ok(countrys);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

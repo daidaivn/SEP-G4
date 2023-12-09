@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +25,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var details = _context.TeamWorks
                     .Include(x => x.Work)
-                    .ThenInclude(x=>x.UniCost)
+                    .ThenInclude(x => x.UniCost)
                     .Include(x => x.Work)
                     .ThenInclude(x => x.WorkArea)
                     .Include(x => x.Team)
@@ -38,17 +37,17 @@ namespace CarpentryWorkshopAPI.Controllers
                         TeamName = d.Team.TeamName,
                         ProductName = d.Work.UniCost.UnitName,
                         Cost = d.Work.Cost,
-                        WorkAreaName =d.Work.WorkArea.WorkAreaName,
+                        WorkAreaName = d.Work.WorkArea.WorkAreaName,
                         WorkId = d.WorkId,
                         WorkName = d.Work.WorkName,
                         NumberOFProductToday = d.TotalProduct,
                         Date = d.Date.Value.ToString("dd'-'MM'-'yyyy"),
-                    }).FirstOrDefault();                
+                    }).FirstOrDefault();
                 if (details == null)
                 {
                     return NotFound("Not have data");
                 }
-                details.NumberOfProduct = _context.TeamWorks.Include(de=>de.Team).Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id).Sum(de => de.TotalProduct);
+                details.NumberOfProduct = _context.TeamWorks.Include(de => de.Team).Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id).Sum(de => de.TotalProduct);
                 return Ok(details);
             }
             catch (Exception ex)
@@ -61,7 +60,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                if(teamWorkUpdateDTO.numberProduct < 0)
+                if (teamWorkUpdateDTO.numberProduct < 0)
                 {
                     return BadRequest("data is not valid");
                 }
@@ -113,7 +112,7 @@ namespace CarpentryWorkshopAPI.Controllers
         //                startDate = startDate.AddDays(1);
         //                count++;
         //            }
-                    
+
         //        }
         //        _context.TeamWorks.AddRange(teamWorks);
         //        _context.SaveChanges();
@@ -129,7 +128,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                List<TeamWork> teamWorks= new List<TeamWork>();
+                List<TeamWork> teamWorks = new List<TeamWork>();
                 var work = _context.Works.FirstOrDefault(w => w.WorkId == teamWorkDTO.WorkId);
                 if (work == null)
                 {
@@ -156,7 +155,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Date = startDate,
                     };
                     teamWorks.Add(teamWork);
-                    
+
                     startDate.Value.AddDays(1);
                 }
                 _context.AddRange(teamWorks);

@@ -42,7 +42,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var page = _context.Pages.Where(pa=>pa.PageId == id).FirstOrDefault();
+                var page = _context.Pages.Where(pa => pa.PageId == id).FirstOrDefault();
                 return Ok(_mapper.Map<PageDTO>(page));
             }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var page = _context.Pages.Where(pa => pa.PageName.ToLower().Contains(text.ToLower())).ToList();
-                if(page.Count > 0) 
+                if (page.Count > 0)
                 {
                     return Ok(_mapper.Map<List<PageDTO>>(page));
                 }
@@ -80,17 +80,17 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var page = _context.Pages.Where(pa => pa.PageId == id).FirstOrDefault();
-                if(page == null)
+                if (page == null)
                 {
                     return NotFound("can not find page");
                 }
-                if(page.Status == true)
+                if (page.Status == true)
                 {
-                    page.Status= false;
+                    page.Status = false;
                 }
                 else
                 {
-                    page.Status=true;
+                    page.Status = true;
                 }
                 _context.Pages.Update(page);
                 _context.SaveChanges();

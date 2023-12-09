@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -20,9 +19,9 @@ namespace CarpentryWorkshopAPI.Controllers
         public IActionResult GetAllRelationshipsTypes()
         {
             var relationshipsType = _context.RelationshipsTypes
-                .Select(re=> new RelationshipsType
+                .Select(re => new RelationshipsType
                 {
-                    RelationshipId = re.RelationshipId, 
+                    RelationshipId = re.RelationshipId,
                     RelationshipName = re.RelationshipName,
                     Note = re.Note,
                 })

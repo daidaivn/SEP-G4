@@ -2,8 +2,6 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.ISalary;
 using CarpentryWorkshopAPI.Models;
-using DocumentFormat.OpenXml.Bibliography;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -32,13 +30,13 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .ThenInclude(at => at.Allowance)
                 .ToList()
                 .AsQueryable();
-                
+
             if (!string.IsNullOrEmpty(getSalarysDTO.InputText))
             {
                 var input = getSalarysDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
                 allsalarys = allsalarys.Where(x =>
                     x.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
-                    x.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) 
+                    x.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
                 );
             }
             if (getSalarysDTO.month != 0 && getSalarysDTO.year != 0)
@@ -59,12 +57,12 @@ namespace CarpentryWorkshopAPI.Services.Salary
             foreach (var item in allsalarys)
             {
                 var mainsalary = await _context.HoursWorkDays
-                                        .Where(h => h.EmployeeId == item.EmployeeId && h.Day.HasValue && h.Day.Value.Month == getSalarysDTO.month 
+                                        .Where(h => h.EmployeeId == item.EmployeeId && h.Day.HasValue && h.Day.Value.Month == getSalarysDTO.month
                                         && h.Day.Value.Year == getSalarysDTO.year)
                                         .SumAsync(h => h.DailyRate.GetValueOrDefault());
                 var basicsalary = await _context.Contracts
-                                .Where(c => c.EmployeeId == item.EmployeeId && c.StartDate.HasValue && c.StartDate.Value.Month <= getSalarysDTO.month 
-                                && c.StartDate.Value.Year <= getSalarysDTO.year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month 
+                                .Where(c => c.EmployeeId == item.EmployeeId && c.StartDate.HasValue && c.StartDate.Value.Month <= getSalarysDTO.month
+                                && c.StartDate.Value.Year <= getSalarysDTO.year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month
                                 >= getSalarysDTO.month && c.EndDate.Value.Year >= getSalarysDTO.year)))
                                 .Select(c => c.Amount).FirstOrDefaultAsync();
                 if (basicsalary == null)
@@ -80,7 +78,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     && b.OccasionDate.Value.Year == getSalarysDTO.year)
                     .SumAsync(b => b.Amount.GetValueOrDefault());
 
-                var totaltaxpercen = await _context.DeductionsDetails                           
+                var totaltaxpercen = await _context.DeductionsDetails
                                  .Include(x => x.DeductionType)
                                  .Where(x => x.DeductionType.Status == true)
                                  .SumAsync(d => d.Percentage);
@@ -91,7 +89,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var totaldependent = await _context.Dependents
                                      .Where(x => x.EmployeeId == item.EmployeeId)
                                      .CountAsync();
-                var allowance =  item.EmployeesAllowances
+                var allowance = item.EmployeesAllowances
                                  .Where(ea => ea.AllowanceType.Allowance.Status == true)
                                  .Sum(ea => ea.AllowanceType.Amount);
                 var totalAllowance = item.EmployeesAllowances
@@ -107,21 +105,25 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     if (taxsalary <= 5000000)
                     {
-                        personaltax = 0.05 * (double)taxsalary ;
+                        personaltax = 0.05 * (double)taxsalary;
                     }
                     else if (taxsalary > 5000000 && taxsalary <= 10000000)
                     {
                         personaltax = 250000 + (double)(taxsalary - 5000000) * 0.1;
-                    }else if (taxsalary > 10000000 && taxsalary <= 18000000)
+                    }
+                    else if (taxsalary > 10000000 && taxsalary <= 18000000)
                     {
                         personaltax = (double)taxsalary * 0.15 - 750000;
-                    }else if (taxsalary > 18000000 && taxsalary <= 32000000)
+                    }
+                    else if (taxsalary > 18000000 && taxsalary <= 32000000)
                     {
                         personaltax = (double)taxsalary * 0.2 - 1650000;
-                    }else if (taxsalary > 32000000 && taxsalary <= 52000000)
+                    }
+                    else if (taxsalary > 32000000 && taxsalary <= 52000000)
                     {
                         personaltax = (double)taxsalary * 0.25 - 3250000;
-                    }else if (taxsalary > 52000000 && taxsalary <= 80000000)
+                    }
+                    else if (taxsalary > 52000000 && taxsalary <= 80000000)
                     {
                         personaltax = (double)taxsalary * 0.3 - 5850000;
                     }
@@ -130,9 +132,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         personaltax = (double)taxsalary * 0.35 - 9850000;
                     }
                 }
-                
+
                 var deductions = totaltaxpercen * (double)basicsalary;
-               
+
                 if (deductions == null)
                 {
                     deductions = 0;
@@ -148,7 +150,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     ActualSalary = mainsalary - (decimal)deductions + totalAllowance + bonus + special - (decimal)personaltax - (decimal)deductionnotax * basicsalary
                 });
             }
-            
+
             return result;
         }
         public async Task<dynamic> GetEmployeeSalaryDetail(int employeeid, int month, int year)
@@ -238,7 +240,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .Where(x => x.Employee.EmployeeId == employeeid)
                 .Select(x => new
                 {
-                    BonusNames = x.BonusName, 
+                    BonusNames = x.BonusName,
                     Amounts = x.BonusAmount
                 }).ToListAsync();
             var totalbonus = await _context.BonusDetails
@@ -297,8 +299,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 Amounts = mainsalary,
                 TotalWorkDay = "Số ngày làm trong tháng",
                 WorkDayAmount = totaldaywork,
-                TotalWorkHour= "Số giờ làm trong tháng",
-                WorkHourAmount = totalhour, 
+                TotalWorkHour = "Số giờ làm trong tháng",
+                WorkHourAmount = totalhour,
             };
             return result;
         }
@@ -309,7 +311,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                         .SumAsync(h => h.DailyRate.GetValueOrDefault());
             var basicsalary = await _context.Contracts
                                 .Where(c => c.EmployeeId == employeeid && c.StartDate.HasValue && c.StartDate.Value.Month <= month && c.StartDate.Value.Year <= year && (c.EndDate == null || (c.EndDate.HasValue && c.EndDate.Value.Month >= month && c.EndDate.Value.Year >= year)))
-                                .Select(c => c.Amount).FirstOrDefaultAsync();          
+                                .Select(c => c.Amount).FirstOrDefaultAsync();
             if (basicsalary == null)
             {
                 basicsalary = 0;
@@ -484,7 +486,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 TotalAmount = mainsalary - (decimal)deductions + totalAllowance + bonus + special - (decimal)personaltax - (decimal)deductionnotax * basicsalary
             };
             return result;
-           
+
         }
     }
 }

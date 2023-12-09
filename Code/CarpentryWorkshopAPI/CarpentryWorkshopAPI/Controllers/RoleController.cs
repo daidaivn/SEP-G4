@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    
+
     [ApiController]
     [Route("CCMSapi/[controller]/[action]")]
     public class RoleController : Controller
@@ -22,14 +21,14 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]       
+        [Authorize(Roles = "Role,ListEmployee,Decentralization,TimeKeeping")]
         [HttpGet]
         public IActionResult GetAllRoles()
         {
             try
             {
                 var rolelist = _context.Roles
-                    .Include(x =>x.RolesEmployees)
+                    .Include(x => x.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
                     .Select(roled => new RoleDetailDTO
                     {
@@ -50,7 +49,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(rolelist);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -80,8 +80,8 @@ namespace CarpentryWorkshopAPI.Controllers
                             DepartmentId = x.DepartmentId,
                             DepartmentName = x.Department.DepartmentName,
                         }
-                        ).OrderBy(x=>x.DepartmentName).ToList(),
-                        
+                        ).OrderBy(x => x.DepartmentName).ToList(),
+
                     }).FirstOrDefault();
                 if (rolelist == null)
                 {
@@ -95,7 +95,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
-        public IActionResult GetRoleById(int rid) 
+        public IActionResult GetRoleById(int rid)
         {
             try
             {
@@ -122,7 +122,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(role);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -130,7 +131,7 @@ namespace CarpentryWorkshopAPI.Controllers
         [Authorize(Roles = "Role")]
         [HttpPost]
         public ActionResult<Role> CreateRoles([FromBody] RoleDTO roleDTO)
-        { 
+        {
             try
             {
                 var newrole = _mapper.Map<Role>(roleDTO);
@@ -142,7 +143,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
                 RolesStatusHistory newhistory = new RolesStatusHistory
                 {
-                    RoleId= newrole.RoleId,
+                    RoleId = newrole.RoleId,
                     Action = "Create",
                     ActionDate = DateTime.Now,
                     CurrentEmployeeId = null,
@@ -150,7 +151,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Create role succesful");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -174,18 +176,19 @@ namespace CarpentryWorkshopAPI.Controllers
                     ActionDate = DateTime.Now,
                     CurrentEmployeeId = null,
                 };
-                _context.RolesStatusHistories.Add(newhistory);               
+                _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Update role successful");
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         [Authorize(Roles = "Role")]
         [HttpPut]
-        public IActionResult ChangeStatusRole(int rid) 
+        public IActionResult ChangeStatusRole(int rid)
         {
             try
             {
@@ -196,19 +199,19 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 foreach (var item in changeroles)
                 {
-               
-                        if (item.RoleId == rid)
+
+                    if (item.RoleId == rid)
+                    {
+                        if (item.Status == true)
                         {
-                            if (item.Status == true)
-                            {
-                                item.Status = false;
-                            }
-                            else
-                            {
-                                item.Status = true;
-                            }
+                            item.Status = false;
                         }
-                    
+                        else
+                        {
+                            item.Status = true;
+                        }
+                    }
+
                 }
                 RolesStatusHistory newhistory = new RolesStatusHistory
                 {
@@ -261,9 +264,10 @@ namespace CarpentryWorkshopAPI.Controllers
                         NumberOfEmployee = r.RolesEmployees.Select(x => x.Employee).Count(),
                     }
                     );
-               
+
                 return Ok(roles);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -293,8 +297,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     RolesEmployee newrd = new RolesEmployee()
                     {
                         EmployeeId = editRoleDTO.EmployeeId,
-                        RoleId = item.RoleId, 
-                        DepartmentId = item.DepartmentId, 
+                        RoleId = item.RoleId,
+                        DepartmentId = item.DepartmentId,
                         StartDate = DateTime.Now,
                         EndDate = null,
                         Status = true

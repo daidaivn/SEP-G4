@@ -9,9 +9,9 @@ namespace CarpentryWorkshopAPI.Controllers
     [Route("CCMSapi/[controller]/[action]")]
     public class ShiftTypeController : Controller
     {
-       private readonly SEPG4CCMSContext _context;
-       private readonly IMapper _mapper;
-       public ShiftTypeController(SEPG4CCMSContext context, IMapper mapper)
+        private readonly SEPG4CCMSContext _context;
+        private readonly IMapper _mapper;
+        public ShiftTypeController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -25,22 +25,23 @@ namespace CarpentryWorkshopAPI.Controllers
                 var types = _context.ShiftTypes
                     .Select(t => new CreateShiftTypeDTO
                     {
-                        ShiftTypeId= t.ShiftTypeId,
-                        TypeName= t.TypeName,
-                        Status= t.Status,
+                        ShiftTypeId = t.ShiftTypeId,
+                        TypeName = t.TypeName,
+                        Status = t.Status,
                         StartTimestring = DateTime.Parse(t.StartTime.ToString()).ToString("HH':'mm':'ss"),
-                        EndTimestring= DateTime.Parse(t.EndTime.ToString()).ToString("HH':'mm':'ss")
+                        EndTimestring = DateTime.Parse(t.EndTime.ToString()).ToString("HH':'mm':'ss")
                     });
                 if (types == null)
                 {
                     return NotFound();
                 }
                 return Ok(types);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
         [HttpPost]
         public IActionResult CreateAndUpdateShiftType([FromBody] CreateShiftTypeDTO createShiftTypeDTO)
@@ -82,18 +83,19 @@ namespace CarpentryWorkshopAPI.Controllers
                         ActionDate = DateTime.Now,
                         CurrentEmployeeId = null,
                     };
-                    _context.HistoryChangeShiftTypes.Add(history);                 
+                    _context.HistoryChangeShiftTypes.Add(history);
                     _context.SaveChanges();
                     return Ok("Update shift type successful");
 
                 }
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet] 
+        [HttpGet]
         public IActionResult Filter(bool status)
         {
             try
@@ -107,7 +109,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<CreateShiftTypeDTO>>(types);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

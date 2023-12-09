@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarpentryWorkshopAPI.Models;
-using AutoMapper;
-using CarpentryWorkshopAPI.DTO;
-using System.Text;
-using System.Globalization;
-using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    
+
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
@@ -37,7 +31,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 return NotFound();
             }
             var list = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).ToList();
-            var number = _context.Departments.Include(de => de.RolesEmployees).Select(de => de.RolesEmployees.Where(re => re.EndDate == null).Select(de=>de.EmployeeId).Distinct().Count());
+            var number = _context.Departments.Include(de => de.RolesEmployees).Select(de => de.RolesEmployees.Where(re => re.EndDate == null).Select(de => de.EmployeeId).Distinct().Count());
             List<DepartmentListDTO> listDTO = _mapper.Map<List<DepartmentListDTO>>(list);
 
             return Ok(listDTO);
@@ -65,11 +59,11 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPut]
         public IActionResult UpdateDepartment([FromBody] DepartmentDTO departmentDTO)
         {
-            
+
             try
             {
                 var department = _context.Departments.FirstOrDefault(de => de.DepartmentId == departmentDTO.DepartmentId);
-                if(department == null)
+                if (department == null)
                 {
                     return NotFound();
                 }
@@ -89,10 +83,10 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                
-                
-                    return BadRequest(ex.Message);
-                
+
+
+                return BadRequest(ex.Message);
+
             }
 
             return Ok("Update success");
@@ -109,10 +103,10 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             try
             {
-                DepartmentDTO departmentDTO = new DepartmentDTO() 
+                DepartmentDTO departmentDTO = new DepartmentDTO()
                 {
                     DepartmentId = 0,
-                    DepartmentName= departmentName,
+                    DepartmentName = departmentName,
                     Status = true
                 };
                 var department = _mapper.Map<Department>(departmentDTO);
@@ -133,9 +127,9 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
 
-            
+
+
         }
         [Authorize(Roles = "ListDepartment")]
         // DELETE: api/Departments/5
@@ -181,7 +175,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 return Ok("Update status success");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -198,7 +192,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Include(x => x.Country)
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
-                    .Where(re=>re.RolesEmployees.Any(re=>re.DepartmentId == id && re.EndDate == null))
+                    .Where(re => re.RolesEmployees.Any(re => re.DepartmentId == id && re.EndDate == null))
                     .Select(emp => new EmployeeListDTO
                     {
                         EmployeeID = emp.EmployeeId,

@@ -20,12 +20,13 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var result = await _salaryService.GetAllSalarys(getSalarysDTO);
-                if (result== null) 
+                if (result == null)
                 {
                     return BadRequest();
                 }
                 return Ok(result);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -36,12 +37,13 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var result = await _salaryService.GetEmployeeSalaryDetail(employeeid, month, year);
-                if (result==null)
+                if (result == null)
                 {
                     return BadRequest();
                 }
                 return Ok(result);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -58,7 +60,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

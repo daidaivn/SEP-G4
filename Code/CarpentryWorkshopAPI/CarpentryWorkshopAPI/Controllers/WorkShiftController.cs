@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.Xml;
 
 namespace CarpentryWorkshopAPI.Controllers
 {

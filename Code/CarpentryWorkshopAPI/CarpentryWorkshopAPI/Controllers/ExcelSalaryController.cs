@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using CarpentryWorkshopAPI.DTO;
+﻿using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.ISalary;
-using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -16,10 +14,10 @@ namespace CarpentryWorkshopAPI.Controllers
             _excelSalarySevice = excelSalarySevice;
         }
 
-       
+
 
         [HttpGet("ContractsByDate/{month}/{year}")]
-        public async Task<ActionResult<IEnumerable<EmployeeInfo>>> GetEmployeesByContractDate( int month, int year)
+        public async Task<ActionResult<IEnumerable<EmployeeInfo>>> GetEmployeesByContractDate(int month, int year)
         {
             var employees = await _excelSalarySevice.GetEmployeesByContractDateAsync(month, year);
             return Ok(employees);

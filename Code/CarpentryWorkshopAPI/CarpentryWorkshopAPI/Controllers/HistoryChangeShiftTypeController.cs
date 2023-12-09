@@ -32,7 +32,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<HistoryChangeShiftTypeDTO>>(historys);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -55,7 +56,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<HistoryChangeShiftTypeDTO>>(historydate);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -70,7 +72,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historydate = _context.HistoryChangeShiftTypes
                     .Include(x => x.ShiftType)
-                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate 
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
                     && x.ShiftTypeId == sid
                     )
                     .ToList();

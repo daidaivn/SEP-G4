@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    
+
     [Route("CCMSapi/[controller]/[action]")]
     [ApiController]
     public class AccessCotroller : ControllerBase
@@ -22,7 +19,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AccessDTO>>> GetRolesWithPages()
         {
@@ -50,7 +47,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Invalid Role or Page ID");
                 }
-                
+
                 role.Pages.Add(page);
                 await _context.SaveChangesAsync();
                 return Ok("sucess");
@@ -59,7 +56,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-                        
+
         }
         [HttpDelete("{roleId}/{pageId}")]
         public async Task<ActionResult> DeleteRolePage(int roleId, int pageId)
@@ -84,7 +81,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
     }
 }

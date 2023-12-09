@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
-using System.Globalization;
 
 namespace CarpentryWorkshopAPI.Mapper
 {
@@ -145,7 +144,7 @@ namespace CarpentryWorkshopAPI.Mapper
                .ReverseMap();
             //AdvanceSalary
             CreateMap<CreateAdvanceDTO, AdvancesSalary>();
-                
+
 
             CreateMap<UpdateAdvanceDTO, AdvancesSalary>();
 
