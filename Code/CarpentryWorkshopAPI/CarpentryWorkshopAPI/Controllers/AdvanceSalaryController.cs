@@ -40,10 +40,20 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                string trimmedEmployeeIdString = employeeidstring.TrimStart('0');
+                int eid = Int32.Parse(trimmedEmployeeIdString);
+                var existingAdvance = await _context.AdvancesSalaries
+                    .Include(x => x.Employee)
+                    .Where(x => x.Date.Value.Month == DateTime.Now.Month && x.Date.Value.Year == DateTime.Now.Year && x.EmployeeId == eid)
+                    .ToListAsync();
+                if (existingAdvance.Count > 0)
+                {
+                    return StatusCode(409, "Nhân viên đã tạm ứng trong tháng này");
+                }
                 var employee = await _advanceService.GetEmployee(employeeidstring);
                 if (employee == null)
                 {
-                    return NotFound();
+                    return BadRequest("Không tìm thấy nhân viên này");
                 }
                 return Ok(employee);
             }catch(Exception ex)
