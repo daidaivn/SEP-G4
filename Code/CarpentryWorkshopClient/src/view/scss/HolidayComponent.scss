@@ -66,6 +66,20 @@
         font-size: 22px;
         font-weight: 400;
       }
+      textarea {
+        display: flex;
+        height: 108px;
+        padding: 14px 24px;
+        align-items: center;
+        gap: 10px;
+        flex: 1 0 0;
+        border-radius: 20px;
+        border: 1px solid #e6e5ea;
+        color: #000;
+        font-family: Noto Sans;
+        font-size: 22px;
+        font-weight: 400;
+      }
     }
     .btn-footer {
       display: flex;

@@ -330,20 +330,24 @@ const ListAdvanceComponent = () => {
             </div>
             <div className="footer">
               <div className="item-body">
-                <p>Nhập mã nhân viên</p>
+                <p>Nhập mã nhân viên:</p>
                 <input type="text" placeholder="Nhập mã nhân viên" />
               </div>
               <div className="item-body gray">
-                <p>Tên nhân viên</p>
+                <p>Tên nhân viên:</p>
                 <input type="text" value="Nguyễn Văn A" />
               </div>
               <div className="item-body">
-                <p>Số tiền ứng</p>
+                <p>Số tiền ứng:</p>
                 <input type="text" placeholder="Số ngày nghỉ" />
               </div>
               <div className="item-body">
-                <p>Ngày ứng</p>
+                <p>Ngày ứng:</p>
                 <input type="date" />
+              </div>
+              <div className="item-body">
+                <p>Lý do:</p>
+                <textarea placeholder="Lý do" />
               </div>
               <div className="btn-footer">
                 <div className="btn cancel" onClick={handleCancelAdvance}>
