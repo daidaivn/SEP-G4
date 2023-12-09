@@ -11,7 +11,7 @@ namespace CarpentryWorkshopAPI.Controllers
     public class ContractTypeStatusHistoriesController : Controller
     {
         private readonly SEPG4CCMSContext _context;
-        private readonly IMapper _mapper ;
+        private readonly IMapper _mapper;
         public ContractTypeStatusHistoriesController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
@@ -31,7 +31,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(histories);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -49,16 +50,16 @@ namespace CarpentryWorkshopAPI.Controllers
                         .Where(x => x.ContractTypeId == ctid &&
                         x.ActionDate >= startDate && x.ActionDate <= endDate)
                         .ToList();
-                    if (cth == null)
-                    {
-                        return NotFound();
-                    }
-                  
-                
+                if (cth == null)
+                {
+                    return NotFound();
+                }
+
+
                 var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
                 return Ok(dto);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -71,16 +72,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                   var cth = _context.ContractTypeStatusHistories
-                    .Include(x => x.ContractType)
-                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
-                    .ToList();
-                    if (cth == null)
-                    {
-                        return NotFound();
-                    }
+                var cth = _context.ContractTypeStatusHistories
+                 .Include(x => x.ContractType)
+                 .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
+                 .ToList();
+                if (cth == null)
+                {
+                    return NotFound();
+                }
 
-                
+
                 var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(cth);
                 return Ok(dto);
             }

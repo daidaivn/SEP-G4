@@ -33,7 +33,7 @@ namespace CarpentryWorkshopAPI.Services.Account
                 return (false);
         }
         public dynamic Check_Gmail(string gmail)
-        { 
+        {
             bool ketqua = false;
             TcpClient tClient = new TcpClient("gmail-smtp-in.l.google.com", 25);
             string CRLF = "\r\n";

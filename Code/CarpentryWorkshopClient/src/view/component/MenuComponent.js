@@ -20,6 +20,10 @@ const Menucomponent = () => {
   if (!userPages.length) {
     userPages = JSON.parse(sessionStorage.getItem("userPages")) || [];
   }
+  let department = JSON.parse(localStorage.getItem("department")) || [];
+  if (!department.length) {
+    department = JSON.parse(sessionStorage.getItem("department")) || [];
+  }
   const hasAccessiblePage = userPages.some((page) =>
     [
       "ListEmployee",
@@ -46,6 +50,7 @@ const Menucomponent = () => {
 
     navigate("/login");
   };
+  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Sự kiện");
 
   return (
     <div className="list-menu">
@@ -125,7 +130,7 @@ const Menucomponent = () => {
               </NavLink>
             </div>
           )}
-          {userPages.includes("Payroll") && (
+          {hasPayrollAccess && (
             <div className="item-link">
               <NavLink
                 to={"/payroll"}

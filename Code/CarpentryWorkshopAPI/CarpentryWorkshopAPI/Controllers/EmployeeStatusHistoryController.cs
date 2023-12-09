@@ -31,31 +31,32 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<EmployeeHistoryDTO>>(historylist);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
         [HttpPost]
         public IActionResult GetHistoryByDate(string date)
         {
             try
             {
-               
-                
-                    DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
-                    DateTime endDate = startDate.AddDays(1).AddSeconds(-1); 
-                   var historylistbydate = _context.EmployeesStatusHistories
-                   .Include(x => x.Employee)
-                   .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
-                   .ToList();
-                    if (historylistbydate == null)
-                    {
-                        return NotFound();
-                    }
-                
+
+
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
+                var historylistbydate = _context.EmployeesStatusHistories
+                .Include(x => x.Employee)
+                .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
+                .ToList();
+                if (historylistbydate == null)
+                {
+                    return NotFound();
+                }
+
                 var dto = _mapper.Map<List<EmployeeHistoryDTO>>(historylistbydate);
                 return Ok(dto);
             }
@@ -69,21 +70,21 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-               
-               
-                    DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture);
-                    DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
-                   var emphistorylistbydate = _context.EmployeesStatusHistories
-                        .Include(x => x.Employee)
-                        .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
-                        && x.EmployeeId == eid)
-                        .ToList();
-                    if (emphistorylistbydate == null)
-                    {
-                        return NotFound();
-                    }
-                
+
+
+                DateTime startDate = DateTime.ParseExact(date, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
+                var emphistorylistbydate = _context.EmployeesStatusHistories
+                     .Include(x => x.Employee)
+                     .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
+                     && x.EmployeeId == eid)
+                     .ToList();
+                if (emphistorylistbydate == null)
+                {
+                    return NotFound();
+                }
+
                 var dto = _mapper.Map<List<EmployeeHistoryDTO>>(emphistorylistbydate);
                 return Ok(dto);
             }

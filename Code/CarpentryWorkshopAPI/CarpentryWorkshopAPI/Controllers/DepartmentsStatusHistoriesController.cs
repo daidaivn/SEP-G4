@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CarpentryWorkshopAPI.Models;
-using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -48,7 +41,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                       System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historylistbydate = _context.DepartmentsStatusHistories
-                    .Where(x => x.ActionDate >=startDate && x.ActionDate <= endDate)
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate)
                     .ToList();
                 if (historylistbydate == null)
                 {

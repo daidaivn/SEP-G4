@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarpentryWorkshopAPI.Models;
-using AutoMapper;
-using CarpentryWorkshopAPI.DTO;
-using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using System.Text;
-using System.Data.Common;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -40,12 +34,12 @@ namespace CarpentryWorkshopAPI.Controllers
             deEndDate.Select(de => de.Status = false);
             _context.UpdateRange(deEndDate);
             _context.SaveChanges();
-            var dependents = _context.Dependents.Include(de=>de.Employee).Include(de=>de.Relationship)
-                .Select(de=>new DependentListDTO
+            var dependents = _context.Dependents.Include(de => de.Employee).Include(de => de.Relationship)
+                .Select(de => new DependentListDTO
                 {
                     DependentId = de.DependentId,
                     EmployeeId = de.DependentId,
-                    EmployeesName = de.Employee.FirstName +" "+ de.Employee.LastName,
+                    EmployeesName = de.Employee.FirstName + " " + de.Employee.LastName,
                     FullName = de.FullName,
                     IdentifierCode = de.IdentifierCode,
                     Gender = de.Gender,
@@ -60,7 +54,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     Status = de.Status,
 
                 }).ToList();
-            
+
             return Ok(dependents);
         }
 
@@ -68,11 +62,11 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetDependentPeopleById(int id)
         {
-          if (_context.Dependents == null)
-          {
-              return NotFound("Can not Context");
-          }
-            var dependent = _context.Dependents.Where(de=>de.DependentId == id).Include(de => de.Employee).Include(de => de.Relationship)
+            if (_context.Dependents == null)
+            {
+                return NotFound("Can not Context");
+            }
+            var dependent = _context.Dependents.Where(de => de.DependentId == id).Include(de => de.Employee).Include(de => de.Relationship)
                 .Select(de => new DependentListDTO
                 {
                     DependentId = de.DependentId,
@@ -103,14 +97,14 @@ namespace CarpentryWorkshopAPI.Controllers
         // PUT: api/Dependents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult UpdateDependent([FromBody]DependentDTO dependentDTO)
+        public IActionResult UpdateDependent([FromBody] DependentDTO dependentDTO)
         {
             var dependent = _context.Dependents.FirstOrDefault(x => x.DependentId == dependentDTO.DependentId);
-            if(dependent == null)
+            if (dependent == null)
             {
                 return NotFound();
-            } 
-            dependent.EmployeeId= dependentDTO.EmployeeId >0 ? dependentDTO.EmployeeId : dependent.EmployeeId;
+            }
+            dependent.EmployeeId = dependentDTO.EmployeeId > 0 ? dependentDTO.EmployeeId : dependent.EmployeeId;
             dependent.FullName = !string.IsNullOrEmpty(dependentDTO.FullName) ? dependentDTO.FullName : dependent.FullName;
             dependent.IdentifierCode = !string.IsNullOrEmpty(dependentDTO.IdentifierCode) ? dependentDTO.IdentifierCode : dependent.IdentifierCode;
             dependent.Gender = dependentDTO.Gender.HasValue ? dependentDTO.Gender : dependent.Gender;
@@ -131,7 +125,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     dependent.EndDate = DOB.Value.AddYears(18);
                     dependent.StartDate = DOB;
-                }               
+                }
             }
             else
             {
@@ -141,11 +135,11 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             _context.Entry(dependent).State = EntityState.Modified;
             _context.SaveChanges();
-            DependentsStatusHistory dependentsStatusHistory= new DependentsStatusHistory() 
+            DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory()
             {
                 Action = "Update",
-                ActionDate= DateTime.Now,
-                CurrentEmployeeId= 1,
+                ActionDate = DateTime.Now,
+                CurrentEmployeeId = 1,
                 DependentId = dependentDTO.DependentId
             };
             _context.DependentsStatusHistories.Add(dependentsStatusHistory);
@@ -171,13 +165,13 @@ namespace CarpentryWorkshopAPI.Controllers
         // POST: api/Dependents
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public IActionResult CreateDependent([FromBody]DependentDTO dependentDTO)
+        public IActionResult CreateDependent([FromBody] DependentDTO dependentDTO)
         {
-          if (_context.Dependents == null)
-          {
-              return Problem("Entity set 'SEPG4CCMSContext.Dependents'  is null.");
-          }
-            try 
+            if (_context.Dependents == null)
+            {
+                return Problem("Entity set 'SEPG4CCMSContext.Dependents'  is null.");
+            }
+            try
             {
                 var dependent = _mapper.Map<Dependent>(dependentDTO);
                 if (DateTime.TryParseExact(dependentDTO.DobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime result))
@@ -197,7 +191,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         dependent.StartDate = DOB;
                     }
                 }
-                else  if (dependentDTO.RelationshipId > 1)
+                else if (dependentDTO.RelationshipId > 1)
                 {
                     dependent.StartDate = !string.IsNullOrEmpty(dependentDTO.StartDateString) ? DateTime.ParseExact(dependentDTO.StartDateString, "dd-MM-yyyy",
                                            System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now.Date;
@@ -207,7 +201,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Not have relationship");
                 }
-                _context.Dependents.Add(dependent);               
+                _context.Dependents.Add(dependent);
                 _context.SaveChanges();
                 DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory()
                 {
@@ -220,10 +214,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
                 return Ok("add success");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }                       
+            }
         }
 
         // DELETE: api/Dependents/5
@@ -234,16 +228,16 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return NotFound();
             }
-            Dependent dependent = _context.Dependents.Where(de=>de.DependentId == id).SingleOrDefault();
-            DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory();            
-            
+            Dependent dependent = _context.Dependents.Where(de => de.DependentId == id).SingleOrDefault();
+            DependentsStatusHistory dependentsStatusHistory = new DependentsStatusHistory();
+
             if (dependent == null)
             {
                 return NotFound();
             }
             else
             {
-                if(dependent.Status == true)
+                if (dependent.Status == true)
                 {
                     dependentsStatusHistory.DependentId = id;
                     dependentsStatusHistory.Action = "Change status false";
@@ -278,24 +272,24 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var dependentsList = _context.Dependents.Include(de => de.Employee).Include(de=>de.Relationship).ToList().AsQueryable();
+                var dependentsList = _context.Dependents.Include(de => de.Employee).Include(de => de.Relationship).ToList().AsQueryable();
                 if (!string.IsNullOrEmpty(dependentsSearchDTO.InputText))
                 {
                     string text = dependentsSearchDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
                     dependentsList = dependentsList.Where(de => de.FullName.ToLower().Normalize(NormalizationForm.FormD).Contains(text) ||
                                                     de.IdentifierCode.Contains(text) ||
-                                                    (de.Employee.FirstName+de.Employee.LastName).ToLower().Normalize(NormalizationForm.FormD).Contains(text)||
+                                                    (de.Employee.FirstName + de.Employee.LastName).ToLower().Normalize(NormalizationForm.FormD).Contains(text) ||
                                                     de.EmployeeId.ToString() == text);
                 }
                 if (dependentsSearchDTO.Status.HasValue)
                 {
                     dependentsList = dependentsList.Where(de => de.Status == dependentsSearchDTO.Status);
                 }
-                if(dependentsSearchDTO.Gender.HasValue)
+                if (dependentsSearchDTO.Gender.HasValue)
                 {
                     dependentsList = dependentsList.Where(de => de.Gender == dependentsSearchDTO.Gender);
                 }
-                if(dependentsList == null)
+                if (dependentsList == null)
                 {
                     return NotFound("no data");
                 }

@@ -32,7 +32,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<WorkScheduleDTO>>(schedules);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -53,7 +54,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     WorkScheduleStatusHistory history = new WorkScheduleStatusHistory
                     {
-                        WorkScheduleId= newschedule.WorkScheduleId,
+                        WorkScheduleId = newschedule.WorkScheduleId,
                         Action = "Create",
                         ActionDate = DateTime.Now,
                         CurrentEmployeeId = null,
@@ -81,7 +82,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return Ok("Update work schedule successful");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -114,7 +116,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.WorkScheduleStatusHistories.Add(history);
                 _context.SaveChanges();
                 return Ok("Change status successful");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

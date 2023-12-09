@@ -1,6 +1,4 @@
-﻿using CarpentryWorkshopAPI.Models;
-
-namespace CarpentryWorkshopAPI.DTO
+﻿namespace CarpentryWorkshopAPI.DTO
 {
     public class CreateEmployeeDTO
     {
@@ -24,6 +22,6 @@ namespace CarpentryWorkshopAPI.DTO
             public int RoleID { get; set; }
             public int DepartmentID { get; set; }
         }
-      
+
     }
 }

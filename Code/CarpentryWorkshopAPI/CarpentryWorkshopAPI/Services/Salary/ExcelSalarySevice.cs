@@ -1,11 +1,9 @@
-﻿using CarpentryWorkshopAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using CarpentryWorkshopAPI.IServices.ISalary;
-using AutoMapper;
-using ClosedXML.Excel;
+﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Drawing;
+using CarpentryWorkshopAPI.IServices.ISalary;
+using CarpentryWorkshopAPI.Models;
+using ClosedXML.Excel;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace CarpentryWorkshopAPI.Services.Salary
@@ -178,7 +176,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     workbook.SaveAs(memoryStream);
                     memoryStream.Position = 0;
 
-                   
+
                 }
 
                 return memoryStream;

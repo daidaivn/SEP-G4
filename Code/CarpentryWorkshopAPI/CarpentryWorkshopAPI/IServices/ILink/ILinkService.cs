@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace CarpentryWorkshopAPI.IServices.ILink
+﻿namespace CarpentryWorkshopAPI.IServices.ILink
 {
     public interface ILinkService
     {

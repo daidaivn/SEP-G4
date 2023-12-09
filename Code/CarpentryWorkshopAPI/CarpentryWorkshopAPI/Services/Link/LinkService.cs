@@ -1,5 +1,4 @@
 ﻿using CarpentryWorkshopAPI.IServices.ILink;
-using Microsoft.AspNetCore.Mvc.Localization;
 using System.Net;
 
 namespace CarpentryWorkshopAPI.Services.Link
@@ -37,13 +36,13 @@ namespace CarpentryWorkshopAPI.Services.Link
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    return false; 
+                    return false;
                 }
             }
 
-            return false; 
+            return false;
         }
 
-       
+
     }
 }

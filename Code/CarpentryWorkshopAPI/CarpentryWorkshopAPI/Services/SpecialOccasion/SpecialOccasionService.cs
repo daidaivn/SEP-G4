@@ -3,7 +3,6 @@ using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.SpecialOccasion;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 
 namespace CarpentryWorkshopAPI.Services.SpecialOccasion
 {
@@ -27,7 +26,7 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
                 _context.SaveChanges();
                 return "add success";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex.Message;
             }
@@ -35,7 +34,7 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
 
         public dynamic GetAllSpecialOccasion()
         {
-            var specialOccasion = _context.SpecialOccasions.Include(se=>se.Employee).Select(se => new SpecialOccasionDTO
+            var specialOccasion = _context.SpecialOccasions.Include(se => se.Employee).Select(se => new SpecialOccasionDTO
             {
                 OccasionId = se.OccasionId,
                 EmployeeId = se.EmployeeId,
