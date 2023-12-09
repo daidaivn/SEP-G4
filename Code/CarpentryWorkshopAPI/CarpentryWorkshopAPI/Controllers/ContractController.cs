@@ -121,23 +121,35 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                bool isError = false;
                 var emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
                 var newct = new Models.Contract();
                 if (await _context.Contracts.AnyAsync(x => x.ContractCode.ToLower().Equals(createContractDTO.ContractCode.ToLower())))
                 {
                     return StatusCode(409, "Mã hợp đồng đã tồn tại");
+                    isError = true;
                 }
                 if (await _context.Contracts.AnyAsync(x => x.LinkDoc.ToLower().Equals(createContractDTO.LinkDoc.ToLower()))) 
                 {
                     return StatusCode(409, "Đường dẫn hợp đồng đã tồn tại");
+                    isError = true;
                 }
                 if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
                 {
                     return StatusCode(409, "Đường dẫn chưa được triển khai");
+                    isError = true;
                 }
-                else
+                if (isError == true)
                 {
+                     _context.Employees.Remove(emp);
+                     _context.SaveChanges();
+                }
+                    var months = await _context.ContractTypes
+                        .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
+                        .Select(x => x.Month)
+                        .FirstOrDefaultAsync();
                     newct = _mapper.Map<Models.Contract>(createContractDTO);
+                    newct.EndDate = newct.StartDate.Value.AddMonths((int)months);
                     if (newct == null)
                     {
                         return NotFound();
@@ -146,7 +158,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     newct.Status = true;
                     _context.Contracts.Add(newct);
                     _context.SaveChanges();
-                }
+                
                 emp.Status = true;
                 _context.Employees.Update(emp);
                 EmployeesStatusHistory ehistory = new EmployeesStatusHistory
@@ -192,7 +204,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
+                    var months = await _context.ContractTypes
+                        .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
+                        .Select(x => x.Month)
+                        .FirstOrDefaultAsync();
                     updatect = _mapper.Map<Models.Contract>(createContractDTO);
+                    updatect.EndDate = updatect.StartDate.Value.AddMonths((int)months);
                     if (updatect == null)
                     {
                         return NotFound();
