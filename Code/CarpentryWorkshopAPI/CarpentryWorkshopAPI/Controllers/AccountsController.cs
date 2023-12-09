@@ -61,7 +61,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             var pages = user.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
             var roles = user.Employee.RolesEmployees.Where(re=>re.EndDate == null).Select(u=>u.Role.RoleName).ToArray();
-           
+            var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
             var claims = new List<Claim>
              {
         new Claim(ClaimTypes.Name, user.UserName),
@@ -90,6 +90,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 Name = employee.FirstName + " " + employee.LastName,
                 Pages = pages,
                 Roles = roles,
+                Department= departments,
                 EmployeeID = employee.EmployeeId,
                 UserAccount = user.UserName
             };
@@ -105,6 +106,9 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ThenInclude(u => u.RolesEmployees)
                 .ThenInclude(u => u.Role)
                 .ThenInclude(u => u.Pages)
+                .Include(u => u.Employee)
+                .ThenInclude(u => u.RolesEmployees)
+                .ThenInclude(u => u.Department)
                 .FirstOrDefaultAsync(u => u.UserName == username && u.Status == true);
 
             if (userAccount == null)
