@@ -71,7 +71,7 @@ const RewardCompany = ({
                     reward.specialOcationList.map((item, index) => (
                       // Render individual items here
                       <div key={index} className="item-reward">
-                        <p className="stt">{index+1}</p>
+                        <p className="stt">{index + 1}</p>
                         <div className="child-reward">
                           <p>{item.occasionType}</p>
                         </div>
@@ -86,11 +86,11 @@ const RewardCompany = ({
                         </div>
                       </div>
                     ))}
-                    {Array.isArray(reward.companyRewardList) &&
+                  {Array.isArray(reward.companyRewardList) &&
                     reward.companyRewardList.map((item, index) => (
                       // Render individual items here
                       <div key={index} className="item-reward">
-                        <p className="stt">{index+1}</p>
+                        <p className="stt">{index + 1}</p>
                         <div className="child-reward">
                           <p>{item.bonusName}</p>
                         </div>
@@ -105,11 +105,11 @@ const RewardCompany = ({
                         </div>
                       </div>
                     ))}
-                    {Array.isArray(reward.personalRewardList) &&
+                  {Array.isArray(reward.personalRewardList) &&
                     reward.personalRewardList.map((item, index) => (
                       // Render individual items here
                       <div key={index} className="item-reward">
-                        <p className="stt">{index+1}</p>
+                        <p className="stt">{index + 1}</p>
                         <div className="child-reward">
                           <p>{item.bonusName}</p>
                         </div>
