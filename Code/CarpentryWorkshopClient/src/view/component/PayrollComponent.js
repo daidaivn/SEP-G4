@@ -6,6 +6,7 @@ import "../scss/reset.scss";
 import "../scss/index.scss";
 import "../scss/fonts.scss";
 import "../scss/PayrollComponent.scss";
+import "../scss/responsive/Payroll.scss";
 import { createYearOptions, getMonthsInYear } from "../logicTime/getWeeDays";
 import ListUserHeader from "./componentUI/ListUserHeader";
 

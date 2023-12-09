@@ -1,0 +1,74 @@
+// Tablet
+@media (min-width: 768px) and (max-width: 1536px) {
+  .list-table-scroll-x {
+    max-width: 1021px;
+  }
+  .table-scroll-x {
+    height: 400px;
+  }
+  .excel {
+    svg {
+      width: 23px;
+      height: 23px;
+    }
+    font-size: 16px;
+  }
+  .buttonAdd {
+    svg {
+      width: 23px;
+      height: 23px;
+    }
+  }
+  .table-scroll-x thead tr {
+    padding: 17px 32px 17px 12px;
+  }
+  .head-excel,
+  .text-head p,
+  .modal-payroll .modal-head {
+    font-size: 35px !important;
+    padding: 26px 20px !important;
+  }
+  .modal-excel .body-excel .item p,
+  .modal-excel .body-excel .item .ant-select .ant-select-selector,
+  .modal-excel .body-excel .footer,
+  .modal-type-reward-all .modal-body .body-head p,
+  .modal-type-reward-all .modal-body .body-head span,
+  .modal-type-reward-all .modal-body .body-mid thead td,
+  .modal-type-reward-all .modal-body .item p,
+  .modal-reward-company .body-reward .div1 thead td,
+  .child-reward p,
+  .item-reward p,
+  .modal-reward-company .body-reward .div2 .btn-reward,
+  .modal-reward-company .body-reward .div1 .item-reward p,
+  .modal-allowance-all .body-allowance-all thead tr .child1,
+  .modal-allowance-all .body-allowance-all thead tr .item-child,
+  .modal-allowance-all .body-allowance-all .tbody .item-body .item-child-body,
+  .modal-allowance-all .body-allowance-all .tbody .item-body {
+    font-size: 18px;
+  }
+  .modal-type-reward-all {
+  }
+  .modal-payroll .modal-head .body-payroll1 p {
+    font-size: 35px !important;
+  }
+  .body-payroll1 {
+    padding: unset !important;
+  }
+  .modal-reward-company {
+    width: 1244px;
+  }
+  .modal-allowance-all .head-allowance-all .text-head p {
+    padding: unset !important;
+  }
+  .modal-allowance-all .head-allowance-all {
+    padding: 30px 20px !important;
+  }
+  .modal-allowance-all {
+    width: 1400px;
+    height: 700px;
+  }
+  .year {
+    width: 130px !important;
+    padding: 12px 10px !important;
+  }
+}

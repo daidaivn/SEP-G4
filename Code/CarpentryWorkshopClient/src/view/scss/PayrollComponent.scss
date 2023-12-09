@@ -608,6 +608,11 @@
   width: 2221px;
   height: 600px;
   padding-bottom: 20px;
+  thead {
+    tr {
+      border-radius: 40px !important;
+    }
+  }
 }
 .list-table-scroll-x {
   margin-top: 20px;
