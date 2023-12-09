@@ -73,8 +73,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("Page not found in Role");
                 }
-                role.Pages.Remove(page);
-                await _context.SaveChangesAsync();
+                string admin = "Admin";
+                if (role.RoleName.ToLower().Equals(admin.ToLower())) 
+                {
+                    return BadRequest("Không được bỏ chọn cho chức vụ này");
+                }
+                else
+                {
+                    role.Pages.Remove(page);
+                    await _context.SaveChangesAsync();
+                }
                 return NoContent();
             }
             catch (Exception ex)
