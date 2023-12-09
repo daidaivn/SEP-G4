@@ -14,6 +14,7 @@ namespace CarpentryWorkshopAPI.Models
         public int ContractTypeId { get; set; }
         public string? ContractName { get; set; }
         public bool? Status { get; set; }
+        public int? Month { get; set; }
 
         public virtual ICollection<ContractTypeStatusHistory> ContractTypeStatusHistories { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }

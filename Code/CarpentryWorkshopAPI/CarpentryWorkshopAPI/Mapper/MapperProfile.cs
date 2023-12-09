@@ -36,8 +36,6 @@ namespace CarpentryWorkshopAPI.Mapper
             //
             CreateMap<CreateContractDTO, Contract>()
                 .ForMember(de => de.StartDate, option => option.MapFrom(d => DateTime.ParseExact(d.StartDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture)))
-                .ForMember(de => de.EndDate, option => option.MapFrom(d => DateTime.ParseExact(d.EndDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture)));
             CreateMap<Contract, ContractDTO>()
                 .ForMember(de => de.ContractTypeName, option => option.MapFrom(d => d.ContractType!.ContractName))
