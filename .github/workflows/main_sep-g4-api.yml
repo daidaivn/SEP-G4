@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - 'Code/CarpentryWorkshopAPI/**'
+      - 'Code/CarpentryWorkshopAPI/**'  
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,9 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: |
+          cd Code/CarpentryWorkshopAPI
+          dotnet build --configuration Release
 
       - name: dotnet publish
         run: |
@@ -44,13 +46,13 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-      
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -59,4 +61,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3392B16DA62F43ACBB5D1056224A5594 }}
           package: .
-          
