@@ -16,29 +16,61 @@ const ChangePass = ({
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [reCapcha, setReCapcha] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showVeryPassword, setShowVeryPassword] = useState(false);
 
   const accountName =
     localStorage.getItem("accountName") ||
     sessionStorage.getItem("accountName");
 
-  console.log('accountName',accountName);
-  
+  console.log('accountName', accountName);
+
 
   const validateData = () => {
     const errors = [];
     const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-    if (!password || (password && !passRegex.test(password))) {
-      errors.push("Password không hợp lệ.");
+  
+    if (!password) {
+      // Không có thông báo lỗi
+    } else if (!passRegex.test(password)) {
+      errors.push(
+        "Mật khẩu phải có độ dài tối thiểu 8 ký tự, bao gồm ít nhất một chữ cái in hoa và một chữ số."
+      );
     }
+  
+    if (!username) {
+      errors.push("Xin vui lòng nhập tài khoản.");
+    } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      errors.push(
+        "Tài khoản chỉ có thể chứa các ký tự chữ cái, số và dấu gạch dưới."
+      );
+    }
+  
+    if (!rePassword) {
+      errors.push("Xin vui lòng xác nhận mật khẩu.");
+    } else if (password !== rePassword) {
+      errors.push("Mật khẩu xác nhận không khớp.");
+    }
+  
+    if (!reCapcha) {
+      errors.push("Xin vui lòng nhập mã captcha.");
+    } else if (reCapcha !== capcha) {
+      errors.push("Mã captcha không chính xác. Vui lòng thử lại.");
+      setCapcha(generateCaptcha());
+    }
+  
     if (errors.length > 0) {
       errors.forEach((error) => {
-        toast.warning(error);
+        toast.warning(error, {
+          position: "top-right",
+        });
       });
       return false;
     }
     return true;
   };
+  
+
   const reset = () => {
     setUsername("");
     setPassword("");
@@ -46,14 +78,14 @@ const ChangePass = ({
   };
   const handleOkChange = () => {
     const vali = validateData();
-    if(!vali){
+    if (!vali) {
       return;
     }
-    if(password != rePassword){
+    if (password != rePassword) {
       toast.warning("Mật khẩu phải giống khi nhập lại");
       return;
     }
-    if(reCapcha != capcha){
+    if (reCapcha != capcha) {
       toast.warning("Bạn cần phải nhập đúng capcha");
       setCapcha(generateCaptcha());
       return;
@@ -78,6 +110,19 @@ const ChangePass = ({
     reset();
     setIsModalOpenChange(false);
   };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleShowVeryPassword = () => {
+    setShowVeryPassword(!showVeryPassword);
+  };
+
+  const handleRefresh = () => {
+    setCapcha(generateCaptcha());
+  };
+
   return (
     <>
       {/* modal doi mat khau */}
@@ -88,7 +133,7 @@ const ChangePass = ({
         onCancel={handleCancelChange}
       >
         <div className="change-all">
-          <div className="change-head">Tài khoản / mật khẩu</div>
+          <div className="change-head">Đổi tài khoản / mật khẩu</div>
           <div className="change-body">
             <div className="item-change-body">
               <p>Tài khoản:</p>
@@ -101,24 +146,31 @@ const ChangePass = ({
             <div className="item-change-body">
               <p>Mật khẩu:</p>
               <Input
-                type="text"
+                type={showPassword ? "text" : "password"}
                 placeholder="Nhập mật khẩu"
                 onChange={(e) => setPassword(e.target.value)}
-              ></Input>
+              />
+              <button onClick={(handleShowPassword)}>
+                {showPassword ? "Ẩn" : "Hiển thị"}
+              </button>
             </div>
             <div className="item-change-body">
-              <p>Nhập mật khẩu</p>
+              <p>Xác nhận mật khẩu</p>
               <Input
-                type="text"
-                placeholder="Nhập mật khẩu"
+                type={showVeryPassword ? "text" : "password"}
+                placeholder="Xác nhận mật khẩu"
                 onChange={(e) => setRePassword(e.target.value)}
               ></Input>
+              <button onClick={(handleShowVeryPassword)}>
+                {showVeryPassword ? "Ẩn" : "Hiển thị"}
+              </button>
             </div>
             <div className="item-change-body">
               <p>Capcha</p>
               <div className="capcha" type="text" contentEditable={false}>
                 {capcha.split('').join(' ')}
               </div>
+              <button onClick={handleRefresh}>Refresh</button>
             </div>
             <div className="item-change-body">
               <p>Xác nhận Capcha</p>
@@ -127,9 +179,6 @@ const ChangePass = ({
             <div className="change-footer">
               <button className="cancel" onClick={handleCancelChange}>
                 Hủy bỏ
-              </button>
-              <button className="edit" onClick={handleCancelChange}>
-                Sửa
               </button>
               <button className="save" onClick={handleOkChange}>
                 Lưu
