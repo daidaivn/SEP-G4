@@ -27,7 +27,6 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-
                 if (employeeId <= 0)
                 {
                     return BadRequest("employeeId not valid");

@@ -288,7 +288,7 @@ const CalendarComponent = () => {
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Lên lịch làm việc</h2>
+            <h2>Lịch làm việc</h2>
             <span>Tạo công việc và giao việc làm cho từng nhóm</span>
           </div>
           <MenuResponsive />
