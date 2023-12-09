@@ -1,6 +1,12 @@
 @media (min-width: 768px) and (max-width: 1536px) {
   .list-input-search {
-    padding: 18px !important;
+    padding: 12px 18px !important;
+    .icon-web {
+      svg {
+        width: 21px;
+        height: 21px;
+      }
+    }
   }
   .table-Decent thead tr td {
     font-size: 16px !important;

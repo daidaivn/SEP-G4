@@ -1,0 +1,34 @@
+// Tablet
+@media (min-width: 768px) and (max-width: 1536px) {
+  .list-table-scroll-x {
+    max-width: 1021px;
+  }
+  .table-scroll-x {
+    height: 400px;
+  }
+  .excel {
+    svg {
+      width: 23px;
+      height: 23px;
+    }
+    font-size: 16px;
+  }
+  .buttonAdd {
+    svg {
+      width: 23px;
+      height: 23px;
+    }
+  }
+  .table-scroll-x thead tr {
+    padding: 17px 32px 17px 12px;
+  }
+  .head-excel {
+    font-size: 35px !important;
+    padding: 26px 0px !important;
+  }
+  .modal-excel .body-excel .item p,
+  .modal-excel .body-excel .item .ant-select .ant-select-selector,
+  .modal-excel .body-excel .footer {
+    font-size: 18px;
+  }
+}
