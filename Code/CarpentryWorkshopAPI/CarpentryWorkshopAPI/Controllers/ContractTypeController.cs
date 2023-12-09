@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 
 

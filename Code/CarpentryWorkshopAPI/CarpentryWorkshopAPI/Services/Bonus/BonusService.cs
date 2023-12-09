@@ -2,7 +2,6 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.IBonus;
 using CarpentryWorkshopAPI.Models;
-using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
@@ -30,7 +29,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 return " Add personal reward successful";
             }
             else
-            {                
+            {
                 var newPR = _mapper.Map<BonusDetail>(personalRewardDTO);
                 newPR.BonusDate = !string.IsNullOrEmpty(personalRewardDTO.BonusDatestring) &&
                 DateTime.TryParseExact(personalRewardDTO.BonusDatestring, "dd-MM-yyyy",
@@ -78,14 +77,14 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         BonusName = companyRewardDTO.BonusName,
                         BonusReason = companyRewardDTO.BonusReason,
                     };
-                    if( !string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
+                    if (!string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
                                        DateTime.TryParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture,
                                        System.Globalization.DateTimeStyles.None, out var parsedDate))
                     {
                         newCR.BonusDate = parsedDate;
                     }
-                                       
+
                     _context.CompanyWideBonus.Update(newCR);
                     _context.SaveChanges();
                 }
@@ -94,7 +93,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
         }
         public dynamic CreateAndUpdateSpecialOccasion(SpecialOccasionDTO specialOccasionDTO)
         {
-            
+
             if (specialOccasionDTO.OccasionId == 0)
             {
                 var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
@@ -104,7 +103,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 return " Add SpecialOccasions";
             }
             else
-            {                
+            {
                 var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
                 if (DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture,
@@ -136,7 +135,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     {
                         OccasionId = ps.OccasionId,
                         EmployeeId = ps.EmployeeId,
-                        Beneficiary =ps.Employee.LastName + " " +ps.Employee.FirstName,
+                        Beneficiary = ps.Employee.LastName + " " + ps.Employee.FirstName,
                         OccasionType = ps.OccasionType,
                         Amount = ps.Amount,
                         OccasionDateString = ps.OccasionDate.Value.ToString("dd'-'MM'-'yyyy"),
@@ -148,7 +147,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     .GroupBy(sd => sd.BonusName)
                     .Select(group => group.First())
                     .ToList();
-                
+
                 List<DTO.AllRewardDTO.CWR> companydto = new List<AllRewardDTO.CWR>();
                 foreach (var item in company)
                 {

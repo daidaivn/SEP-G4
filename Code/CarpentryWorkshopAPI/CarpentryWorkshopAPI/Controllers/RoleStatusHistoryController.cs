@@ -32,7 +32,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var rshDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historys);
                 return Ok(rshDTO);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -55,7 +56,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
                 return Ok(historydateDTO);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -70,7 +72,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
                 var historysbydate = _context.RolesStatusHistories
                     .Include(x => x.Role)
-                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate 
+                    .Where(x => x.ActionDate >= startDate && x.ActionDate <= endDate
                     && x.RoleId == rid)
                     .ToList();
                 if (historysbydate == null)

@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
-using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.ProjectModel;
 using System.Data;
-using System.Net;
-using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
@@ -775,7 +771,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                if(scheduleDataInputDTO == null)
+                if (scheduleDataInputDTO == null)
                 {
                     return BadRequest("not have data to");
                 }
@@ -795,7 +791,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 string searchTerm = "";
                 if (!string.IsNullOrEmpty(scheduleDataInputDTO.InputText))
                 {
-                     searchTerm = scheduleDataInputDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
+                    searchTerm = scheduleDataInputDTO.InputText.ToLower().Normalize(NormalizationForm.FormD);
                 }
                 var teams = await _context.Teams
                     .Include(t => t.EmployeeTeams)
@@ -812,30 +808,31 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 var teamSearchs = teams.Where(t => t.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm));
 
-                foreach(Team team in teamSearchs)
+                foreach (Team team in teamSearchs)
                 {
                     var day = new List<object>();
-                    var teamworks = _context.TeamWorks.Where(tw=>tw.TeamId == team.TeamId).ToList();
-                    var endDate = DateTime.ParseExact(end+ "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
+                    var teamworks = _context.TeamWorks.Where(tw => tw.TeamId == team.TeamId).ToList();
+                    var endDate = DateTime.ParseExact(end + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
                     var startDate = DateTime.ParseExact(start + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
-                    var timeShift = team.WorkSchedules.Where(ws=>ws.EndDate == null).Select(t => new
+                    var timeShift = team.WorkSchedules.Where(ws => ws.EndDate == null).Select(t => new
                     {
                         TimeIn = t.ShiftType.StartTime,
                         Timeout = t.ShiftType.EndTime,
-                    }).FirstOrDefault(); 
-                    while(startDate <= endDate)
+                    }).FirstOrDefault();
+                    while (startDate <= endDate)
                     {
                         string status;
                         if (startDate.Date < DateTime.Now.Date)
                         {
                             status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null;
                         }
-                        else if (startDate.Date == DateTime.Now.Date){
+                        else if (startDate.Date == DateTime.Now.Date)
+                        {
                             status = (timeShift == null || DateTime.Now.TimeOfDay > timeShift.TimeIn) ? "end" : (teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no");
                         }
-                        else 
+                        else
                         {
                             status = teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no";
                         }
@@ -859,11 +856,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
                         Year = DateTime.Now.Year,
-                        DataForWork = day,                     
+                        DataForWork = day,
                     });
-                    
+
                 }
-                
+
                 return result;
             }
             catch (Exception ex)

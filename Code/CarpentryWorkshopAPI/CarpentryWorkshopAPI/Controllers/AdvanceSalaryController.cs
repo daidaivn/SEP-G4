@@ -30,7 +30,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 return Ok(advances);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -56,7 +56,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return BadRequest("Không tìm thấy nhân viên này");
                 }
                 return Ok(employee);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -72,7 +73,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(detail);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -146,7 +148,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 return Ok(updateAd);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

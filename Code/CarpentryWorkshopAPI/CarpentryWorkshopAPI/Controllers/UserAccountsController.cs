@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using CarpentryWorkshopAPI.DTO;
+using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarpentryWorkshopAPI.Models;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using System.Data;
-using CarpentryWorkshopAPI.DTO;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -19,7 +13,7 @@ namespace CarpentryWorkshopAPI.Controllers
     {
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
-        
+
         public UserAccountsController(SEPG4CCMSContext context, IMapper mapper)
         {
             _context = context;
@@ -30,20 +24,20 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet]
         public IActionResult GetAllUserAccounts()
         {
-          if (_context.UserAccounts == null)
-          {
-              return NotFound();
-          }
+            if (_context.UserAccounts == null)
+            {
+                return NotFound();
+            }
             var userAccount = _context.UserAccounts
                   .Include(u => u.Employee)
                   .ThenInclude(u => u.RolesEmployees)
                   .ThenInclude(u => u.Role)
-                  .ThenInclude(u=> u.Pages)
+                  .ThenInclude(u => u.Pages)
                   .Select(ua => new UserAccountListDTO
                   {
-                      EmployeeId= ua.EmployeeId,
-                      UserName= ua.UserName,
-                      Password= ua.Password,
+                      EmployeeId = ua.EmployeeId,
+                      UserName = ua.UserName,
+                      Password = ua.Password,
                       PageName = ua.Employee.RolesEmployees.SelectMany(u => u.Role.Pages).Select(p => p.PageName).ToList(),
                       EmployeeName = ua.Employee.FirstName + " " + ua.Employee.LastName,
                   });
@@ -54,12 +48,12 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUserAccountById(int id)
         {
-          if (_context.UserAccounts == null)
-          {
-              return NotFound();
-          }
+            if (_context.UserAccounts == null)
+            {
+                return NotFound();
+            }
             var userAccount = _context.UserAccounts
-                  .Where(ua=>ua.EmployeeId == id)
+                  .Where(ua => ua.EmployeeId == id)
                   .Include(u => u.Employee)
                   .ThenInclude(u => u.RolesEmployees)
                   .ThenInclude(u => u.Role)
@@ -82,25 +76,25 @@ namespace CarpentryWorkshopAPI.Controllers
                 return Ok(userAccount);
             }
 
-            
+
         }
 
         // PUT: api/UserAccounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public IActionResult UpdateUserAccount([FromBody]UserAccountDTO userAccountDTO)
+        public IActionResult UpdateUserAccount([FromBody] UserAccountDTO userAccountDTO)
         {
             var userAccount = _mapper.Map<UserAccount>(userAccountDTO);
-            if (_context.UserAccounts ==null)
+            if (_context.UserAccounts == null)
             {
                 return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
             }
-            if(userAccount == null)
+            if (userAccount == null)
             {
                 return NotFound();
             }
-             _context.UserAccounts.Update(userAccount);
-            
+            _context.UserAccounts.Update(userAccount);
+
             try
             {
                 _context.SaveChanges();
@@ -108,7 +102,7 @@ namespace CarpentryWorkshopAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-                
+
             }
             return Ok("success");
         }
@@ -120,9 +114,9 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             var userAccount = _mapper.Map<UserAccount>(userAccountDTO);
             if (_context.UserAccounts == null)
-          {
-              return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
-          }
+            {
+                return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
+            }
             _context.UserAccounts.Add(userAccount);
             try
             {

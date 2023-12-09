@@ -1,12 +1,6 @@
-﻿using AutoMapper;
-using CarpentryWorkshopAPI.DTO;
+﻿using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.IBonus;
-using CarpentryWorkshopAPI.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto;
-using System.Globalization;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -14,7 +8,7 @@ namespace CarpentryWorkshopAPI.Controllers
     [Route("CCMSapi/[controller]/[action]")]
     public class RewardController : Controller
     {
-        private readonly IBonusService _bonusService ;
+        private readonly IBonusService _bonusService;
         public RewardController(IBonusService bonusService)
         {
             _bonusService = bonusService;
@@ -36,19 +30,19 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-          
+
         }
         [HttpPost]
         public IActionResult CreateAndEditCompanyReward([FromBody] CompanyRewardDTO companyRewardDTO)
         {
             try
             {
-               var service = _bonusService.CreateAndUpdateCompanyRerward(companyRewardDTO);
+                var service = _bonusService.CreateAndUpdateCompanyRerward(companyRewardDTO);
                 if (service == null)
                 {
                     return BadRequest();
                 }
-                return Ok(service); 
+                return Ok(service);
             }
             catch (Exception ex)
             {
@@ -78,7 +72,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
 
-               var result = _bonusService.GetAllReward(date);
+                var result = _bonusService.GetAllReward(date);
                 if (result == null)
                 {
                     return BadRequest();

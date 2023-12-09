@@ -2,11 +2,8 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.ILink;
 using CarpentryWorkshopAPI.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Contracts;
-using System.Security.Cryptography;
 using System.Text;
 
 
@@ -48,7 +45,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Status = c.Status,
                         ContractCode = c.ContractCode,
                         Image = c.Image,
-                        Amount= c.Amount,
+                        Amount = c.Amount,
                     }).FirstOrDefault();
                 if (employeecontract == null)
                 {
@@ -75,11 +72,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         .Where(x => x.StartDate >= sdate && x.StartDate <= endDate && x.Status == true)
                         .Include(emp => emp.Employee)
                         .ToList();
-                    if (ctbystart == null)
-                    {
-                        return NotFound();
-                    }
-                    
+                if (ctbystart == null)
+                {
+                    return NotFound();
+                }
+
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
                 return Ok(ctDTO);
 
@@ -100,7 +97,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = sdate.AddDays(1).AddSeconds(-1);
                 var ctbyend = _context.Contracts
-                        .Where(x => x.EndDate >= sdate && x.EndDate <= endDate && x.Status == true )
+                        .Where(x => x.EndDate >= sdate && x.EndDate <= endDate && x.Status == true)
                         .Include(emp => emp.Employee)
                         .ToList();
                 if (ctbyend == null)
@@ -126,13 +123,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (await _context.Contracts.AnyAsync(x => x.ContractCode.ToLower().Equals(createContractDTO.ContractCode.ToLower())))
                 {
                     var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
-                    if(history != null)
+                    if (history != null)
                     {
                         _context.UserAccountsStatusHistories.Remove(history);
                         _context.SaveChanges();
                     }
                     var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
-                    if(account != null)
+                    if (account != null)
                     {
                         _context.UserAccounts.Remove(account);
                         _context.SaveChanges();
@@ -141,7 +138,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return StatusCode(409, "Mã hợp đồng đã tồn tại");
                 }
-                if (await _context.Contracts.AnyAsync(x => x.LinkDoc.ToLower().Equals(createContractDTO.LinkDoc.ToLower()))) 
+                if (await _context.Contracts.AnyAsync(x => x.LinkDoc.ToLower().Equals(createContractDTO.LinkDoc.ToLower())))
                 {
                     var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
                     if (history != null)
@@ -177,22 +174,22 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return StatusCode(409, "Đường dẫn chưa được triển khai");
                 }
-               
-                    var months = await _context.ContractTypes
-                        .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
-                        .Select(x => x.Month)
-                        .FirstOrDefaultAsync();
-                    newct = _mapper.Map<Models.Contract>(createContractDTO);
-                    newct.EndDate = newct.StartDate.Value.AddMonths((int)months);
-                    if (newct == null)
-                    {
-                        return NotFound();
-                    }
-                    newct.EmployeeId = emp.EmployeeId;
-                    newct.Status = true;
-                    _context.Contracts.Add(newct);
-                    _context.SaveChanges();
-                
+
+                var months = await _context.ContractTypes
+                    .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
+                    .Select(x => x.Month)
+                    .FirstOrDefaultAsync();
+                newct = _mapper.Map<Models.Contract>(createContractDTO);
+                newct.EndDate = newct.StartDate.Value.AddMonths((int)months);
+                if (newct == null)
+                {
+                    return NotFound();
+                }
+                newct.EmployeeId = emp.EmployeeId;
+                newct.Status = true;
+                _context.Contracts.Add(newct);
+                _context.SaveChanges();
+
                 emp.Status = true;
                 _context.Employees.Update(emp);
                 EmployeesStatusHistory ehistory = new EmployeesStatusHistory
@@ -213,12 +210,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Create contract successfull");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut] 
+        [HttpPut]
         public async Task<IActionResult> UpdateContract([FromBody] CreateContractDTO createContractDTO)
         {
             try
@@ -252,7 +250,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
-                    ContractId= updatect.ContractId,
+                    ContractId = updatect.ContractId,
                     Action = "Update",
                     ActionDate = DateTime.Now,
                     CurrentEmployeeId = null,
@@ -271,25 +269,25 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-               Models.Contract contract = new Models.Contract();
-              
-                         contract = _context.Contracts
-                        .Include(ctt => ctt.ContractType)
-                        .Include(emp => emp.Employee)
-                        .FirstOrDefault(x => x.ContractId == contractId);
-                    if (contract == null)
-                    {
-                        return NotFound();
-                    }
-                    if (contract.Status == true)
-                    {
-                        contract.Status = false;
-                    }
-                    else
-                    {
-                        contract.Status = true;
-                    }
-                
+                Models.Contract contract = new Models.Contract();
+
+                contract = _context.Contracts
+               .Include(ctt => ctt.ContractType)
+               .Include(emp => emp.Employee)
+               .FirstOrDefault(x => x.ContractId == contractId);
+                if (contract == null)
+                {
+                    return NotFound();
+                }
+                if (contract.Status == true)
+                {
+                    contract.Status = false;
+                }
+                else
+                {
+                    contract.Status = true;
+                }
+
                 _context.Contracts.Update(contract);
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
@@ -301,7 +299,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
                 return Ok("Change contract status successful");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -326,7 +325,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
                 return Ok(ctDTO);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -336,7 +335,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-              
+
                 var query = _context.Contracts
                     .Include(emp => emp.Employee)
                     .Include(ctt => ctt.ContractType)
@@ -369,7 +368,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 });
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

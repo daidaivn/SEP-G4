@@ -2,7 +2,6 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -26,16 +25,17 @@ namespace CarpentryWorkshopAPI.Controllers
                 var costs = _context.UnitCosts.ToList();
                 if (costs == null)
                 {
-                    return NotFound();  
+                    return NotFound();
                 }
                 var dto = _mapper.Map<List<UnitCostDTO>>(costs);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost] 
+        [HttpPost]
         public IActionResult CreateAndUpdateUnitCost([FromBody] UnitCostDTO unitCostDTO)
         {
             try
@@ -79,7 +79,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return Ok("Update unit cost successful");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

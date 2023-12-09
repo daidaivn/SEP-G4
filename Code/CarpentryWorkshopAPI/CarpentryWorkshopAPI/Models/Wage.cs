@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CarpentryWorkshopAPI.Models
+﻿namespace CarpentryWorkshopAPI.Models
 {
     public partial class Wage
     {

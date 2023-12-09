@@ -1,7 +1,4 @@
-﻿using CarpentryWorkshopAPI.Models;
-using Org.BouncyCastle.Asn1.Mozilla;
-
-namespace CarpentryWorkshopAPI.DTO
+﻿namespace CarpentryWorkshopAPI.DTO
 {
     public class TeamForScheduleDTO
     {

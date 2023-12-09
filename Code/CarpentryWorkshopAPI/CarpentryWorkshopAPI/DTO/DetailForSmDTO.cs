@@ -1,6 +1,4 @@
-﻿using System.Drawing.Printing;
-
-namespace CarpentryWorkshopAPI.DTO
+﻿namespace CarpentryWorkshopAPI.DTO
 {
     public class DetailForSmDTO
     {
@@ -11,7 +9,7 @@ namespace CarpentryWorkshopAPI.DTO
         public string? WorkAreaName { get; set; }
         public double? Cost { get; set; }
         public int? WorkId { get; set; }
-        public string? WorkName { get; set;}
+        public string? WorkName { get; set; }
         public int? NumberOfProduct { get; set; }
         public int? NumberOFProductToday { get; set; }
         public string? Date { get; set; }

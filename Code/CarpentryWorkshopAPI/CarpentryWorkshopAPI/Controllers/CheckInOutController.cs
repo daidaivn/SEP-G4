@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using System.Data;
- 
+
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CCMSapi/[controller]/[action]")]
@@ -16,7 +13,7 @@ namespace CarpentryWorkshopAPI.Controllers
     [Authorize(Roles = "TimeKeeping")]
     public class CheckInOutController : ControllerBase
     {
-        
+
         private readonly SEPG4CCMSContext _context;
         private IMapper _mapper;
         public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)
@@ -88,8 +85,8 @@ namespace CarpentryWorkshopAPI.Controllers
         public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
         {
             var personCheckInOut = _context.RolesEmployees.Include(re => re.Role).Where(re => re.EmployeeId == teamLeaderId && re.Role.RoleName == "Bảo vệ" && re.EndDate == null).FirstOrDefault();
-            
-            if(personCheckInOut == null)
+
+            if (personCheckInOut == null)
             {
                 var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
@@ -264,7 +261,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var time = new List<object>();
                 foreach (var employee in employees)
                 {
-                    var employeeRole = _context.RolesEmployees.Include(re => re.Role).OrderBy(re=>re.Role.RoleLevel).FirstOrDefault(re => (re.Role.RoleName == "Trưởng ca" || re.Role.RoleName == "Phó ca") && re.EmployeeId == employee.EmployeeId);
+                    var employeeRole = _context.RolesEmployees.Include(re => re.Role).OrderBy(re => re.Role.RoleLevel).FirstOrDefault(re => (re.Role.RoleName == "Trưởng ca" || re.Role.RoleName == "Phó ca") && re.EmployeeId == employee.EmployeeId);
                     TimeSpan timeIn = new TimeSpan(7, 0, 0);
                     TimeSpan timeOut = new TimeSpan(16, 0, 0);
                     if (employeeRole != null)
@@ -279,11 +276,11 @@ namespace CarpentryWorkshopAPI.Controllers
                                 TeamId = et.TeamId,
                             })
                              .FirstOrDefaultAsync();
-                        if(teamId != null)
+                        if (teamId != null)
                         {
                             timeIn = teamId.TimeIn ?? TimeSpan.Zero;
                             timeOut = teamId.Timeout ?? TimeSpan.Zero;
-                        }                        
+                        }
                     }
                     DateTime DateIn = DateTime.Now.Date.Add(timeIn);
                     DateTime DateOut = DateTime.Now.Date.Add(timeOut);
@@ -371,7 +368,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             });
                         }
                     }
-                    
+
 
 
                 }
@@ -384,9 +381,9 @@ namespace CarpentryWorkshopAPI.Controllers
                 });
                 return time;
             }
-            
 
-            
+
+
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
@@ -395,11 +392,11 @@ namespace CarpentryWorkshopAPI.Controllers
             foreach (var Id in _context.Teams.Select(t => t.TeamId).ToList())
             {
                 var teamId = await _context.Teams
-                .Where(t=>t.TeamId == Id)
+                .Where(t => t.TeamId == Id)
                 .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work)
                 .Select(et => new
                 {
-                    TimeIn = et.WorkSchedules.Where(ws=>ws.EndDate == null).Select(ws => ws.ShiftType.StartTime).Single(),
+                    TimeIn = et.WorkSchedules.Where(ws => ws.EndDate == null).Select(ws => ws.ShiftType.StartTime).Single(),
                     Timeout = et.WorkSchedules.Where(ws => ws.EndDate == null).Select(ws => ws.ShiftType.EndTime).Single(),
                     TeamId = et.TeamId,
                     WorkId = et.TeamWorks.Select(w => w.WorkId)
@@ -539,7 +536,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var checkInOut = _context.CheckInOuts.Where(a => a.Date.Value.Date == datetime && a.EmployeeId == employeeId).AsQueryable();
                 var checkIn = checkInOut.OrderBy(a => a.TimeCheckIn).FirstOrDefault();
                 var checkOut = checkInOut.OrderBy(a => a.TimeCheckIn).LastOrDefault();
-                if(checkInOut != null)
+                if (checkInOut != null)
                 {
                     return Ok(new
                     {
@@ -552,7 +549,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound("emoployee chua checkin or out");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -569,17 +566,17 @@ namespace CarpentryWorkshopAPI.Controllers
                     var checkInOut = new CheckInOut()
                     {
                         EmployeeId = employeeId,
-                        Date= dateTime,
+                        Date = dateTime,
                         TimeCheckIn = DateTime.Now.TimeOfDay,
                     };
                     _context.CheckInOuts.Add(checkInOut);
                 }
                 else
                 {
-                    var checkIn = Attendance.OrderBy(a=>a.TimeCheckIn).LastOrDefault();
-                    if (checkIn != null) 
+                    var checkIn = Attendance.OrderBy(a => a.TimeCheckIn).LastOrDefault();
+                    if (checkIn != null)
                     {
-                        if(checkIn.TimeCheckOut == null)
+                        if (checkIn.TimeCheckOut == null)
                         {
                             checkIn.TimeCheckOut = DateTime.Now.TimeOfDay;
                             _context.CheckInOuts.Update(checkIn);
@@ -594,7 +591,7 @@ namespace CarpentryWorkshopAPI.Controllers
                             };
                             _context.CheckInOuts.Add(checkInOut);
                         }
-                        
+
                     }
 
                 }
@@ -610,20 +607,20 @@ namespace CarpentryWorkshopAPI.Controllers
         public IActionResult UpdateCheckInOutForEmployee([FromBody] CheckInOutDTO checkInOutDTO)
         {
             try
-            {               
-                if (checkInOutDTO.Id > 0 )
+            {
+                if (checkInOutDTO.Id > 0)
                 {
                     var checkInOut = _context.CheckInOuts.Where(a => a.CheckInOutId == checkInOutDTO.Id).FirstOrDefault();
-                    
-                    if(checkInOut != null )
+
+                    if (checkInOut != null)
                     {
-                        checkInOut.TimeCheckOut = !string.IsNullOrEmpty(checkInOutDTO.CheckOut) && TimeSpan.TryParse(checkInOutDTO.CheckOut, out var checkOut) ? checkOut : checkInOut.TimeCheckOut ;
+                        checkInOut.TimeCheckOut = !string.IsNullOrEmpty(checkInOutDTO.CheckOut) && TimeSpan.TryParse(checkInOutDTO.CheckOut, out var checkOut) ? checkOut : checkInOut.TimeCheckOut;
                         checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutDTO.CheckIn) && TimeSpan.TryParse(checkInOutDTO.CheckIn, out var checkIn) ? checkIn : checkInOut.TimeCheckIn;
-                        if(checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
+                        if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
                             return BadRequest("data can not update");
                         }
-                        
+
                         _context.CheckInOuts.Update(checkInOut);
                         _context.SaveChanges();
                         return Ok("success");
@@ -631,7 +628,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     else
                     {
                         return StatusCode(403, "Not have data checkInOut today");
-                    }                        
+                    }
                 }
                 else
                 {
@@ -648,17 +645,17 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                if(!DateTime.TryParseExact(dateString, "dd-MM-yyyy",
+                if (!DateTime.TryParseExact(dateString, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture,
                                        System.Globalization.DateTimeStyles.None, out var parsedDate))
                 {
                     return BadRequest("date is not valid");
                 }
-                if(employeeId <= 0 )
+                if (employeeId <= 0)
                 {
                     return BadRequest("employee not valid");
                 }
-                var CheckInOut = await _context.CheckInOuts.Include(ci=>ci.Employee).Where(ci=>ci.EmployeeId == employeeId && ci.Date.Value.Date == parsedDate.Date)
+                var CheckInOut = await _context.CheckInOuts.Include(ci => ci.Employee).Where(ci => ci.EmployeeId == employeeId && ci.Date.Value.Date == parsedDate.Date)
                     .Select(ci => new
                     {
                         CheckInOutId = ci.CheckInOutId,
@@ -669,12 +666,13 @@ namespace CarpentryWorkshopAPI.Controllers
                         EmployeeName = ci.Employee.LastName + " " + ci.Employee.FirstName,
                     })
                     .ToListAsync();
-                if(CheckInOut.Count == 0)
+                if (CheckInOut.Count == 0)
                 {
                     return NotFound("not have data");
                 }
                 return Ok(CheckInOut);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

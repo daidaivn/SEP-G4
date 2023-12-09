@@ -2,10 +2,8 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.IServices.IAdvance;
 using CarpentryWorkshopAPI.Models;
-using DocumentFormat.OpenXml.Bibliography;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace CarpentryWorkshopAPI.Services.Advance
@@ -78,22 +76,22 @@ namespace CarpentryWorkshopAPI.Services.Advance
                 .FirstOrDefaultAsync();
             return advanceDetail;
         }
-       public async Task<dynamic> GetEmployee(string employeeidstring)
+        public async Task<dynamic> GetEmployee(string employeeidstring)
         {
             string trimmedEmployeeIdString = employeeidstring.TrimStart('0');
             int eid = Int32.Parse(trimmedEmployeeIdString);
             var employee = await _context.Employees
                 .Include(x => x.Contracts)
                 .Where(x => x.EmployeeId == eid)
-                .Select(x => new 
-                { 
+                .Select(x => new
+                {
                     EmployeeID = x.EmployeeId,
                     EmployeeName = x.FirstName + " " + x.LastName,
                     MaxAdvance = x.Contracts.Where(c => c.EmployeeId == eid).Select(c => (long)c.Amount * 0.3).FirstOrDefault()
                 })
                 .FirstOrDefaultAsync();
             return employee;
-        } 
+        }
         public async Task<dynamic> CreateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO)
         {
             DateTime date = DateTime.Now.Date;

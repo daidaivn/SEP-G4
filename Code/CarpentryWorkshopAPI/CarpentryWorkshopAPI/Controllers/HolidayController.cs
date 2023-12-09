@@ -63,7 +63,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(allholidays);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -80,8 +81,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Select(group => new
                     {
                         HolidayDetailId = group.First().HolidayDetailId,
-                        HolidayID = group.Key, 
-                        HolidayName = group.First().Holiday.HolidayName, 
+                        HolidayID = group.Key,
+                        HolidayName = group.First().Holiday.HolidayName,
                         StartDate = group.Min(x => x.Date).Value.ToString("dd'-'MM'-'yyyy"),
                         EndDate = group.Max(x => x.Date).Value.ToString("dd'-'MM'-'yyyy"),
                         //Status = group.Min(x => x.Date).Value.Date > DateTime.Now.Date ? "HolidayNotStart"
@@ -96,41 +97,43 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(holidays);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> CreateHolidayDetail([FromBody] HolidayDetailDTO holidayDetailDTO)
         {
             try
-            {            
-                    var startDate = DateTime.ParseExact(holidayDetailDTO.StartDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture);
-                    var endDate = DateTime.ParseExact(holidayDetailDTO.EndDatestring, "dd-MM-yyyy",
-                                   System.Globalization.CultureInfo.InvariantCulture);
-                    Holiday newHoliday = new Holiday()
+            {
+                var startDate = DateTime.ParseExact(holidayDetailDTO.StartDatestring, "dd-MM-yyyy",
+                               System.Globalization.CultureInfo.InvariantCulture);
+                var endDate = DateTime.ParseExact(holidayDetailDTO.EndDatestring, "dd-MM-yyyy",
+                               System.Globalization.CultureInfo.InvariantCulture);
+                Holiday newHoliday = new Holiday()
+                {
+                    HolidayName = holidayDetailDTO.HolidayName
+                };
+                await _context.Holidays.AddAsync(newHoliday);
+                await _context.SaveChangesAsync();
+                while (startDate <= endDate)
+                {
+                    HolidaysDetail newHolidayDetail = new HolidaysDetail()
                     {
-                        HolidayName = holidayDetailDTO.HolidayName
+                        HolidayId = newHoliday.HolidayId,
+                        Date = startDate,
                     };
-                    await _context.Holidays.AddAsync(newHoliday);
+                    await _context.HolidaysDetails.AddAsync(newHolidayDetail);
                     await _context.SaveChangesAsync();
-                    while (startDate <= endDate)
-                    {
-                        HolidaysDetail newHolidayDetail = new HolidaysDetail()
-                        {
-                            HolidayId = newHoliday.HolidayId,
-                            Date = startDate,
-                        };
-                        await _context.HolidaysDetails.AddAsync(newHolidayDetail);
-                        await _context.SaveChangesAsync();
-                        startDate = startDate.AddDays(1);
-                    }
-                   
-                    return Ok("Create holiday detail successful");
-               
-            }catch(Exception ex)
+                    startDate = startDate.AddDays(1);
+                }
+
+                return Ok("Create holiday detail successful");
+
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

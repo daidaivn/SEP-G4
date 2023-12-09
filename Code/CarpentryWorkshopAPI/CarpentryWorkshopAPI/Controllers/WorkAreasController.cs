@@ -29,11 +29,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var dto = _mapper.Map<List<WorkAreasDTO>>(areas);
                 return Ok(dto);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-           
+
         }
         [HttpGet]
         public IActionResult CreateAndUpdateWorkAreas([FromBody] WorkAreasDTO workAreasDTO)
@@ -63,7 +64,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return Ok("Update work area successful");
                 }
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -82,7 +84,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return NotFound();
                 }
                 return Ok(filter);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
