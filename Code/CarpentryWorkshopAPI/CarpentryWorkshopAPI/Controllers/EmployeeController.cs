@@ -497,6 +497,8 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
+                var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
+                var employeeIdLength = maxEmployeeId.ToString().Length;
                 var query = _context.Employees
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
@@ -509,7 +511,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     query = query.Where(x =>
                         x.FirstName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
                         x.LastName.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
-                        x.PhoneNumber.ToLower().Normalize(NormalizationForm.FormD).Contains(input)
+                        x.PhoneNumber.ToLower().Normalize(NormalizationForm.FormD).Contains(input) ||
+                        x.EmployeeId.ToString().PadLeft(employeeIdLength, '0').ToLower().Normalize(NormalizationForm.FormD).Contains(input)
                     );
                 }
 
