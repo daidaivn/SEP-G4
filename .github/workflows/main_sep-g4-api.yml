@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'Code/CarpentryWorkshopAPI/**'  
   workflow_dispatch:
 
 jobs:
@@ -25,20 +23,16 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: |
-          cd Code/CarpentryWorkshopAPI
-          dotnet build --configuration Release
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: |
-          cd Code/CarpentryWorkshopAPI
-          dotnet publish -c Release -o ./publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: Code/CarpentryWorkshopAPI/publish 
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -46,12 +40,21 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D88765BBE505466C90F915C378FC2CFA }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7170A127603749AE81648BF43D1071EB }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BCC267CFA292488490BC3FFD1E3F89D0 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -59,5 +62,5 @@ jobs:
         with:
           app-name: 'SEP-G4-API'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_b8bf5c7543c24f03b8a61ad3a218be91 }}
           package: .
+          
