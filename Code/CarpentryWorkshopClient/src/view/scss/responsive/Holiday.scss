@@ -21,4 +21,10 @@
   .modal-add-holiday .footer {
     padding: 0px 20px 20px 20px;
   }
+  .modal-add-holiday .body .head {
+    padding-left: unset;
+  }
+  .modal-add-holiday .footer .item-body Input {
+    font-size: 18px !important;
+  }
 }

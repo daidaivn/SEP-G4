@@ -223,7 +223,7 @@ const AddEmployeeModal = ({
                   Thoát
                 </button>
                 <button className="btn-edit btn-save" onClick={AddEmployee}>
-                  Lưu
+                  Thêm
                 </button>
               </div>
             </div>

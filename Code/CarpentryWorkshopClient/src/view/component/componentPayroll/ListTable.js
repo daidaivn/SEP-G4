@@ -193,9 +193,7 @@ const ListTable = ({
                 </svg>
               </div>
             </td>
-            <td>
-              Lương thực nhận{" "}
-            </td>
+            <td>Lương thực nhận </td>
           </tr>
         </thead>
         {salaryDetail.length === 0 ? (

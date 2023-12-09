@@ -201,7 +201,7 @@ const TimekeepingComponent = () => {
   //Load data for work day
   const fetchDataWorkPerDay = () => {
     let isDataLoaded = false;
-    let toastId = null; 
+    let toastId = null;
     fetchAllDataWorks(userEmployeeID)
       .then((data) => {
         isDataLoaded = true;
@@ -215,8 +215,7 @@ const TimekeepingComponent = () => {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Nhóm hiện không có công việc'); // Hiển thị thông báo lỗi ngay lập tức
-      });  
+      });
     setTimeout(() => {
       if (!isDataLoaded) {
         toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
@@ -236,7 +235,7 @@ const TimekeepingComponent = () => {
       return;
     }
     let isDataLoaded = false;
-    let toastId = null; 
+    let toastId = null;
     updateDataWorks(work.teamWorkId, number)
       .then((data) => {
         isDataLoaded = true;
@@ -251,7 +250,7 @@ const TimekeepingComponent = () => {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
         toast.error('Thay đổi dữ liệu không thành công'); // Hiển thị thông báo lỗi ngay lập tức
-      });  
+      });
     setTimeout(() => {
       if (!isDataLoaded) {
         toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
@@ -808,43 +807,40 @@ const TimekeepingComponent = () => {
                 </svg>
               </div>
               <div className="body-edit">
-                <div className="item-modal">
-                  <p>Tên công việc</p>
-                  <Input type="text" value={work.workName}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Tên nhóm</p>
-                  <Input type="text" value={work.teamName}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Loại sản phẩm:</p>
-                  <Input type="text" value={work.productName}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Đơn giá 1 sản phẩm</p>
-                  <Input type="text" value={work.cost}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Số sản phẩm đã hoàn thành</p>
-                  <Input type="text" value={work.numberOFProductToday}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Số sản phẩm cần sản xuất</p>
-                  <Input type="text" value={work.numberOfProduct}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Khu vục sản xuất</p>
-                  <Input type="text" value={work.workAreaName}></Input>
-                </div>
-                <div className="item-modal">
-                  <p>Ngày làm việc</p>
-                  <Input type="date" value={convertDobToISO(work.date)}></Input>
-                </div>
-                <div className="footer-modal fix-modal-shift">
-                  <span className="edit" onClick={handleEdit}>
-                    Cập nhật số sản phẩm hoàn thành
-                  </span>
-                </div>
+                {work.length === 0 ? (
+                  <p>Nhóm chưa có công việc cho ngày hôm nay</p>
+                ) : (
+                  <div className="body-edit">
+                    <div className="item-modal">
+                      <p>Tên công việc</p>
+                      <Input type="text" value={work.workName}></Input>
+                    </div>
+                    <div className="item-modal">
+                      <p>Loại sản phẩm:</p>
+                      <Input type="text" value={work.productName}></Input>
+                    </div>
+                    <div className="item-modal">
+                      <p>Số sản phẩm đã hoàn thành</p>
+                      <Input
+                        type="text"
+                        value={number != null ? number : work.numberOFProductToday}
+                        onChange={(e) => setNumber(e.target.value)}
+                      ></Input>
+                    </div>
+                    <div className="item-modal">
+                      <p>Ngày làm việc</p>
+                      <Input type="date" value={convertDobToISO(work.date)}></Input>
+                    </div>
+                    <div className="footer-modal">
+                      <span className="back" onClick={handleCancel}>
+                        Hủy bỏ
+                      </span>
+                      <span className="edit save" onClick={handleSave}>
+                        Lưu
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </Modal>
