@@ -23,6 +23,14 @@ function App() {
   if (!userPages.length) {
     userPages = JSON.parse(sessionStorage.getItem("userPages")) || [];
   }
+
+  let department = JSON.parse(localStorage.getItem("department")) || [];
+  if (!department.length) {
+    department = JSON.parse(sessionStorage.getItem("department")) || [];
+  }
+  // Combine access checks
+  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Sự kiện");
+
   return (
     <div className="screen">
       <Menucomponent />
@@ -61,7 +69,7 @@ function App() {
           {userPages.includes("Calendar") && (
             <Route path="/calendar" element={<CalendarComponent />} />
           )}
-          {userPages.includes("Payroll") && (
+          {hasPayrollAccess && (
             <Route path="/payroll" element={<PayrollComponent />} />
           )}
           {userPages.includes("SeeWork") && (
@@ -87,5 +95,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

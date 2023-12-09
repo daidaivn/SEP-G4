@@ -464,6 +464,7 @@ function ListEmployeeComponent() {
           .then((data) => {
             resolve(data);
             handleSaveRole();
+            fetchData();
           })
           .catch((error) => {
             resolve(Promise.reject(error));

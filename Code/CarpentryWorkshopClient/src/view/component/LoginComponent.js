@@ -42,6 +42,8 @@ const LoginComponent = () => {
               localStorage.setItem("userPages", JSON.stringify(response.pages));
               localStorage.setItem("userEmployeeID", response.employeeID);
               localStorage.setItem("accountName", response.userAccount);
+              localStorage.setItem("department", JSON.stringify(response.department));
+
 
             } else {
               sessionStorage.setItem("userToken", response.token);
@@ -50,7 +52,11 @@ const LoginComponent = () => {
               sessionStorage.setItem("userPages",JSON.stringify(response.pages));
               sessionStorage.setItem("userEmployeeID", response.employeeID);
               sessionStorage.setItem("accountName", response.userAccount);
+              sessionStorage.setItem("department", JSON.stringify(response.department));
             }
+
+            console.log('response.department',response.department);
+            
             navigate("/");
             resolve(response);
           })

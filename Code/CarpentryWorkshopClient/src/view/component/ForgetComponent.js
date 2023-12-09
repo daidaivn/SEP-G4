@@ -48,7 +48,7 @@ const ForgetComponent = () => {
         success: "Success",
       }
     );
-    setMess("Tài khoản của bạn đã được gủi đến Email. Vui lòng kiểm tra");
+    setMess("Tài khoản của bạn đã được gửi đến Email. Vui lòng kiểm tra");
   };
   return (
     <div className="main-login">
