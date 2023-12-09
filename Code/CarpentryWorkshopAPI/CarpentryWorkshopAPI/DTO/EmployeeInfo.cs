@@ -45,7 +45,8 @@
 
         public long Advances { get; set; }
         public long JobIncentives { get; set; }
-
+        public long Bonus { get; set; }
+        public long SpecialOccasion { get; set; }
         public long ActualReceived { get; set; }
     }
 

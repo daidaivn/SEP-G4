@@ -83,25 +83,31 @@ namespace CarpentryWorkshopAPI.Services.Advance
             string trimmedEmployeeIdString = employeeidstring.TrimStart('0');
             int eid = Int32.Parse(trimmedEmployeeIdString);
             var employee = await _context.Employees
+                .Include(x => x.Contracts)
                 .Where(x => x.EmployeeId == eid)
                 .Select(x => new 
                 { 
                     EmployeeID = x.EmployeeId,
-                    EmployeeName = x.FirstName + " " + x.LastName 
+                    EmployeeName = x.FirstName + " " + x.LastName,
+                    MaxAdvance = x.Contracts.Where(c => c.EmployeeId == eid).Select(c => (long)c.Amount * 0.3).FirstOrDefault()
                 })
                 .FirstOrDefaultAsync();
             return employee;
         } 
         public async Task<dynamic> CreateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO)
         {
+            DateTime date = DateTime.Now.Date;
             var newAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
+            newAdvance.Date = date;
             await _context.AdvancesSalaries.AddAsync(newAdvance);
             await _context.SaveChangesAsync();
             return "Create advance salary successful";
         }
         public async Task<dynamic> UpdateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO)
         {
+            DateTime date = DateTime.Now.Date;
             var updateAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
+            updateAdvance.Date = date;
             _context.AdvancesSalaries.Update(updateAdvance);
             _context.SaveChanges();
             return "Update advance salary successful";
