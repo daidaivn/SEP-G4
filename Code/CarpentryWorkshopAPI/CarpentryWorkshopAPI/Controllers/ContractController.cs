@@ -121,29 +121,63 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                bool isError = false;
                 var emp = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
                 var newct = new Models.Contract();
                 if (await _context.Contracts.AnyAsync(x => x.ContractCode.ToLower().Equals(createContractDTO.ContractCode.ToLower())))
                 {
+                    var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                    if(history != null)
+                    {
+                        _context.UserAccountsStatusHistories.Remove(history);
+                        _context.SaveChanges();
+                    }
+                    var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                    if(account != null)
+                    {
+                        _context.UserAccounts.Remove(account);
+                        _context.SaveChanges();
+                    }
+                    _context.Employees.Remove(emp);
+                    _context.SaveChanges();
                     return StatusCode(409, "Mã hợp đồng đã tồn tại");
-                    isError = true;
                 }
                 if (await _context.Contracts.AnyAsync(x => x.LinkDoc.ToLower().Equals(createContractDTO.LinkDoc.ToLower()))) 
                 {
+                    var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                    if (history != null)
+                    {
+                        _context.UserAccountsStatusHistories.Remove(history);
+                        _context.SaveChanges();
+                    }
+                    var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                    if (account != null)
+                    {
+                        _context.UserAccounts.Remove(account);
+                        _context.SaveChanges();
+                    }
+                    _context.Employees.Remove(emp);
+                    _context.SaveChanges();
                     return StatusCode(409, "Đường dẫn hợp đồng đã tồn tại");
-                    isError = true;
                 }
                 if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
                 {
+                    var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                    if (history != null)
+                    {
+                        _context.UserAccountsStatusHistories.Remove(history);
+                        _context.SaveChanges();
+                    }
+                    var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                    if (account != null)
+                    {
+                        _context.UserAccounts.Remove(account);
+                        _context.SaveChanges();
+                    }
+                    _context.Employees.Remove(emp);
+                    _context.SaveChanges();
                     return StatusCode(409, "Đường dẫn chưa được triển khai");
-                    isError = true;
                 }
-                if (isError == true)
-                {
-                     _context.Employees.Remove(emp);
-                     _context.SaveChanges();
-                }
+               
                     var months = await _context.ContractTypes
                         .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
                         .Select(x => x.Month)
