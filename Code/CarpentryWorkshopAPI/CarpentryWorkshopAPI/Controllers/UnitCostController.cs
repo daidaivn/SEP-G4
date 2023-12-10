@@ -32,7 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -45,7 +45,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     var dto = _mapper.Map<UnitCost>(unitCostDTO);
                     if (dto == null)
                     {
-                        return BadRequest();
+                        return BadRequest("Lỗi dữ liệu");
                     }
                     _context.UnitCosts.Add(dto);
                     _context.SaveChanges();
@@ -58,7 +58,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.UnitCostStatusHistories.Add(history);
                     _context.SaveChanges();
-                    return Ok("Create unit cost successful");
+                    return Ok("Tạo đơn giá thành công");
                 }
                 else
                 {
@@ -77,12 +77,12 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.UnitCostStatusHistories.Add(history);
                     _context.SaveChanges();
-                    return Ok("Update unit cost successful");
+                    return Ok("Chỉnh sửa đơn giá thành công");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -95,13 +95,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (ucs == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(ucs);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

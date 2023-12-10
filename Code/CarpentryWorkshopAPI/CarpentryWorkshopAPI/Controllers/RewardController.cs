@@ -22,13 +22,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var personal = _bonusService.CreateAndUpdatePersonalReward(personalRewardDTO);
                 if (personal == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(personal);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -40,13 +40,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var service = _bonusService.CreateAndUpdateCompanyRerward(companyRewardDTO);
                 if (service == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(service);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -57,13 +57,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var service = _bonusService.CreateAndUpdateSpecialOccasion(specialOccasionDTO);
                 if (service == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(service);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -75,13 +75,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = _bonusService.GetAllReward(date);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

@@ -39,7 +39,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi hiển thị danh sách");
             }
 
         }
@@ -66,7 +66,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.HistoryChangeShiftTypes.Add(history);
                     _context.SaveChanges();
-                    return Ok("Create shift type successful");
+                    return Ok("Tạo ca làm việc thành công");
                 }
                 else
                 {
@@ -85,14 +85,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.HistoryChangeShiftTypes.Add(history);
                     _context.SaveChanges();
-                    return Ok("Update shift type successful");
+                    return Ok("Chỉnh sửa ca làm việc thành công");
 
                 }
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi tạo hoặc chỉnh sửa ca làm việc");
             }
         }
         [HttpGet]
@@ -112,7 +112,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi lọc");
             }
         }
     }
