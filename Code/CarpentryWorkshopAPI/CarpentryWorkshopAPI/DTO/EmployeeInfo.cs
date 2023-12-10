@@ -47,6 +47,7 @@
         public long JobIncentives { get; set; }
         public long Bonus { get; set; }
         public long SpecialOccasion { get; set; }
+        public long CompanyWideBonus { get; set; }
         public long ActualReceived { get; set; }
     }
 
