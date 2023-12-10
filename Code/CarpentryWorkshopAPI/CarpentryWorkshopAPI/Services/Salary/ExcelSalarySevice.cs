@@ -289,6 +289,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .ThenInclude(at => at.Allowance)
                         .Include(e => e.BonusDetails)
                         .Include(e => e.SpecialOccasions)
+                        .Include(e => e.CompanyWideBonus)
                 .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
@@ -348,7 +349,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var special = e.SpecialOccasions
                 .Where(so => so.OccasionDate >= startDate && so.OccasionDate <= endDate)
                 .Sum(so => so.Amount);
-                var totalBs = bonus + special;
+                var company = e.CompanyWideBonus
+                .Where(cw => cw.BonusDate >= startDate && cw.BonusDate <= endDate)
+                .Sum(cw => cw.BonusAmount);
+                var totalBs = bonus + special + company;
                 if (totalBs == null)
                 {
                     totalBs = 0;
@@ -465,6 +469,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     JobIncentives = (long)totalBs,
                     Bonus = (long)bonus,
                     SpecialOccasion = (long)special,
+                    CompanyWideBonus = (long)company,
                     ActualReceived = (long)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
 
                 };
