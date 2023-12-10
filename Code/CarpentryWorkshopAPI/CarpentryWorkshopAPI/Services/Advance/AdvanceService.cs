@@ -62,6 +62,7 @@ namespace CarpentryWorkshopAPI.Services.Advance
             var employeeIdLength = maxEmployeeId.ToString().Length;
             var advanceDetail = await _context.AdvancesSalaries
                 .Include(x => x.Employee)
+                .ThenInclude(x => x.Contracts)
                 .Where(x => x.AdvanceSalaryId == advanceSalaryId)
                 .Select(x => new
                 {
@@ -69,6 +70,7 @@ namespace CarpentryWorkshopAPI.Services.Advance
                     EmployeeID = x.EmployeeId,
                     EmployeeIdstring = x.EmployeeId.ToString().PadLeft(employeeIdLength, '0'),
                     EmployeeName = x.Employee.FirstName + " " + x.Employee.LastName,
+                    MaxAdvance = x.Employee.Contracts.Where(c => c.EmployeeId == x.EmployeeId).Select(c => (long)c.Amount * 0.3).FirstOrDefault(),
                     Amount = x.Amount,
                     Date = x.Date.Value.ToString("dd'-'MM'-'yyyy"),
                     Note = x.Note
