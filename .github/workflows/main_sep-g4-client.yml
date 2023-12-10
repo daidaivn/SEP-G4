@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'Code/CarpentryWorkshopClient/**'
   workflow_dispatch:
 
 jobs:
@@ -23,17 +21,17 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: npm install and build
+      - name: npm install, build, and test
         run: |
-          cd Code/CarpentryWorkshopClient
           npm install
           npm run build --if-present
+          npm run test --if-present
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: Code/CarpentryWorkshopClient/build/
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,4 +53,4 @@ jobs:
           app-name: 'SEP-G4-Client'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_ECF6842A271E473CA7C07774894E49C5 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F8954A43DE1149AA982CC8E34CF77310 }}
