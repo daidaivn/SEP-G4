@@ -140,8 +140,8 @@ function ListEmployeeComponent() {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalCIC(formattedValue);
   };
-  console.log('originalImage',originalImage);
-  
+  console.log('originalImage', originalImage);
+
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -149,7 +149,7 @@ function ListEmployeeComponent() {
       reader.onload = async (event) => {
         const base64Image = event.target.result;
         setOriginalImage(base64Image); // Save base64 string to state
-  
+
         const previewUrl = URL.createObjectURL(file);
         setPreviewImage(previewUrl); // Update preview image
       };
@@ -158,16 +158,16 @@ function ListEmployeeComponent() {
   };
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
-        const updatedValue = {};
-        if (value) {
-          updatedValue.roleID = value.roleID;
-          updatedValue.departmentID = value.departmentID;
-        } else {
-          updatedValue.roleID = null;
-          updatedValue.departmentID = null;
-        }
-        return updatedValue;
-      })
+      const updatedValue = {};
+      if (value) {
+        updatedValue.roleID = value.roleID;
+        updatedValue.departmentID = value.departmentID;
+      } else {
+        updatedValue.roleID = null;
+        updatedValue.departmentID = null;
+      }
+      return updatedValue;
+    })
     : [];
 
   const handleEdit = () => {
@@ -468,15 +468,15 @@ function ListEmployeeComponent() {
       return;
     }
     toast.promise(
-        EditRole(id, updatedRoleDepartments)
-          .then((data) => {
-            handleSaveRole();
-            fetchData();
-            return data;
-          })
-          .catch((error) => {
-            throw toast.error(error.response.data);
-      }),
+      EditRole(id, updatedRoleDepartments)
+        .then((data) => {
+          handleSaveRole();
+          fetchData();
+          return data;
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
         success: "Thêm nhân viên thành công",
       }
@@ -509,10 +509,10 @@ function ListEmployeeComponent() {
           handlelDetail(id);
           handleSave();
           fetchData();
-          return toast.error(data);
+          return toast.success(data);
         })
         .catch((error) => {
-            throw toast.error(error.response.data);
+          throw toast.error(error.response.data);
         }),
       {
         pending: "Đang xử lý",
@@ -554,7 +554,7 @@ function ListEmployeeComponent() {
           return toast.error(data);
         })
         .catch((error) => {
-            throw toast.error(error.response.data);
+          throw toast.error(error.response.data);
         }),
       {
         pending: "Đang xử lý",
@@ -598,7 +598,7 @@ function ListEmployeeComponent() {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleSave = () => {
@@ -670,7 +670,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -717,7 +717,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchData = () => {
@@ -765,6 +765,8 @@ function ListEmployeeComponent() {
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
             setOriginalEmail(data.email);
+            setPreviewImage(data.image)
+            setOriginalImage(data.image)
             resolve(data);
           })
           .catch((error) => {
@@ -795,11 +797,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-          {
-            value: null,
-            label: "Bỏ chọn",
-          },
-        ]
+        {
+          value: null,
+          label: "Bỏ chọn",
+        },
+      ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -1083,10 +1085,15 @@ function ListEmployeeComponent() {
                 <div className="modal-employee-box1">
                   <div className="modal-child-body1">
                     <div className="img-body1">
-                      <img src={avt} alt="" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                      />
+                      {previewImage && (
+                        <img src={previewImage} alt="Xem trước ảnh" />
+                      )}
                     </div>
-
-                    <Input type="file" onChange={handleImage} name="up"></Input>
                   </div>
 
                   <div className="modal-child-body2">
