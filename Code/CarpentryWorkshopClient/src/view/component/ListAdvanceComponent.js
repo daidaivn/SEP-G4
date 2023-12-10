@@ -7,8 +7,10 @@ import "../scss/responsive/responsive.scss";
 import { Input, Modal, Select } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { useEffect, useState } from "react";
-import { FetchDataAdvance } from "../../sevices/AdvanceService";
+import { FetchDataAdvance, GetAdvanceSalaryDetail } from "../../sevices/AdvanceService";
 import { formatMoney } from "../logicTime/formatAll";
+import ModalAdvance from "./componentAdvance/modalAdvance";
+import { toast } from "react-toastify";
 import {
   createYearOptions,
   getWeekRange,
@@ -18,6 +20,8 @@ import { da } from "date-fns/locale";
 const ListAdvanceComponent = () => {
   //modal Tạo ứng lương
   const [isModalOpenAdvance, setIsModalOpenAdvance] = useState(false);
+  const [handleCancel, setHandleCancel] = useState(true);
+
   const [action, setAction] = useState("");
 
   const showModalAdvance = () => {
@@ -26,9 +30,8 @@ const ListAdvanceComponent = () => {
   const handleOkAdvance = () => {
     setIsModalOpenAdvance(false);
   };
-  const handleCancelAdvance = () => {
-    setIsModalOpenAdvance(false);
-  };
+
+
   const yearOptions = createYearOptions();
   const [months, setMonths] = useState(null);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -39,6 +42,17 @@ const ListAdvanceComponent = () => {
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
   };
+  const initialInputAdvanceState = {
+    advanceSalaryID: "",
+    IdAdvanceString: "",
+    IdAdvance: "",
+    nameUserAdvance: "",
+    amountAdvance: "",
+    maxAdvance: "0",
+    date: "",
+    note: "",
+  };
+  const [inputAdvance, setInputAdvance] = useState(initialInputAdvanceState);
   console.log("months", months);
   console.log("selectedYear", selectedYear);
   const convertDobToISO = (dobstring) => {
@@ -54,6 +68,12 @@ const ListAdvanceComponent = () => {
     }
     return dobstring;
   };
+
+  const handleCancelAdvance = () => {
+    setIsModalOpenAdvance(false);
+    setInputAdvance(initialInputAdvanceState);
+  };
+
   const FetchAllAdvances = () => {
     FetchDataAdvance(inputSearch, months, selectedYear)
       .then((data) => {
@@ -63,6 +83,37 @@ const ListAdvanceComponent = () => {
         console.log("error", error);
       });
   };
+
+  const FetchAdvanceSalaryDetail = (id) => {
+    toast.promise(
+      new Promise((resolve) => {
+        GetAdvanceSalaryDetail(id)
+          .then((data) => {
+            showModalAdvance()
+            setInputAdvance({
+              advanceSalaryID: data.advanceSalaryID,
+              IdAdvanceString: data.employeeIdstring,
+              IdAdvance: data.employeeID,
+              nameUserAdvance: data.employeeName,
+              amountAdvance: data.amount,
+              maxAdvance: data.maxAdvance,
+              date: data.date,
+              note: data.note
+            });
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: 'Đang xử lý',
+        success: 'Thêm nhân viên thành công',
+        error: 'Lỗi thêm vào nhóm',
+      }
+    );
+  };
+
   useEffect(() => {
     FetchAllAdvances();
   }, [inputSearch, months, selectedYear]);
@@ -144,6 +195,7 @@ const ListAdvanceComponent = () => {
             className="ListWork"
             onClick={() => {
               showModalAdvance();
+              setAction("add")
             }}
           >
             <svg
@@ -196,7 +248,10 @@ const ListAdvanceComponent = () => {
                 <td>{advance.date}</td>
                 <td>{advance.note}</td>
                 <td>
-                  <p>
+                  <p onClick={() => {
+                    FetchAdvanceSalaryDetail(advance.advanceSalaryID)
+                    setAction("edit")
+                  }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="31"
@@ -217,50 +272,14 @@ const ListAdvanceComponent = () => {
         </table>
 
         {/* modal tạo ứng lương */}
-        <Modal
-          className="modal"
-          open={isModalOpenAdvance}
-          onOk={handleOkAdvance}
-          onCancel={handleCancelAdvance}
-        >
-          <div className="modal-add-holiday">
-            <div className="body">
-              <div className="head">
-                <h3>Tạo ứng lương</h3>
-              </div>
-            </div>
-            <div className="footer">
-              <div className="item-body">
-                <p>Nhập mã nhân viên:</p>
-                <input type="text" placeholder="Nhập mã nhân viên" />
-              </div>
-              <div className="item-body gray">
-                <p>Tên nhân viên:</p>
-                <input type="text" value="Nguyễn Văn A" />
-              </div>
-              <div className="item-body">
-                <p>Số tiền ứng:</p>
-                <input type="text" placeholder="Số ngày nghỉ" />
-              </div>
-              <div className="item-body">
-                <p>Ngày ứng:</p>
-                <input type="date" />
-              </div>
-              <div className="item-body">
-                <p>Lý do:</p>
-                <textarea placeholder="Lý do" />
-              </div>
-              <div className="btn-footer">
-                <div className="btn cancel" onClick={handleCancelAdvance}>
-                  Hủy bỏ
-                </div>
-                <div className="btn save" onClick={handleOkAdvance}>
-                  Lưu
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <ModalAdvance
+          isModalOpenAdvance={isModalOpenAdvance}
+          handleOkAdvance={handleOkAdvance}
+          handleCancelAdvance={handleCancelAdvance}
+          inputAdvance={inputAdvance}
+          setInputAdvance={setInputAdvance}
+          action={action}
+        />
       </div>
     </>
   );

@@ -29,7 +29,7 @@ function App() {
     department = JSON.parse(sessionStorage.getItem("department")) || [];
   }
   // Combine access checks
-  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Sự kiện");
+  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Phòng Kế toán");
 
   return (
     <div className="screen">
