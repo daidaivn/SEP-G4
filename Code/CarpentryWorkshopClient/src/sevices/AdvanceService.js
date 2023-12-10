@@ -10,4 +10,18 @@ const FetchDataAdvance = (inputText, month, year) =>{
   };
   return axios.post(`/CCMSapi/AdvanceSalary/GetAllAdvanceSalarys`,requestBody);
 }
-export {FetchDataAdvance};
+
+const GetEmployees = (id) => {
+  const employeeidstring = id;
+  return axios.get(
+    `/CCMSapi/AdvanceSalary/GetEmployees?employeeidstring=${employeeidstring}`
+  );
+};
+
+const GetAdvanceSalaryDetail = (id) => {
+  const AdvanceID = id;
+  return axios.get(
+    `/CCMSapi/AdvanceSalary/GetAdvanceSalaryDetail?advanceSalaryId=${AdvanceID}`
+  );
+};
+export {FetchDataAdvance, GetEmployees, GetAdvanceSalaryDetail};
