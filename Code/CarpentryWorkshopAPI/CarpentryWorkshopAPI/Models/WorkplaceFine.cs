@@ -1,4 +1,7 @@
-﻿namespace CarpentryWorkshopAPI.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace CarpentryWorkshopAPI.Models
 {
     public partial class WorkplaceFine
     {
