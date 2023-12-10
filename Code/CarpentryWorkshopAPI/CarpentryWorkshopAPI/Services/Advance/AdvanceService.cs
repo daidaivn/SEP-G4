@@ -101,11 +101,12 @@ namespace CarpentryWorkshopAPI.Services.Advance
             await _context.SaveChangesAsync();
             return "Create advance salary successful";
         }
-        public async Task<dynamic> UpdateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO)
+        public async Task<dynamic> UpdateAdvance([FromBody] UpdateAdvanceDTO updateAdvanceDTO)
         {
             DateTime date = DateTime.Now.Date;
-            var updateAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
+            var updateAdvance = _mapper.Map<AdvancesSalary>(updateAdvanceDTO);
             updateAdvance.Date = date;
+            updateAdvance.Status = true;
             _context.AdvancesSalaries.Update(updateAdvance);
             _context.SaveChanges();
             return "Update advance salary successful";
