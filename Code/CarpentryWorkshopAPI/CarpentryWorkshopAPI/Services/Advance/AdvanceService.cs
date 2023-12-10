@@ -99,9 +99,10 @@ namespace CarpentryWorkshopAPI.Services.Advance
             DateTime date = DateTime.Now.Date;
             var newAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
             newAdvance.Date = date;
+            newAdvance.Status = true;
             await _context.AdvancesSalaries.AddAsync(newAdvance);
             await _context.SaveChangesAsync();
-            return "Create advance salary successful";
+            return "Tạo tạm ứng thành công";
         }
         public async Task<dynamic> UpdateAdvance([FromBody] UpdateAdvanceDTO updateAdvanceDTO)
         {
@@ -111,7 +112,7 @@ namespace CarpentryWorkshopAPI.Services.Advance
             updateAdvance.Status = true;
             _context.AdvancesSalaries.Update(updateAdvance);
             _context.SaveChanges();
-            return "Update advance salary successful";
+            return "Chỉnh sửa tạm ứng thành công";
         }
     }
 }

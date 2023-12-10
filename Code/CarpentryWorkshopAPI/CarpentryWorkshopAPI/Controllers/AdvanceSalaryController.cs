@@ -50,6 +50,33 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(409, "Nhân viên đã tạm ứng trong tháng này");
                 }
+                var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                var endDate = startDate.AddMonths(1).AddDays(-1);
+                var holidays = await _context.HolidaysDetails
+                                     .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
+                                     .Select(h => h.Date.Value)
+                                     .ToListAsync();
+                var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                var employees = await _context.Employees
+                    .Include(x => x.HoursWorkDays)
+                    .Where(x => x.EmployeeId == eid)
+                    .FirstOrDefaultAsync();
+                if (employees != null)
+                {
+                    var employeeWorkingDay = employees.HoursWorkDays
+                        .Count(hwd => hwd.Day.HasValue &&
+                                      TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
+                                      !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
+
+                    if (employeeWorkingDay < 13)
+                    {
+                        return StatusCode(409, "Nhân viên này chưa đủ điều kiện được tạm ứng");
+                    }
+                }
+                else
+                {
+                    return StatusCode(409, "Không tìm thấy nhân viên này");
+                }
                 var employee = await _advanceService.GetEmployee(employeeidstring);
                 if (employee == null)
                 {
@@ -84,26 +111,26 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                var endDate = startDate.AddMonths(1).AddDays(-1);
-                var holidays = await _context.HolidaysDetails
-                                     .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
-                                     .Select(h => h.Date.Value)
-                                     .ToListAsync();
-                var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-                var employee = await _context.Employees
-                    .Include(x => x.HoursWorkDays)
-                    .Where(x => x.EmployeeId == createAdvanceDTO.EmployeeId)
-                    .FirstOrDefaultAsync();
-                var employeeWorkingDay = employee.HoursWorkDays
-                    .Count(hwd => hwd.Day.HasValue &&
-                                  TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
-                                  !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
+                //var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                //var endDate = startDate.AddMonths(1).AddDays(-1);
+                //var holidays = await _context.HolidaysDetails
+                //                     .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
+                //                     .Select(h => h.Date.Value)
+                //                     .ToListAsync();
+                //var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                //var employee = await _context.Employees
+                //    .Include(x => x.HoursWorkDays)
+                //    .Where(x => x.EmployeeId == createAdvanceDTO.EmployeeId)
+                //    .FirstOrDefaultAsync();
+                //var employeeWorkingDay = employee.HoursWorkDays
+                //    .Count(hwd => hwd.Day.HasValue &&
+                //                  TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
+                //                  !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
 
-                if (employeeWorkingDay < 13)
-                {
-                    return StatusCode(409, "Nhân viên này chưa đủ điều kiện được tạm ứng");
-                }
+                //if (employeeWorkingDay < 13)
+                //{
+                //    return StatusCode(409, "Nhân viên này chưa đủ điều kiện được tạm ứng");
+                //}
                 var newAd = await _advanceService.CreateAdvance(createAdvanceDTO);
                 if (newAd == null)
                 {
@@ -121,26 +148,26 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                var endDate = startDate.AddMonths(1).AddDays(-1);
-                var holidays = await _context.HolidaysDetails
-                                     .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
-                                     .Select(h => h.Date.Value)
-                                     .ToListAsync();
-                var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-                var employee = await _context.Employees
-                    .Include(x => x.HoursWorkDays)
-                    .Where(x => x.EmployeeId == updateAdvanceDTO.EmployeeId)
-                    .FirstOrDefaultAsync();
-                var employeeWorkingDay = employee.HoursWorkDays
-                    .Count(hwd => hwd.Day.HasValue &&
-                                  TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
-                                  !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
+                //var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                //var endDate = startDate.AddMonths(1).AddDays(-1);
+                //var holidays = await _context.HolidaysDetails
+                //                     .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
+                //                     .Select(h => h.Date.Value)
+                //                     .ToListAsync();
+                //var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                //var employee = await _context.Employees
+                //    .Include(x => x.HoursWorkDays)
+                //    .Where(x => x.EmployeeId == updateAdvanceDTO.EmployeeId)
+                //    .FirstOrDefaultAsync();
+                //var employeeWorkingDay = employee.HoursWorkDays
+                //    .Count(hwd => hwd.Day.HasValue &&
+                //                  TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).DayOfWeek != DayOfWeek.Sunday &&
+                //                  !holidays.Contains(TimeZoneInfo.ConvertTimeFromUtc(hwd.Day.Value, timeZone).Date));
 
-                if (employeeWorkingDay < 13)
-                {
-                    return StatusCode(409, "Nhân viên này chưa đủ điều kiện được tạm ứng");
-                }
+                //if (employeeWorkingDay < 13)
+                //{
+                //    return StatusCode(409, "Nhân viên này chưa đủ điều kiện được tạm ứng");
+                //}
                 var updateAd = await _advanceService.UpdateAdvance(updateAdvanceDTO);
                 if (updateAd == null)
                 {

@@ -106,39 +106,39 @@ const ModalAdvance = ({
         });
     };
 
-    function handleAmountInput(event) {
-        const enteredAmount = parseInt(event.target.value, 10);
-        const allowedAmount = parseInt(inputAdvance.maxAdvance, 10);
+  function handleAmountInput(event) {
+    const enteredAmount = parseInt(event.target.value, 10);
+    const allowedAmount = parseInt(inputAdvance.maxAdvance, 10);
 
-        if (enteredAmount > allowedAmount) {
-            setInputAdvance({
-                ...inputAdvance,
-                amountAdvance: allowedAmount.toString(),
-            });
-            toast.warn("Số tiền ứng đã vượt quá số tiền tối đa!");
-        } else {
-            setInputAdvance({
-                ...inputAdvance,
-                amountAdvance: event.target.value,
-            });
-        }
+    if (enteredAmount > allowedAmount) {
+      setInputAdvance({
+        ...inputAdvance,
+        amountAdvance: allowedAmount.toString(),
+      });
+      toast.warn("Số tiền ứng đã vượt quá số tiền tối đa!");
+    } else {
+      setInputAdvance({
+        ...inputAdvance,
+        amountAdvance: event.target.value,
+      });
     }
+  }
 
-    const convertDobToISO = (dobstring) => {
-        if (dobstring) {
-            const parts = dobstring.split("-");
-            if (parts.length === 3) {
-                const day = parts[0];
-                const month = parts[1];
-                const year = parts[2];
-                return `${year}-${month}-${day}`;
-            }
-            return dobstring;
-        }
-        return dobstring;
-    };
+  const convertDobToISO = (dobstring) => {
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
+    }
+    return dobstring;
+  };
 
-    console.log('inputAdvance', inputAdvance);
+  console.log("inputAdvance", inputAdvance);
 
     return (
         <Modal className="modal" open={isModalOpenAdvance} onOk={handleOkAdvance}>
