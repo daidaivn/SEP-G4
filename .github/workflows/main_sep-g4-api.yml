@@ -59,5 +59,5 @@ jobs:
         with:
           app-name: 'SEP-G4-API'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3392B16DA62F43ACBB5D1056224A5594 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_171BBEF6FA974DF693F9ECDEACDCB0B7 }}
           package: .
