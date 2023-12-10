@@ -149,16 +149,16 @@ function ListEmployeeComponent() {
   };
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
-      const updatedValue = {};
-      if (value) {
-        updatedValue.roleID = value.roleID;
-        updatedValue.departmentID = value.departmentID;
-      } else {
-        updatedValue.roleID = null;
-        updatedValue.departmentID = null;
-      }
-      return updatedValue;
-    })
+        const updatedValue = {};
+        if (value) {
+          updatedValue.roleID = value.roleID;
+          updatedValue.departmentID = value.departmentID;
+        } else {
+          updatedValue.roleID = null;
+          updatedValue.departmentID = null;
+        }
+        return updatedValue;
+      })
     : [];
 
   const handleEdit = () => {
@@ -509,8 +509,7 @@ function ListEmployeeComponent() {
         .catch((error) => {
           if (error.response && error.response.status === 409) {
             throw toast.error(error.response.data);
-          }
-          else {
+          } else {
             throw toast.error(error.response.data);
           }
         }),
@@ -557,8 +556,7 @@ function ListEmployeeComponent() {
         .catch((error) => {
           if (error.response && error.response.status === 409) {
             throw toast.error(error.response.data);
-          }
-          else {
+          } else {
             throw toast.error(error.response.data);
           }
         }),
@@ -605,7 +603,7 @@ function ListEmployeeComponent() {
         setCountries(data);
         console.log(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const handleSave = () => {
@@ -677,7 +675,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         setRoles(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -724,13 +722,13 @@ function ListEmployeeComponent() {
       .then((data) => {
         setDepartments(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const fetchData = () => {
     let isDataLoaded = false;
     let toastId = null;
-  
+
     fetchAllEmplyee()
       .then((data) => {
         isDataLoaded = true;
@@ -744,11 +742,11 @@ function ListEmployeeComponent() {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Lỗi không có nhân viên'); // Hiển thị thông báo lỗi ngay lập tức
+        toast.error("Lỗi không có nhân viên"); // Hiển thị thông báo lỗi ngay lập tức
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
   };
@@ -802,11 +800,11 @@ function ListEmployeeComponent() {
   const selectOptions = [
     ...(filterRole
       ? [
-        {
-          value: null,
-          label: "Bỏ chọn",
-        },
-      ]
+          {
+            value: null,
+            label: "Bỏ chọn",
+          },
+        ]
       : []),
     ...roles.map((role) => ({
       value: role.roleID,
@@ -1185,6 +1183,7 @@ function ListEmployeeComponent() {
                       <div className="box-child-employee1 div-detail">
                         <p>Địa chỉ: </p>
                         <textarea
+                          disabled
                           value={originalAddress}
                           onChange={(e) => setOriginalAddress(e.target.value)}
                         />
@@ -1351,6 +1350,7 @@ function ListEmployeeComponent() {
                       <div className="box-child-employee1 div-detail">
                         <p>Địa chỉ: </p>
                         <textarea
+                          disabled
                           value={
                             idDetail && idDetail.address
                               ? idDetail.address
