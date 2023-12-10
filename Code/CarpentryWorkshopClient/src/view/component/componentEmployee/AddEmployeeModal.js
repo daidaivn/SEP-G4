@@ -1,6 +1,7 @@
 import React from "react";
 import { Select, Input, Modal, Radio, Form, Switch } from "antd";
-import { useState } from "react";
+
+
 
 const AddEmployeeModal = ({
   avt,
@@ -223,7 +224,7 @@ const AddEmployeeModal = ({
                   Thoát
                 </button>
                 <button className="btn-edit btn-save" onClick={AddEmployee}>
-                  Thêm
+                  Lưu
                 </button>
               </div>
             </div>

@@ -140,11 +140,20 @@ function ListEmployeeComponent() {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalCIC(formattedValue);
   };
-  const handleImageUpload = (event) => {
+  console.log('originalImage',originalImage);
+  
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setPreviewImage(previewUrl);
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const base64Image = event.target.result;
+        setOriginalImage(base64Image); // Save base64 string to state
+  
+        const previewUrl = URL.createObjectURL(file);
+        setPreviewImage(previewUrl); // Update preview image
+      };
+      reader.readAsDataURL(file);
     }
   };
   const updatedRoleDepartmentsAdd = roleDepartmentValues

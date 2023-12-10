@@ -50,7 +50,7 @@ const Menucomponent = () => {
 
     navigate("/login");
   };
-  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Phòng Kế toán");
+  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Phòng kế toán");
 
   return (
     <div className="list-menu">

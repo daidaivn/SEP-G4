@@ -1378,3 +1378,23 @@ i .logo-responsive {
     color: #000;
   }
 }
+
+.image-container {
+  position: relative;
+}
+
+.image-container input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.image-container img {
+  display: block;
+}
+
+.image-container img:hover + input {
+  opacity: 1;
+}
