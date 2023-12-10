@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'Code/CarpentryWorkshopAPI/**'  
   workflow_dispatch:
 
 jobs:
@@ -25,20 +23,16 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: |
-          cd Code/CarpentryWorkshopAPI
-          dotnet build --configuration Release
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: |
-          cd Code/CarpentryWorkshopAPI
-          dotnet publish -c Release -o ./publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: Code/CarpentryWorkshopAPI/publish 
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -46,18 +40,18 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-
+      
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'SEP-G4-API'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3392B16DA62F43ACBB5D1056224A5594 }}
           package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_171BBEF6FA974DF693F9ECDEACDCB0B7 }}
