@@ -43,6 +43,7 @@ namespace CarpentryWorkshopAPI.Services.Advance
                 alladvance = alladvance.Where(x => x.Date.Value.Month == searchAdvanceDTO.Month);
             }
             var result = alladvance
+                .OrderByDescending(x => x.AdvanceSalaryId)
                 .Select(a => new
                 {
                     AdvanceSalaryID = a.AdvanceSalaryId,
