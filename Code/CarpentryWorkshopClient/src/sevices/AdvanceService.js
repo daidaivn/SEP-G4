@@ -1,7 +1,6 @@
 
 import axios from "./customize-axios"; // Import Axios instance
 
-
 const FetchDataAdvance = (inputText, month, year) => {
   const requestBody = {
     inputText: inputText,
