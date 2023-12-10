@@ -6,11 +6,15 @@ const GetTeamForSchedule = (id) => {
         `/CCMSapi/Team/GetTeamForSchedule?teamleaderid=${userEmployeeID}`
     );
 };
-const GetAllWorks = (id,) => {
-    const  employeeId = id
-    
+const GetAllWorks = (userEmployeeID ,selectedWeek, selectedYear) => {
+  const requestBody = {
+    id: userEmployeeID,
+    date: selectedWeek,
+    year: selectedYear,
+  };
+  console.log('requestBody',requestBody);
   return axios.post(
-    `/CCMSapi/Works/GetAllWorks?employeeId=${employeeId}`
+    `/CCMSapi/Works/GetAllWorks`,requestBody
   );
 };
 

@@ -181,7 +181,7 @@ const CalendarComponent = () => {
   const fetchAllWorks = () => {
     toast.promise(
       new Promise((resolve) => {
-        GetAllWorks(userEmployeeID)
+        GetAllWorks(userEmployeeID,selectedWeek,selectedYear)
           .then((data) => {
             resolve(data);
             setIsModalOpenListShift(true);

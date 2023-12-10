@@ -84,7 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var startDate = new DateTime(createAdvanceDTO.my.Year, createAdvanceDTO.my.Month, 1);
+                var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
                 var holidays = await _context.HolidaysDetails
                                      .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
@@ -117,11 +117,11 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateAdvanceSalary([FromBody] CreateAdvanceDTO createAdvanceDTO)
+        public async Task<IActionResult> UpdateAdvanceSalary([FromBody] UpdateAdvanceDTO updateAdvanceDTO)
         {
             try
             {
-                var startDate = new DateTime(createAdvanceDTO.my.Year, createAdvanceDTO.my.Month, 1);
+                var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
                 var holidays = await _context.HolidaysDetails
                                      .Where(h => h.Date.HasValue && h.Date.Value >= startDate && h.Date.Value <= endDate)
@@ -130,7 +130,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
                 var employee = await _context.Employees
                     .Include(x => x.HoursWorkDays)
-                    .Where(x => x.EmployeeId == createAdvanceDTO.EmployeeId)
+                    .Where(x => x.EmployeeId == updateAdvanceDTO.EmployeeId)
                     .FirstOrDefaultAsync();
                 var employeeWorkingDay = employee.HoursWorkDays
                     .Count(hwd => hwd.Day.HasValue &&
@@ -141,7 +141,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(409, "Nhân viên này chưa đủ điều kiện được tạm ứng");
                 }
-                var updateAd = await _advanceService.UpdateAdvance(createAdvanceDTO);
+                var updateAd = await _advanceService.UpdateAdvance(updateAdvanceDTO);
                 if (updateAd == null)
                 {
                     return BadRequest();

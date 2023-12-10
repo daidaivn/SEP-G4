@@ -10,6 +10,6 @@ namespace CarpentryWorkshopAPI.IServices.IAdvance
         Task<dynamic> GetAdvanceDetail(int advanceSalaryId);
         Task<dynamic> GetEmployee(string employeeidstring);
         Task<dynamic> CreateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO);
-        Task<dynamic> UpdateAdvance([FromBody] CreateAdvanceDTO createAdvanceDTO);
+        Task<dynamic> UpdateAdvance([FromBody] UpdateAdvanceDTO updateAdvanceDTO);
     }
 }
