@@ -13,6 +13,7 @@ function TableEmployee({
       <thead>
         <tr>
           <td>Ảnh</td>
+          <td>MSNV</td>
           <td>Họ và tên</td>
           <td>Giới tính</td>
           <td>Số điện thoại</td>
@@ -36,6 +37,7 @@ function TableEmployee({
               <td>
                 <img src={employee.image} alt="avt" />
               </td>
+              <td>{employee.employeeIdstring}</td>
               <td>{employee.fullName}</td>
               <td>{employee.gender}</td>
               <td>{employee.phoneNumber}</td>

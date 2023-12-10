@@ -1282,6 +1282,7 @@ i .logo-responsive {
     align-items: center;
     gap: 10px;
     align-self: stretch;
+
     button {
       border: none;
       background-color: unset;
@@ -1297,20 +1298,8 @@ i .logo-responsive {
       font-size: 22px;
       font-weight: 400;
     }
-    Input {
-      display: flex;
-      padding: 14px 24px;
-      align-items: center;
-      gap: 10px;
-      flex: 1 0 0;
-      border-radius: 60px;
-      border: 1px solid #e6e5ea;
-    }
+
     .capcha {
-      display: flex;
-      padding: 14px 24px;
-      align-items: center;
-      gap: 10px;
       flex: 1 0 0;
       color: #f90000;
       font-family: Noto Sans;
@@ -1368,5 +1357,24 @@ i .logo-responsive {
     border-radius: 60px;
     border: 1px solid #e6e5ea;
     background: #e9e9e9;
+  }
+}
+.item-child-change {
+  display: flex;
+  padding: 14px 24px;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 60px;
+  border: 1px solid #e6e5ea;
+  input {
+    padding: 5px;
+    flex: 1 0 0;
+    border-radius: 60px;
+    border: none;
+    font-family: Noto Sans;
+    font-size: 22px;
+    font-weight: 400;
+    color: #000;
   }
 }
