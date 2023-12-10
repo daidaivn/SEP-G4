@@ -459,21 +459,17 @@ function ListEmployeeComponent() {
       return;
     }
     toast.promise(
-      new Promise((resolve) => {
         EditRole(id, updatedRoleDepartments)
           .then((data) => {
-            resolve(data);
             handleSaveRole();
             fetchData();
+            return data;
           })
           .catch((error) => {
-            resolve(Promise.reject(error));
-          });
+            throw toast.error(error.response.data);
       }),
       {
-        pending: "Đang xử lý",
         success: "Thêm nhân viên thành công",
-        error: "Lỗi thêm vào nhóm",
       }
     );
   };
@@ -504,18 +500,13 @@ function ListEmployeeComponent() {
           handlelDetail(id);
           handleSave();
           fetchData();
-          return data;
+          return toast.error(data);
         })
         .catch((error) => {
-          if (error.response && error.response.status === 409) {
             throw toast.error(error.response.data);
-          } else {
-            throw toast.error(error.response.data);
-          }
         }),
       {
         pending: "Đang xử lý",
-        success: "Cập nhật nhân viên thành công",
       }
     );
   };
@@ -551,18 +542,13 @@ function ListEmployeeComponent() {
           AddContract(data);
           console.log(data);
 
-          return data;
+          return toast.error(data);
         })
         .catch((error) => {
-          if (error.response && error.response.status === 409) {
             throw toast.error(error.response.data);
-          } else {
-            throw toast.error(error.response.data);
-          }
         }),
       {
         pending: "Đang xử lý",
-        success: "Thêm nhân viên thành công",
       }
     );
   };
