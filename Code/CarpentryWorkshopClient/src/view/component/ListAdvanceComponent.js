@@ -86,30 +86,25 @@ const ListAdvanceComponent = () => {
 
   const FetchAdvanceSalaryDetail = (id) => {
     toast.promise(
-      new Promise((resolve) => {
-        GetAdvanceSalaryDetail(id)
-          .then((data) => {
-            showModalAdvance()
-            setInputAdvance({
-              advanceSalaryID: data.advanceSalaryID,
-              IdAdvanceString: data.employeeIdstring,
-              IdAdvance: data.employeeID,
-              nameUserAdvance: data.employeeName,
-              amountAdvance: data.amount,
-              maxAdvance: data.maxAdvance,
-              date: data.date,
-              note: data.note
-            });
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
+      GetAdvanceSalaryDetail(id)
+        .then((data) => {
+          showModalAdvance()
+          setInputAdvance({
+            advanceSalaryID: data.advanceSalaryID,
+            IdAdvanceString: data.employeeIdstring,
+            IdAdvance: data.employeeID,
+            nameUserAdvance: data.employeeName,
+            amountAdvance: data.amount,
+            maxAdvance: data.maxAdvance,
+            date: data.date,
+            note: data.note
           });
-      }),
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
         pending: 'Đang xử lý',
-        success: 'Thêm nhân viên thành công',
-        error: 'Lỗi thêm vào nhóm',
       }
     );
   };
@@ -195,7 +190,8 @@ const ListAdvanceComponent = () => {
             className="ListWork"
             onClick={() => {
               showModalAdvance();
-              setAction("add")
+              setAction("add");
+              setHandleCancel(true)
             }}
           >
             <svg
@@ -279,6 +275,12 @@ const ListAdvanceComponent = () => {
           inputAdvance={inputAdvance}
           setInputAdvance={setInputAdvance}
           action={action}
+          handleCancel={handleCancel}
+          setHandleCancel={setHandleCancel}
+          FetchAllAdvances={FetchAllAdvances}
+          inputSearch={inputSearch}
+          months={months}
+          selectedYear={selectedYear}
         />
       </div>
     </>
