@@ -27,6 +27,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("employeeId not valid");
                 }
+                if (string.IsNullOrEmpty(workInputDTO.Date))
+                {
+                    return BadRequest("data not valid");
+                }
+                string[] split = workInputDTO.Date.Split('-');
+                string start = split[0];
+                string end = split[1];
                 string role = "Nhóm trưởng";
                 var department = await _context.RolesEmployees
                     .Include(re => re.Role)
@@ -51,11 +58,13 @@ namespace CarpentryWorkshopAPI.Controllers
                  .Include(w => w.TeamWorks)
                  .ThenInclude(w => w.Team)
                  .ToListAsync();  // Use ToListAsync here to asynchronously fetch the data
-
-                if (workInputDTO.Month > 0)
-                {
-                    work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Month == workInputDTO.Month)).ToList();
-                }
+                var endDate = DateTime.ParseExact(end + "/" + workInputDTO.Year, "dd/MM/yyyy",
+                                  System.Globalization.CultureInfo.InvariantCulture);
+                var startDate = DateTime.ParseExact(start + "/" + workInputDTO.Year, "dd/MM/yyyy",
+                               System.Globalization.CultureInfo.InvariantCulture);
+                
+                work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value >= startDate && tw.Date.Value <= endDate)).ToList();
+                
                 if(workInputDTO.Year > 0)
                 {
                     work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Year == workInputDTO.Year)).ToList();
@@ -71,6 +80,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     WorkArea = w.WorkArea.WorkAreaName,
                     Department = department.DepartmentName,
                     Date = w.TeamWorks.Select(tw => tw.Date.Value.ToString("dd'-'MM'-'yyyy")).FirstOrDefault(),
+                    Status = w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date
+                                    ? "WorkNotStart"
+                                    : (w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date < DateTime.Now.Date
+                                        ? "WorkEnd"
+                                        : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
+                                            ? "Done"
+                                            : "NotDone")),
                 });
                 return Ok(result);
             }

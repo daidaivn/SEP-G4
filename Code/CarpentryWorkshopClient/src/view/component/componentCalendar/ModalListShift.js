@@ -52,7 +52,7 @@ const ModalListShift = ({
                     <p className="head2">Nhóm nhận việc</p>
                   </div>
                   <div className="head2-table head-fix">
-                    <p className="head2">Trạng thái công việc</p>
+                    <p className="head2">Thời gian công việc</p>
                   </div>
                   <div className="head3-table">
                     <p className="head3">Chi tiết</p>
@@ -76,7 +76,6 @@ const ModalListShift = ({
                           )}
                         </div>
                         <div className="item3">
-                          {work.status === "Done" ? (
                             <>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -102,95 +101,9 @@ const ModalListShift = ({
                                   </clipPath>
                                 </defs>
                               </svg>
-                              <p>Hoàn thành</p>
+                              <p>{work.date}</p>
                             </>
-                          ) : work.status === "WorkNotStart" ? (
-                            <>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="11"
-                                height="10"
-                                viewBox="0 0 11 10"
-                                fill="none"
-                              >
-                                <g clip-path="url(#clip0_1195_1030)">
-                                  <path
-                                    d="M5.83301 10C7.15909 10 8.43086 9.47322 9.36854 8.53553C10.3062 7.59785 10.833 6.32608 10.833 5C10.833 3.67392 10.3062 2.40215 9.36854 1.46447C8.43086 0.526784 7.15909 0 5.83301 0C4.50693 0 3.23516 0.526784 2.29747 1.46447C1.35979 2.40215 0.833008 3.67392 0.833008 5C0.833008 6.32608 1.35979 7.59785 2.29747 8.53553C3.23516 9.47322 4.50693 10 5.83301 10Z"
-                                    fill="#34C759"
-                                  />
-                                </g>
-                                <defs>
-                                  <clipPath id="clip0_1195_1030">
-                                    <rect
-                                      width="10"
-                                      height="10"
-                                      fill="white"
-                                      transform="translate(0.833008)"
-                                    />
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                              <p>Công việc chưa tới thời gian</p>
-                            </>
-                          ) : work.status === "WorkEnd" ? (
-                            <>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="11"
-                                height="10"
-                                viewBox="0 0 11 10"
-                                fill="none"
-                              >
-                                <g clip-path="url(#clip0_1195_1030)">
-                                  <path
-                                    d="M5.83301 10C7.15909 10 8.43086 9.47322 9.36854 8.53553C10.3062 7.59785 10.833 6.32608 10.833 5C10.833 3.67392 10.3062 2.40215 9.36854 1.46447C8.43086 0.526784 7.15909 0 5.83301 0C4.50693 0 3.23516 0.526784 2.29747 1.46447C1.35979 2.40215 0.833008 3.67392 0.833008 5C0.833008 6.32608 1.35979 7.59785 2.29747 8.53553C3.23516 9.47322 4.50693 10 5.83301 10Z"
-                                    fill="#34C759"
-                                  />
-                                </g>
-                                <defs>
-                                  <clipPath id="clip0_1195_1030">
-                                    <rect
-                                      width="10"
-                                      height="10"
-                                      fill="white"
-                                      transform="translate(0.833008)"
-                                    />
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                              <p>Công việc kết thúc</p>
-                            </>
-                          ) : (
-                            <>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="11"
-                                height="10"
-                                viewBox="0 0 11 10"
-                                fill="none"
-                              >
-                                <g clip-path="url(#clip0_1301_1041)">
-                                  <path
-                                    d="M5.83301 10C7.15909 10 8.43086 9.47322 9.36854 8.53553C10.3062 7.59785 10.833 6.32608 10.833 5C10.833 3.67392 10.3062 2.40215 9.36854 1.46447C8.43086 0.526784 7.15909 0 5.83301 0C4.50693 0 3.23516 0.526784 2.29747 1.46447C1.35979 2.40215 0.833008 3.67392 0.833008 5C0.833008 6.32608 1.35979 7.59785 2.29747 8.53553C3.23516 9.47322 4.50693 10 5.83301 10Z"
-                                    fill="#FC1E1E"
-                                  />
-                                </g>
-                                <defs>
-                                  <clipPath id="clip0_1301_1041">
-                                    <rect
-                                      width="10"
-                                      height="10"
-                                      fill="white"
-                                      transform="translate(0.833008)"
-                                    />
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                              <p>Chưa hoàn thành</p>
-                            </>
-                          )}
                         </div>
-
                         {work.status === "WorkNotStart" ? (
                           <div
                             className="item4"
