@@ -21,9 +21,11 @@ const ModalAdvance = ({
         toast.promise(
             CreateAdvanceSalary(inputAdvance)
                 .then((data) => {
+                    console.log('data',data);
+                    
                     handleCancelAdvance()
                     FetchAllAdvances()
-                    return toast.error(data.response.data);
+                    return toast.error(data);
                 })
                 .catch((error) => {
                     throw toast.error(error.response.data);
@@ -40,7 +42,8 @@ const ModalAdvance = ({
                 .then((data) => {
                     handleCancelAdvance()
                     FetchAllAdvances()
-                    return toast.error(data.response.data);
+                    console.log('data',data);
+                    return toast.error(data);
                 })
                 .catch((error) => {
                     throw toast.error(error.response.data);

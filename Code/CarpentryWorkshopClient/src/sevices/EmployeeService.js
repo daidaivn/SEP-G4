@@ -73,6 +73,8 @@ const CreateEmployee = (
   Email,
   Image
 ) => {
+  console.log('Imagesevice',Image);
+
   const requestBody = {
     lastName: originalLastName,
     firstName: originalFirstName,
