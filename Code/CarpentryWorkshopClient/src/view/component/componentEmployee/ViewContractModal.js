@@ -10,6 +10,7 @@ const ViewContractModal = ({
   contract,
   contractTypes,
   convertDobToISO,
+  originalOffice,
 }) => {
   return (
     <Modal
@@ -57,6 +58,28 @@ const ViewContractModal = ({
               </tr>
               <tr>
                 <div className="input-date">
+                  <Select
+                    className="select-input"
+                    value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
+                    style={{
+                      width: "100%",
+                    }}
+                    options={[
+                      {
+                        value: true,
+                        label: "Khối văn phòng",
+                      },
+                      {
+                        value: false,
+                        label: "Khối sản xuất",
+                      },
+                    ]
+                    }
+                  />
+                </div>
+              </tr>
+              <tr>
+                <div className="input-date">
                   <Input
                     className="select-input"
                     placeholder="Thời gian bắt đầu"
@@ -97,6 +120,7 @@ const ViewContractModal = ({
                   />
                 </div>
               </tr>
+              
               <tr>
                 <div className="input-date">
                   <Input

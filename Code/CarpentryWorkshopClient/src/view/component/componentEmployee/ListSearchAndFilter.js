@@ -87,7 +87,9 @@ const ListSearchAndFilter = ({
   setPreviewImage,
   handleContractAmountChange,
   amount,
-  setAmount
+  setAmount,
+  setOriginalOffice,
+  originalOffice
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -421,6 +423,8 @@ const ListSearchAndFilter = ({
         amount={amount}
         handleContractAmountChange={handleContractAmountChange}
         setAmount={setAmount}
+        originalOffice={originalOffice}
+        setOriginalOffice={setOriginalOffice}
       />
       <NewRoleDepartmentModal
         isModalOpenAddRole={isModalOpenAddRole}
@@ -457,6 +461,8 @@ const ListSearchAndFilter = ({
           amount={amount}
           handleContractAmountChange={handleContractAmountChange}
           setAmount={setAmount}
+          setOriginalOffice={setOriginalOffice}
+          originalOffice={originalOffice}
         />
       ) : (
         <ViewContractModal
@@ -468,6 +474,7 @@ const ListSearchAndFilter = ({
           contract={contract}
           contractTypes={contractTypes}
           convertDobToISO={convertDobToISO}
+          originalOffice={originalOffice}
         />
       )}
       <i className="icon-responsive icon-filter icon-add">

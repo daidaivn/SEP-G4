@@ -98,7 +98,6 @@ const CreateEmployee = (
   return axios.post(`/CCMSapi/Employee/CreateEmployee`, requestBody);
 };
 
-
 const GetAllCountry = () => {
   return axios.get(
     `/CCMSapi/Country/GetAllCountry`

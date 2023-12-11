@@ -67,6 +67,8 @@ function ListEmployeeComponent() {
   const [originalWage, SetOriginalWage] = useState("");
   const [originalDepartment, setOriginalDepartment] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
+  const [originalOffice, setOriginalOffice] = useState("");
+  
 
   //contract
   const [contractId, setContractID] = useState("");
@@ -86,6 +88,8 @@ function ListEmployeeComponent() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
+
+  
 
   const log = () => {
     console.log("id", id);
@@ -114,7 +118,11 @@ function ListEmployeeComponent() {
     console.log("contractStatus:", contractStatus);
     console.log("contractImage", contractImage);
     console.log("amount", amount);
+    console.log('originalOffice',originalOffice);
+    
   };
+
+  console.log('originalOffice',originalOffice);
 
   const addDependent = () => {
     if (updatedIdDetail && updatedIdDetail.roleDepartments) {
@@ -223,6 +231,7 @@ function ListEmployeeComponent() {
         setContractLink(data.linkDoc);
         setContractImage(data.image);
         setAmount(data.amount);
+        setOriginalOffice(data.isOffice)
       })
       .catch((error) => {
         console.log("error", error);
@@ -420,9 +429,7 @@ function ListEmployeeComponent() {
       errors.push("Vui lòng chọn thời gian bắt đầu hợp đồng không được phép.");
     }
 
-    if (!contractEndDate) {
-      errors.push("Vui lòng chọn thời gian kết thúc hợp đồng không được phép.");
-    }
+
     if (!contractType) {
       errors.push("Vui lòng chọn loại hợp đồng.");
     }
@@ -452,7 +459,8 @@ function ListEmployeeComponent() {
           contractType,
           contractCode,
           contractImage,
-          amount
+          amount,
+          originalOffice
         )
           .then((data) => {
             resolve(data);
@@ -583,7 +591,8 @@ function ListEmployeeComponent() {
           contractStatus,
           contractType,
           contractCode,
-          amount
+          amount,
+          originalOffice
         )
           .then((data) => {
             console.log("data", data);
@@ -659,6 +668,7 @@ function ListEmployeeComponent() {
     setContractStatus(true);
     setContractImage("");
     setAmount("");
+    setOriginalOffice("")
   };
 
   const handleCancelView = () => {
@@ -775,8 +785,8 @@ function ListEmployeeComponent() {
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
             setOriginalEmail(data.email);
-            // setPreviewImage(data.image)
-            // setOriginalImage(data.image)
+            setPreviewImage(data.image)
+            setOriginalImage(data.image)
             resolve(data);
           })
           .catch((error) => {
@@ -1034,6 +1044,8 @@ function ListEmployeeComponent() {
         amount={amount}
         handleContractAmountChange={handleContractAmountChange}
         setAmount={setAmount}
+        setOriginalOffice={setOriginalOffice}
+        originalOffice={originalOffice}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -1481,6 +1493,29 @@ function ListEmployeeComponent() {
                     value={contract.amount}
                   ></Input>
                 </tr>
+                <tr>
+                <div className="input-date">
+                  <Select
+                    className="select-input"
+                    value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
+                    style={{
+                      width: "100%",
+                    }}
+                    options={[
+                      {
+                        value: true,
+                        label: "Khối văn phòng",
+                      },
+                      {
+                        value: false,
+                        label: "Khối sản xuất",
+                      },
+                    ]
+                    }
+                    disabled
+                  />
+                </div>
+              </tr>
                 <tr>
                   <div className="input-date">
                     <Input
