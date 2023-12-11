@@ -2,38 +2,34 @@ import React from "react";
 import { Input, Modal, Select } from "antd";
 import { toast } from "react-toastify";
 import { CreateAndEditPersonalReward } from "../../../sevices/PayrollSevice";
-import { DetailID } from "../../../sevices/EmployeeService";
+import { DetailEmployeebasic } from "../../../sevices/EmployeeService";
 const RewardPersonal = ({
   isModalOpenRewardPersonal,
   handleChange,
-  employees,
   employeeID,
   bonusAmount,
   bonusReason,
   bonusName,
-  setEmployeesID,
-  employeeName,
   employeeInput,
   handleBonusAmountChange,
   setBonusName,
   setBonusReason,
-  setEmployeeName,
   setEmployeeInput,
   featchDataReward,
   resetPersonDetail,
   setIsModalOpenRewardPersonal,
   validateData,
 }) => {
-  
   const FetchEmployees = (id) => {
     toast.promise(
-      DetailID(id)
+      DetailEmployeebasic(id)
         .then((data) => {
           setEmployeeInput({
+            employeeStringID: data.employeeIdstring,
             employeeID: data.employeeId,
             employeeName: data.fullName,
           });
-          console.log('employeeInput', employeeInput);
+          console.log("employeeInput", employeeInput);
           return data;
         })
         .catch((error) => {
@@ -47,13 +43,13 @@ const RewardPersonal = ({
 
   function handleEmployee(event) {
     setEmployeeInput({
-        ...employeeInput,
-        employeeID: event.target.value,
+      ...employeeInput,
+      employeeStringID: event.target.value,
     });
     setTimeout(() => {
-        handleUserInput(event)
+      handleUserInput(event);
     }, 1000);
-}
+  }
 
   function handleUserInput(event) {
     if (event.type === "keydown" && event.key === "Enter") {
@@ -78,24 +74,22 @@ const RewardPersonal = ({
       return;
     }
     toast.promise(
-      new Promise((resolve) => {
-        CreateAndEditPersonalReward(
-          0,
-          employeeID,
-          bonusAmount,
-          bonusName,
-          bonusReason
-        )
-          .then((data) => {
-            resolve(data);
-            featchDataReward();
-            resetPersonDetail();
-            setIsModalOpenRewardPersonal(false);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
+      CreateAndEditPersonalReward(
+        0,
+        employeeInput.employeeID,
+        bonusAmount,
+        bonusName,
+        bonusReason
+      )
+        .then((data) => {
+          featchDataReward();
+          resetPersonDetail();
+          setIsModalOpenRewardPersonal(false);
+          return data;
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
         success: "add person success",
         pending: "Đang tải dữ liệu",
@@ -144,7 +138,7 @@ const RewardPersonal = ({
               <p>Mã nhân viên</p>
               <input
                 type="number"
-                value={employeeInput.employeeID}
+                value={employeeInput.employeeStringID}
                 placeholder="Nhập mã nhân viên"
                 onChange={handleEmployee}
                 onKeyDown={handleEmployee}
@@ -153,11 +147,7 @@ const RewardPersonal = ({
             </div>
             <div className="item-modal">
               <p>Tên nhân viên:</p>
-              <input
-                type="text"
-                value={employeeInput.employeeName}
-                disabled
-              />
+              <input type="text" value={employeeInput.employeeName} disabled />
             </div>
             <div className="item-modal">
               <p>Chi tiết thưởng</p>

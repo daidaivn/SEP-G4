@@ -22,6 +22,10 @@ const DetailID = (id) => {
   var eid = id;
   return axios.get(`/CCMSapi/Employee/GetEmployeeDetail?eid=${eid}`);
 };
+const DetailEmployeebasic = (id) => {
+  var eid = id;
+  return axios.get(`/CCMSapi/Employee/GetEmployeeDetailBasic?employeeidstring=${eid}`);
+};
 
 const UpdateEmployee = (
   id,
@@ -100,4 +104,4 @@ const GetAllCountry = () => {
     `/CCMSapi/Country/GetAllCountry`
   );
 };
-export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry, CreateEmployee};
+export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry, CreateEmployee, DetailEmployeebasic};

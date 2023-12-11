@@ -99,8 +99,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     WorkId = et.TeamWorks.Select(w => w.WorkId),
                 })
                 .FirstOrDefaultAsync();
-
-                if (teamId.TeamId == 0)
+                if(teamId == null)
+                {
+                    return NotFound("Không tìm thấy thông tin nhóm");
+                }
+                if (teamId.TeamId <= 0)
                 {
                     return NotFound("Không tìm thấy thông tin mã nhóm");
                 }
@@ -247,6 +250,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
                     Result = result
                 });
+               if(time == null)
+                {
+                    return Ok(Enumerable.Empty<object>());
+                }
+               
                 return time;
 
             }
@@ -379,6 +387,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
                     Result = result
                 });
+                if (time == null)
+                {
+                    return Ok(Enumerable.Empty<object>());
+                }
                 return time;
             }
         }
