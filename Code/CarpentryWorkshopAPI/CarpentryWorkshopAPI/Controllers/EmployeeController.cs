@@ -115,6 +115,51 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest("Lỗi dữ liệu");
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeDetailBasic(string employeeidstring)
+        {
+            try
+            {
+                string trimmedEmployeeIdString = employeeidstring.TrimStart('0');
+                int eid = Int32.Parse(trimmedEmployeeIdString);
+                var employeeDetailBasic = await _context.Employees
+                   .Where(emp => emp.EmployeeId == eid)
+                   .Include(emp => emp.RolesEmployees)
+                   .ThenInclude(roleemp => roleemp.Role)
+                   .ThenInclude(role => role.RolesEmployees)
+                   .Include(emp => emp.RolesEmployees)
+                   .ThenInclude(roleemp => roleemp.Department)
+                   .Select(emp => new 
+                   {
+                       EmployeeId = emp.EmployeeId,
+                       EmployeeIdstring = employeeidstring,
+                       FullName = emp.LastName + " " + emp.FirstName,
+                       Dobstring = emp.Dob.Value.ToString("dd'-'MM'-'yyyy"),
+                       Address = emp.Address,
+                       Cic = emp.Cic,
+                       Country = emp.Country.CountryName,
+                       CountryId = emp.CountryId,
+                       Genderstring = (bool)emp.Gender ? "Nam" : "Nữ",
+                       Gender = emp.Gender,
+                       PhoneNumber = emp.PhoneNumber,
+                       TaxId = emp.TaxId,
+                       Email = emp.Email,
+                       Status = emp.Status                   
+                   }).FirstOrDefaultAsync();
+
+                if (employeeDetailBasic == null)
+                {
+                    return NotFound("Không tìm thấy dữ liệu");
+                }
+
+                return Ok(employeeDetailBasic);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
         //[HttpGet("{eid}")]
         //public IActionResult EditEmployeeDetail(int eid)
         //{
