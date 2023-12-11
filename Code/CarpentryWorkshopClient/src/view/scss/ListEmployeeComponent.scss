@@ -296,11 +296,14 @@
   }
 }
 .img-body1 {
-  margin-top: 35px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
+  flex-direction: column-reverse;
+  img {
+    border-radius: 100%;
+  }
 }
 .modal-add-employee {
   display: flex;
@@ -942,6 +945,17 @@
       td:first-child {
         width: 92px;
         flex: unset;
+      }
+    }
+  }
+}
+.list-table {
+}
+tbody {
+  tr {
+    td {
+      img {
+        border-radius: 100%;
       }
     }
   }
