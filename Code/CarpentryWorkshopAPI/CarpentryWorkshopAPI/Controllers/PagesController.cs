@@ -32,7 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -47,7 +47,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -64,12 +64,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    return Ok("not have data");
+                    return Ok("Không có dữ liệu");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -82,7 +82,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var page = _context.Pages.Where(pa => pa.PageId == id).FirstOrDefault();
                 if (page == null)
                 {
-                    return NotFound("can not find page");
+                    return NotFound("Không thể tìm thấy trang");
                 }
                 if (page.Status == true)
                 {
@@ -94,11 +94,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 _context.Pages.Update(page);
                 _context.SaveChanges();
-                return Ok("sucessfully");
+                return Ok("Chuyển trạng thái trang thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }

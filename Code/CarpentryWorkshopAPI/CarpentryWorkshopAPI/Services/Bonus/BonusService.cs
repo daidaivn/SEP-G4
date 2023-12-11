@@ -26,7 +26,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 newPR.BonusDate = DateTime.Now.Date;
                 _context.BonusDetails.Add(newPR);
                 _context.SaveChanges();
-                return " Add personal reward successful";
+                return "Thêm thưởng cá nhân thành công";
             }
             else
             {
@@ -39,7 +39,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 : newPR.BonusDate;
                 _context.BonusDetails.Update(newPR);
                 _context.SaveChanges();
-                return " Update personal reward successful";
+                return "Chỉnh sửa thưởng cá nhân thành công";
             }
         }
         public dynamic CreateAndUpdateCompanyRerward(CompanyRewardDTO companyRewardDTO)
@@ -63,7 +63,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     _context.CompanyWideBonus.Add(newCR);
                     _context.SaveChanges();
                 }
-                return " Add company reward successful";
+                return "Thêm thưởng công ty thành công";
             }
             else
             {
@@ -88,7 +88,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     _context.CompanyWideBonus.Update(newCR);
                     _context.SaveChanges();
                 }
-                return " Update company reward successful";
+                return "Chỉnh sửa thưởng công ty thành công";
             }
         }
         public dynamic CreateAndUpdateSpecialOccasion(SpecialOccasionDTO specialOccasionDTO)
@@ -100,7 +100,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 newPR.OccasionDate = DateTime.Now.Date;
                 _context.SpecialOccasions.Add(newPR);
                 _context.SaveChanges();
-                return " Add SpecialOccasions";
+                return "Tạo hiếu hỉ thành công";
             }
             else
             {
@@ -114,7 +114,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 newPR.OccasionDate = parsedDate;
                 _context.SpecialOccasions.Update(newPR);
                 _context.SaveChanges();
-                return " SpecialOccasions";
+                return "Chỉnh sửa hiếu hỉ thành công";
             }
         }
         public dynamic GetAllReward(string date)

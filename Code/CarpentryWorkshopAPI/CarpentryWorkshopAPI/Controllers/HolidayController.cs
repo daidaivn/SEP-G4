@@ -60,13 +60,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (allholidays == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(allholidays);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -94,13 +94,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .FirstOrDefaultAsync();
                 if (holidays == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(holidays);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -130,12 +130,12 @@ namespace CarpentryWorkshopAPI.Controllers
                     startDate = startDate.AddDays(1);
                 }
 
-                return Ok("Create holiday detail successful");
+                return Ok("Tạo chi tiết ngày lễ thành công");
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -174,12 +174,12 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 _context.HolidaysDetails.UpdateRange(updateHolidayDetail);
                 await _context.SaveChangesAsync();
-                return Ok("Update holiday detail successful");
+                return Ok("Chỉnh sửa chi tiết ngày lễ thành công");
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         //[HttpPost]

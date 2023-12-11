@@ -57,7 +57,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
             return Ok(degree);
@@ -70,7 +70,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Degrees == null)
             {
-                return Problem("Entity set 'SEPG4CCMSContext.Degrees'  is null.");
+                return Problem("Dữ liệu rỗng");
             }
             Degree degree = new Degree()
             {
@@ -89,7 +89,7 @@ namespace CarpentryWorkshopAPI.Controllers
             _context.DegreesStatusHistories.Add(degreesStatusHistory);
             _context.SaveChanges();
 
-            return CreatedAtAction("GetDegree", new { id = degree.DegreeId }, degree);
+            return CreatedAtAction("Lấy thông tin bằng cấp", new { id = degree.DegreeId }, degree);
         }
 
         // DELETE: api/Degrees/5
@@ -98,13 +98,13 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Degrees == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             var degree = _context.Degrees.SingleOrDefault(de => de.DegreeId == id);
             DegreesStatusHistory degreesStatusHistory = new DegreesStatusHistory();
             if (degree == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             if (degree.Status == true)
             {
@@ -133,7 +133,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Degrees == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             var degree = _context.Degrees.ToList().AsQueryable();
             if (!string.IsNullOrEmpty(degreeDTO.DegreeName))

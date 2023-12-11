@@ -45,16 +45,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 var page = await _context.Pages.FindAsync(accessDTO.PageId);
                 if (role == null || page == null)
                 {
-                    return BadRequest("Invalid Role or Page ID");
+                    return BadRequest("Mã chức vụ hoặc mã trang không hợp lệ.");
                 }
 
                 role.Pages.Add(page);
                 await _context.SaveChangesAsync();
-                return Ok("sucess");
+                return Ok("Tạo thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -66,12 +66,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 var role = await _context.Roles.Include(r => r.Pages).FirstOrDefaultAsync(r => r.RoleId == roleId);
                 if (role == null)
                 {
-                    return NotFound("Role not found");
+                    return NotFound("Không tìm thấy chức vụ");
                 }
                 var page = role.Pages.FirstOrDefault(p => p.PageId == pageId);
                 if (page == null)
                 {
-                    return NotFound("Page not found in Role");
+                    return NotFound("Chức vụ này không có quyền ở trang này");
                 }
                 string admin = "Admin";
                 if (role.RoleName.ToLower().Equals(admin.ToLower())) 
@@ -87,7 +87,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }

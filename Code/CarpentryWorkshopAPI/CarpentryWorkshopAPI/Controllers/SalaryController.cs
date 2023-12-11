@@ -22,13 +22,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = await _salaryService.GetAllSalarys(getSalarysDTO);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -39,13 +39,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = await _salaryService.GetEmployeeSalaryDetail(employeeid, month, year);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -56,13 +56,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = await _salaryService.GetEmployeeAllowanceDetail(employeeid, month, year);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -73,13 +73,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = await _salaryService.GetEmployeeMainSalaryDetail(employeeid, month, year);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -90,13 +90,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = await _salaryService.GetEmployeeDeductionDetail(employeeid, month, year);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -107,13 +107,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var result = await _salaryService.GetEmployeeActualSalaryDetail(employeeid, month, year);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Lỗi dữ liệu");
                 }
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

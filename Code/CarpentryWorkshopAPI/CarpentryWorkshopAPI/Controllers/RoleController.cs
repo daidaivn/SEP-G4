@@ -46,13 +46,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     });
                 if (rolelist == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(rolelist);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -85,13 +85,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     }).FirstOrDefault();
                 if (rolelist == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(rolelist);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -119,13 +119,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     }).FirstOrDefault();
                 if (role == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(role);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "Role")]
@@ -150,11 +150,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Create role succesful");
+                return Ok("Tạo chức vụ thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "Role")]
@@ -166,7 +166,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var updaterole = _mapper.Map<Role>(roleDTO);
                 if (updaterole == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 _context.Roles.Update(updaterole);
                 RolesStatusHistory newhistory = new RolesStatusHistory
@@ -178,12 +178,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Update role successful");
+                return Ok("Chỉnh sửa chức vụ thành công");
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "Role")]
@@ -195,7 +195,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var changeroles = _context.Roles.ToList();
                 if (changeroles == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 foreach (var item in changeroles)
                 {
@@ -222,11 +222,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.RolesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Change roles status succesful");
+                return Ok("Chuyển trạng thái chức vụ thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "Role")]
@@ -269,7 +269,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -307,11 +307,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                 }
 
-                return Ok("Update successful");
+                return Ok("Chỉnh sửa chức vụ thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 

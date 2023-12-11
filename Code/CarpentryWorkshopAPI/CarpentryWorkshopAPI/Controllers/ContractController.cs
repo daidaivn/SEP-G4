@@ -55,7 +55,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -74,7 +74,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ToList();
                 if (ctbystart == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
 
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
@@ -83,7 +83,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -102,7 +102,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ToList();
                 if (ctbyend == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbyend);
                 return Ok(ctDTO);
@@ -110,7 +110,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -183,7 +183,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 newct.EndDate = newct.StartDate.Value.AddMonths((int)months);
                 if (newct == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 newct.EmployeeId = emp.EmployeeId;
                 newct.Status = true;
@@ -209,11 +209,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Create contract successfull");
+                return Ok("Tạo hợp đồng thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPut]
@@ -244,7 +244,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     updatect.EndDate = updatect.StartDate.Value.AddMonths((int)months);
                     if (updatect == null)
                     {
-                        return NotFound();
+                        return NotFound("Không tìm thấy dữ liệu");
                     }
                     _context.Contracts.Update(updatect);
                 }
@@ -257,11 +257,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Update contract successfull");
+                return Ok("Chỉnh sửa hợp đồng thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPut]
@@ -298,11 +298,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Change contract status successful");
+                return Ok("Chuyển trạng thái hợp đồng thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -319,7 +319,7 @@ namespace CarpentryWorkshopAPI.Controllers
                    .ToList();
                     if (ctbystart == null)
                     {
-                        return NotFound();
+                        return NotFound("Không tìm thấy dữ liệu");
                     }
                 }
                 var ctDTO = _mapper.Map<List<ContractDTO>>(ctbystart);
@@ -327,7 +327,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -370,7 +370,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }
