@@ -17,7 +17,8 @@ const CreateContract = (
   contractStatus,
   contractType,
   contractCode,
-  amount
+  amount,
+  originalOffice
 ) => {
   console.log(id);
   console.log(contractStartDate);
@@ -37,7 +38,8 @@ const CreateContract = (
     contractTypeID: Number(contractType),
     contractCode: contractCode,
     image: "",
-    amount: Number(amount)
+    amount: Number(amount),
+    isOffice: originalOffice
   };
 
   console.log('requestBody', requestBody);
@@ -58,7 +60,8 @@ const UpdateContract = (
   cTypeID,
   cCode,
   img,
-  amount
+  amount,
+  originalOffice
 ) => {
   const requestBody = {
     contractId: cId,
@@ -70,7 +73,8 @@ const UpdateContract = (
     contractTypeID: cTypeID,
     contractCode: cCode,
     image: img,
-    amount: Number(amount)
+    amount: Number(amount),
+    isOffice: originalOffice
   };
   console.log('data contract', requestBody);
 

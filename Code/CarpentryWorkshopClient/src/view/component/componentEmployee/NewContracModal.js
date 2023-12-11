@@ -22,7 +22,9 @@ const NewContractModal = ({
   contractTypes,
   amount,
   handleContractAmountChange,
-  setAmount
+  setAmount,
+  originalOffice,
+  setOriginalOffice
 }) => {
   return (
     <Modal
@@ -91,17 +93,24 @@ const NewContractModal = ({
                   />
                 </div>
                 <div className="input-date">
-                  <Input
+                  <Select
                     className="select-input"
-                    placeholder="Thời gian kết thúc" // Đã sửa đổi nội dung placeholder
-                    type="date"
+                    value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
                     style={{
                       width: "100%",
                     }}
-                    value={convertDobToISO(contractEndDate)} // Thêm dòng này để hiển thị giá trị từ state
-                    onChange={(e) =>
-                      setContractEndDate(convertDobToISO(e.target.value))
-                    } // Thêm dòng này để cập nhật giá trị vào state
+                    onChange={(value) => setOriginalOffice(value)} // Thêm dòng này để cập nhật giá trị vào state
+                    options={[
+                      {
+                        value: true,
+                        label: "Khối văn phòng",
+                      },
+                      {
+                        value: false,
+                        label: "Khối sản xuất",
+                      },
+                    ]
+                    }
                   />
                 </div>
               </tr>

@@ -35,7 +35,7 @@ function TableEmployee({
               }}
             >
               <td>
-                <img src={employee.image} alt="avt" />
+                <img src={employee.image} alt="avt" loading="lazy"/>
               </td>
               <td>{employee.employeeIdstring}</td>
               <td>{employee.fullName}</td>
