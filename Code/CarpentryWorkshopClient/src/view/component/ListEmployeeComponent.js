@@ -142,20 +142,30 @@ function ListEmployeeComponent() {
   };
   console.log('originalImage', originalImage);
 
+  
+
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
+      const fileSize = file.size; // Get file size in bytes
+      if (fileSize > 100 * 1024) { // Check if size is over 100kb
+        // Show toast notification
+        toast.error('Kích thước hình ảnh quá lớn. Vui lòng tải lên một hình ảnh nhỏ hơn 100kb.');
+        return; // Don't proceed with upload if size is over limit
+      }
+  
       const reader = new FileReader();
       reader.onload = async (event) => {
         const base64Image = event.target.result;
         setOriginalImage(base64Image); // Save base64 string to state
-
+  
         const previewUrl = URL.createObjectURL(file);
         setPreviewImage(previewUrl); // Update preview image
       };
       reader.readAsDataURL(file);
     }
   };
+
   const updatedRoleDepartmentsAdd = roleDepartmentValues
     ? roleDepartmentValues.map((value) => {
       const updatedValue = {};
@@ -765,8 +775,8 @@ function ListEmployeeComponent() {
             setOriginalStatus(data.status);
             SetOriginalWage(data.wave);
             setOriginalEmail(data.email);
-            setPreviewImage(data.image)
-            setOriginalImage(data.image)
+            // setPreviewImage(data.image)
+            // setOriginalImage(data.image)
             resolve(data);
           })
           .catch((error) => {
@@ -1266,6 +1276,7 @@ function ListEmployeeComponent() {
                       <img
                         src={idDetail && idDetail.image ? idDetail.image : avt}
                         alt="avt"
+                        loading="lazy"
                       />
                     </div>
                   </div>
