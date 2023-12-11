@@ -46,6 +46,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         ContractCode = c.ContractCode,
                         Image = c.Image,
                         Amount = c.Amount,
+                        IsOffice = c.IsOffice
                     }).FirstOrDefault();
                 if (employeecontract == null)
                 {
