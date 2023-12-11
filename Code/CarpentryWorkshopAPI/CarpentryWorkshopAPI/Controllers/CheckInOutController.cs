@@ -381,9 +381,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 });
                 return time;
             }
-
-
-
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()

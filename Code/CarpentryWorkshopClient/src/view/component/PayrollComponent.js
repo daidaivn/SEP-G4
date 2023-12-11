@@ -63,12 +63,19 @@ const PayrollComponent = () => {
   const [dataActualSalary, setActualSalary] = useState([]);
 
   //personal reward
+  const initialInputEmployeeState = {
+    employeeID: "",
+    employeeName: "",
+  };
   const [employees, setEmployees] = useState([]);
   const [employeeID, setEmployeesID] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
+  const [employeeInput, setEmployeeInput] = useState(initialInputEmployeeState);
   const [bonusAmount, setBonusAmount] = useState("");
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
+
 
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
@@ -288,6 +295,7 @@ const PayrollComponent = () => {
     setBonusReason("");
     setEmployeesID("");
     setBonusName("");
+    setEmployeeName("");
   };
 
   //modal Thưởng toàn thể công ty
@@ -562,10 +570,14 @@ const PayrollComponent = () => {
           bonusAmount={bonusAmount}
           bonusReason={bonusReason}
           bonusName={bonusName}
+          employeeName={employeeName}
+          employeeInput={employeeInput}
           setEmployeesID={setEmployeesID}
           handleBonusAmountChange={handleBonusAmountChange}
           setBonusName={setBonusName}
           setBonusReason={setBonusReason}
+          setEmployeeName={setEmployeeName}
+          setEmployeeInput={setEmployeeInput}
           resetPersonDetail={resetPersonDetail}
           featchDataReward={featchDataReward}
           setIsModalOpenRewardPersonal={setIsModalOpenRewardPersonal}
