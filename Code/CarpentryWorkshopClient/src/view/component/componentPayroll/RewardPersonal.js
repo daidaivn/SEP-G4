@@ -2,23 +2,71 @@ import React from "react";
 import { Input, Modal, Select } from "antd";
 import { toast } from "react-toastify";
 import { CreateAndEditPersonalReward } from "../../../sevices/PayrollSevice";
+import { DetailEmployeebasic } from "../../../sevices/EmployeeService";
 const RewardPersonal = ({
   isModalOpenRewardPersonal,
   handleChange,
-  employees,
   employeeID,
   bonusAmount,
   bonusReason,
   bonusName,
-  setEmployeesID,
+  employeeInput,
   handleBonusAmountChange,
   setBonusName,
   setBonusReason,
+  setEmployeeInput,
   featchDataReward,
   resetPersonDetail,
   setIsModalOpenRewardPersonal,
   validateData,
 }) => {
+  const FetchEmployees = (id) => {
+    toast.promise(
+      DetailEmployeebasic(id)
+        .then((data) => {
+          setEmployeeInput({
+            employeeStringID: data.employeeIdstring,
+            employeeID: data.employeeId,
+            employeeName: data.fullName,
+          });
+          console.log("employeeInput", employeeInput);
+          return data;
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
+      {
+        pending: "Đang xử lý",
+      }
+    );
+  };
+
+  function handleEmployee(event) {
+    setEmployeeInput({
+      ...employeeInput,
+      employeeStringID: event.target.value,
+    });
+    setTimeout(() => {
+      handleUserInput(event);
+    }, 1000);
+  }
+
+  function handleUserInput(event) {
+    if (event.type === "keydown" && event.key === "Enter") {
+      if (event.target.value.trim() && isModalOpenRewardPersonal === true) {
+        FetchEmployees(event.target.value);
+      } else {
+        toast.error("Vui lòng nhập mã nhân viên!");
+      }
+    } else if (event.type === "blur") {
+      if (event.target.value.trim() && isModalOpenRewardPersonal === true) {
+        FetchEmployees(event.target.value);
+      } else {
+        toast.error("Vui lòng nhập mã nhân viên!");
+      }
+    }
+  }
+
   const handleOkRewardPersonal = () => {
     const isDataValid = validateData();
 
@@ -26,27 +74,30 @@ const RewardPersonal = ({
       return;
     }
     toast.promise(
-      new Promise((resolve) => {
-        CreateAndEditPersonalReward(0,employeeID,bonusAmount,bonusName,bonusReason)
-          .then((data) => {
-            resolve(data);
-            featchDataReward();
-            resetPersonDetail();
-            setIsModalOpenRewardPersonal(false);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
+      CreateAndEditPersonalReward(
+        0,
+        employeeInput.employeeID,
+        bonusAmount,
+        bonusName,
+        bonusReason
+      )
+        .then((data) => {
+          featchDataReward();
+          resetPersonDetail();
+          setIsModalOpenRewardPersonal(false);
+          return data;
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
-        success:"add person success",
+        success: "add person success",
         pending: "Đang tải dữ liệu",
         error: "Lỗi tải dữ liệu",
       }
     );
-    
   };
-  
+
   const handleCancelRewardPersonal = () => {
     resetPersonDetail();
     setIsModalOpenRewardPersonal(false);
@@ -67,25 +118,36 @@ const RewardPersonal = ({
           <div className="body-modal">
             <div className="item-modal">
               <p>Loại thưởng</p>
-              <Input type="text" placeholder="Sản xuất chân ghế" value={bonusName} onChange={(e)=> setBonusName(e.target.value)}></Input>
+              <Input
+                type="text"
+                placeholder="Sản xuất chân ghế"
+                value={bonusName}
+                onChange={(e) => setBonusName(e.target.value)}
+              ></Input>
             </div>
             <div className="item-modal">
               <p>Số tiền thưởng:</p>
-              <Input type="text" placeholder="500.000" value={bonusAmount} onChange={handleBonusAmountChange}></Input>
+              <Input
+                type="text"
+                placeholder="500.000"
+                value={bonusAmount}
+                onChange={handleBonusAmountChange}
+              ></Input>
             </div>
             <div className="item-modal">
-              <p>Chọn nhân viên</p>
-              <Select
-                style={{
-                  width: 120,
-                }}
-                value={employeeID}
-                onChange={(value)=> setEmployeesID(value)}
-                options={employees.map((employee) => ({
-                  value: employee.employeeID, 
-                  label: employee.fullName, 
-                }))}
+              <p>Mã nhân viên</p>
+              <input
+                type="number"
+                value={employeeInput.employeeStringID}
+                placeholder="Nhập mã nhân viên"
+                onChange={handleEmployee}
+                onKeyDown={handleEmployee}
+                onBlur={handleEmployee}
               />
+            </div>
+            <div className="item-modal">
+              <p>Tên nhân viên:</p>
+              <input type="text" value={employeeInput.employeeName} disabled />
             </div>
             <div className="item-modal">
               <p>Chi tiết thưởng</p>
@@ -93,7 +155,7 @@ const RewardPersonal = ({
                 type="text"
                 placeholder="Ví lý do gì đấy nên được thưởng các quyền lợi"
                 value={bonusReason}
-                onChange={(e)=>setBonusReason(e.target.value)}
+                onChange={(e) => setBonusReason(e.target.value)}
               ></Input>
             </div>
 

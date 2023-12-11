@@ -63,12 +63,20 @@ const PayrollComponent = () => {
   const [dataActualSalary, setActualSalary] = useState([]);
 
   //personal reward
+  const initialInputEmployeeState = {
+    employeeStringID: "",
+    employeeID: "",
+    employeeName: "",
+  };
   const [employees, setEmployees] = useState([]);
   const [employeeID, setEmployeesID] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
+  const [employeeInput, setEmployeeInput] = useState(initialInputEmployeeState);
   const [bonusAmount, setBonusAmount] = useState("");
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
+
 
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
@@ -255,32 +263,12 @@ const PayrollComponent = () => {
   const handleCancelRewardCompany = () => {
     setIsModalOpenRewardCompany(false);
   };
-  const fetchEmployeeData = () => {
-    toast.promise(
-      new Promise((resolve) => {
-        fetchAllEmplyee()
-          .then((data) => {
-            setEmployees(data);
-            resolve(data);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
-      {
-        pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
-      }
-    );
-  };
   //modal Thưởng cá nhân
   const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
     false
   );
   const showModalRewardPersonal = () => {
-    fetchEmployeeData();
     setIsModalOpenRewardPersonal(true);
-    console.log("employee", employees);
   };
 
   const resetPersonDetail = () => {
@@ -288,6 +276,8 @@ const PayrollComponent = () => {
     setBonusReason("");
     setEmployeesID("");
     setBonusName("");
+    setEmployeeName("");
+    setEmployeeInput(initialInputEmployeeState);
   };
 
   //modal Thưởng toàn thể công ty
@@ -372,7 +362,6 @@ const PayrollComponent = () => {
 
   const [isModalOpenHoliday, setIsModalOpenHoliday] = useState(false);
   const showModalHoliday = () => {
-    fetchEmployeeData();
     setIsModalOpenHoliday(true);
   };
 
@@ -557,15 +546,15 @@ const PayrollComponent = () => {
         <RewardPersonal
           isModalOpenRewardPersonal={isModalOpenRewardPersonal}
           handleChange={handleChange}
-          employees={employees}
           employeeID={employeeID}
           bonusAmount={bonusAmount}
           bonusReason={bonusReason}
           bonusName={bonusName}
-          setEmployeesID={setEmployeesID}
+          employeeInput={employeeInput}
           handleBonusAmountChange={handleBonusAmountChange}
           setBonusName={setBonusName}
           setBonusReason={setBonusReason}
+          setEmployeeInput={setEmployeeInput}
           resetPersonDetail={resetPersonDetail}
           featchDataReward={featchDataReward}
           setIsModalOpenRewardPersonal={setIsModalOpenRewardPersonal}
@@ -574,12 +563,10 @@ const PayrollComponent = () => {
         <Holiday
           isModalOpenHoliday={isModalOpenHoliday}
           handleChange={handleChange}
-          employees={employees}
           employeeID={employeeID}
           bonusAmount={bonusAmount}
           bonusReason={bonusReason}
           bonusName={bonusName}
-          setEmployeesID={setEmployeesID}
           handleBonusAmountChange={handleBonusAmountChange}
           setBonusName={setBonusName}
           setBonusReason={setBonusReason}
@@ -587,6 +574,8 @@ const PayrollComponent = () => {
           featchDataReward={featchDataReward}
           setIsModalOpenHoliday={setIsModalOpenHoliday}
           validateData={validateData}
+          employeeInput={employeeInput}
+          setEmployeeInput={setEmployeeInput}
         />
         {/* Modal Sửa tên thưởng */}
         <Modal

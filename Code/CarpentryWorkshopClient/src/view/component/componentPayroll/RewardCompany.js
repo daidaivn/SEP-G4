@@ -12,6 +12,7 @@ const RewardCompany = ({
   date,
   setDate,
 }) => {
+  let tableIndex = 0;
   return (
     <>
       {/* Modal Thưởng công ty */}
@@ -71,7 +72,7 @@ const RewardCompany = ({
                     reward.specialOcationList.map((item, index) => (
                       // Render individual items here
                       <div key={index} className="item-reward">
-                        <p className="stt">{index + 1}</p>
+                        <p className="stt">{tableIndex = tableIndex + 1}</p>
                         <div className="child-reward">
                           <p>{item.occasionType}</p>
                         </div>
@@ -90,7 +91,7 @@ const RewardCompany = ({
                     reward.companyRewardList.map((item, index) => (
                       // Render individual items here
                       <div key={index} className="item-reward">
-                        <p className="stt">{index + 1}</p>
+                        <p className="stt">{tableIndex = tableIndex + 1}</p>
                         <div className="child-reward">
                           <p>{item.bonusName}</p>
                         </div>
@@ -109,7 +110,7 @@ const RewardCompany = ({
                     reward.personalRewardList.map((item, index) => (
                       // Render individual items here
                       <div key={index} className="item-reward">
-                        <p className="stt">{index + 1}</p>
+                        <p className="stt">{tableIndex = tableIndex + 1}</p>
                         <div className="child-reward">
                           <p>{item.bonusName}</p>
                         </div>
