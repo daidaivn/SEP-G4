@@ -13,5 +13,6 @@
         public string? ContractCode { get; set; }
         public string? Image { get; set; }
         public decimal? Amount { get; set; }
+        public bool? IsOffice { get; set; }
     }
 }
