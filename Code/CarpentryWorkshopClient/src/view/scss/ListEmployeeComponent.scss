@@ -182,6 +182,19 @@
   flex: 1 0 0;
   align-self: stretch;
   background: #f9faf5;
+  .modal-employee-box1 {
+    .modal-child-body1 {
+      .img-body1 {
+        img {
+          height: 280px;
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+}
+.modal-child-body1 Input {
+  margin-bottom: 20px;
 }
 .modal-employee-box1 {
   display: flex;
@@ -296,11 +309,14 @@
   }
 }
 .img-body1 {
-  margin-top: 35px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
+  flex-direction: column-reverse;
+  img {
+    border-radius: 100%;
+  }
 }
 .modal-add-employee {
   display: flex;
@@ -942,6 +958,17 @@
       td:first-child {
         width: 92px;
         flex: unset;
+      }
+    }
+  }
+}
+.list-table {
+}
+tbody {
+  tr {
+    td {
+      img {
+        border-radius: 100%;
       }
     }
   }
