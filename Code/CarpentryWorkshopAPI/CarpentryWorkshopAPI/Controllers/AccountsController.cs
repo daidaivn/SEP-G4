@@ -42,7 +42,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
             if (user == null)
             {
-                return Unauthorized("Sai rồi");
+                return Unauthorized("Tài khoản không đúng.");
             }
             HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
             var jwtSection = _configuration.GetSection("JWT");
@@ -159,13 +159,13 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 // Token validation failed
                 Console.WriteLine($"Token validation failed: {ex.Message}");
-                return BadRequest("Logout failed");
+                return BadRequest("Đăng xuất thất bại.");
             }
 
             // Here, you can implement additional logic to invalidate the token (e.g., blacklist)
             // For simplicity, we assume that removing the claim is sufficient for "logout"
 
-            return Ok("Logout successful.");
+            return Ok("Đăng xuất thành công.");
         }
 
 
@@ -176,7 +176,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var acc = _context.UserAccounts.Where(us => us.UserName == request.UserName).SingleOrDefault();
             if (acc != null)
             {
-                return BadRequest("acc already have");
+                return BadRequest("Tài khoản này đã tồn tại.");
             }
             if (!ModelState.IsValid)
             {
@@ -198,7 +198,7 @@ namespace CarpentryWorkshopAPI.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync();
-            return Ok("Logout successful.");
+            return Ok("Đăng xuất thành công");
         }
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(string emailInput)
@@ -207,12 +207,12 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (string.IsNullOrEmpty(emailInput))
                 {
-                    return BadRequest("not have data");
+                    return BadRequest("Vui lòng nhập thông tin");
                 }
                 var account = await _context.UserAccounts.Include(ua => ua.Employee).Where(ua => ua.Employee.Email == emailInput).FirstOrDefaultAsync();
                 if (account == null)
                 {
-                    return BadRequest("not have this account");
+                    return BadRequest("Tài khoản này không tồn tại");
                 }
                 var user = account.UserName;
                 var pass = _accountService.GenerateRandomString(8);
@@ -240,11 +240,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-                return Ok("forgot success");
+                return Ok("Thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -256,7 +256,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var account = await _context.UserAccounts.Include(ua => ua.Employee).Where(ua => ua.EmployeeId == loginRequest.Id).FirstOrDefaultAsync();
                 if (account == null)
                 {
-                    return BadRequest("useraname or password not right");
+                    return BadRequest("Tên đăng nhập hoặc mật khẩu không đúng");
                 }
 
                 var user = loginRequest.UserName;
@@ -286,11 +286,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-                return Ok("change success");
+                return Ok("Thay đổi thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }

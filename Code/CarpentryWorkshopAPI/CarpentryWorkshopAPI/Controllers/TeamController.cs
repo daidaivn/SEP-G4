@@ -63,7 +63,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -98,11 +98,11 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 }
                 _context.SaveChanges();
-                return Ok("Add new team member successful");
+                return Ok("Thêm thành viên nhóm thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi thêm thành viên nhóm");
             }
         }
         [HttpPost]
@@ -125,12 +125,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 dtm.EndDate = DateTime.Now;
                 _context.EmployeeTeams.Update(dtm);
                 _context.SaveChanges();
-                return Ok("Delete teammenber successful");
+                return Ok("Xóa thành viên nhóm thành công");
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi xóa thành viên nhóm");
             }
         }
         [HttpPost]
@@ -171,11 +171,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.HistoryChangeTeams.Add(history);
                 _context.SaveChanges();
-                return Ok("Create team successful");
+                return Ok("Tạo nhóm mới thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi tạo nhóm mới");
             }
         }
         [HttpPost]
@@ -214,7 +214,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -250,7 +250,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -285,7 +285,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -320,7 +320,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -371,7 +371,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -403,7 +403,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -454,11 +454,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.HistoryChangeTeams.Add(history);
                 _context.SaveChanges();
-                return Ok("Change member for team successful");
+                return Ok("Đổi thành viên nhóm thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi đổi thành viên nhóm");
             }
         }
         [HttpGet("{teamId}/members")]
@@ -517,7 +517,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -554,7 +554,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -601,16 +601,16 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.EmployeeTeams.Add(changeTeamNew);
                     _context.SaveChanges();
 
-                    return Ok("success");
+                    return Ok("Chuyển trưởng ca thành công");
                 }
                 else
                 {
-                    return BadRequest("err");
+                    return BadRequest("Lỗi chuyển trưởng ca");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPut]
@@ -656,17 +656,17 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.EmployeeTeams.Add(changeTeamNew);
                     _context.SaveChanges();
 
-                    return Ok("success");
+                    return Ok("Chuyển phó ca thành công");
                 }
                 else
                 {
-                    return BadRequest("err");
+                    return BadRequest("Lỗi chuyển phó ca");
                 }
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -682,11 +682,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 exteam.TeamName = newName;
                 _context.SaveChanges();
-                return Ok("Change team name successful");
+                return Ok("Đổi tên nhóm thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -763,7 +763,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(409, "Internal Server Error");
+                return StatusCode(409, "Lỗi máy chủ");
             }
         }
         [HttpPost]
@@ -773,7 +773,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (scheduleDataInputDTO == null)
                 {
-                    return BadRequest("not have data to");
+                    return BadRequest("Không tìm thấy dữ liệu");
                 }
                 string[] split = scheduleDataInputDTO.Date.Split('-');
                 string start = split[0];
@@ -786,7 +786,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }).FirstOrDefault();
                 if (department == null)
                 {
-                    return NotFound("notHaveDepartment");
+                    return NotFound("Không có phòng ban này");
                 }
                 string searchTerm = "";
                 if (!string.IsNullOrEmpty(scheduleDataInputDTO.InputText))
@@ -803,7 +803,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToListAsync();
                 if (teams.Count < 0)
                 {
-                    return BadRequest("notfound");
+                    return BadRequest("Không tìm thấy dữ liệu");
                 }
 
                 var teamSearchs = teams.Where(t => t.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm));
@@ -865,7 +865,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(409, "Internal Server Error");
+                return StatusCode(409, "Lỗi máy chủ");
             }
         }
 

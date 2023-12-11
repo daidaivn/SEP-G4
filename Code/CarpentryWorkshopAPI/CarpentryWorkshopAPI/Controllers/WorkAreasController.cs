@@ -32,7 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -46,11 +46,11 @@ namespace CarpentryWorkshopAPI.Controllers
                     var dto = _mapper.Map<WorkArea>(workAreasDTO);
                     if (dto == null)
                     {
-                        return BadRequest();
+                        return BadRequest("Lỗi dữ liệu");
                     }
                     _context.WorkAreas.Add(dto);
                     _context.SaveChanges();
-                    return Ok("Create work area successful");
+                    return Ok("Tạo phân khu thành công");
                 }
                 else
                 {
@@ -61,13 +61,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     _context.WorkAreas.Update(dto);
                     _context.SaveChanges();
-                    return Ok("Update work area successful");
+                    return Ok("Chỉnh sửa phân khu thành công");
                 }
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -81,13 +81,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (filter == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(filter);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

@@ -25,11 +25,11 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (workInputDTO.Id <= 0)
                 {
-                    return BadRequest("employeeId not valid");
+                    return BadRequest("Mã nhân viên không hợp lệ");
                 }
                 if (string.IsNullOrEmpty(workInputDTO.Date))
                 {
-                    return BadRequest("data not valid");
+                    return BadRequest("Dữ liệu không hợp lệ");
                 }
                 string[] split = workInputDTO.Date.Split('-');
                 string start = split[0];
@@ -48,7 +48,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (department == null)
                 {
-                    return NotFound("notHaveDepartment");
+                    return NotFound("Không tìm thấy phòng ban");
                 }
 
                 var work = await _context.Works
@@ -92,7 +92,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Lỗi máy chủ");
             }
         }
 
@@ -103,7 +103,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (wId <= 0)
                 {
-                    return BadRequest("wid not valid");
+                    return BadRequest("Mã công việc không hợp lệ");
                 }
                 var work = _context.Works.Where(w => w.WorkId == wId).Include(w => w.UniCost).Include(w => w.WorkArea).Include(w => w.TeamWorks).ThenInclude(w => w.Team)
                     .Select(w => new
@@ -129,13 +129,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     }).FirstOrDefault();
                 if (work == null)
                 {
-                    return NotFound("Không tồn tại workId");
+                    return NotFound("Mã công việc không tồn tại");
                 }
                 return Ok(work);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Lỗi máy chủ");
             }
 
         }
@@ -146,7 +146,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (teamId <= 0 || employeeId <= 0)
                 {
-                    return BadRequest("data not valid");
+                    return BadRequest("Dữ liệu không hợp lệ");
                 }
                 var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
                 {
@@ -155,7 +155,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }).FirstOrDefault();
                 if (department == null)
                 {
-                    return NotFound("notHaveDepartment");
+                    return NotFound("Không tìm thấy phòng ban");
                 }
                 var worklSchedule = _context.WorkSchedules.Include(ws => ws.ShiftType).Where(ws => ws.StartDate <= DateTime.Now && ws.EndDate == null && ws.TeamId == teamId)
                     .Select(ws => new
@@ -183,7 +183,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Lỗi máy chủ");
             }
 
         }
@@ -237,7 +237,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }).FirstOrDefault();
                 if (department == null)
                 {
-                    return NotFound("notHaveDepartment");
+                    return NotFound("Không tìm thấy phòng ban");
                 }
                 var work = _mapper.Map<Work>(workDTO);
                 work.StartDate = !string.IsNullOrEmpty(workDTO.StartDateString) ? DateTime.ParseExact(workDTO.StartDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture) : null;
@@ -247,7 +247,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
                 if (string.IsNullOrEmpty(workDTO.DateString))
                 {
-                    return BadRequest("date not right format");
+                    return BadRequest("Định dạng ngày không hợp lệ");
                 }
                 TeamWork newTw = new TeamWork()
                 {
@@ -259,12 +259,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.TeamWorks.Add(newTw);
                 _context.SaveChanges();
-                return Ok("add success");
+                return Ok("Thêm công việc thành công");
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPut]
@@ -275,7 +275,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var work = _context.Works.FirstOrDefault(w => w.WorkId == workDTO.WorkId);
                 if (work == null)
                 {
-                    return NotFound("can not find work to update");
+                    return NotFound("Không tìm thấy công việc");
                 }
                 work.WorkAreaId = workDTO.WorkAreaId > 0 ? workDTO.WorkAreaId : work.WorkAreaId;
                 work.WorkName = !string.IsNullOrEmpty(workDTO.WorkName) ? workDTO.WorkName : work.WorkName;
@@ -287,11 +287,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 work.Note = !string.IsNullOrEmpty(workDTO.Note) ? workDTO.Note : work.Note;
                 _context.Works.Update(work);
                 _context.SaveChanges();
-                return Ok("add success");
+                return Ok("Chỉnh sửa công việc thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 

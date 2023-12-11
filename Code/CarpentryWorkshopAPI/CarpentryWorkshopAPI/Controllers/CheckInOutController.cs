@@ -102,7 +102,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (teamId.TeamId == 0)
                 {
-                    return NotFound("Team Leader not found");
+                    return NotFound("Không tìm thấy thông tin mã nhóm");
                 }
                 DateTime DateIn = DateTime.Now.Date.Add(teamId.TimeIn ?? TimeSpan.Zero);
                 DateTime DateOut = DateTime.Now.Date.Add(teamId.Timeout ?? TimeSpan.Zero);
@@ -116,7 +116,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToListAsync();
                 if (employees.Count() == 0)
                 {
-                    return NotFound("No employees found in the team with EndDate == null");
+                    return NotFound("Không tìm thấy nhân viên trong nhóm có ngày kết thúc trống");
                 }
                 var result = new List<object>();
                 var time = new List<object>();
@@ -255,7 +255,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Where(e => e.Role.RoleName != "Bảo vệ" && e.Role.RoleName != "Nhân viên" && e.EndDate == null).Select(e => e.Employee).Distinct().ToListAsync();
                 if (employees.Count() == 0)
                 {
-                    return NotFound("No employees found in the team with EndDate == null");
+                    return NotFound("Không tìm thấy nhân viên trong nhóm có ngày kết thúc trống");
                 }
                 var result = new List<object>();
                 var time = new List<object>();
@@ -402,7 +402,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (teamId.TeamId == 0)
                 {
-                    return NotFound("Team Leader not found");
+                    return NotFound("Không tìm thấy thông tin mã nhóm");
                 }
 
                 var employees = await _context.EmployeeTeams
@@ -543,12 +543,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    return NotFound("emoployee chua checkin or out");
+                    return NotFound("Nhân viên chưa đăng ký vào hoặc ra");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -593,11 +593,11 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 }
                 _context.SaveChanges();
-                return Ok("Check In Out success");
+                return Ok("Đăng kí vào thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -615,7 +615,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutDTO.CheckIn) && TimeSpan.TryParse(checkInOutDTO.CheckIn, out var checkIn) ? checkIn : checkInOut.TimeCheckIn;
                         if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
-                            return BadRequest("data can not update");
+                            return BadRequest("Dữ liệu không thể chỉnh sửa");
                         }
 
                         _context.CheckInOuts.Update(checkInOut);
@@ -624,17 +624,17 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else
                     {
-                        return StatusCode(403, "Not have data checkInOut today");
+                        return StatusCode(403, "Không có thông tin đăng kí vào hoặc ra");
                     }
                 }
                 else
                 {
-                    return BadRequest("missing data");
+                    return BadRequest("Không tìm thấy dữ liệu");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet]
@@ -646,11 +646,11 @@ namespace CarpentryWorkshopAPI.Controllers
                                        System.Globalization.CultureInfo.InvariantCulture,
                                        System.Globalization.DateTimeStyles.None, out var parsedDate))
                 {
-                    return BadRequest("date is not valid");
+                    return BadRequest("Thông tin ngày không hợp lệ");
                 }
                 if (employeeId <= 0)
                 {
-                    return BadRequest("employee not valid");
+                    return BadRequest("Nhân viên không hợp lệ");
                 }
                 var CheckInOut = await _context.CheckInOuts.Include(ci => ci.Employee).Where(ci => ci.EmployeeId == employeeId && ci.Date.Value.Date == parsedDate.Date)
                     .Select(ci => new
@@ -665,13 +665,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToListAsync();
                 if (CheckInOut.Count == 0)
                 {
-                    return NotFound("not have data");
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(CheckInOut);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]

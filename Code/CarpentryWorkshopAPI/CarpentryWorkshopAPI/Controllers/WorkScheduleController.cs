@@ -28,14 +28,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (schedules == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var dto = _mapper.Map<List<WorkScheduleDTO>>(schedules);
                 return Ok(dto);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -61,7 +61,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.WorkScheduleStatusHistories.Add(history);
                     _context.SaveChanges();
-                    return Ok("Create work schedule successful");
+                    return Ok("Tạo lịch làm việc thành công");
                 }
                 else
                 {
@@ -80,12 +80,12 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.WorkScheduleStatusHistories.Add(history);
                     _context.SaveChanges();
-                    return Ok("Update work schedule successful");
+                    return Ok("Chỉnh sửa lịch làm việc thành công");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPut]
@@ -96,7 +96,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var schedule = _context.WorkSchedules.FirstOrDefault(x => x.WorkScheduleId == wid);
                 if (schedule == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 if (schedule.Status == true)
                 {
@@ -115,11 +115,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.WorkScheduleStatusHistories.Add(history);
                 _context.SaveChanges();
-                return Ok("Change status successful");
+                return Ok("Chuyển trạng thái lịch làm việc thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

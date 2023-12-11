@@ -28,14 +28,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (historys == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var rshDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historys);
                 return Ok(rshDTO);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -52,14 +52,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (historysbydate == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
                 return Ok(historydateDTO);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -77,14 +77,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (historysbydate == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var historydateDTO = _mapper.Map<List<RoleStatusHistoryDTO>>(historysbydate);
                 return Ok(historydateDTO);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

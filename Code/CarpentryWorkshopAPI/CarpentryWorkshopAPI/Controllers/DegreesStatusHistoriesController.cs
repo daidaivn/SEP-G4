@@ -22,13 +22,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var historylist = _context.DegreesStatusHistories.ToList();
                 if (historylist == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(historylist);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -45,13 +45,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (historylistbydate == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(historylistbydate);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpGet("{did}/{actionDate}")]
@@ -68,13 +68,13 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (dephistorylistbydate == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(dephistorylistbydate);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

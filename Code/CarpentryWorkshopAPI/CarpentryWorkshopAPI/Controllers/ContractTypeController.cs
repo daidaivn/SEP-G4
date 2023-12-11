@@ -25,14 +25,14 @@ namespace CarpentryWorkshopAPI.Controllers
                 var contracttypes = _context.ContractTypes.ToList();
                 if (contracttypes == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var dto = _mapper.Map<List<ContractTypeDTO>>(contracttypes);
                 return Ok(dto);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -45,7 +45,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     var newctt = _mapper.Map<ContractType>(contractTypeDTO);
                     if (newctt == null)
                     {
-                        return NotFound();
+                        return NotFound("Không tìm thấy dữ liệu");
                     }
                     _context.ContractTypes.Add(newctt);
                     _context.SaveChanges();
@@ -58,14 +58,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.ContractTypeStatusHistories.Add(newhistory);
                     _context.SaveChanges();
-                    return Ok("Create contracttype successful");
+                    return Ok("Tạo loại hợp đồng thành công");
                 }
                 else
                 {
                     var newctt = _mapper.Map<ContractType>(contractTypeDTO);
                     if (newctt == null)
                     {
-                        return NotFound();
+                        return NotFound("Không tìm thấy dữ liệu");
                     }
                     _context.ContractTypes.Update(newctt);
                     ContractTypeStatusHistory newhistory = new ContractTypeStatusHistory
@@ -77,12 +77,12 @@ namespace CarpentryWorkshopAPI.Controllers
                     };
                     _context.ContractTypeStatusHistories.Add(newhistory);
                     _context.SaveChanges();
-                    return Ok("Update contracttype successful");
+                    return Ok("Tạo loại hợp đồng thành công");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -103,7 +103,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }
