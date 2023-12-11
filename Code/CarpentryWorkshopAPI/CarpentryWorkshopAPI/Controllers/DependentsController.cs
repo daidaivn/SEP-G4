@@ -28,7 +28,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Dependents == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             var deEndDate = _context.Dependents.Where(de => (de.EndDate == null ? DateTime.MaxValue : de.EndDate) < DateTime.Now && de.Status == true).ToList();
             deEndDate.Select(de => de.Status = false);
@@ -43,7 +43,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     FullName = de.FullName,
                     IdentifierCode = de.IdentifierCode,
                     Gender = de.Gender,
-                    GenderString = de.Gender == true ? "nam" : "nữ",
+                    GenderString = de.Gender == true ? "Nam" : "Nữ",
                     DobString = de.Dob != null ? de.Dob.Value.ToString("dd'-'MM'-'yyyy") : "",
                     StartDateString = de.StartDate != null ? de.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
@@ -64,7 +64,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Dependents == null)
             {
-                return NotFound("Can not Context");
+                return NotFound("Dữ liệu rỗng");
             }
             var dependent = _context.Dependents.Where(de => de.DependentId == id).Include(de => de.Employee).Include(de => de.Relationship)
                 .Select(de => new DependentListDTO
@@ -75,7 +75,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     FullName = de.FullName,
                     IdentifierCode = de.IdentifierCode,
                     Gender = de.Gender,
-                    GenderString = de.Gender == true ? "nam" : "nữ",
+                    GenderString = de.Gender == true ? "Nam" : "Nữ",
                     DobString = de.Dob != null ? de.Dob.Value.ToString("dd'-'MM'-'yyyy") : "",
                     StartDateString = de.StartDate != null ? de.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
@@ -88,7 +88,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }).FirstOrDefault();
             if (dependent == null)
             {
-                return NotFound("Can not have dependent");
+                return NotFound("Không có người phụ thuộc");
             }
 
             return Ok(dependent);
@@ -151,15 +151,15 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (!DependentExists(dependentDTO.DependentId))
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 else
                 {
-                    return BadRequest(ex.Message);
+                    return BadRequest("Lỗi dữ liệu");
                 }
             }
 
-            return Ok("update success");
+            return Ok("Chỉnh sửa người phụ thuộc thành công");
         }
 
         // POST: api/Dependents
@@ -169,7 +169,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Dependents == null)
             {
-                return Problem("Entity set 'SEPG4CCMSContext.Dependents'  is null.");
+                return Problem("Dữ liệu rỗng");
             }
             try
             {
@@ -180,7 +180,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("data is not valid");
+                    return BadRequest("Dữ liệu không hợp lệ");
                 }
                 if (dependentDTO.RelationshipId == 1)
                 {
@@ -199,7 +199,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("Not have relationship");
+                    return BadRequest("Không có quan hệ");
                 }
                 _context.Dependents.Add(dependent);
                 _context.SaveChanges();
@@ -212,11 +212,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.DependentsStatusHistories.Add(dependentsStatusHistory);
                 _context.SaveChanges();
-                return Ok("add success");
+                return Ok("Thêm người phụ thuộc thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -233,7 +233,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             if (dependent == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             else
             {
@@ -259,7 +259,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             _context.SaveChanges();
 
-            return Ok("success change status");
+            return Ok("Chuyển trạng thái người phụ thuộc thành công");
         }
 
         private bool DependentExists(int id)
@@ -291,7 +291,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 if (dependentsList == null)
                 {
-                    return NotFound("no data");
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var dto = dependentsList.Select(de => new DependentListDTO
                 {
@@ -301,7 +301,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     FullName = de.FullName,
                     IdentifierCode = de.IdentifierCode,
                     Gender = de.Gender,
-                    GenderString = de.Gender == true ? "nam" : "nữ",
+                    GenderString = de.Gender == true ? "Nam" : "Nữ",
                     DobString = de.Dob != null ? de.Dob.Value.ToString("dd'-'MM'-'yyyy") : "",
                     StartDateString = de.StartDate != null ? de.StartDate.Value.ToString("dd'-'MM'-'yyyy") : "",
                     EndDateString = de.EndDate != null ? de.EndDate.Value.ToString("dd'-'MM'-'yyyy") : "",
@@ -317,7 +317,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 

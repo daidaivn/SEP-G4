@@ -69,7 +69,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
             if (userAccount == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             else
             {
@@ -91,7 +91,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             if (userAccount == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             _context.UserAccounts.Update(userAccount);
 
@@ -101,10 +101,10 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
 
             }
-            return Ok("success");
+            return Ok("Chỉnh sửa tài khoản thành công");
         }
 
         // POST: api/UserAccounts
@@ -115,7 +115,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var userAccount = _mapper.Map<UserAccount>(userAccountDTO);
             if (_context.UserAccounts == null)
             {
-                return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
+                return Problem("Dữ liệu rỗng");
             }
             _context.UserAccounts.Add(userAccount);
             try
@@ -134,7 +134,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetUserAccount", new { id = userAccount.EmployeeId }, userAccount);
+            return CreatedAtAction("Thông tin tài khoản:", new { id = userAccount.EmployeeId }, userAccount);
         }
 
         // DELETE: api/UserAccounts/5
@@ -148,7 +148,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var userAccount = await _context.UserAccounts.FindAsync(id);
             if (userAccount == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
 
             _context.UserAccounts.Remove(userAccount);

@@ -24,7 +24,7 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
                 specialOccasion.OccasionDate = DateTime.ParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
                 _context.SpecialOccasions.Add(specialOccasion);
                 _context.SaveChanges();
-                return "add success";
+                return "Tạo hiếu hỉ thành công";
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
                 specialOccasion.OccasionDate = DateTime.ParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
                 _context.SpecialOccasions.Update(specialOccasion);
                 _context.SaveChanges();
-                return "add success";
+                return "Chỉnh sửa hiếu hỉ thành công";
             }
             catch (Exception ex)
             {

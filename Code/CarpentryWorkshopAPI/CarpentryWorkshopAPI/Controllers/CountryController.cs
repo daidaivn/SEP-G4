@@ -28,13 +28,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 });
                 if (countrys == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 return Ok(countrys);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

@@ -28,7 +28,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Departments == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             var list = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).ToList();
             var number = _context.Departments.Include(de => de.RolesEmployees).Select(de => de.RolesEmployees.Where(re => re.EndDate == null).Select(de => de.EmployeeId).Distinct().Count());
@@ -43,13 +43,13 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Departments == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             var department = _context.Departments.Where(e => e.DepartmentId == id).FirstOrDefault();
             DepartmentListDTO departmentDTO = _mapper.Map<DepartmentListDTO>(department);
             if (department == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             return Ok(departmentDTO);
         }
@@ -65,7 +65,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var department = _context.Departments.FirstOrDefault(de => de.DepartmentId == departmentDTO.DepartmentId);
                 if (department == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 department.DepartmentName = !string.IsNullOrEmpty(departmentDTO.DepartmentName) ? departmentDTO.DepartmentName : department.DepartmentName;
                 department.Status = departmentDTO.Status.HasValue ? departmentDTO.Status : department.Status;
@@ -85,11 +85,11 @@ namespace CarpentryWorkshopAPI.Controllers
             {
 
 
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
 
             }
 
-            return Ok("Update success");
+            return Ok("Chỉnh sửa phòng ban thành công");
         }
         [Authorize(Roles = "ListDepartment")]
         // POST: api/Departments
@@ -99,7 +99,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (_context.Departments == null)
             {
-                return Problem("Entity set 'SEPG4CCMSContext.Departments'  is null.");
+                return Problem("Dữ liệu rỗng");
             }
             try
             {
@@ -121,11 +121,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.DepartmentsStatusHistories.Add(departmentsStatusHistory);
                 _context.SaveChanges();
-                return Ok("Add Success");
+                return Ok("Tạo phòng ban thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
 
@@ -140,7 +140,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (_context.Departments == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 Department department = _context.Departments.Include(de => de.RolesEmployees).SingleOrDefault(e => e.DepartmentId == id);
                 DepartmentsStatusHistory departmentsStatusHistory = new DepartmentsStatusHistory();
@@ -173,11 +173,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.DepartmentsStatusHistories.Add(departmentsStatusHistory);
                 _context.SaveChangesAsync();
 
-                return Ok("Update status success");
+                return Ok("Chuyển trạng thái phòng ban thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
 
@@ -211,7 +211,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "ListDepartment")]
@@ -220,7 +220,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             if (departmentDTO == null || _context.Departments == null)
             {
-                return BadRequest();
+                return BadRequest("Lỗi dữ liệu");
             }
 
             var listDepartment = _context.Departments.Include(de => de.RolesEmployees).ThenInclude(de => de.Employee).ToList().AsQueryable();

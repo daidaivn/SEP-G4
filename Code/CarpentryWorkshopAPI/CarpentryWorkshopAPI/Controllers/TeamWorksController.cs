@@ -45,14 +45,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     }).FirstOrDefault();
                 if (details == null)
                 {
-                    return NotFound("Not have data");
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 details.NumberOfProduct = _context.TeamWorks.Include(de => de.Team).Where(de => de.Team.TeamLeaderId == id || de.Team.TeamSubLeaderId == id).Sum(de => de.TotalProduct);
                 return Ok(details);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -62,21 +62,21 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 if (teamWorkUpdateDTO.numberProduct < 0)
                 {
-                    return BadRequest("data is not valid");
+                    return BadRequest("Dữ liệu không hợp lệ");
                 }
                 var teamWork = _context.TeamWorks.Where(tw => tw.TeamWorkId == teamWorkUpdateDTO.teamWorkId).FirstOrDefault();
                 if (teamWork == null)
                 {
-                    return NotFound("not have data");
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 teamWork.TotalProduct = teamWorkUpdateDTO.numberProduct;
                 _context.TeamWorks.Update(teamWork);
                 _context.SaveChanges();
-                return Ok("Update success");
+                return Ok("Chỉnh sửa thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         //[HttpPost]
@@ -132,7 +132,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var work = _context.Works.FirstOrDefault(w => w.WorkId == teamWorkDTO.WorkId);
                 if (work == null)
                 {
-                    return NotFound("can not find workid");
+                    return NotFound("Không tìm thấy mã công việc");
                 }
                 var teamWorkRemove = _context.TeamWorks.Where(tw => tw.WorkId == teamWorkDTO.WorkId && tw.TeamId == teamWorkDTO.TeamId && tw.Date < tw.Work.EndDate && tw.Date > DateTime.Now);
                 if (teamWorkRemove.Any())
@@ -160,11 +160,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 _context.AddRange(teamWorks);
                 _context.SaveChanges();
-                return Ok("Add suceess");
+                return Ok("Tạo thành công");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

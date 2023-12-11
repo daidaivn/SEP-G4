@@ -57,7 +57,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -104,7 +104,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (employeeDetailBasic == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
 
                 return Ok(employeeDetailBasic);
@@ -112,7 +112,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         //[HttpGet("{eid}")]
@@ -177,14 +177,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToListAsync();
                 if (employeeDepend == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var edDTO = _mapper.Map<List<EmployeeDependentDTO>>(employeeDepend);
                 return Ok(edDTO);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "ListEmployee")]
@@ -196,7 +196,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var delete = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
                 if (delete == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 _context.Employees.Remove(delete);
                 _context.SaveChanges();
@@ -204,7 +204,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "ListEmployee")]
@@ -323,7 +323,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "ListEmployee")]
@@ -344,7 +344,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (employee == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
 
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
@@ -387,24 +387,26 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(409, "Email chưa được đăng kí");
                 }
-                string htmlBody = "<p>Xin chào,</p>" +
-                    "<p>Dưới đây là nội dung email của bạn:</p>" +
-                    "<p>Thông tin email của bạn đã được thay đổi.</p>" +
-                    "<p>Cảm ơn bạn đã đọc email này.</p>";
-                var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
-                email.To.Add(MailboxAddress.Parse($"{employeeEmail}"));
-                email.Subject = "Thông tin email đã được cập nhật";
-                email.Body = new TextPart(TextFormat.Html)
-                {
-                    Text = htmlBody
-                };
-                using var smtp = new SmtpClient();
-                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
-                smtp.Send(email);
-                smtp.Disconnect(true);
-                smtp.Dispose();
+                if (updateEmployeeDTO.Email != employeeEmail) {
+                    string htmlBody = "<p>Xin chào,</p>" +
+                        "<p>Dưới đây là nội dung email của bạn:</p>" +
+                        "<p>Thông tin email của bạn đã được thay đổi.</p>" +
+                        "<p>Cảm ơn bạn đã đọc email này.</p>";
+                    var email = new MimeMessage();
+                    email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
+                    email.To.Add(MailboxAddress.Parse($"{employeeEmail}"));
+                    email.Subject = "Thông tin email đã được cập nhật";
+                    email.Body = new TextPart(TextFormat.Html)
+                    {
+                        Text = htmlBody
+                    };
+                    using var smtp = new SmtpClient();
+                    smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                    smtp.Authenticate("ccmsadm12@gmail.com", "iqmfipjieykysglr");
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
+                    smtp.Dispose();
+                }
                 EmployeesStatusHistory newhistory = new EmployeesStatusHistory
                 {
                     EmployeeId = employee.EmployeeId,
@@ -414,11 +416,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.EmployeesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Update employee and roleemployee successfull");
+                return Ok("Cập nhận thông tin nhân viên thành công.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "ListEmployee")]
@@ -433,7 +435,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 .ToList();
             if (employees == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
             try
             {
@@ -478,11 +480,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.EmployeesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Change employee status successfully");
+                return Ok("Chuyển đổi trạng thái nhân viên thành công.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
 
 
@@ -546,7 +548,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [Authorize(Roles = "ListEmployee")]
@@ -593,11 +595,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.RolesEmployees.Add(oldfornew);
                 _context.SaveChanges();
-                return Ok("Change role in department successful");
+                return Ok("Chuyển đổi chức vụ trong phòng ban thành công.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }

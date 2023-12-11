@@ -42,7 +42,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while generating the report: " + ex.Message);
+                return StatusCode(500, "Một lỗi được phát hiện trong tiến trình: " + ex.Message);
             }
         }
 

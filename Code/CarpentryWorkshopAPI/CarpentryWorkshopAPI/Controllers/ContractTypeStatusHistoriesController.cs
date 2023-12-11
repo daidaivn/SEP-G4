@@ -27,14 +27,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ToList();
                 if (histories == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
                 var dto = _mapper.Map<List<ContractTypeHistoryDTO>>(histories);
                 return Ok(dto);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -52,7 +52,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ToList();
                 if (cth == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
 
 
@@ -61,7 +61,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
         [HttpPost]
@@ -78,7 +78,7 @@ namespace CarpentryWorkshopAPI.Controllers
                  .ToList();
                 if (cth == null)
                 {
-                    return NotFound();
+                    return NotFound("Không tìm thấy dữ liệu");
                 }
 
 
@@ -87,7 +87,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Lỗi dữ liệu");
             }
         }
     }
