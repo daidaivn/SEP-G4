@@ -260,9 +260,16 @@ const ListTable = ({
                   VNĐ{" "}
                 </td>
                 <td>
-                  {Salary.jobIncentives === 0
+                  {Salary.bonus +
+                    Salary.specialOccasion +
+                    Salary.companyWideBonus ===
+                  0
                     ? "0"
-                    : formatMoney(Salary.jobIncentives)}{" "}
+                    : formatMoney(
+                        Salary.bonus +
+                          Salary.specialOccasion +
+                          Salary.companyWideBonus
+                      )}{" "}
                   VNĐ{" "}
                 </td>
                 <td>

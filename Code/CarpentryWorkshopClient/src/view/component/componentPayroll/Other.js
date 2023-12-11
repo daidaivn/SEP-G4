@@ -43,9 +43,9 @@ const Other = ({
                 <tr>
                   <div className="child1">MNV</div>
                   <div className="item-child">Họ và tên</div>
-                  <div className="item-child">Ăn sáng</div>
-                  <div className="item-child">Trang phục</div>
-                  <div className="item-child">Xăng xe</div>
+                  <div className="item-child">Thưởng cá nhân</div>
+                  <div className="item-child">Thưởng dịp đặc biệt</div>
+                  <div className="item-child">Thưởng công ty</div>
                   <div className="item-child">Tổng</div>
                 </tr>
               </thead>
@@ -60,33 +60,31 @@ const Other = ({
                           <div className="item-first">{index + 1}</div>
                           <div className="item-second">{item.fullName}</div>
                           <div className="item-child-body">
-                            {item.allowances.meal === 0
-                              ? "0"
-                              : formatMoney(item.allowances.meal)}{" "}
+                            {item.bonus === 0 ? "0" : formatMoney(item.bonus)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.uniform === 0
+                            {item.specialOccasion === 0
                               ? "0"
-                              : formatMoney(item.allowances.uniform)}{" "}
+                              : formatMoney(item.specialOccasion)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.petrol === 0
+                            {item.companyWideBonus === 0
                               ? "0"
-                              : formatMoney(item.allowances.petrol)}{" "}
+                              : formatMoney(item.companyWideBonus)}{" "}
                             VNĐ
                           </div>
                           <div className="item-child-body">
-                            {item.allowances.meal +
-                              item.allowances.uniform +
-                              item.allowances.petrol ===
+                            {item.bonus +
+                              item.specialOccasion +
+                              item.companyWideBonus ===
                             0
                               ? "0"
                               : formatMoney(
-                                  item.allowances.meal +
-                                    item.allowances.uniform +
-                                    item.allowances.petrol
+                                  item.bonus +
+                                    item.specialOccasion +
+                                    item.companyWideBonus
                                 )}{" "}
                             VNĐ
                           </div>
