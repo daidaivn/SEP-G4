@@ -57,8 +57,6 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<Salary> Salaries { get; set; } = null!;
         public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
         public virtual DbSet<SpecialOccasion> SpecialOccasions { get; set; } = null!;
-        public virtual DbSet<Subsidy> Subsidies { get; set; } = null!;
-        public virtual DbSet<SubsidyAmount> SubsidyAmounts { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
         public virtual DbSet<TeamWork> TeamWorks { get; set; } = null!;
         public virtual DbSet<UnitCost> UnitCosts { get; set; } = null!;
@@ -69,7 +67,6 @@ namespace CarpentryWorkshopAPI.Models
         public virtual DbSet<WorkArea> WorkAreas { get; set; } = null!;
         public virtual DbSet<WorkSchedule> WorkSchedules { get; set; } = null!;
         public virtual DbSet<WorkScheduleStatusHistory> WorkScheduleStatusHistories { get; set; } = null!;
-        public virtual DbSet<WorkplaceFine> WorkplaceFines { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -754,6 +751,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolesEmployees)
                     .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__RolesEmpl__RoleI__10566F31");
             });
 
@@ -822,37 +820,6 @@ namespace CarpentryWorkshopAPI.Models
                     .HasForeignKey(d => d.EmployeeId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_SpecialOccasions_Employees");
-            });
-
-            modelBuilder.Entity<Subsidy>(entity =>
-            {
-                entity.ToTable("Subsidy");
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.Subsidies)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Subsidy_Employees");
-
-                entity.HasOne(d => d.SubsidyAmount)
-                    .WithMany(p => p.Subsidies)
-                    .HasForeignKey(d => d.SubsidyAmountId)
-                    .HasConstraintName("FK_Subsidy_SubsidyAmount");
-            });
-
-            modelBuilder.Entity<SubsidyAmount>(entity =>
-            {
-                entity.ToTable("SubsidyAmount");
-
-                entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
-
-                entity.Property(e => e.Date)
-                    .HasColumnType("datetime")
-                    .HasColumnName("date");
             });
 
             modelBuilder.Entity<Team>(entity =>
@@ -1027,19 +994,6 @@ namespace CarpentryWorkshopAPI.Models
                     .HasForeignKey(d => d.WorkScheduleId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_WorkScheduleStatusHistory_WorkSchedule");
-            });
-
-            modelBuilder.Entity<WorkplaceFine>(entity =>
-            {
-                entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
-
-                entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.WorkplaceFines)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_WorkplaceFines_Employees");
             });
 
             OnModelCreatingPartial(modelBuilder);
