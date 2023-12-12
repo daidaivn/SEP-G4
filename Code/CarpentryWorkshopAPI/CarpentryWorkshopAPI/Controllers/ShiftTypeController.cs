@@ -46,6 +46,33 @@ namespace CarpentryWorkshopAPI.Controllers
             }
 
         }
+        [HttpGet]
+        public IActionResult GetShiftTypeById(int id)
+        {
+            try
+            {
+                var types = _context.ShiftTypes
+                    .Where(st=>st.ShiftTypeId == id)    
+                    .Select(t => new CreateShiftTypeDTO
+                    {
+                        ShiftTypeId = t.ShiftTypeId,
+                        TypeName = t.TypeName,
+                        Status = t.Status,
+                        StartTimestring = DateTime.Parse(t.StartTime.ToString()).ToString("HH':'mm':'ss"),
+                        EndTimestring = DateTime.Parse(t.EndTime.ToString()).ToString("HH':'mm':'ss")
+                    });
+                if (types == null)
+                {
+                    return NotFound();
+                }
+                return Ok(types);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi hiển thị danh sách");
+            }
+
+        }
         [HttpPost]
         public IActionResult CreateAndUpdateShiftType([FromBody] CreateShiftTypeDTO createShiftTypeDTO)
         {
