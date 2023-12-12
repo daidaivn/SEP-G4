@@ -84,6 +84,7 @@ const CalendarComponent = () => {
     localStorage.getItem("userPages") || sessionStorage.getItem("userPages");
 
   const userPagesArray = JSON.parse(userPagesString);
+  
 
   if (Array.isArray(userPagesArray) && userPagesArray.includes("Calendar")) {
     var calendarPageName = "Calendar";
@@ -276,9 +277,13 @@ const CalendarComponent = () => {
     }, 1000);
   };
 
+  console.log('selectedWeek',selectedWeek);
+  
+
   useEffect(() => {
     FetchDataForSchedule();
   }, [iText, selectedWeek, selectedYear]);
+
   useEffect(() => {
     fetchAllUnitCosts();
     fetchAllWorkAreas();

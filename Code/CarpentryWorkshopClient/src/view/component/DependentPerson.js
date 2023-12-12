@@ -100,7 +100,6 @@ function DependentPerson() {
               relationshipId,
               identifierCode,
               dobString,
-              identifierName,
               status,
             } = data;
             setemployeesName(employeesName);
@@ -132,6 +131,7 @@ function DependentPerson() {
         UpdateDependent(
           dependentId,
           employeeId,
+          guardian,
           Relationship,
           Identifier,
           date,
@@ -189,7 +189,7 @@ function DependentPerson() {
   const fetchData = () => {
     let isDataLoaded = false;
     let toastId = null;
-  
+
     fetchAllDependent()
       .then((data) => {
         isDataLoaded = true;
@@ -348,9 +348,9 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
@@ -407,9 +407,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -562,6 +562,13 @@ function DependentPerson() {
               <div className="modal-body modal-body-dependent">
                 <div className="name-person-dependent">
                   <h3>{guardian}</h3>
+                  <td className="input-text">
+                    <Input
+                      placeholder="Basic usage"
+                      value={guardian}
+                      onChange={(e) => setGuardian(e.target.value)}
+                    />
+                  </td>
                 </div>
 
                 <div className="info-detail-dependent">
