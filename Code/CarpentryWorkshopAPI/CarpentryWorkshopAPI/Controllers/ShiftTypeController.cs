@@ -2,6 +2,9 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing.Text;
+using System.Net.WebSockets;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -115,5 +118,32 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest("Lỗi lọc");
             }
         }
+        //[HttpGet]
+        //public async Task<IActionResult> GetTeamShift(int teamId)
+        //{
+        //    try
+        //    {
+        //        List<Object> result = new List<object>();
+        //        var team = await _context.Teams
+        //            .Include(t=>t.EmployeeTeams)
+        //            .ThenInclude(t => t.Employee)
+        //            .Include(t=>t.WorkSchedules)
+        //            .Select(t => new
+        //        {
+        //            TeamId = t.TeamId,
+        //            NmuberOfEmployee = t.EmployeeTeams.Where(t=>t.EndDate == null).Distinct().Count(),
+        //            Employee = t.EmployeeTeams.Where(t=>t.EndDate == null).Select(et => new
+        //            {
+        //                EmployeeName = et.Employee.FirstName + " " + et.Employee.LastName,
+        //                EmployeeId = et.Employee.EmployeeId,
+        //            })
+        //        }).ToListAsync();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest("Lỗi lọc");
+        //    }
+        //}
     }
 }
