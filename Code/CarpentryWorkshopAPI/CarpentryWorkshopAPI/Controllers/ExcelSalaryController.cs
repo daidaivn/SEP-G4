@@ -22,6 +22,12 @@ namespace CarpentryWorkshopAPI.Controllers
             var employees = await _excelSalarySevice.GetEmployeesByContractDateAsync(month, year);
             return Ok(employees);
         }
+        [HttpGet("ContractsByDate/{month}/{year}/{employeeId}")]
+        public async Task<ActionResult<IEnumerable<EmployeeInfo>>> GetEmployeesByContractDate(int month, int year, int employeeId)
+        {
+            var employees = await _excelSalarySevice.GetEmployeesByContractDateAsyncById(month, year, employeeId);
+            return Ok(employees);
+        }
 
         //[HttpPost("generate-excel/{month}/{year}")]
         //public async Task<IActionResult> GenerateExcel(int month, int year)

@@ -646,7 +646,204 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 return "Invalid Input";
             }
         }
+        public async Task<EmployeeInfo> GetEmployeesByContractDateAsyncById(int month, int year, int employeeId)
+        {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            var startDate = new DateTime(year, month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            var holidays = await FetchHolidaysAsync(startDate, endDate);
+            var employees = await _context.Employees
+                        .Include(e => e.Contracts)
+                        .Include(e => e.EmployeesAllowances)
+                        .ThenInclude(ea => ea.AllowanceType)
+                        .ThenInclude(at => at.Allowance)
+                        .Include(e => e.BonusDetails)
+                        .Include(e => e.SpecialOccasions)
+                        .Include(e => e.CompanyWideBonus)
+                .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
+                .Include(e => e.HoursWorkDays)
+                .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate) && e.EmployeeId == employeeId)
+                .FirstOrDefaultAsync();
 
+            int sequence = 1;
+            var maxEmployeeId = _context.Employees.Max(e => e.EmployeeId);
+            string social = "BHXH";
+            var socialInsurance = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(social.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            string health = "BHYT";
+            var healthInsurance = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(health.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            string unemployment = "BHTT";
+            var unemploymentInsurance = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(unemployment.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            string union = "Phí công đoàn";
+            var unionFees = await _context.DeductionsDetails
+                                 .Include(x => x.DeductionType)
+                                 .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
+                                 .Select(x => x.Percentage)
+                                 .FirstOrDefaultAsync();
+            
+                var latestContract = GetLatestContract(employees);
+                var actualWorkDays = CalculateActualWorkingDays(employees, startDate, endDate, holidays, timeZone);
+                var overtimeWorkDays = CalculateOvertimeWorkingDays(employees, startDate, endDate, holidays, timeZone);
+                var workDaysOnHolidays = CalculateWorkingDaysOnHolidays(employees, startDate, endDate, holidays, timeZone);
+                var workingDaysInMonth = CalculateWorkingDaysInMonth(month, year, holidays, timeZone);
+                var workDayBonus = CalculateWorkDayBonus(employees, startDate, endDate);
+                var bussinessSalary = CalculateBusinessSalary(employees, startDate, endDate);
+                if (bussinessSalary == null)
+                {
+                    bussinessSalary = 0;
+                }
+                var totalOT = employees.HoursWorkDays
+                .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+                .Sum(h => h.DailyRate) * 1;
+                var totalHolidaySalary = employees.HoursWorkDays
+                .Where(hwd => hwd.Day.HasValue &&
+                              holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
+                .Sum(ths => ths.DailyRate) * 2;
+                var bonus = employees.BonusDetails
+                .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
+                .Sum(bd => bd.BonusAmount);
+                var special = employees.SpecialOccasions
+                .Where(so => so.OccasionDate >= startDate && so.OccasionDate <= endDate)
+                .Sum(so => so.Amount);
+                var company = employees.CompanyWideBonus
+                .Where(cw => cw.BonusDate >= startDate && cw.BonusDate <= endDate)
+                .Sum(cw => cw.BonusAmount);
+                var totalBs = bonus + special + company;
+                if (totalBs == null)
+                {
+                    totalBs = 0;
+                }
+                if (totalHolidaySalary == null)
+                {
+                    totalHolidaySalary = 0;
+                }
+                if (totalOT == null)
+                {
+                    totalOT = 0;
+                }
+
+                decimal basicSalary = 0;
+                decimal dailyWage = 0;
+                decimal actualWorkdaySalary = 0;
+
+                string meal = "Tiền ăn ca";
+                var mealAllowanceBasic = employees.EmployeesAllowances
+                   .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
+                   && ea.AllowanceType.Allowance.Name.ToLower().Equals(meal.ToLower()))
+                   .Select(ea => ea.AllowanceType.Amount)
+                   .FirstOrDefault();
+                var mealAllowance = mealAllowanceBasic / workingDaysInMonth * (actualWorkDays + workDaysOnHolidays + workDayBonus);
+                string clother = "Quần áo";
+                var clotherAllowanceBasic = employees.EmployeesAllowances
+                   .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
+                   && ea.AllowanceType.Allowance.Name.ToLower().Equals(clother.ToLower()))
+                   .Select(ea => ea.AllowanceType.Amount)
+                   .FirstOrDefault();
+                var clotherAllowance = clotherAllowanceBasic / workingDaysInMonth * (actualWorkDays + workDaysOnHolidays + workDayBonus);
+                string car = "Xăng xe";
+                var carAllowanceBasic = employees.EmployeesAllowances
+                   .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
+                   && ea.AllowanceType.Allowance.Name.ToLower().Equals(car.ToLower()))
+                   .Select(ea => ea.AllowanceType.Amount)
+                   .FirstOrDefault();
+                var carAllowance = carAllowanceBasic / workingDaysInMonth * (actualWorkDays + workDaysOnHolidays + workDayBonus);
+                var advances = employees.AdvancesSalaries
+                         .Where(x => x.EmployeeId == employees.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
+                         .Sum(x => x.Amount);
+                if (latestContract != null && (bool)latestContract.IsOffice == true)
+                {
+                    basicSalary = latestContract.Amount ?? 0;
+                    dailyWage = basicSalary / workingDaysInMonth;
+                    actualWorkdaySalary = actualWorkDays * dailyWage;
+                }
+                if (latestContract != null && (bool)latestContract.IsOffice == false)
+                {
+                    basicSalary = latestContract.Amount ?? 0;
+                    actualWorkdaySalary = employees.HoursWorkDays
+                    .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == employees.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
+                    .Sum(h => (decimal)(h.DailyRate ?? 0));
+
+                }
+
+                var personalRelief = 11000000.00;
+                var totaldependent = employees.Dependents.Where(x => x.EmployeeId == employees.EmployeeId).Count();
+                var dependentRelief = 4400000.00 * totaldependent;
+                var totalActualSalary = actualWorkdaySalary + totalHolidaySalary + totalOT + mealAllowance + clotherAllowance + carAllowance + bussinessSalary;
+                var taxableIncome = totalActualSalary - mealAllowance - clotherAllowance;
+                var totalInsurance = (decimal)(socialInsurance + healthInsurance + unemploymentInsurance) * basicSalary;
+                var totalRelief = (decimal)personalRelief + (decimal)dependentRelief;
+                var incometax = taxableIncome - totalInsurance - totalRelief;
+                if (incometax < 0)
+                {
+                    incometax = 0;
+                }
+                var personIncome = CalculatePersonalIncomeTax((decimal)incometax);
+                if (personIncome == null)
+                {
+                    personIncome = 0;
+                }
+                return new EmployeeInfo
+                {
+                    EmployeeId = employees.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
+                    OrderNumber = sequence++,
+                    FullName = employees.LastName + " " + employees.FirstName,
+                    Position = employees.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                    Location = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
+                    Gender = (bool)employees.Gender ? "Nam" : "Nữ",
+                    ActualWork = actualWorkDays,
+                    HolidayWork = workDaysOnHolidays,
+                    Overtime = workDayBonus,
+                    BasicSalary = (long)basicSalary,
+                    InsuranceSalary = (long)basicSalary,
+                    ActualDaySalary = (long)actualWorkdaySalary,
+                    OvertimeSalary = (long)(totalHolidaySalary + totalOT),
+                    Allowances = new Allowances
+                    {
+                        Meal = (long)mealAllowance,
+                        Uniform = (long)clotherAllowance,
+                        Petrol = (long)carAllowance
+                    },
+                    BusinessSalary = (long)bussinessSalary,
+                    TotalActualSalary = (long)totalActualSalary,
+                    Deductions = new Deductions
+                    {
+                        SocialInsurance = (long)((decimal)socialInsurance * basicSalary),
+                        HealthInsurance = (long)((decimal)healthInsurance * basicSalary),
+                        UnemploymentInsurance = (long)((decimal)unemploymentInsurance * basicSalary),
+                        UnionFees = (long)((decimal)unionFees * basicSalary)
+                    },
+                    TaxableIncome = (long)taxableIncome,
+                    TaxDeductions = new TaxDeductions
+                    {
+                        PersonalRelief = (long)personalRelief,
+                        DependentRelief = (long)dependentRelief,
+                        Insurance = (long)totalInsurance
+                    },
+                    IncomeTax = (long)incometax,
+                    PersonalIncomeTax = (long)personIncome,
+                    Advances = (long)advances,
+                    JobIncentives = (long)totalBs,
+                    Bonus = (long)bonus,
+                    SpecialOccasion = (long)special,
+                    CompanyWideBonus = (long)company,
+                    ActualReceived = (long)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
+
+                };
+           
+        }
 
     }
 }
