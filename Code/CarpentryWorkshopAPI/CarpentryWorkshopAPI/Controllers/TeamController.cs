@@ -502,7 +502,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 //.FirstOrDefault();
                 string st = "Nhân viên";
                 var staff = members
-                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower())))
+                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower())) 
+                && emp.EmployeeId != team.TeamLeaderId && emp.EmployeeId != team.TeamSubLeaderId)
                 .GroupBy(emp => emp.EmployeeId)
                 .Select(group => group.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate)).First())
                 .ToList();
