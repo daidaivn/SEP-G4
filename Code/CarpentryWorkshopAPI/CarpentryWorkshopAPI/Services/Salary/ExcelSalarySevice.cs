@@ -145,6 +145,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         SetStyleBody(worksheet.Cell(startRow, 22));
                         SetStyleBody(worksheet.Cell(startRow, 23));
                         SetStyleBody(worksheet.Cell(startRow, 24));
+                        SetStyleBody(worksheet.Cell(startRow, 25));
+                        SetStyleBody(worksheet.Cell(startRow, 26));
+                        SetStyleBody(worksheet.Cell(startRow, 27));
+                        SetStyleBody(worksheet.Cell(startRow, 28));
+                        SetStyleBody(worksheet.Cell(startRow, 29));
+                        SetStyleBody(worksheet.Cell(startRow, 30));
+                        SetStyleBody(worksheet.Cell(startRow, 31));
+                        SetStyleBody(worksheet.Cell(startRow, 32));
+                        SetStyleBody(worksheet.Cell(startRow, 33));
+                        SetStyleBody(worksheet.Cell(startRow, 34));
+                        SetStyleBody(worksheet.Cell(startRow, 35));
 
                         SetNumberFormat(worksheet.Cell(startRow, 2));
                         SetNumberFormat(worksheet.Cell(startRow, 3));
@@ -169,6 +180,18 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         SetNumberFormat(worksheet.Cell(startRow, 22));
                         SetNumberFormat(worksheet.Cell(startRow, 23));
                         SetNumberFormat(worksheet.Cell(startRow, 24));
+                        SetNumberFormat(worksheet.Cell(startRow, 25));
+                        SetNumberFormat(worksheet.Cell(startRow, 26));
+                        SetNumberFormat(worksheet.Cell(startRow, 27));
+                        SetNumberFormat(worksheet.Cell(startRow, 28));
+                        SetNumberFormat(worksheet.Cell(startRow, 29));
+                        SetNumberFormat(worksheet.Cell(startRow, 30));
+                        SetNumberFormat(worksheet.Cell(startRow, 31));
+                        SetNumberFormat(worksheet.Cell(startRow, 32));
+                        SetNumberFormat(worksheet.Cell(startRow, 33));
+                        SetNumberFormat(worksheet.Cell(startRow, 34));
+                        SetNumberFormat(worksheet.Cell(startRow, 35));
+                        
 
                         startRow++;
                     }
