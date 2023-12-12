@@ -30,18 +30,15 @@ const getWeekRange = (date) => {
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(endOfWeek.getDate() + 6);
 
-    const isEdge = /Edge\/\d./i.test(navigator.userAgent);
-
-    let dateFormatOptions = { month: 'numeric', day: 'numeric' };
-
-    if (isEdge) {
-        // If it's Microsoft Edge, reverse the date and month
-        dateFormatOptions = { day: 'numeric', month: 'numeric' };
-    }
+    const formatDate = (date) => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${day}/${month}`;
+    };
 
     return {
-        start: startOfWeek.toLocaleDateString(undefined, dateFormatOptions),
-        end: endOfWeek.toLocaleDateString(undefined, dateFormatOptions),
+        start: formatDate(startOfWeek),
+        end: formatDate(endOfWeek),
     };
 };
 
