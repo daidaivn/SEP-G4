@@ -24,15 +24,24 @@ const getMonthsInYear = (year) => {
     return result.map((month, index) => ({ value: index + 1, label: month }));
 };
 
- const getWeekRange = (date) => {
+const getWeekRange = (date) => {
     const startOfWeek = new Date(date);
-    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Chủ nhật là ngày đầu tiên của tuần
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(endOfWeek.getDate() + 6); // Thứ Bảy là ngày cuối cùng của tuần
+    endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+    const isEdge = /Edge\/\d./i.test(navigator.userAgent);
+
+    let dateFormatOptions = { month: 'numeric', day: 'numeric' };
+
+    if (isEdge) {
+        // If it's Microsoft Edge, reverse the date and month
+        dateFormatOptions = { day: 'numeric', month: 'numeric' };
+    }
 
     return {
-        start: startOfWeek.toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' }),
-        end: endOfWeek.toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' }),
+        start: startOfWeek.toLocaleDateString(undefined, dateFormatOptions),
+        end: endOfWeek.toLocaleDateString(undefined, dateFormatOptions),
     };
 };
 

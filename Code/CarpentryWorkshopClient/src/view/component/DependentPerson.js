@@ -560,22 +560,21 @@ function DependentPerson() {
                 <h3>Thay đổi thông tin người phụ thuộc</h3>
               </div>
               <div className="modal-body modal-body-dependent">
-                <div className="name-person-dependent">
-                  <h3>{guardian}</h3>
-                  <td className="input-text">
-                    <Input
-                      placeholder="Basic usage"
-                      value={guardian}
-                      onChange={(e) => setGuardian(e.target.value)}
-                    />
-                  </td>
-                </div>
-
                 <div className="info-detail-dependent">
                   <Row>
                     <Col span={24}>
                       <table className="table-info-detail">
                         <tbody>
+                        <tr>
+                            <th className="text">Người phục thuộc:</th>
+                            <td className="input-text">
+                              <Input
+                                placeholder="Basic usage"
+                                value={guardian}
+                                onChange={(e) => setGuardian(e.target.value)}
+                              />
+                            </td>
+                          </tr>
                           <tr>
                             <th className="text">Người giám hộ:</th>
                             <td className="input-text">
