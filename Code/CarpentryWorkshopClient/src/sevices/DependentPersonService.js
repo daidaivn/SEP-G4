@@ -23,10 +23,11 @@ const GetDependentPeopleById = (ID) => {
   );
 };
 
-const UpdateDependent = (dependentId, employeeId, relationshipId,identifierCode, dobString, status) => {
+const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,identifierCode, dobString, status) => {
   const requestBody = {
     dependentId : dependentId,
     employeeId: employeeId,
+    fullName:guardian,
     relationshipId: relationshipId,
     identifierCode: identifierCode,
     dobString: dobString,

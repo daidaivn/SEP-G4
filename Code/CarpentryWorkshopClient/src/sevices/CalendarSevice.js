@@ -93,6 +93,9 @@ const GetDataForSchedule = (userEmployeeID,selectedWeek, selectedYear, iText) =>
     year: selectedYear,
     inputText:iText
   };
+
+  console.log('inputText',iText);
+  
   console.log('requestBody',requestBody);
   return axios.post(
     `/CCMSapi/Team/GetDataForSchedule`,requestBody
