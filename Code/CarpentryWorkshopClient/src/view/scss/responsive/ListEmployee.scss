@@ -96,7 +96,7 @@
   }
   .ant-input {
     font-size: 18px !important;
-    padding: 10px 20px !important;
+    padding: 19px 20px !important;
   }
   .radio-employee span {
     font-size: 20px !important;
@@ -129,11 +129,14 @@
   .modal-employee-box1 {
     flex: unset !important;
   }
-}
-.body-modal-add-contract table .thead-first,
-.salary-contract {
-  font-size: 18px !important;
-}
-.ant-select-selector .ant-select-selection-item {
-  font-size: 18px !important;
+  .body-modal-add-contract table .body-table tr .ant-select {
+    padding: 11px;
+  }
+  .body-modal-add-contract table .thead-first,
+  .salary-contract {
+    font-size: 18px !important;
+  }
+  .ant-select-selector .ant-select-selection-item {
+    font-size: 18px !important;
+  }
 }

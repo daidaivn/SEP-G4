@@ -24,7 +24,7 @@ const NewContractModal = ({
   handleContractAmountChange,
   setAmount,
   originalOffice,
-  setOriginalOffice
+  setOriginalOffice,
 }) => {
   return (
     <Modal
@@ -49,7 +49,6 @@ const NewContractModal = ({
                   placeholder="Mã hợp đồng"
                   style={{
                     width: "100%",
-                    height: "auto",
                   }}
                   value={contractCode} // Thêm dòng này để hiển thị giá trị từ state
                   onChange={(e) => setContractCode(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
@@ -75,7 +74,12 @@ const NewContractModal = ({
               </tr>
               <tr>
                 <p className="salary-contract">Lương hợp đồng:</p>
-                <Input type="text" placeholder="Lương hợp đồng" value={amount} onChange={(e) => setAmount(e.target.value)}></Input>
+                <Input
+                  type="text"
+                  placeholder="Lương hợp đồng"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                ></Input>
               </tr>
               <tr>
                 <div className="input-date">
@@ -109,8 +113,7 @@ const NewContractModal = ({
                         value: false,
                         label: "Khối sản xuất",
                       },
-                    ]
-                    }
+                    ]}
                   />
                 </div>
               </tr>
