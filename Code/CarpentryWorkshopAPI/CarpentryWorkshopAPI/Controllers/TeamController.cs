@@ -812,9 +812,9 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     var day = new List<object>();
                     var teamworks = _context.TeamWorks.Where(tw => tw.TeamId == team.TeamId).ToList();
-                    var endDate = DateTime.ParseExact(scheduleDataInputDTO.Year + "/" + end, "yyyy/MM/dd",
+                    var endDate = DateTime.ParseExact(end + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
-                    var startDate = DateTime.ParseExact(scheduleDataInputDTO.Year + "/" + start, "yyyy/MM/dd",
+                    var startDate = DateTime.ParseExact(start + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
                     var timeShift = team.WorkSchedules.Where(ws => ws.EndDate == null).Select(t => new
                     {
