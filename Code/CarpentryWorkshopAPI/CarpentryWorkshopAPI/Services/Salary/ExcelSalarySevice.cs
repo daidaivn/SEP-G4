@@ -31,10 +31,11 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
 
                     SetMergedHeader(worksheet, "J4:R4", "Bảng tính tiền lương nhân viên");
-                    SetMergedHeader(worksheet, "M5", $"Tháng {month}");
+                    SetMergedHeader(worksheet, "N5", $"Tháng {month}");
                     SetMergedHeader(worksheet, "AJ1:AK1", "Mẫu số: 02 - LĐTL");
                     SetMergedHeader(worksheet, "AI2:AL2", "(Ban hành theo Thông tư số 200/2014/TT-BTC");
                     SetMergedHeader(worksheet, "AI3:AL3", "Ngày 22/12/2014 của Bộ Tài chính)");
+                   
 
                     // Đặt giá trị và xử lý hợp nhất cho các ô header
                     SetColorMergedHeader(worksheet, "B7:B9", "Mã nv");
@@ -70,8 +71,11 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     SetColorMergedHeader(worksheet, "AC7:AC9", "TN Tính thuế");
                     SetColorMergedHeader(worksheet, "AD7:AD9", "Thuế TNCN");
                     SetColorMergedHeader(worksheet, "AE7:AE9", "Tạm ứng");
-                    SetColorMergedHeader(worksheet, "AF7:AF9", "Các khoản khác");
-                    SetColorMergedHeader(worksheet, "AG7:AG9", "Thực lĩnh");
+                    SetColorMergedHeader(worksheet, "AF7:AH7", "Các khoản khác");
+                    SetColorMergedHeader(worksheet, "AF8:AF9", "Thưởng cá nhân");
+                    SetColorMergedHeader(worksheet, "AG8:AG9", "Thưởng dịp đặc biệt");
+                    SetColorMergedHeader(worksheet, "AH8:AH9", "Thưởng công ty");
+                    SetColorMergedHeader(worksheet, "AI7:AI9", "Thực lĩnh");
 
                     // Thêm dữ liệu nhân viên từ hàng 10 trở đi
                     int startRow = 10;
@@ -113,8 +117,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         worksheet.Cell(startRow, 29).Value = ConvertToFormattedString(employee.IncomeTax.ToString());
                         worksheet.Cell(startRow, 30).Value = ConvertToFormattedString(employee.PersonalIncomeTax.ToString());
                         worksheet.Cell(startRow, 31).Value = ConvertToFormattedString(employee.Advances.ToString());
-                        worksheet.Cell(startRow, 32).Value = ConvertToFormattedString(employee.JobIncentives.ToString());
-                        worksheet.Cell(startRow, 33).Value = ConvertToFormattedString(employee.ActualReceived.ToString());
+                        worksheet.Cell(startRow, 32).Value = ConvertToFormattedString(employee.Bonus.ToString());
+                        worksheet.Cell(startRow, 33).Value = ConvertToFormattedString(employee.SpecialOccasion.ToString());
+                        worksheet.Cell(startRow, 34).Value = ConvertToFormattedString(employee.CompanyWideBonus.ToString());
+                        worksheet.Cell(startRow, 35).Value = ConvertToFormattedString(employee.ActualReceived.ToString());
 
                         SetStyleBody(worksheet.Cell(startRow, 2));
                         SetStyleBody(worksheet.Cell(startRow, 3));
@@ -139,6 +145,17 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         SetStyleBody(worksheet.Cell(startRow, 22));
                         SetStyleBody(worksheet.Cell(startRow, 23));
                         SetStyleBody(worksheet.Cell(startRow, 24));
+                        SetStyleBody(worksheet.Cell(startRow, 25));
+                        SetStyleBody(worksheet.Cell(startRow, 26));
+                        SetStyleBody(worksheet.Cell(startRow, 27));
+                        SetStyleBody(worksheet.Cell(startRow, 28));
+                        SetStyleBody(worksheet.Cell(startRow, 29));
+                        SetStyleBody(worksheet.Cell(startRow, 30));
+                        SetStyleBody(worksheet.Cell(startRow, 31));
+                        SetStyleBody(worksheet.Cell(startRow, 32));
+                        SetStyleBody(worksheet.Cell(startRow, 33));
+                        SetStyleBody(worksheet.Cell(startRow, 34));
+                        SetStyleBody(worksheet.Cell(startRow, 35));
 
                         SetNumberFormat(worksheet.Cell(startRow, 2));
                         SetNumberFormat(worksheet.Cell(startRow, 3));
@@ -163,6 +180,18 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         SetNumberFormat(worksheet.Cell(startRow, 22));
                         SetNumberFormat(worksheet.Cell(startRow, 23));
                         SetNumberFormat(worksheet.Cell(startRow, 24));
+                        SetNumberFormat(worksheet.Cell(startRow, 25));
+                        SetNumberFormat(worksheet.Cell(startRow, 26));
+                        SetNumberFormat(worksheet.Cell(startRow, 27));
+                        SetNumberFormat(worksheet.Cell(startRow, 28));
+                        SetNumberFormat(worksheet.Cell(startRow, 29));
+                        SetNumberFormat(worksheet.Cell(startRow, 30));
+                        SetNumberFormat(worksheet.Cell(startRow, 31));
+                        SetNumberFormat(worksheet.Cell(startRow, 32));
+                        SetNumberFormat(worksheet.Cell(startRow, 33));
+                        SetNumberFormat(worksheet.Cell(startRow, 34));
+                        SetNumberFormat(worksheet.Cell(startRow, 35));
+                        
 
                         startRow++;
                     }
@@ -171,6 +200,31 @@ namespace CarpentryWorkshopAPI.Services.Salary
 
                     // Gọi hàm để đặt font chữ cho toàn bộ Excel
                     SetGlobalFont(worksheet);
+
+                    //CSS
+                    worksheet.Cell("J4").Style
+                         .Font.SetBold()
+                         .Font.SetFontSize(25)
+                         .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        
+                    worksheet.Cell("N5").Style
+                        .Font.SetBold()
+                        .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                        .Font.SetFontSize(15);
+
+                    worksheet.Cell("AJ1").Style
+                        .Font.SetBold()
+                        .Font.SetFontSize(10)
+                        .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                    worksheet.Cell("AI2").Style
+                        .Font.SetItalic()
+                        .Font.SetFontSize(10);
+
+                    worksheet.Cell("AI3").Style
+                        .Font.SetItalic()
+                        .Font.SetFontSize(10);
+
 
                     // Lưu workbook mới vào memory stream
                     workbook.SaveAs(memoryStream);

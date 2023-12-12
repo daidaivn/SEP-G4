@@ -183,7 +183,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string leade = "Nhóm trưởng";
+                string leade = "Trưởng phòng";
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
@@ -222,7 +222,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string leade = "Nhóm trưởng";
+                string leade = "Trưởng phòng";
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
@@ -328,7 +328,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string leade = "Nhóm trưởng";
+                string leade = "Trưởng phòng";
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
@@ -491,12 +491,16 @@ namespace CarpentryWorkshopAPI.Controllers
                                         )
                                   .ToList();
 
-                var shiftmanager = _context.Employees.FirstOrDefault(x => x.EmployeeId == team.TeamLeaderId);
+                var shiftmanager = await _context.Employees
+                    .Include(x => x.EmployeeTeams)
+                    .FirstOrDefaultAsync(x => x.EmployeeId == team.TeamLeaderId && x.EmployeeTeams.Any(et => et.EndDate == null));
                 //.Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sm.ToLower())))
                 //.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
                 //.FirstOrDefault();
                 //string sa = "Phó ca";
-                var shiftassistant = _context.Employees.FirstOrDefault(x => x.EmployeeId == team.TeamSubLeaderId);
+                var shiftassistant = await _context.Employees
+                    .Include(x => x.EmployeeTeams)
+                    .FirstOrDefaultAsync(x => x.EmployeeId == team.TeamSubLeaderId && x.EmployeeTeams.Any(et => et.EndDate == null));
                 //.Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
                 //.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
                 //.FirstOrDefault();
@@ -780,7 +784,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 string start = split[0];
                 string end = split[1];
                 var result = new List<object>();
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,

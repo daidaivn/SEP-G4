@@ -21,8 +21,6 @@ namespace CarpentryWorkshopAPI.Models
             RolesEmployees = new HashSet<RolesEmployee>();
             Salaries = new HashSet<Salary>();
             SpecialOccasions = new HashSet<SpecialOccasion>();
-            Subsidies = new HashSet<Subsidy>();
-            WorkplaceFines = new HashSet<WorkplaceFine>();
         }
 
         public int EmployeeId { get; set; }
@@ -55,7 +53,5 @@ namespace CarpentryWorkshopAPI.Models
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
         public virtual ICollection<Salary> Salaries { get; set; }
         public virtual ICollection<SpecialOccasion> SpecialOccasions { get; set; }
-        public virtual ICollection<Subsidy> Subsidies { get; set; }
-        public virtual ICollection<WorkplaceFine> WorkplaceFines { get; set; }
     }
 }
