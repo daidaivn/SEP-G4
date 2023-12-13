@@ -5,7 +5,10 @@ const ModalGroup = ({
   handleOkGroup,
   handleCancelGroup,
   shift,
+  team,
   setShift,
+  SetTeam,
+  shiftType,
 }) => {
   return (
     <>
@@ -20,7 +23,7 @@ const ModalGroup = ({
         <div className="modal-group">
           <div className="head-modal">
             <div className="head-title">
-              <p>Nhóm 1</p>
+              <p>{shift.TeamName}</p>
             </div>
             <div className="close">
               <svg
@@ -46,21 +49,20 @@ const ModalGroup = ({
                 <p>Thời gian làm việc:</p>
               </div>
               <div className="time-detail">
-                <p>- Ca 1: 6h30 đến 15h30 </p>
-                <p>- Ca 2: 6h30 đến 15h30 </p>
+                <p>- {shift.ShiftName}: {shiftType.startTimestring} đến {shiftType.endTimestring} </p>
               </div>
             </div>
             <div className="shift">
               <div className="shift-detail">
                 <p>Ca làm việc:</p>
                 <div className="box">
-                  <p className="box-item">{shift}</p>
+                  <p className="box-item">{shift.ShiftName}</p>
                 </div>
               </div>
               <div className="shift-detail">
                 <p>Số thành viên:</p>
                 <div className="box">
-                  <p className="box-item">8 thành viên</p>
+                  <p className="box-item">{shift.NumberOfMember}</p>
                 </div>
               </div>
             </div>
