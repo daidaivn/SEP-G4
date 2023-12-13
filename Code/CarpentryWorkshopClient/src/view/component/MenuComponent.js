@@ -50,7 +50,8 @@ const Menucomponent = () => {
 
     navigate("/login");
   };
-  const hasPayrollAccess = userPages.includes("Payroll") && department.includes("Phòng kế toán");
+  const hasPayrollAccess =
+    userPages.includes("Payroll") && department.includes("Phòng kế toán");
 
   return (
     <div className="list-menu">
@@ -96,7 +97,7 @@ const Menucomponent = () => {
                 onClick={() => handleDivClick("div10")}
                 activeClassName={activeDiv === "div10" ? "active" : ""}
               >
-                <i className="icon-activity"></i>
+                <i className="icon-grid"></i>
 
                 <span className="text">Lên lịch làm việc</span>
               </NavLink>
@@ -110,7 +111,7 @@ const Menucomponent = () => {
                 onClick={() => handleDivClick("div11")}
                 activeClassName={activeDiv === "div11" ? "active" : ""}
               >
-                <i className="icon-activity"></i>
+                <i className="icon-plane"></i>
 
                 <span className="text">Quản Lý nghỉ lễ</span>
               </NavLink>
@@ -124,7 +125,7 @@ const Menucomponent = () => {
                 onClick={() => handleDivClick("div12")}
                 activeClassName={activeDiv === "div12" ? "active" : ""}
               >
-                <i className="icon-activity"></i>
+                <i className="icon-wallet"></i>
 
                 <span className="text">Danh sách tạm ứng</span>
               </NavLink>
@@ -138,7 +139,7 @@ const Menucomponent = () => {
                 onClick={() => handleDivClick("div13")}
                 activeClassName={activeDiv === "div13" ? "active" : ""}
               >
-                <i className="icon-activity"></i>
+                <i className="icon-table"></i>
 
                 <span className="text">Lương | Thưởng</span>
               </NavLink>
@@ -152,7 +153,7 @@ const Menucomponent = () => {
                 onClick={() => handleDivClick("div8")}
                 activeClassName={activeDiv === "div8" ? "active" : ""}
               >
-                <i className="icon-activity"></i>
+                <i className="icon-people "></i>
 
                 <span className="text">Phân quyền</span>
               </NavLink>
@@ -166,7 +167,7 @@ const Menucomponent = () => {
                 onClick={() => handleDivClick("div9")}
                 activeClassName={activeDiv === "div9" ? "active" : ""}
               >
-                <i className="icon-activity"></i>
+                <i className="icon-caseworker"></i>
 
                 <span className="text">Công việc | Điểm danh</span>
               </NavLink>
@@ -253,7 +254,7 @@ const Menucomponent = () => {
                           activeClassName={activeDiv === "div7" ? "active" : ""}
                           className={"item-child"}
                         >
-                          <i className="icon-add1"></i>
+                          <i className="icon-Meeting"></i>
 
                           <span className="text">Nhóm</span>
                         </NavLink>
