@@ -56,14 +56,6 @@ function ListUserHeader() {
   const closeUserAll = () => {
     setUserAllVisible(false);
   };
-  useEffect(() => {
-    const storedUserName =
-      localStorage.getItem("userName") || sessionStorage.getItem("userName");
-    if (storedUserName) {
-      setUserName(storedUserName);
-    }
-    getSalaryDetail();
-  }, [ months, date]);
 
   const [isModalOpenUser, setIsModalOpenUser] = useState(false);
   const showModalUser = () => {
@@ -149,6 +141,14 @@ function ListUserHeader() {
     setCapcha(generateCaptcha());
     setIsModalOpenChange(true);
   };
+  useEffect(() => {
+    const storedUserName =
+      localStorage.getItem("userName") || sessionStorage.getItem("userName");
+    if (storedUserName) {
+      setUserName(storedUserName);
+    }
+    getSalaryDetail();
+  }, [months, date]);
 
   return (
     <>

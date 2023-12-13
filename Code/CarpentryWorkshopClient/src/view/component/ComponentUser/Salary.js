@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Modal, Select } from "antd";
-import { GetEmployeeDetailSalary } from "../../../sevices/PayrollSevice";
+
 import { formatMoney } from "../../logicTime/formatAll";
 const Salary = ({
   isModalOpenPayroll,
