@@ -9,6 +9,7 @@ const ModalGroup = ({
   setShift,
   SetTeam,
   shiftType,
+  detailTeamID,
 }) => {
   return (
     <>
@@ -49,7 +50,10 @@ const ModalGroup = ({
                 <p>Thời gian làm việc:</p>
               </div>
               <div className="time-detail">
-                <p>- {shift.ShiftName}: {shiftType.startTimestring} đến {shiftType.endTimestring} </p>
+                <p>
+                  - {shift.ShiftName}: {shiftType.startTimestring} đến{" "}
+                  {shiftType.endTimestring}{" "}
+                </p>
               </div>
             </div>
             <div className="shift">
@@ -83,21 +87,74 @@ const ModalGroup = ({
                   </div>
                 </div>
                 <div className="body-all scrollbar" id="style-15">
-                  
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
+                  {detailTeamID.shiftManager ||
+                  detailTeamID.shiftAssistant ||
+                  (detailTeamID.staff && detailTeamID.staff.length > 0) ? (
+                    <>
+                      {detailTeamID.shiftManager ? (
+                        <div className="body">
+                          <div className="body-item">
+                            <p>1</p>
+                          </div>
+                          <div className="body-item">
+                            <p>Ca trưởng</p>
+                          </div>
+                          <div className="body-item">
+                            <p>{detailTeamID.shiftManager.employeeId}</p>
+                          </div>
+                          <div className="body-item">
+                            <p>
+                              {detailTeamID.shiftManager
+                                ? detailTeamID.shiftManager.fullName
+                                : ""}
+                            </p>
+                          </div>
+                        </div>
+                      ) : null}
+                      {detailTeamID.shiftAssistant ? (
+                        <div className="body">
+                          <div className="body-item">
+                            <p>2</p>
+                          </div>
+                          <div className="body-item">
+                            <p>Ca phó</p>
+                          </div>
+                          <div className="body-item">
+                            <p>{detailTeamID.shiftAssistant.employeeId}</p>
+                          </div>
+                          <div className="body-item">
+                            <p>
+                              {detailTeamID.shiftAssistant
+                                ? detailTeamID.shiftAssistant.fullName
+                                : ""}
+                            </p>
+                          </div>
+                        </div>
+                      ) : null}
+                      {detailTeamID &&
+                        detailTeamID.staff &&
+                        detailTeamID.staff.map((staffMember, index) => (
+                          <div className="body">
+                            <div key={index} className="body-item">
+                              <p>{index +3}</p>
+                            </div>
+                            <div className="body-item">
+                              <p>Nhân viên</p>
+                            </div>
+                            <div className="body-item">
+                              <p>{staffMember.employeeId}</p>
+                            </div>
+                            <div className="body-item">
+                              <p>
+                                {staffMember ? staffMember.fullName : ""}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                    </>
+                  ) : (
+                    <p> Không có thành viên trong nhóm</p>
+                  )}
                 </div>
               </div>
             </div>

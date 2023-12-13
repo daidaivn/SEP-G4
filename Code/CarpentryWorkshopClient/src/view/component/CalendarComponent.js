@@ -16,6 +16,7 @@ import {
 import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
 import { GetAllWorkAreas } from "../../sevices/WorkAreaSevice";
 import { fetchShiftType } from "../../sevices/ShiftTypeService";
+import { detailTeamByID } from "../../sevices/TeamService";
 import {
   ListSearchFilterAdd,
   ModalListShift,
@@ -44,7 +45,7 @@ const CalendarComponent = () => {
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
   const [iText, setIText] = useState("");
-  const [shiftType, setShiftType] = useState([]);
+ 
 
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
@@ -71,6 +72,8 @@ const CalendarComponent = () => {
   const [workidDetail, setWorkidDetail] = useState([]);
   const [shift, setShift] = useState(innitShift);
   const [team, setTeam] = useState([]);
+  const [shiftType, setShiftType] = useState([]);
+  const [detailTeamID, setDetailTeamID] = useState([]);
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
@@ -287,9 +290,8 @@ const CalendarComponent = () => {
       }
     }, 1000);
   };
-
-  const fetchAllShiftType = () => {
-    fetchShiftType(shift.ShiftId)
+  const fetchAllShiftType = (id) => {
+    fetchShiftType(id)
       .then((data) => {
         setShiftType(data);
         console.log('shift', data);
@@ -298,6 +300,19 @@ const CalendarComponent = () => {
         console.log(error);
       });
   };
+  const detailTeam = (id) =>{
+    detailTeamByID(id)
+      .then((data) => {
+        setDetailTeamID(data);
+        console.log('team', data);
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
+  console.log('shift', shift);
 
   console.log('selectedWeek',selectedWeek);
   
@@ -354,6 +369,7 @@ const CalendarComponent = () => {
           setShift={setShift}
           setTeam={setTeam}
           fetchAllShiftType={fetchAllShiftType}
+          detailTeam={detailTeam}
         />
 
         <ModalListShift
@@ -393,6 +409,7 @@ const CalendarComponent = () => {
           setShift={setShift}
           SetTeam={setTeam}
           shiftType={shiftType}
+          detailTeamID={detailTeamID}
         />
       </div>
     </>

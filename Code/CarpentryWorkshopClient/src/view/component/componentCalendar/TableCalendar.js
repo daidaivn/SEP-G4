@@ -18,6 +18,7 @@ const TableCalendar = ({
   setShift,
   setTeam,
   fetchAllShiftType,
+  detailTeam,
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -47,7 +48,6 @@ const TableCalendar = ({
                     className="shift"
                     onClick={() => {
                       showModalGroup();
-                      fetchAllShiftType();
                     }}
                   >
                     {team.shiftType.map((item, index) => (
@@ -59,7 +59,10 @@ const TableCalendar = ({
                             ShiftName: item.typeName,
                             TeamName: team.teamName,
                             NumberOfMember: team.numberMember,
-                          });}
+                            TeamID: team.teamId,
+                          });
+                          fetchAllShiftType(item.shiftTypeId);
+                          detailTeam(team.teamId);}
                         }
                       >
                         {item.typeName}
