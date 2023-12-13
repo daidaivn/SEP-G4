@@ -664,7 +664,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate) && e.EmployeeId == employeeId)
                 .FirstOrDefaultAsync();
-
+            if(employees == null)
+            {
+                return new EmployeeInfo();
+            }
             int sequence = 1;
             var maxEmployeeId = _context.Employees.Max(e => e.EmployeeId);
             string social = "BHXH";
@@ -795,7 +798,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
             {
                 personIncome = 0;
             }
-            return new EmployeeInfo
+            var result = new EmployeeInfo
             {
                 EmployeeId = employees.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
                 OrderNumber = sequence++,
@@ -842,7 +845,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 ActualReceived = (long)(totalActualSalary - totalInsurance - personIncome - advances - (decimal)unionFees * basicSalary + totalBs)
 
             };
-
+            return result;
         }
 
     }

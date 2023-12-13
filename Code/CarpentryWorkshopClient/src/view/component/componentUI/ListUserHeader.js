@@ -10,14 +10,20 @@ import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
 import { DetailID } from "../../../sevices/EmployeeService";
-import { GetEmployeeDetailSalary } from "../../../sevices/PayrollSevice";
+import { GetEmployeeDetailSalary, fetchAllSalaryDetail } from "../../../sevices/PayrollSevice";
 import { ChangePass, Role, Salary } from "../ComponentUser";
 import { createYearOptions, getMonthsInYear } from "../../logicTime/getWeeDays";
 // import avt from ".../";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
   const [gender, setGender] = useState("Nguyễn Văn An");
-  const [userName, setUserName] = useState("");
+  const [userDetail, setUserDetai] = useState({
+        userName: "",
+        userID:"",
+        userImage: ""
+  });
+  
+
   const [capcha, setCapcha] = useState("");
   const [userAllVisible, setUserAllVisible] = useState(false);
   const userEmployeeID =
@@ -30,6 +36,7 @@ function ListUserHeader() {
   const monthOptions = getMonthsInYear(date);
   const currentMonth = new Date().getMonth() + 1;
   const [months, setMonths] = useState(currentMonth.toString());
+
 
   //convert date
   const convertDobToISO = (dobstring) => {
@@ -55,22 +62,13 @@ function ListUserHeader() {
   const closeUserAll = () => {
     setUserAllVisible(false);
   };
-  useEffect(() => {
-    const storedUserName =
-      localStorage.getItem("userName") || sessionStorage.getItem("userName");
-    if (storedUserName) {
-      setUserName(storedUserName);
-    }
-  }, []);
 
-  const [isModalOpenUser, setIsModalOpenUser] = useState(false);
-  const showModalUser = () => {
+  const getDetailEmployee = () =>{
     toast.promise(
       new Promise((resolve) => {
         DetailID(userEmployeeID)
           .then((data) => {
             setEmployee(data);
-
             resolve(data);
           })
           .catch((error) => {
@@ -79,10 +77,12 @@ function ListUserHeader() {
       }),
       {
         pending: "Đang xử lý",
-        success: "success",
-        error: `Lỗi làm việc`,
       }
     );
+
+  }
+  const [isModalOpenUser, setIsModalOpenUser] = useState(false);
+  const showModalUser = () => {  
     setIsModalOpenUser(true);
   };
   const handleOkUser = () => {
@@ -102,14 +102,21 @@ function ListUserHeader() {
   const handleCancelUserRole = () => {
     setIsModalOpenUserRole(false);
   };
-  const getSalaryDetail = () =>{
+  console.log('1233', userEmployeeID);
+  console.log('1233', months);
+  console.log('1233', date);
+
+
+  const getSalaryDetail = () => {
     toast.promise(
       GetEmployeeDetailSalary(userEmployeeID, months, date)
         .then((data) => {
-          setSalary(data);
+          console.log('3333', data);
+          setSalaryUser(data);
           console.log("salary", data);
         })
         .catch((error) => {
+          console.log("1233", error)
           throw toast.error(error.response.data);
         }),
       {
@@ -117,7 +124,7 @@ function ListUserHeader() {
       }
     );
   }
-  const [salary, setSalary] = useState([]);
+  const [salaryUser, setSalaryUser] = useState([]);
   const [isModalOpenPayroll, setIsModalOpenPayroll] = useState(false);
   const showModalPayroll = () => {
     getSalaryDetail();
@@ -147,12 +154,20 @@ function ListUserHeader() {
     setCapcha(generateCaptcha());
     setIsModalOpenChange(true);
   };
+
+  const storedUserID =
+  localStorage.getItem("userEmployeeID") || sessionStorage.getItem("userEmployeeID");
+
+  useEffect(() => {
+    getDetailEmployee();
+
+  }, []);
+
   return (
     <>
       <div className="list-user-header">
-        <span onClick={toggleUserAll}>{userName ? `${userName}` : "User"}</span>
-        <img onClick={toggleUserAll} className="user-list" src={user} alt="" />
-        <img className="notification-list" src={notification} alt="" />
+        <span onClick={toggleUserAll}>{employee && employee.fullName ? `${employee.fullName}` : "User"}</span>
+        <img onClick={toggleUserAll} className="user-list" src={employee && employee.image ? `${employee.image}` : user} alt="" />
       </div>
       {userAllVisible && (
         <div className="user-all">
@@ -393,6 +408,7 @@ function ListUserHeader() {
         monthOptions={monthOptions}
         setMonths={setMonths}
         months={months}
+        salaryUser={salaryUser}
       />
       <Role
         isModalOpenUserRole={isModalOpenUserRole}
