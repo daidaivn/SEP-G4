@@ -10,7 +10,9 @@ import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
 import { DetailID } from "../../../sevices/EmployeeService";
+import { GetEmployeeDetailSalary } from "../../../sevices/PayrollSevice";
 import { ChangePass, Role, Salary } from "../ComponentUser";
+import { createYearOptions, getMonthsInYear } from "../../logicTime/getWeeDays";
 // import avt from ".../";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
@@ -21,6 +23,14 @@ function ListUserHeader() {
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
+
+  const yearOptions = createYearOptions();
+  const [date, setDate] = useState(new Date().getFullYear());
+
+  const monthOptions = getMonthsInYear(date);
+  const currentMonth = new Date().getMonth() + 1;
+  const [months, setMonths] = useState(currentMonth.toString());
+
   //convert date
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
@@ -92,9 +102,25 @@ function ListUserHeader() {
   const handleCancelUserRole = () => {
     setIsModalOpenUserRole(false);
   };
-
+  const getSalaryDetail = () =>{
+    toast.promise(
+      GetEmployeeDetailSalary(userEmployeeID, months, date)
+        .then((data) => {
+          setSalary(data);
+          console.log("salary", data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
+      {
+        pending: "Đang xử lý",
+      }
+    );
+  }
+  const [salary, setSalary] = useState([]);
   const [isModalOpenPayroll, setIsModalOpenPayroll] = useState(false);
   const showModalPayroll = () => {
+    getSalaryDetail();
     setIsModalOpenPayroll(true);
   };
   const handleOkPayroll = () => {
@@ -104,15 +130,15 @@ function ListUserHeader() {
     setIsModalOpenPayroll(false);
   };
   function generateCaptcha() {
-    const characters = 'IOQ4MTABCDEFGHIJKLMNPQRSTUVWXYZ56789'; // Excluding characters: 'OUVWXYZ1'
+    const characters = "IOQ4MTABCDEFGHIJKLMNPQRSTUVWXYZ56789"; // Excluding characters: 'OUVWXYZ1'
     const captchaLength = 7;
-  
-    let captcha = '';
+
+    let captcha = "";
     for (let i = 0; i < captchaLength; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
       captcha += characters.charAt(randomIndex);
     }
-  
+
     return captcha;
   }
 
@@ -361,6 +387,12 @@ function ListUserHeader() {
         isModalOpenPayroll={isModalOpenPayroll}
         handleOkPayroll={handleOkPayroll}
         handleCancelPayroll={handleCancelPayroll}
+        date={date}
+        setDate={setDate}
+        yearOptions={yearOptions}
+        monthOptions={monthOptions}
+        setMonths={setMonths}
+        months={months}
       />
       <Role
         isModalOpenUserRole={isModalOpenUserRole}

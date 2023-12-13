@@ -92,7 +92,14 @@ const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusRea
     console.log('special', requestBody);
     return axios.post(`/CCMSapi/Reward/CreateAndEditCompanyReward`,requestBody);
 };
-
+const GetEmployeeDetailSalary = (eid, EMonth, EYear) => {
+    const employeeid = eid;
+    const month = EMonth;
+    const year = EYear;
+    return axios.get(
+        `/CCMSapi/Salary/GetEmployeeActualSalaryDetail?employeeid=${employeeid}&month=${month}&year=${year}`
+    );
+};
 export {
     fetchAllSalaries,
     fetchAllSalaryDetail,
@@ -104,5 +111,6 @@ export {
     CreateAndEditPersonalReward,
     CreateAndUpdateSpecialOccasion,
     CreateAndUpdateCompanyRerward,
-    ExcelSalary
+    ExcelSalary,
+    GetEmployeeDetailSalary,
 };
