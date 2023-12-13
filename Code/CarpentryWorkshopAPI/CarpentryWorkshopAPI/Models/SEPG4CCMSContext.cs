@@ -162,12 +162,6 @@ namespace CarpentryWorkshopAPI.Models
                 entity.Property(e => e.BonusDate).HasColumnType("datetime");
 
                 entity.Property(e => e.BonusName).HasMaxLength(50);
-
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.CompanyWideBonus)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_CompanyWideBonus_Employees");
             });
 
             modelBuilder.Entity<Contract>(entity =>
@@ -637,6 +631,7 @@ namespace CarpentryWorkshopAPI.Models
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.HourWorkTeams)
                     .HasForeignKey(d => d.TeamId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_HourWorkTeam_Teams");
             });
 

@@ -10,7 +10,6 @@ namespace CarpentryWorkshopAPI.Models
             AdvancesSalaries = new HashSet<AdvancesSalary>();
             BonusDetails = new HashSet<BonusDetail>();
             CheckInOuts = new HashSet<CheckInOut>();
-            CompanyWideBonus = new HashSet<CompanyWideBonu>();
             Contracts = new HashSet<Contract>();
             Dependents = new HashSet<Dependent>();
             EmployeeDegrees = new HashSet<EmployeeDegree>();
@@ -42,7 +41,6 @@ namespace CarpentryWorkshopAPI.Models
         public virtual ICollection<AdvancesSalary> AdvancesSalaries { get; set; }
         public virtual ICollection<BonusDetail> BonusDetails { get; set; }
         public virtual ICollection<CheckInOut> CheckInOuts { get; set; }
-        public virtual ICollection<CompanyWideBonu> CompanyWideBonus { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<Dependent> Dependents { get; set; }
         public virtual ICollection<EmployeeDegree> EmployeeDegrees { get; set; }
