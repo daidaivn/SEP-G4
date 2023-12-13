@@ -60,7 +60,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Status = t.Status,
                         StartTimestring = DateTime.Parse(t.StartTime.ToString()).ToString("HH':'mm':'ss"),
                         EndTimestring = DateTime.Parse(t.EndTime.ToString()).ToString("HH':'mm':'ss")
-                    });
+                    }).FirstOrDefault();
                 if (types == null)
                 {
                     return NotFound();
