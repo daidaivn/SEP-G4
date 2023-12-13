@@ -50,44 +50,40 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 .ToList();
             if (companyRewardDTO.CompanyBonusId == 0)
             {
-                foreach (var item in allemployees)
+
+                CompanyWideBonu newCR = new CompanyWideBonu()
                 {
-                    CompanyWideBonu newCR = new CompanyWideBonu()
-                    {
-                        EmployeeId = item.EmployeeId,
-                        BonusAmount = companyRewardDTO.BonusAmount,
-                        BonusName = companyRewardDTO.BonusName,
-                        BonusDate = DateTime.Now.Date,
-                        BonusReason = companyRewardDTO.BonusReason,
-                    };
-                    _context.CompanyWideBonus.Add(newCR);
-                    _context.SaveChanges();
-                }
+                    BonusAmount = companyRewardDTO.BonusAmount,
+                    BonusName = companyRewardDTO.BonusName,
+                    BonusDate = DateTime.Now.Date,
+                    BonusReason = companyRewardDTO.BonusReason,
+                };
+                _context.CompanyWideBonus.Add(newCR);
+                _context.SaveChanges();
+
                 return "Thêm thưởng công ty thành công";
             }
             else
             {
-                foreach (var item in allemployees)
-                {
-                    CompanyWideBonu newCR = new CompanyWideBonu()
-                    {
-                        CompanyBonusId = companyRewardDTO.CompanyBonusId,
-                        EmployeeId = item.EmployeeId,
-                        BonusAmount = companyRewardDTO.BonusAmount,
-                        BonusName = companyRewardDTO.BonusName,
-                        BonusReason = companyRewardDTO.BonusReason,
-                    };
-                    if (!string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
-                                       DateTime.TryParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture,
-                                       System.Globalization.DateTimeStyles.None, out var parsedDate))
-                    {
-                        newCR.BonusDate = parsedDate;
-                    }
 
-                    _context.CompanyWideBonus.Update(newCR);
-                    _context.SaveChanges();
+                CompanyWideBonu newCR = new CompanyWideBonu()
+                {
+                    CompanyBonusId = companyRewardDTO.CompanyBonusId,
+                    BonusAmount = companyRewardDTO.BonusAmount,
+                    BonusName = companyRewardDTO.BonusName,
+                    BonusReason = companyRewardDTO.BonusReason,
+                };
+                if (!string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
+                                   DateTime.TryParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture,
+                                   System.Globalization.DateTimeStyles.None, out var parsedDate))
+                {
+                    newCR.BonusDate = parsedDate;
                 }
+
+                _context.CompanyWideBonus.Update(newCR);
+                _context.SaveChanges();
+
                 return "Chỉnh sửa thưởng công ty thành công";
             }
         }
@@ -142,7 +138,6 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                     }).ToList();
                 var persondto = _mapper.Map<List<DTO.AllRewardDTO.PR>>(person);
                 var company = _context.CompanyWideBonus
-                    .Include(x => x.Employee)
                     .Where(sd => sd.BonusDate >= startDateOfMonth && sd.BonusDate <= endDateOfMonth)
                     .GroupBy(sd => sd.BonusName)
                     .Select(group => group.First())
