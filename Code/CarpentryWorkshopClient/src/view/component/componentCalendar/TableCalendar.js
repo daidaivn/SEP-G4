@@ -37,9 +37,9 @@ const TableCalendar = ({
         </tr>
       </thead>
       <div className="body-calendar">
-        <tbody className="scrollbar" id="style-15">
-          {dataForSchedule &&
-            dataForSchedule.map((team, index) => (
+        {dataForSchedule && dataForSchedule.length > 0 ? (
+          <tbody className="scrollbar" id="style-15">
+            {dataForSchedule.map((team, index) => (
               <tr key={team.teamId}>
                 <td>
                   {team.teamName}
@@ -53,13 +53,14 @@ const TableCalendar = ({
                     {team.shiftType.map((item, index) => (
                       <div
                         key={index}
-                        onClick={() =>
-                          {setShift({
+                        onClick={() => {
+                          setShift({
                             ShiftId: item.shiftTypeId,
                             ShiftName: item.typeName,
                             TeamName: team.teamName,
                             NumberOfMember: team.numberMember,
-                          });}
+                          });
+                        }
                         }
                       >
                         {item.typeName}
@@ -169,7 +170,12 @@ const TableCalendar = ({
                 ))}
               </tr>
             ))}
-        </tbody>
+          </tbody>
+        ) : (
+          <p>Thông lịch làm việc của các nhóm chưa sẵn sàng hoặc không tồn tại.</p>
+        )
+        }
+
       </div>
     </table>
   );
