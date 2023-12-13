@@ -17,7 +17,13 @@ import { createYearOptions, getMonthsInYear } from "../../logicTime/getWeeDays";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
   const [gender, setGender] = useState("Nguyễn Văn An");
-  const [userName, setUserName] = useState("");
+  const [userDetail, setUserDetai] = useState({
+        userName: "",
+        userID:"",
+        userImage: ""
+  });
+  
+
   const [capcha, setCapcha] = useState("");
   const [userAllVisible, setUserAllVisible] = useState(false);
   const userEmployeeID =
@@ -96,21 +102,21 @@ function ListUserHeader() {
   const handleCancelUserRole = () => {
     setIsModalOpenUserRole(false);
   };
-  console.log('1233',userEmployeeID);
-    console.log('1233',months);
-    console.log('1233',date);
+  console.log('1233', userEmployeeID);
+  console.log('1233', months);
+  console.log('1233', date);
 
 
-  const getSalaryDetail = () =>{
+  const getSalaryDetail = () => {
     toast.promise(
       GetEmployeeDetailSalary(userEmployeeID, months, date)
         .then((data) => {
-          console.log('3333',data);
+          console.log('3333', data);
           setSalaryUser(data);
           console.log("salary", data);
         })
         .catch((error) => {
-          console.log("1233",error)
+          console.log("1233", error)
           throw toast.error(error.response.data);
         }),
       {
@@ -149,21 +155,18 @@ function ListUserHeader() {
     setIsModalOpenChange(true);
   };
 
-  
+  const storedUserID =
+  localStorage.getItem("userEmployeeID") || sessionStorage.getItem("userEmployeeID");
+
   useEffect(() => {
-    const storedUserName =
-      localStorage.getItem("userName") || sessionStorage.getItem("userName");
-    if (storedUserName) {
-      setUserName(storedUserName);
-    }
+
   }, []);
 
   return (
     <>
       <div className="list-user-header">
-        <span onClick={toggleUserAll}>{userName ? `${userName}` : "User"}</span>
+        <span onClick={toggleUserAll}>{storedUserID ? `${storedUserID}` : "User"}</span>
         <img onClick={toggleUserAll} className="user-list" src={user} alt="" />
-        <img className="notification-list" src={notification} alt="" />
       </div>
       {userAllVisible && (
         <div className="user-all">
