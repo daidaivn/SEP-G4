@@ -59,8 +59,7 @@ const CalendarComponent = () => {
   const [allUnitCosts, setAllUnitCosts] = useState([]);
   const [allWorkAreas, setAllWorkAreas] = useState([]);
   const [workidDetail, setWorkidDetail] = useState([]);
-  const [shift, setShift] = useState("");
-  const [teamName, SetTeamName] = useState("");
+
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
@@ -279,6 +278,8 @@ const CalendarComponent = () => {
   };
 
   console.log('selectedWeek',selectedWeek);
+
+  
   
 
   useEffect(() => {
@@ -328,8 +329,6 @@ const CalendarComponent = () => {
           setWorkidDetail={setWorkidDetail}
           setWorkDetailById={setWorkDetailById}
           convertDate={convertDate}
-          shift={shift}
-          setShift={setShift}
         />
 
         <ModalListShift
@@ -364,8 +363,6 @@ const CalendarComponent = () => {
           isModalOpenGroup={isModalOpenGroup}
           handleOkGroup={handleOkGroup}
           handleCancelGroup={handleCancelGroup}
-          shift={shift}
-          setShift={setShift}
         />
       </div>
     </>
