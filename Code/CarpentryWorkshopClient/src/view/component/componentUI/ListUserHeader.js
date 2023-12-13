@@ -10,7 +10,7 @@ import { Modal } from "antd";
 import { Radio } from "antd";
 import { Select, Space } from "antd";
 import { DetailID } from "../../../sevices/EmployeeService";
-import { GetEmployeeDetailSalary } from "../../../sevices/PayrollSevice";
+import { GetEmployeeDetailSalary, fetchAllSalaryDetail } from "../../../sevices/PayrollSevice";
 import { ChangePass, Role, Salary } from "../ComponentUser";
 import { createYearOptions, getMonthsInYear } from "../../logicTime/getWeeDays";
 // import avt from ".../";
@@ -30,6 +30,7 @@ function ListUserHeader() {
   const monthOptions = getMonthsInYear(date);
   const currentMonth = new Date().getMonth() + 1;
   const [months, setMonths] = useState(currentMonth.toString());
+
 
   //convert date
   const convertDobToISO = (dobstring) => {
@@ -61,7 +62,8 @@ function ListUserHeader() {
     if (storedUserName) {
       setUserName(storedUserName);
     }
-  }, []);
+    getSalaryDetail();
+  }, [ months, date]);
 
   const [isModalOpenUser, setIsModalOpenUser] = useState(false);
   const showModalUser = () => {
@@ -147,6 +149,7 @@ function ListUserHeader() {
     setCapcha(generateCaptcha());
     setIsModalOpenChange(true);
   };
+
   return (
     <>
       <div className="list-user-header">
@@ -393,6 +396,7 @@ function ListUserHeader() {
         monthOptions={monthOptions}
         setMonths={setMonths}
         months={months}
+        salary={salary}
       />
       <Role
         isModalOpenUserRole={isModalOpenUserRole}

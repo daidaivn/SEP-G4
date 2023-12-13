@@ -87,7 +87,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                         : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
                                             ? "Done"
                                             : "NotDone")),
-                });
+                }).OrderBy(e=>e.Date);
                 return Ok(result);
             }
             catch (Exception ex)
