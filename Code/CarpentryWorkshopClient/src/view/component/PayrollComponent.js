@@ -29,6 +29,7 @@ import {
   Tax,
   Other,
   Advancesalary,
+  EditRewardPersonal,
 } from "./componentPayroll";
 
 import {
@@ -76,7 +77,6 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
-
 
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
@@ -128,6 +128,21 @@ const PayrollComponent = () => {
       return false;
     }
     return true;
+  };
+
+  //modal sửa thưởng cá nhân
+  const [
+    isModalOpenEditRewardPersonal,
+    setIsModalOpenEditRewardPersonal,
+  ] = useState(false);
+  const showModalEditRewardPersonal = () => {
+    setIsModalOpenEditRewardPersonal(true);
+  };
+  const handleOkEditRewardPersonal = () => {
+    setIsModalOpenEditRewardPersonal(false);
+  };
+  const handleCancelEditRewardPersonal = () => {
+    setIsModalOpenEditRewardPersonal(false);
   };
 
   //modal Excel
