@@ -780,7 +780,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 string start = split[0];
                 string end = split[1];
                 var result = new List<object>();
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
@@ -846,16 +846,21 @@ namespace CarpentryWorkshopAPI.Controllers
                         });
                         startDate = startDate.AddDays(1);
                     }
-                    var shiftTypeNames = _context.WorkSchedules
+                    var shiftType = await _context.WorkSchedules
                         .Where(ws => ws.TeamId == team.TeamId && ws.StartDate.Value.Date <= startDate.Date && ws.EndDate.Value.Date >= endDate.Date)
-                        .Select(ws => ws.ShiftType.TypeName)
+                        .Select(ws => new ShiftTypeDTO
+                        {
+                            ShiftTypeId = ws.ShiftTypeId,
+                            TypeName = ws.ShiftType.TypeName,
+                        })
                         .Distinct()
-                        .ToList();
+                        .ToListAsync();
                     result.Add(new
                     {
-                        ShiftTypeName = shiftTypeNames,
+                        ShiftType = shiftType,
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
+                        NumberMember = team.EmployeeTeams.Where(et=>et.EndDate == null).Select(et => et.EmployeeId).Distinct().Count(),
                         Year = DateTime.Now.Year,
                         DataForWork = day,
                     });

@@ -2,6 +2,9 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing.Text;
+using System.Net.WebSockets;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
@@ -23,6 +26,33 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var types = _context.ShiftTypes
+                    .Select(t => new CreateShiftTypeDTO
+                    {
+                        ShiftTypeId = t.ShiftTypeId,
+                        TypeName = t.TypeName,
+                        Status = t.Status,
+                        StartTimestring = DateTime.Parse(t.StartTime.ToString()).ToString("HH':'mm':'ss"),
+                        EndTimestring = DateTime.Parse(t.EndTime.ToString()).ToString("HH':'mm':'ss")
+                    });
+                if (types == null)
+                {
+                    return NotFound();
+                }
+                return Ok(types);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi hiển thị danh sách");
+            }
+
+        }
+        [HttpGet]
+        public IActionResult GetShiftTypeById(int id)
+        {
+            try
+            {
+                var types = _context.ShiftTypes
+                    .Where(st=>st.ShiftTypeId == id)    
                     .Select(t => new CreateShiftTypeDTO
                     {
                         ShiftTypeId = t.ShiftTypeId,
@@ -115,5 +145,32 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest("Lỗi lọc");
             }
         }
+        //[HttpGet]
+        //public async Task<IActionResult> GetTeamShift(int teamId)
+        //{
+        //    try
+        //    {
+        //        List<Object> result = new List<object>();
+        //        var team = await _context.Teams
+        //            .Include(t=>t.EmployeeTeams)
+        //            .ThenInclude(t => t.Employee)
+        //            .Include(t=>t.WorkSchedules)
+        //            .Select(t => new
+        //        {
+        //            TeamId = t.TeamId,
+        //            NmuberOfEmployee = t.EmployeeTeams.Where(t=>t.EndDate == null).Distinct().Count(),
+        //            Employee = t.EmployeeTeams.Where(t=>t.EndDate == null).Select(et => new
+        //            {
+        //                EmployeeName = et.Employee.FirstName + " " + et.Employee.LastName,
+        //                EmployeeId = et.Employee.EmployeeId,
+        //            })
+        //        }).ToListAsync();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest("Lỗi lọc");
+        //    }
+        //}
     }
 }

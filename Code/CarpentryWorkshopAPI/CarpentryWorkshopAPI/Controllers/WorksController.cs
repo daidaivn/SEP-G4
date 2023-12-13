@@ -34,7 +34,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 string[] split = workInputDTO.Date.Split('-');
                 string start = split[0];
                 string end = split[1];
-                string role = "Nhóm trưởng";
+                string role = "Trưởng phòng";
                 var department = await _context.RolesEmployees
                     .Include(re => re.Role)
                     .Include(re => re.Department)

@@ -1,6 +1,12 @@
 import React from "react";
 import { Input, Select, Modal } from "antd";
-const ModalGroup = ({ isModalOpenGroup, handleOkGroup, handleCancelGroup }) => {
+const ModalGroup = ({
+  isModalOpenGroup,
+  handleOkGroup,
+  handleCancelGroup,
+  shift,
+  setShift,
+}) => {
   return (
     <>
       <Modal
@@ -48,7 +54,7 @@ const ModalGroup = ({ isModalOpenGroup, handleOkGroup, handleCancelGroup }) => {
               <div className="shift-detail">
                 <p>Ca làm việc:</p>
                 <div className="box">
-                  <p className="box-item">Ca 1</p>
+                  <p className="box-item">{shift}</p>
                 </div>
               </div>
               <div className="shift-detail">
@@ -75,104 +81,7 @@ const ModalGroup = ({ isModalOpenGroup, handleOkGroup, handleCancelGroup }) => {
                   </div>
                 </div>
                 <div className="body-all scrollbar" id="style-15">
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
-                  <div className="body">
-                    <div className="body-item">
-                      <p>1</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Ca trưởng</p>
-                    </div>
-                    <div className="body-item">
-                      <p>001</p>
-                    </div>
-                    <div className="body-item">
-                      <p>Lê Thị Lan</p>
-                    </div>
-                  </div>
+                  
                   <div className="body">
                     <div className="body-item">
                       <p>1</p>

@@ -37,7 +37,12 @@ function DependentPerson() {
   const [inputSearch, setInputSearch] = useState("");
   const [relationshipsType, setRelationshipsType] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-
+  // --------------------
+  const [guardianError, setGuardianError] = useState("");
+  const [employeeIdError, setEmployeeIdError] = useState("");
+  const [relationshipError, setRelationshipError] = useState("");
+  const [identifierError, setIdentifierError] = useState("");
+  const [dateError, setDateError] = useState("");
   const handleSwitchChange = () => {
     setIsChecked(!isChecked);
   };
@@ -155,6 +160,69 @@ function DependentPerson() {
     );
   };
 
+  const add = () => {
+    if (!guardian || !employeeId || !Relationship || !Identifier || !date) {
+      if (!guardian) {
+        setGuardianError("Vui lòng nhập người phụ thuộc");
+      } else {
+        setGuardianError("");
+      }
+
+      if (!employeeId) {
+        setEmployeeIdError("Vui lòng chọn người giám hộ");
+      } else {
+        setEmployeeIdError("");
+      }
+
+      if (!Relationship) {
+        setRelationshipError("Vui lòng chọn mối quan hệ");
+      } else {
+        setRelationshipError("");
+      }
+
+      if (!Identifier) {
+        setIdentifierError("Vui lòng nhập mã định danh");
+      } else {
+        setIdentifierError("");
+      }
+
+      if (!date) {
+        setDateError("Vui lòng nhập ngày sinh");
+      } else {
+        setDateError("");
+      }
+      return; // Ngăn người dùng thêm khi thông tin không hợp lệ
+    }
+
+    toast.promise(
+      new Promise((resolve) => {
+        UpdateDependent(
+          dependentId,
+          employeeId,
+          guardian,
+          Relationship,
+          Identifier,
+          date,
+          isChecked
+        )
+          .then((data) => {
+            handleSave();
+            fetchDepartmentById(dependentId);
+            fetchData();
+            resolve(data);
+          })
+          .catch((error) => {
+            resolve(Promise.reject(error));
+          });
+      }),
+      {
+        pending: "Đang tải dữ liệu",
+        success: "Thêm thông tin thành công",
+        error: "Lỗi thêm người phụ thuộc",
+      }
+    );
+  };
+
   const fetchRelationshipsType = () => {
     GetRelationshipsType()
       .then((data) => {
@@ -203,11 +271,11 @@ function DependentPerson() {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Lỗi không có người phụ thuộc'); // Hiển thị thông báo lỗi ngay lập tức
+        toast.error("Lỗi không có người phụ thuộc"); // Hiển thị thông báo lỗi ngay lập tức
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
   };
@@ -216,6 +284,17 @@ function DependentPerson() {
     fetchData();
     getchAllEmplyees();
   }, []);
+  //modal add người phụ thuộc
+  const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
+  const showModalAdd = () => {
+    setIsModalOpenAdd(true);
+  };
+  const handleOkAdd = () => {
+    setIsModalOpenAdd(false);
+  };
+  const handleCancelAdd = () => {
+    setIsModalOpenAdd(false);
+  };
   return (
     <>
       <div className="col-right-container">
@@ -348,9 +427,9 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
@@ -407,9 +486,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -445,7 +524,7 @@ function DependentPerson() {
               />
             </svg>
           </i>
-          <div className="list-add">
+          <div className="list-add" onClick={showModalAdd}>
             <i className="icon-web">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -565,8 +644,8 @@ function DependentPerson() {
                     <Col span={24}>
                       <table className="table-info-detail">
                         <tbody>
-                        <tr>
-                            <th className="text">Người phục thuộc:</th>
+                          <tr>
+                            <th className="text">Người phụ thuộc:</th>
                             <td className="input-text">
                               <Input
                                 placeholder="Basic usage"
@@ -763,6 +842,182 @@ function DependentPerson() {
             </Modal>
           </div>
         )}
+        <div className="modal-dependent-all">
+          {" "}
+          <Modal
+            className="modal-dependent"
+            open={isModalOpenAdd}
+            on
+            Ok={handleOkAdd}
+            onCancel={handleCancelAdd}
+            width={566}
+          >
+            <div className="modal-head">
+              {" "}
+              <h3>Thêm người phụ thuộc</h3>
+            </div>
+            <div className="modal-body modal-body-dependent">
+              <div className="info-detail-dependent">
+                <Row>
+                  <Col span={24}>
+                    <table className="table-info-detail">
+                      <tbody>
+                        <tr>
+                          <th className="text">Người phụ thuộc:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={guardian}
+                              onChange={(e) => setGuardian(e.target.value)}
+                            />
+                          </td>
+                          <span
+                            style={{
+                              color: "red",
+                              fontSize: "16px",
+                              marginLeft: "65px",
+                            }}
+                          >
+                            {guardianError}
+                          </span>
+                        </tr>
+                        <tr>
+                          <th className="text">Người giám hộ:</th>
+                          <td className="input-text">
+                            <select
+                              name="employeeId"
+                              id="employeeId"
+                              className="select"
+                              onChange={(e) => setEmployeeId(e.target.value)}
+                              value={employeeId}
+                            >
+                              {employees.map((employee) => (
+                                <option
+                                  key={employee.employeeID}
+                                  value={employee.employeeID}
+                                >
+                                  {employee.fullName}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <span
+                            style={{
+                              color: "red",
+                              fontSize: "16px",
+                              marginLeft: "65px",
+                            }}
+                          >
+                            {employeeIdError}
+                          </span>
+                        </tr>
+                        <tr>
+                          <th className="text">Mối quan hệ:</th>
+                          <td className="input-text">
+                            <select
+                              name="Relationship"
+                              id="Relationship"
+                              className="select"
+                              onChange={(e) => setRelationship(e.target.value)}
+                              value={Relationship}
+                            >
+                              {!Relationship && (
+                                <option value="" disabled>
+                                  Chọn quan hệ
+                                </option>
+                              )}
+                              {relationshipsType.map((type) => (
+                                <option
+                                  key={type.relationshipId}
+                                  value={type.relationshipId}
+                                >
+                                  {type.relationshipName}
+                                </option>
+                              ))}
+                              {Relationship && (
+                                <option value="">Bỏ chọn</option>
+                              )}
+                            </select>
+                          </td>
+                          <span
+                            style={{
+                              color: "red",
+                              fontSize: "16px",
+                              marginLeft: "65px",
+                            }}
+                          >
+                            {relationshipError}
+                          </span>
+                        </tr>
+                        <tr>
+                          <th className="text">Mã định danh:</th>
+                          <td className="input-text">
+                            <Input
+                              placeholder="Basic usage"
+                              value={Identifier}
+                              onChange={(e) => setIdentifier(e.target.value)}
+                            />
+                          </td>
+                          <span
+                            style={{
+                              color: "red",
+                              fontSize: "16px",
+                              marginLeft: "65px",
+                            }}
+                          >
+                            {identifierError}
+                          </span>
+                        </tr>
+                        <tr>
+                          <th className="text">Ngày sinh:</th>
+                          <td className="input-text">
+                            <Input
+                              type="date"
+                              placeholder="yyyy-MM-dd"
+                              value={convertDateFormat(date)}
+                              onChange={(e) =>
+                                setDate(convertDateFormat(e.target.value))
+                              }
+                            />
+                          </td>
+                          <span
+                            style={{
+                              color: "red",
+                              fontSize: "16px",
+                              marginLeft: "65px",
+                            }}
+                          >
+                            {dateError}
+                          </span>
+                        </tr>
+                        <tr>
+                          <th className="text">Trạng thái:</th>
+                          <td className="input-text">
+                            <Form.Item valuePropName={status}>
+                              <Switch
+                                checked={isChecked}
+                                onChange={handleSwitchChange}
+                              />
+                            </Form.Item>
+                            Còn phụ thuộc
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+            <div className="modal-footer modal-footer-dependent ">
+              <button className="btn-cancel" onClick={handleCancelAdd}>
+                Hủy bỏ
+              </button>
+              <button className="btn-save" onClick={add}>
+                Lưu
+              </button>
+            </div>
+          </Modal>
+        </div>
       </div>
     </>
   );
