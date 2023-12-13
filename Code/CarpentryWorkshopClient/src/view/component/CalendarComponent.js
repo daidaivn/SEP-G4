@@ -163,22 +163,6 @@ const CalendarComponent = () => {
 
   const handleCancelDetailShift = () => {};
 
-  const handleEditWork = () => {
-    if (workDetailById.status === "WorkNotStart") {
-      setIsEditing(true);
-    } else {
-      toast.warning("Đã đến thời gian của công việc này, không thể chỉnh sửa.");
-    }
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-  };
-
-  const handleEditDetailShift = () => {
-    setIsModalOpenDetailShift(true);
-  };
-
   const resetWorkDetailById = () => {
     setWorkDetailById({
       workId: "",
