@@ -96,14 +96,21 @@ function ListUserHeader() {
   const handleCancelUserRole = () => {
     setIsModalOpenUserRole(false);
   };
+  console.log('1233',userEmployeeID);
+    console.log('1233',months);
+    console.log('1233',date);
+
+
   const getSalaryDetail = () =>{
     toast.promise(
       GetEmployeeDetailSalary(userEmployeeID, months, date)
         .then((data) => {
-          setSalary(data);
+          console.log('3333',data);
+          setSalaryUser(data);
           console.log("salary", data);
         })
         .catch((error) => {
+          console.log("1233",error)
           throw toast.error(error.response.data);
         }),
       {
@@ -111,7 +118,7 @@ function ListUserHeader() {
       }
     );
   }
-  const [salary, setSalary] = useState([]);
+  const [salaryUser, setSalaryUser] = useState([]);
   const [isModalOpenPayroll, setIsModalOpenPayroll] = useState(false);
   const showModalPayroll = () => {
     getSalaryDetail();
@@ -141,14 +148,15 @@ function ListUserHeader() {
     setCapcha(generateCaptcha());
     setIsModalOpenChange(true);
   };
+
+  
   useEffect(() => {
     const storedUserName =
       localStorage.getItem("userName") || sessionStorage.getItem("userName");
     if (storedUserName) {
       setUserName(storedUserName);
     }
-    getSalaryDetail();
-  }, [months, date]);
+  }, []);
 
   return (
     <>
@@ -396,7 +404,7 @@ function ListUserHeader() {
         monthOptions={monthOptions}
         setMonths={setMonths}
         months={months}
-        salary={salary}
+        salaryUser={salaryUser}
       />
       <Role
         isModalOpenUserRole={isModalOpenUserRole}

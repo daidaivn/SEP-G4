@@ -12,8 +12,9 @@ const Salary = ({
   monthOptions,
   setMonths,
   months,
-  salary,
+  salaryUser,
 }) => {
+
   return (
     <>
       <Modal
@@ -85,9 +86,9 @@ const Salary = ({
                     <p>Lương thực tế</p>
                     <div className="money">
                       <p>
-                        {salary.actualDaySalary === 0
+                        {salaryUser.actualDaySalary === 0
                           ? "0"
-                          : formatMoney(salary.actualDaySalary)}{" "}
+                          : formatMoney(salaryUser.actualDaySalary)}{" "}
                         VND
                       </p>
                     </div>
@@ -99,9 +100,9 @@ const Salary = ({
                     <p>Lương làm thêm</p>
                     <div className="money">
                       <p>
-                        {salary.overtimeSalary === 0
+                        {salaryUser.overtimesalaryUser === 0
                           ? "0"
-                          : formatMoney(salary.overtimeSalary)}{" "}
+                          : formatMoney(salaryUser.overtimeSalary)}{" "}
                         VND
                       </p>
                     </div>
@@ -113,9 +114,9 @@ const Salary = ({
                     <p>Lương kinh doanh sản lưởng</p>
                     <div className="money">
                       <p>
-                        {salary.businessSalary === 0
+                        {salaryUser.businessSalary === 0
                           ? "0"
-                          : formatMoney(salary.businessSalary)}{" "}
+                          : formatMoney(salaryUser.businessSalary)}{" "}
                         VND
                       </p>
                     </div>
@@ -136,10 +137,9 @@ const Salary = ({
                     <p>Ăn trưa</p>
                     <div className="money">
                       <p>
-                        {salary.allowances.meal === 0
-                          ? "0"
-                          : formatMoney(salary.allowances.meal)}{" "}
-                        VND
+                        {salaryUser && salaryUser.allowances && salaryUser.allowances.meal
+                          ? formatMoney(salaryUser.allowances.meal)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
@@ -150,10 +150,9 @@ const Salary = ({
                     <p>Đồng phục</p>
                     <div className="money">
                       <p>
-                        {salary.allowances.uniform === 0
-                          ? "0"
-                          : formatMoney(salary.allowances.uniform)}{" "}
-                        VND
+                        {salaryUser && salaryUser.allowances && salaryUser.allowances.uniform
+                          ? formatMoney(salaryUser.allowances.uniform)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
@@ -164,15 +163,15 @@ const Salary = ({
                     <p>Xăng xe</p>
                     <div className="money">
                       <p>
-                        {salary.allowances.petrol === 0
-                          ? "0"
-                          : formatMoney(salary.allowances.petrol)}{" "}
-                        VND
+                        {salaryUser && salaryUser.allowances && salaryUser.allowances.petrol
+                          ? formatMoney(salaryUser.allowances.petrol)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="item-child1-col">
                 <div className="child1-col">
                   <div className="child1-text">
@@ -187,9 +186,9 @@ const Salary = ({
                     <p>Thưởng công ty</p>
                     <div className="money">
                       <p>
-                        {salary.companyWideBonus === 0
+                        {salaryUser.companyWideBonus === 0
                           ? "0"
-                          : formatMoney(salary.companyWideBonus)}{" "}
+                          : formatMoney(salaryUser.companyWideBonus)}{" "}
                         VND
                       </p>
                     </div>
@@ -201,7 +200,7 @@ const Salary = ({
                     <p>Thưởng cá nhân</p>
                     <div className="money">
                       <p>
-                        {salary.bonus === 0 ? "0" : formatMoney(salary.bonus)}{" "}
+                        {salaryUser.bonus === 0 ? "0" : formatMoney(salaryUser.bonus)}{" "}
                         VND
                       </p>
                     </div>
@@ -213,9 +212,9 @@ const Salary = ({
                     <p>Các khoản khác</p>
                     <div className="money">
                       <p>
-                        {salary.specialOccasion === 0
+                        {salaryUser.specialOccasion === 0
                           ? "0"
-                          : formatMoney(salary.specialOccasion)}{" "}
+                          : formatMoney(salaryUser.specialOccasion)}{" "}
                         VND
                       </p>
                     </div>
@@ -236,10 +235,9 @@ const Salary = ({
                     <p>BHXH</p>
                     <div className="money">
                       <p>
-                        {salary.deductions.socialInsurance === 0
-                          ? "0"
-                          : formatMoney(salary.deductions.socialInsurance)}{" "}
-                        VND
+                        {salaryUser.deductions && salaryUser.deductions.socialInsurance !== undefined
+                          ? formatMoney(salaryUser.deductions.socialInsurance)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
@@ -250,10 +248,9 @@ const Salary = ({
                     <p>BHYT</p>
                     <div className="money">
                       <p>
-                        {salary.deductions.healthInsurance === 0
-                          ? "0"
-                          : formatMoney(salary.deductions.healthInsurance)}{" "}
-                        VND
+                        {salaryUser.deductions && salaryUser.deductions.healthInsurance !== undefined
+                          ? formatMoney(salaryUser.deductions.healthInsurance)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
@@ -264,12 +261,9 @@ const Salary = ({
                     <p>BHTT</p>
                     <div className="money">
                       <p>
-                        {salary.deductions.unemploymentInsurance === 0
-                          ? "0"
-                          : formatMoney(
-                              salary.deductions.unemploymentInsurance
-                            )}{" "}
-                        VND
+                        {salaryUser.deductions && salaryUser.deductions.unemploymentInsurance !== undefined
+                          ? formatMoney(salaryUser.deductions.unemploymentInsurance)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
@@ -280,15 +274,15 @@ const Salary = ({
                     <p>Phí công đoàn</p>
                     <div className="money">
                       <p>
-                        {salary.deductions.unionFees === 0
-                          ? "0"
-                          : formatMoney(salary.deductions.unionFees)}{" "}
-                        VND
+                        {salaryUser.deductions && salaryUser.deductions.unionFees !== undefined
+                          ? formatMoney(salaryUser.deductions.unionFees)
+                          : "0"} VND
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="item-child1-col">
                 <div className="child1-col">
                   <div className="child1-text">
@@ -296,9 +290,9 @@ const Salary = ({
                     <p>Thuế thu nhập cá nhân</p>
                     <div className="money">
                       <p>
-                        {salary.personalIncomeTax === 0
+                        {salaryUser.personalIncomeTax === 0
                           ? "0"
-                          : formatMoney(salary.personalIncomeTax)}{" "}
+                          : formatMoney(salaryUser.personalIncomeTax)}{" "}
                         VND
                       </p>
                     </div>
@@ -312,9 +306,9 @@ const Salary = ({
                     <p>Lương ứng</p>
                     <div className="money">
                       <p>
-                        {salary.advances === 0
+                        {salaryUser.advances === 0
                           ? "0"
-                          : formatMoney(salary.advances)}{" "}
+                          : formatMoney(salaryUser.advances)}{" "}
                         VND
                       </p>
                     </div>
@@ -329,9 +323,9 @@ const Salary = ({
                     <p>Tổng số tiền nhận được</p>
                     <div className="money">
                       <p>
-                        {salary.actualReceived === 0
+                        {salaryUser.actualReceived === 0
                           ? "0"
-                          : formatMoney(salary.actualReceived)}{" "}
+                          : formatMoney(salaryUser.actualReceived)}{" "}
                         VND
                       </p>
                     </div>

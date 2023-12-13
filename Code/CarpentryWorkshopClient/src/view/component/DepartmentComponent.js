@@ -147,7 +147,7 @@ function ListDepartmentComponent() {
   const fetData = () => {
     let isDataLoaded = false;
     let toastId = null;
-  
+
     fetchAllDepadment()
       .then((data) => {
         isDataLoaded = true;
@@ -332,36 +332,6 @@ function ListDepartmentComponent() {
               />
             </svg>
           </i>
-          <div className="list-add" onClick={showModalDepartment}>
-            <i className="icon-web">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-              >
-                <path
-                  d="M20.8745 16.75H18.6245V14.5C18.6245 14.09 18.2845 13.75 17.8745 13.75C17.4645 13.75 17.1245 14.09 17.1245 14.5V16.75H14.8745C14.4645 16.75 14.1245 17.09 14.1245 17.5C14.1245 17.91 14.4645 18.25 14.8745 18.25H17.1245V20.5C17.1245 20.91 17.4645 21.25 17.8745 21.25C18.2845 21.25 18.6245 20.91 18.6245 20.5V18.25H20.8745C21.2845 18.25 21.6245 17.91 21.6245 17.5C21.6245 17.09 21.2845 16.75 20.8745 16.75Z"
-                  fill="white"
-                />
-                <path
-                  opacity="0.4"
-                  d="M22.3745 8.52V3.98C22.3745 2.57 21.7345 2 20.1445 2H16.1045C14.5145 2 13.8745 2.57 13.8745 3.98V8.51C13.8745 9.93 14.5145 10.49 16.1045 10.49H20.1445C21.7345 10.5 22.3745 9.93 22.3745 8.52Z"
-                  fill="white"
-                />
-                <path
-                  d="M10.8745 8.52V3.98C10.8745 2.57 10.2345 2 8.64451 2H4.60451C3.01451 2 2.37451 2.57 2.37451 3.98V8.51C2.37451 9.93 3.01451 10.49 4.60451 10.49H8.64451C10.2345 10.5 10.8745 9.93 10.8745 8.52Z"
-                  fill="white"
-                />
-                <path
-                  opacity="0.4"
-                  d="M10.8745 19.77V15.73C10.8745 14.14 10.2345 13.5 8.64451 13.5H4.60451C3.01451 13.5 2.37451 14.14 2.37451 15.73V19.77C2.37451 21.36 3.01451 22 4.60451 22H8.64451C10.2345 22 10.8745 21.36 10.8745 19.77Z"
-                  fill="white"
-                />
-              </svg>
-            </i>
-          </div>
           <i className="icon-responsive icon-filter icon-add">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -515,12 +485,6 @@ function ListDepartmentComponent() {
               <div className="modal-footer modal-footer-deparment modal-footer-group">
                 <button className="btn-cancel" onClick={handleCancelDetail}>
                   Thoát
-                </button>
-                <button
-                  className="btn-edit btn-fix-group"
-                  onClick={showModalEditDepartment}
-                >
-                  Đổi tên phòng ban
                 </button>
               </div>
             </div>
