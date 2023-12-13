@@ -14,7 +14,10 @@ const TableCalendar = ({
   convertDate,
   selectedYear,
   shift,
+  team,
   setShift,
+  setTeam,
+  fetchAllShiftType,
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -40,9 +43,27 @@ const TableCalendar = ({
               <tr key={team.teamId}>
                 <td>
                   {team.teamName}
-                  <div className="shift" onClick={() => showModalGroup()}>
-                    {team.shiftTypeName.map((item, index) => (
-                      <div key={index} onClick={()=>setShift(item)}>{item}</div>
+                  <div
+                    className="shift"
+                    onClick={() => {
+                      showModalGroup();
+                      fetchAllShiftType();
+                    }}
+                  >
+                    {team.shiftType.map((item, index) => (
+                      <div
+                        key={index}
+                        onClick={() =>
+                          {setShift({
+                            ShiftId: item.shiftTypeId,
+                            ShiftName: item.typeName,
+                            TeamName: team.teamName,
+                            NumberOfMember: team.numberMember,
+                          });}
+                        }
+                      >
+                        {item.typeName}
+                      </div>
                     ))}
                   </div>
                 </td>

@@ -62,10 +62,10 @@ namespace CarpentryWorkshopAPI.Controllers
                                   System.Globalization.CultureInfo.InvariantCulture);
                 var startDate = DateTime.ParseExact(start + "/" + workInputDTO.Year, "dd/MM/yyyy",
                                System.Globalization.CultureInfo.InvariantCulture);
-                
+
                 work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value >= startDate && tw.Date.Value <= endDate)).ToList();
-                
-                if(workInputDTO.Year > 0)
+
+                if (workInputDTO.Year > 0)
                 {
                     work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Year == workInputDTO.Year)).ToList();
                 }

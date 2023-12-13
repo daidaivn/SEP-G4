@@ -15,6 +15,7 @@ import {
 } from "../../sevices/CalendarSevice";
 import { GetAllUnitCosts } from "../../sevices/UnitCostSevice";
 import { GetAllWorkAreas } from "../../sevices/WorkAreaSevice";
+import { fetchShiftType } from "../../sevices/ShiftTypeService";
 import {
   ListSearchFilterAdd,
   ModalListShift,
@@ -43,6 +44,7 @@ const CalendarComponent = () => {
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [allWorks, setAllWorks] = useState([]);
   const [iText, setIText] = useState("");
+  const [shiftType, setShiftType] = useState([]);
 
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
@@ -56,11 +58,19 @@ const CalendarComponent = () => {
     status: "",
     date: getTomorrowDateSEAsia(),
   });
+  const innitShift= {
+    ShiftId: "",
+    ShiftName: "",
+    TeamName: "",
+    TeamID : "",
+    NumberOfMember: "",
+  }
+  
   const [allUnitCosts, setAllUnitCosts] = useState([]);
   const [allWorkAreas, setAllWorkAreas] = useState([]);
   const [workidDetail, setWorkidDetail] = useState([]);
-  const [shift, setShift] = useState("");
-  const [teamName, SetTeamName] = useState("");
+  const [shift, setShift] = useState(innitShift);
+  const [team, setTeam] = useState([]);
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
@@ -278,6 +288,17 @@ const CalendarComponent = () => {
     }, 1000);
   };
 
+  const fetchAllShiftType = () => {
+    fetchShiftType(shift.ShiftId)
+      .then((data) => {
+        setShiftType(data);
+        console.log('shift', data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   console.log('selectedWeek',selectedWeek);
   
 
@@ -329,7 +350,10 @@ const CalendarComponent = () => {
           setWorkDetailById={setWorkDetailById}
           convertDate={convertDate}
           shift={shift}
+          team={team}
           setShift={setShift}
+          setTeam={setTeam}
+          fetchAllShiftType={fetchAllShiftType}
         />
 
         <ModalListShift
@@ -365,7 +389,10 @@ const CalendarComponent = () => {
           handleOkGroup={handleOkGroup}
           handleCancelGroup={handleCancelGroup}
           shift={shift}
+          team={team}
           setShift={setShift}
+          SetTeam={setTeam}
+          shiftType={shiftType}
         />
       </div>
     </>
