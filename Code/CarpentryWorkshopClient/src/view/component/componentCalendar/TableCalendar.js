@@ -1,5 +1,5 @@
 import { parseWeekRange } from "../../logicTime/getWeeDays";
-import { format, parse } from 'date-fns';
+import { format, parse } from "date-fns";
 
 const TableCalendar = ({
   showModalDetailShift,
@@ -12,7 +12,9 @@ const TableCalendar = ({
   setWorkidDetail,
   setWorkDetailById,
   convertDate,
-  selectedYear
+  selectedYear,
+  shift,
+  setShift,
 }) => {
   const weekDays = selectedWeek
     ? parseWeekRange(selectedWeek)
@@ -38,19 +40,21 @@ const TableCalendar = ({
               <tr key={team.teamId}>
                 <td>
                   {team.teamName}
-                  <div className="shift" onClick={showModalGroup}>
-                    Ca 1
+                  <div className="shift" onClick={() => showModalGroup()}>
+                    {team.shiftTypeName.map((item, index) => (
+                      <div key={index} onClick={()=>setShift(item)}>{item}</div>
+                    ))}
                   </div>
                 </td>
                 {team.dataForWork.map((work, workIndex) => (
-                  <td key={workIndex} >
+                  <td key={workIndex}>
                     {work.status === "end" ? (
                       <>
                         Kết thúc
                         <svg
                           onClick={() => {
-                            handlegetDataDetail(work.workId)
-                            setActionWork("viewWork")
+                            handlegetDataDetail(work.workId);
+                            setActionWork("viewWork");
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -82,11 +86,14 @@ const TableCalendar = ({
                         <svg
                           onClick={() => {
                             showModalDetailShift();
-                            setActionWork("addWork")
-                            setWorkidDetail(team.teamId)
+                            setActionWork("addWork");
+                            setWorkidDetail(team.teamId);
                             const columnIndex = workIndex;
                             const selectedDate = weekDays[columnIndex];
-                            const formattedDate = format(parse(selectedDate, 'dd/MM', new Date()), 'dd-MM-yyyy');
+                            const formattedDate = format(
+                              parse(selectedDate, "dd/MM", new Date()),
+                              "dd-MM-yyyy"
+                            );
                             setWorkDetailById({
                               date: formattedDate,
                             });
@@ -115,8 +122,8 @@ const TableCalendar = ({
                         Chi tiết
                         <svg
                           onClick={() => {
-                            setActionWork("editWork")
-                            handlegetDataDetail(work.workId)
+                            setActionWork("editWork");
+                            handlegetDataDetail(work.workId);
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -135,8 +142,8 @@ const TableCalendar = ({
                         </svg>
                       </>
                     ) : (
-                      <></>)
-                    }
+                      <></>
+                    )}
                   </td>
                 ))}
               </tr>
