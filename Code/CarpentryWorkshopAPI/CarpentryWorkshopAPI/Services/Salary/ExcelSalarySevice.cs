@@ -374,6 +374,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                  .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
                                  .Select(x => x.Percentage)
                                  .FirstOrDefaultAsync();
+            var company = await _context.CompanyWideBonus
+               .Where(cw => cw.BonusDate >= startDate && cw.BonusDate <= endDate)
+               .SumAsync(cw => cw.BonusAmount);
             var resultTask = employees.Select(async e =>
             {
                 var latestContract = GetLatestContract(e);
@@ -401,10 +404,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .Sum(bd => bd.BonusAmount);
                 var special = e.SpecialOccasions
                 .Where(so => so.OccasionDate >= startDate && so.OccasionDate <= endDate)
-                .Sum(so => so.Amount);
-                var company = e.CompanyWideBonus
-                .Where(cw => cw.BonusDate >= startDate && cw.BonusDate <= endDate)
-                .Sum(cw => cw.BonusAmount);
+                .Sum(so => so.Amount);             
                 var totalBs = bonus + special + company;
                 if (totalBs == null)
                 {
@@ -692,6 +692,9 @@ namespace CarpentryWorkshopAPI.Services.Salary
                                  .Where(x => x.DeductionType.Name.ToLower().Equals(union.ToLower()))
                                  .Select(x => x.Percentage)
                                  .FirstOrDefaultAsync();
+            var company = await _context.CompanyWideBonus
+               .Where(cw => cw.BonusDate >= startDate && cw.BonusDate <= endDate)
+               .SumAsync(cw => cw.BonusAmount);
 
             var latestContract = GetLatestContract(employees);
             var actualWorkDays = CalculateActualWorkingDays(employees, startDate, endDate, holidays, timeZone);
@@ -719,9 +722,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var special = employees.SpecialOccasions
             .Where(so => so.OccasionDate >= startDate && so.OccasionDate <= endDate)
             .Sum(so => so.Amount);
-            var company = employees.CompanyWideBonus
-            .Where(cw => cw.BonusDate >= startDate && cw.BonusDate <= endDate)
-            .Sum(cw => cw.BonusAmount);
             var totalBs = bonus + special + company;
             if (totalBs == null)
             {
