@@ -1,9 +1,16 @@
 import React from "react";
-import { Input, Modal } from "antd";
+import { Input, Modal,Select } from "antd";
+import { GetEmployeeDetailSalary } from "../../../sevices/PayrollSevice";
 const Salary = ({
   isModalOpenPayroll,
   handleOkPayroll,
   handleCancelPayroll,
+  date,
+  setDate,
+  yearOptions,
+  monthOptions,
+  setMonths,
+  months,
 }) => {
   return (
     <>
@@ -18,7 +25,29 @@ const Salary = ({
           <div className="modal-head">
             <div className="body-payroll1">
               <p>Bảng lương</p>
-              <Input type="date"></Input>
+              <div className="list-filter">
+                <Select
+                  className="select-input"
+                  value={`Tháng ${months}`}
+                  style={{ width: 120 }}
+                  onChange={setMonths}
+                  options={monthOptions.map((month) => ({
+                    value: month.value,
+                    label: `Tháng ${month.label}`,
+                  }))}
+                  placeholder="Chọn năm"
+                />
+              </div>
+              <div className="list-filter year">
+                <Select
+                  className="select-input"
+                  value={date}
+                  style={{ width: 120 }}
+                  onChange={setDate}
+                  options={yearOptions}
+                  placeholder="Chọn năm"
+                />
+              </div>
             </div>
             <div className="close">
               <svg
