@@ -85,6 +85,9 @@ const RewardCompany = ({
                         <div className="child-reward last1">
                           <p>{item.occasionDateString}</p>
                         </div>
+                        <div className="child-reward last1">
+                          <p>Hiếu hỉ</p>
+                        </div>
                       </div>
                     ))}
                   {Array.isArray(reward.companyRewardList) &&
@@ -104,6 +107,9 @@ const RewardCompany = ({
                         <div className="child-reward last1">
                           <p>{item.bonusDatestring}</p>
                         </div>
+                        <div className="child-reward last1">
+                          <p>toàn thế</p>
+                        </div>
                       </div>
                     ))}
                   {Array.isArray(reward.personalRewardList) &&
@@ -122,6 +128,9 @@ const RewardCompany = ({
                         </div>
                         <div className="child-reward last1">
                           <p>{item.bonusDatestring}</p>
+                        </div>
+                        <div className="child-reward last1">
+                          <p>Cá nhân</p>
                         </div>
                       </div>
                     ))}
