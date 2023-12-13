@@ -97,7 +97,7 @@ const GetEmployeeDetailSalary = (eid, EMonth, EYear) => {
     const month = EMonth;
     const year = EYear;
     return axios.get(
-        `/CCMSapi/Salary/GetEmployeeActualSalaryDetail?employeeid=${employeeid}&month=${month}&year=${year}`
+        `/CCMSapi/ExcelSalary/GetEmployeesByContractDate/ContractsByDate/${month}/${year}/${employeeid}`
     );
 };
 export {
