@@ -266,7 +266,7 @@ function ListEmployeeComponent() {
     }
 
     if (
-      originalCIC &&
+      !originalCIC &&
       !(originalCIC.length === 9 || originalCIC.length === 12)
     ) {
       errors.push("Mã định danh phải có 9 hoặc 12 số.");
