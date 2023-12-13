@@ -148,7 +148,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Dữ liệu không hợp lệ");
                 }
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeId && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
@@ -230,7 +230,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
 
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == workDTO.EmployeeId && re.Role.RoleName == "Nhóm trưởng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == workDTO.EmployeeId && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
