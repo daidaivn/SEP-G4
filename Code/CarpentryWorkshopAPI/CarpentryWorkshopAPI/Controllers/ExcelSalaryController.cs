@@ -26,6 +26,7 @@ namespace CarpentryWorkshopAPI.Controllers
         public async Task<ActionResult<IEnumerable<EmployeeInfo>>> GetEmployeesByContractDate(int month, int year, int employeeId)
         {
             var employees = await _excelSalarySevice.GetEmployeesByContractDateAsyncById(month, year, employeeId);
+
             return Ok(employees);
         }
 

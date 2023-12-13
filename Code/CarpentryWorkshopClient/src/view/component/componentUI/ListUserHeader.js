@@ -63,14 +63,12 @@ function ListUserHeader() {
     setUserAllVisible(false);
   };
 
-  const [isModalOpenUser, setIsModalOpenUser] = useState(false);
-  const showModalUser = () => {
+  const getDetailEmployee = () =>{
     toast.promise(
       new Promise((resolve) => {
         DetailID(userEmployeeID)
           .then((data) => {
             setEmployee(data);
-
             resolve(data);
           })
           .catch((error) => {
@@ -79,10 +77,12 @@ function ListUserHeader() {
       }),
       {
         pending: "Đang xử lý",
-        success: "success",
-        error: `Lỗi làm việc`,
       }
     );
+
+  }
+  const [isModalOpenUser, setIsModalOpenUser] = useState(false);
+  const showModalUser = () => {  
     setIsModalOpenUser(true);
   };
   const handleOkUser = () => {
@@ -159,14 +159,15 @@ function ListUserHeader() {
   localStorage.getItem("userEmployeeID") || sessionStorage.getItem("userEmployeeID");
 
   useEffect(() => {
+    getDetailEmployee();
 
   }, []);
 
   return (
     <>
       <div className="list-user-header">
-        <span onClick={toggleUserAll}>{storedUserID ? `${storedUserID}` : "User"}</span>
-        <img onClick={toggleUserAll} className="user-list" src={user} alt="" />
+        <span onClick={toggleUserAll}>{employee && employee.fullName ? `${employee.fullName}` : "User"}</span>
+        <img onClick={toggleUserAll} className="user-list" src={employee && employee.image ? `${employee.image}` : user} alt="" />
       </div>
       {userAllVisible && (
         <div className="user-all">
