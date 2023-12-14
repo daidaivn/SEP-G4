@@ -67,6 +67,23 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpGet]
+        public IActionResult GetAllRewards(string date)
+        {
+            try
+            {
+                var result = _bonusService.GetAllReward(date);
+                if (result == null)
+                {
+                    return BadRequest("Lỗi dữ liệu");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
+        [HttpGet]
         public IActionResult GetPersonRewards(int id)
         {
             try
