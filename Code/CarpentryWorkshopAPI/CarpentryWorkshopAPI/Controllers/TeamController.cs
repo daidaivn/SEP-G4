@@ -332,7 +332,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string leade = "Nhóm trưởng";
+                string leade = "Trưởng phòng";
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
