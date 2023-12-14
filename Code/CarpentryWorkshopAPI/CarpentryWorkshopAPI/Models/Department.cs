@@ -14,6 +14,7 @@ namespace CarpentryWorkshopAPI.Models
         public int DepartmentId { get; set; }
         public string? DepartmentName { get; set; }
         public bool? Status { get; set; }
+        public int? IsOffice { get; set; }
 
         public virtual ICollection<DepartmentsStatusHistory> DepartmentsStatusHistories { get; set; }
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }

@@ -84,7 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
         public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
         {
-            var personCheckInOut = _context.RolesEmployees.Include(re => re.Role).Where(re => re.EmployeeId == teamLeaderId && re.Role.RoleName == "Bảo vệ" && re.EndDate == null).FirstOrDefault();
+            var personCheckInOut = _context.RolesEmployees.Include(re => re.Role).Where(re => re.EmployeeId == teamLeaderId && re.Role.RoleName.Contains("Trưởng phòng") && re.EndDate == null).FirstOrDefault();
 
             if (personCheckInOut == null)
             {
