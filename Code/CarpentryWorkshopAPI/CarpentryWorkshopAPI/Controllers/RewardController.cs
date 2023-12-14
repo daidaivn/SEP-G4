@@ -105,7 +105,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var result = _bonusService.GetPersonalReward(id);
+                var result = _bonusService.GetCompanyReward(id);
                 if (result == null)
                 {
                     return BadRequest("Lỗi dữ liệu");
