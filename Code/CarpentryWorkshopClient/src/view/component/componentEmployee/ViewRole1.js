@@ -45,9 +45,6 @@ const ViewRole1 = ({
                 {idDetail && idDetail.roleDepartments && (
                   <div className="show-role">
                     <div className="show-item-role">
-                      <tr>
-                        <p>Chức vụ chính:</p>
-                      </tr>
                       {idDetail.roleDepartments.length > 0 && (
                         <tr>
                           <div className="tr-child">
@@ -65,29 +62,6 @@ const ViewRole1 = ({
                           </div>
                         </tr>
                       )}
-                    </div>
-                    <div className="show-item-role role-fix">
-                      <tr>
-                        <p>Kiêm chức vụ:</p>
-                      </tr>
-                      {idDetail.roleDepartments
-                        .slice(1)
-                        .map((roleDept, index) => (
-                          <tr key={index}>
-                            <div className="tr-child">
-                              <Input
-                                type="text"
-                                value={roleDept.roleName}
-                              ></Input>
-                            </div>
-                            <div className="tr-child">
-                              <Input
-                                type="text"
-                                value={roleDept.departmentName}
-                              ></Input>
-                            </div>
-                          </tr>
-                        ))}
                     </div>
                   </div>
                 )}

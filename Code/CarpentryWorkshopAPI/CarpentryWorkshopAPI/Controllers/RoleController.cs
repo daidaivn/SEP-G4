@@ -55,6 +55,34 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest("Lỗi dữ liệu");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRolesByDepartmentId(int departmentId)
+        {
+            try
+            {
+                var department = await _context.Departments
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(d => d.DepartmentId == departmentId);
+
+                if (department == null)
+                {
+                    return NotFound($"Department with ID {departmentId} not found.");
+                }
+
+                var roles = await _context.Roles
+                    .AsNoTracking()
+                    .Where(r => r.IsOffice == department.IsOffice)
+                    .ToListAsync();
+
+                return Ok(roles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet]
         public IActionResult GetRoleEmployeeById(int roleid)
         {

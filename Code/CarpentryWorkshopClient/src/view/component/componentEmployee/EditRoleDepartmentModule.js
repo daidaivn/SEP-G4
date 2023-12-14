@@ -12,6 +12,7 @@ const EditRoleDepartmentModule = ({
   handleCancelView1,
   handleSaveRole,
   HandelEditRole,
+  allRole
 }) => {
   return (
     <Modal
@@ -31,7 +32,7 @@ const EditRoleDepartmentModule = ({
               <td>Phòng ban</td>
             </thead>
             <div className="body-table">
-              {[...Array(3)].map((_, index) => (
+              {[...Array(1)].map((_, index) => (
                 <tr key={index}>
                   <Select
                     className="select-input"
@@ -53,7 +54,7 @@ const EditRoleDepartmentModule = ({
                     options={[
                       { value: null, label: "Bỏ chức vụ" },
                       ...roles.map((role) => ({
-                        value: role.roleID,
+                        value: role.roleId,
                         label: role.roleName,
                       })),
                     ]}
@@ -73,6 +74,9 @@ const EditRoleDepartmentModule = ({
                         ...idDetail,
                         roleDepartments: newRoleDepartments,
                       });
+                      allRole(newRoleDepartments[0].departmentID);
+                      console.log('newRoleDepartments',newRoleDepartments[0].departmentID);
+                      
                     }}
                     style={{
                       width: "100%",

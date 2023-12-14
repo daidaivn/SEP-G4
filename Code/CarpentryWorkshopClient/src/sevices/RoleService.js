@@ -45,4 +45,12 @@ const EditRole = (eId, updatedRoleDepartments) => {
   return axios.post(`/CCMSapi/Role/EditRole`, requestBody);
 
 };
-export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole , EditRole};
+
+const GetRolesByDepartmentId = (departmentID) => {
+  const departmentId = departmentID;
+  return axios.get(
+    `/CCMSapi/Role/GetRolesByDepartmentId?departmentId=${departmentId}`
+  );
+};
+
+export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole , EditRole, GetRolesByDepartmentId};
