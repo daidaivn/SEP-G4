@@ -71,8 +71,58 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-
                 var result = _bonusService.GetAllReward(date);
+                if (result == null)
+                {
+                    return BadRequest("Lỗi dữ liệu");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
+        [HttpGet]
+        public IActionResult GetPersonRewards(int id)
+        {
+            try
+            {
+                var result = _bonusService.GetPersonalReward(id);
+                if (result == null)
+                {
+                    return BadRequest("Lỗi dữ liệu");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
+        [HttpGet]
+        public IActionResult GetSpecialRewards(int id)
+        {
+            try
+            {
+                var result = _bonusService.GetSpecialOccasionReward(id);
+                if (result == null)
+                {
+                    return BadRequest("Lỗi dữ liệu");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
+        [HttpGet]
+        public IActionResult GetCompanyRewards(int id)
+        {
+            try
+            {
+                var result = _bonusService.GetPersonalReward(id);
                 if (result == null)
                 {
                     return BadRequest("Lỗi dữ liệu");
