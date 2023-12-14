@@ -711,7 +711,7 @@ namespace CarpentryWorkshopAPI.Models
             {
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
-                entity.Property(e => e.RoleName).HasMaxLength(20);
+                entity.Property(e => e.RoleName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<RolesEmployee>(entity =>

@@ -16,6 +16,7 @@ namespace CarpentryWorkshopAPI.Models
         public int? RoleLevel { get; set; }
         public string? RoleName { get; set; }
         public bool? Status { get; set; }
+        public int? IsOffice { get; set; }
 
         public virtual ICollection<RolesEmployee> RolesEmployees { get; set; }
         public virtual ICollection<RolesStatusHistory> RolesStatusHistories { get; set; }
