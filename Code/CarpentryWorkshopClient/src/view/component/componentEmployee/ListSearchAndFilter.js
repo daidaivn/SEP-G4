@@ -89,7 +89,8 @@ const ListSearchAndFilter = ({
   amount,
   setAmount,
   setOriginalOffice,
-  originalOffice
+  originalOffice,
+  allRole
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -434,6 +435,7 @@ const ListSearchAndFilter = ({
         setRoleDepartmentValues={setRoleDepartmentValues}
         roles={roles}
         departments={departments}
+        allRole={allRole}
       />
       {isEditingContract ? (
         <EditContractModal

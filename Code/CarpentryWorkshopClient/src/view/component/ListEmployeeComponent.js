@@ -36,7 +36,7 @@ import {
   EditRoleDepartmentModule,
   ViewRoleDepartmentModule,
 } from "./componentEmployee";
-import { EditRole } from "../../sevices/RoleService";
+import { EditRole, GetRolesByDepartmentId } from "../../sevices/RoleService";
 import avt from "../assets/images/Frame 1649.svg";
 import ViewRole1 from "./componentEmployee/ViewRole1";
 function ListEmployeeComponent() {
@@ -122,19 +122,10 @@ function ListEmployeeComponent() {
     
   };
 
+  console.log("id2323", id);
+
   console.log('originalOffice',originalOffice);
 
-  const addDependent = () => {
-    if (updatedIdDetail && updatedIdDetail.roleDepartments) {
-      const newRoleDepartmentValues = updatedIdDetail.roleDepartments.map(
-        (roleDept) => ({
-          roleID: roleDept.roleID,
-          departmentID: roleDept.departmentID,
-        })
-      );
-      setRoleDepartmentValues(newRoleDepartmentValues);
-    }
-  };
   const handleContractAmountChange = (e) => {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setAmount(formattedValue);
@@ -490,6 +481,7 @@ function ListEmployeeComponent() {
         .then((data) => {
           handleSaveRole();
           fetchData();
+          handlelDetail(id)
           return data;
         })
         .catch((error) => {
@@ -685,13 +677,15 @@ function ListEmployeeComponent() {
     setIsEditingContract(false); // Đặt trạng thái chỉnh sửa về false
     setIsModalOpenEditContract(true);
   };
-  const allRole = () => {
-    fetchAllRole()
+
+  const allRole = (departmentID) => {
+    GetRolesByDepartmentId(departmentID)
       .then((data) => {
         setRoles(data);
       })
       .catch((error) => { });
   };
+
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
       .then((data) => {
@@ -701,6 +695,8 @@ function ListEmployeeComponent() {
         console.log(error);
       });
   };
+
+
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
       const parts = dobstring.split("-");
@@ -803,7 +799,6 @@ function ListEmployeeComponent() {
   useEffect(() => {
     fetchAllCountry();
     fetchData();
-    allRole();
     fetDataDepartment();
     featchAllContract();
   }, [id]);
@@ -1046,6 +1041,7 @@ function ListEmployeeComponent() {
         setAmount={setAmount}
         setOriginalOffice={setOriginalOffice}
         originalOffice={originalOffice}
+        allRole={allRole}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
@@ -1076,6 +1072,7 @@ function ListEmployeeComponent() {
           handleCancelView1={handleCancelView1}
           handleSaveRole={handleSaveRole}
           HandelEditRole={HandelEditRole}
+          allRole={allRole}
         />
       ) : (
         // view chức vụ
