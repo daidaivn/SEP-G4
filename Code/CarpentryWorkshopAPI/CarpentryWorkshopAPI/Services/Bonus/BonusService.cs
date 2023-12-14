@@ -189,8 +189,8 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                      .Select(group => group.First())
                      .ToList();
 
-            List<DTO.AllRewardDTO.CWR> companydto = new List<AllRewardDTO.CWR>();
-            return companydto;
+            
+            return company;
         }
 
         public dynamic GetSpecialOccasionReward(int id)

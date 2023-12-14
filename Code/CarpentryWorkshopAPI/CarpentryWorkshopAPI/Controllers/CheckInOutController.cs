@@ -84,8 +84,7 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
         public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
         {
-            var personCheckInOut = _context.RolesEmployees.Include(re => re.Role).Where(re => re.EmployeeId == teamLeaderId && re.Role.RoleName.Contains("Trưởng phòng") && re.EndDate == null).FirstOrDefault();
-
+            var personCheckInOut = _context.RolesEmployees.Include(re => re.Role).Include(re=>re.Department).Where(re => re.EmployeeId == teamLeaderId && re.Role.RoleName.Contains("Trưởng phòng") && re.EndDate == null && re.Department.IsOffice != 4).FirstOrDefault();
             if (personCheckInOut == null)
             {
                 var teamId = await _context.Teams
@@ -253,14 +252,13 @@ namespace CarpentryWorkshopAPI.Controllers
                if(time == null)
                 {
                     return Ok(Enumerable.Empty<object>());
-                }
-               
+                }               
                 return time;
 
             }
             else
             {
-                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Where(e => e.Role.RoleName != "Bảo vệ" && e.Role.RoleName != "Nhân viên" && e.EndDate == null).Select(e => e.Employee).Distinct().ToListAsync();
+                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Include(e=>e.Department).Where(e => e.DepartmentId == personCheckInOut.DepartmentId && e.EndDate == null).Select(e => e.Employee).Distinct().ToListAsync();
                 if (employees.Count() == 0)
                 {
                     return NotFound("Không tìm thấy nhân viên trong nhóm có ngày kết thúc trống");
