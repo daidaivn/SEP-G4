@@ -343,7 +343,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .ThenInclude(at => at.Allowance)
                         .Include(e => e.BonusDetails)
                         .Include(e => e.SpecialOccasions)
-                .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
+                .Include(e => e.RolesEmployees)
+                .ThenInclude(re => re.Role)
+                .Include(e => e.RolesEmployees)
+                .ThenInclude(re => re.Department)
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
                 .ToListAsync();
@@ -447,19 +450,23 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var advances = e.AdvancesSalaries
                          .Where(x => x.EmployeeId == e.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
                          .Sum(x => x.Amount);
-                if (latestContract != null && (bool)latestContract.IsOffice == true)
+
+                var roleEmployee = e.RolesEmployees.FirstOrDefault(); 
+                var department = roleEmployee?.Department;
+
+                if (department != null && department.IsOffice != 4)
                 {
                     basicSalary = latestContract.Amount ?? 0;
                     dailyWage = basicSalary / workingDaysInMonth;
                     actualWorkdaySalary = actualWorkDays * dailyWage;
                 }
-                if (latestContract != null && (bool)latestContract.IsOffice == false)
+
+                if (department != null && department.IsOffice == 4)
                 {
                     basicSalary = latestContract.Amount ?? 0;
                     actualWorkdaySalary = e.HoursWorkDays
-                    .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == e.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
-                    .Sum(h => (decimal)(h.DailyRate ?? 0));
-
+                        .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == e.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
+                        .Sum(h => (decimal)(h.DailyRate ?? 0));
                 }
 
                 var personalRelief = 11000000.00;
@@ -572,6 +579,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
         {
             return employee.Contracts.OrderByDescending(c => c.EndDate).FirstOrDefault();
         }
+
+
         private int CalculateWorkingDays(Employee employee, DateTime startDate, DateTime endDate, List<DateTime> holidays)
         {
             return employee.HoursWorkDays
