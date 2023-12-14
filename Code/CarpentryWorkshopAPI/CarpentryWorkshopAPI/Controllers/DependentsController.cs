@@ -174,7 +174,8 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var dependent = _mapper.Map<Dependent>(dependentDTO);
-                if (DateTime.TryParseExact(dependentDTO.DobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime result))
+                dependent.Status = dependentDTO.Status.HasValue ? dependentDTO.Status : true;
+                if (DateTime.TryParseExact(dependentDTO.DobString, "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime result))
                 {
                     dependent.Dob = result;
                 }
