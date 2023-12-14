@@ -154,7 +154,6 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         BonusName = item.BonusName,
                         BonusDatestring = item.BonusDate.Value.ToString("dd'-'MM'-'yyyy")
                     };
-
                     companydto.Add(cwrs);
                 }
                 listreward.PersonalRewardList = persondto;
@@ -162,6 +161,57 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                 listreward.SpecialOcationList = personSpecial;
             }
             return listreward;
+        }
+
+        public dynamic GetPersonalReward(int id)
+        {
+            if(id < 0)
+            {
+                return "not valid id";
+            }
+            var person = _context.BonusDetails
+                   .Include(x => x.Employee)
+                   .Where(sd => sd.BonusId == id)
+                   .ToList();
+            var persondto = _mapper.Map<List<DTO.AllRewardDTO.PR>>(person);
+            return persondto;
+        }
+
+        public dynamic GetCompanyReward(int id)
+        {
+            if (id < 0)
+            {
+                return "not valid id";
+            }
+            var company = _context.CompanyWideBonus
+                     .Where(sd => sd.CompanyBonusId == id)
+                     .GroupBy(sd => sd.BonusName)
+                     .Select(group => group.First())
+                     .ToList();
+
+            List<DTO.AllRewardDTO.CWR> companydto = new List<AllRewardDTO.CWR>();
+            return companydto;
+        }
+
+        public dynamic GetSpecialOccasionReward(int id)
+        {
+            if (id < 0)
+            {
+                return "not valid id";
+            }
+            var personSpecial = _context.SpecialOccasions
+                    .Include(sp => sp.Employee)
+                    .Where(sd => sd.OccasionId == id)
+                    .Select(ps => new AllRewardDTO.SPE
+                    {
+                        OccasionId = ps.OccasionId,
+                        EmployeeId = ps.EmployeeId,
+                        Beneficiary = ps.Employee.LastName + " " + ps.Employee.FirstName,
+                        OccasionType = ps.OccasionType,
+                        Amount = ps.Amount,
+                        OccasionDateString = ps.OccasionDate.Value.ToString("dd'-'MM'-'yyyy"),
+                    }).ToList();
+            return personSpecial;
         }
     }
 }
