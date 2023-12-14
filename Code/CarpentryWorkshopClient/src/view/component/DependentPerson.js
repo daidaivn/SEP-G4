@@ -20,6 +20,7 @@ import { Input } from "antd";
 import { Modal } from "antd";
 import { Select } from "antd";
 import { Col, Row } from "antd";
+import { CreateDependent } from "../../sevices/DepartmentService";
 function DependentPerson() {
   const [isEditing, setIsEditing] = useState(false);
   const [guardian, setGuardian] = useState("");
@@ -198,25 +199,24 @@ function DependentPerson() {
     }
 
     toast.promise(
-      new Promise((resolve) => {
-        UpdateDependent(
-          dependentId,
+        CreateDependent(
           employeeId,
           guardian,
-          Relationship,
           Identifier,
+          dependentGender,
           date,
-          isChecked
+          isChecked,
+          Relationship,
+
         )
           .then((data) => {
             handleSave();
             fetchDepartmentById(dependentId);
             fetchData();
-            resolve(data);
+            return toast.success(data);
           })
           .catch((error) => {
-            resolve(Promise.reject(error));
-          });
+            throw toast.error(error.response.data);
       }),
       {
         pending: "Đang tải dữ liệu",
