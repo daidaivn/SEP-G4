@@ -34,7 +34,10 @@ namespace CarpentryWorkshopAPI.Controllers
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
                 }).FirstOrDefault();
-
+                if(employeeDepartment == null)
+                {
+                    return BadRequest("Không có chức vụ trưởng phòng");
+                }
                 var teams = _context.Teams
                     .Include(t => t.TeamWorks)
                         .ThenInclude(tw => tw.Work)
