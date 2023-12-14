@@ -28,7 +28,7 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var employeeDepartment = _context.RolesEmployees
-                    .Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeid && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null)
+                    .Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeid && re.Role.RoleName.Contains("Trưởng phòng") && re.EndDate == null)
                     .Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
@@ -191,7 +191,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
-                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Equals(leade.ToLower()))
+                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
 
                 string lead = "Trưởng ca";
@@ -230,7 +230,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
-                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Equals(leade.ToLower()))
+                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
                 string sublead = "Phó ca";
                 var subleaderlist = _context.Employees
@@ -336,7 +336,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
-                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Equals(leade.ToLower()))
+                    .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
 
                 string rolename = "Nhân viên";
@@ -788,7 +788,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 string start = split[0];
                 string end = split[1];
                 var result = new List<object>();
-                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null).Select(re => new
+                var department = _context.RolesEmployees.Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == scheduleDataInputDTO.LeaderId && re.Role.RoleName.Contains("Trưởng phòng") && re.EndDate == null).Select(re => new
                 {
                     DepartmentId = re.DepartmentId,
                     DepartmentName = re.Department.DepartmentName,
