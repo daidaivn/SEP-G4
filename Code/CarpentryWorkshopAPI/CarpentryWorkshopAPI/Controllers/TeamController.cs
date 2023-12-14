@@ -28,8 +28,12 @@ namespace CarpentryWorkshopAPI.Controllers
             try
             {
                 var employeeDepartment = _context.RolesEmployees
-                   .Where(e => e.EmployeeId == employeeid && e.EndDate == null)
-                   .FirstOrDefault();
+                    .Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeid && re.Role.RoleName == "Trưởng phòng" && re.EndDate == null)
+                    .Select(re => new
+                {
+                    DepartmentId = re.DepartmentId,
+                    DepartmentName = re.Department.DepartmentName,
+                }).FirstOrDefault();
 
                 var teams = _context.Teams
                     .Include(t => t.TeamWorks)
@@ -183,7 +187,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string leade = "Nhóm trưởng";
+                string leade = "Trưởng phòng";
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)
@@ -222,7 +226,7 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                string leade = "Nhóm trưởng";
+                string leade = "Trưởng phòng";
                 var leader = _context.RolesEmployees
                     .Include(x => x.Role)
                     .Include(x => x.Department)

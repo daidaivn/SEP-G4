@@ -260,7 +260,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.TeamWorks.Add(newTw);
                 _context.SaveChanges();
                 return Ok("Thêm công việc thành công");
-
             }
             catch (Exception ex)
             {
