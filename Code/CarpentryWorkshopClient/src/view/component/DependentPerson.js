@@ -34,6 +34,8 @@ function DependentPerson() {
   const [status, setStatus] = useState(false);
   const [filterStatus, setFilterStatus] = useState(null);
   const [filterGender, setFilterGender] = useState(null);
+  const [dependentGender, setDependentGenderr] = useState(null);
+
   const [inputSearch, setInputSearch] = useState("");
   const [relationshipsType, setRelationshipsType] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
@@ -55,6 +57,9 @@ function DependentPerson() {
     setFilterGender(value);
     searchandfilter(inputSearch, value, filterStatus);
   };
+  const handleChangeDependentGender = (value) => {
+    setDependentGenderr(value);
+  };
   const handleChangeInnputSearch = (e) => {
     setInputSearch(e.target.value);
     searchandfilter(e.target.value, filterGender, filterStatus);
@@ -72,9 +77,7 @@ function DependentPerson() {
   };
   const [dependent, setDependent] = useState([]);
   const [isModalOpenDependent, setIsModalOpenDependent] = useState(false);
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+
   const showModalDependent = (value) => {
     setIsModalOpenDependent(true);
   };
@@ -227,7 +230,6 @@ function DependentPerson() {
     GetRelationshipsType()
       .then((data) => {
         setRelationshipsType(data);
-        handleEdit();
       })
       .catch((error) => {
         console.log(error);
@@ -281,6 +283,7 @@ function DependentPerson() {
   };
 
   useEffect(() => {
+    fetchRelationshipsType();
     fetchData();
     getchAllEmplyees();
   }, []);
@@ -427,9 +430,9 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
@@ -486,9 +489,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
+                    value: null,
+                    label: "Bỏ chọn",
+                  }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -710,7 +713,7 @@ function DependentPerson() {
                             <th className="text">Mã định danh:</th>
                             <td className="input-text">
                               <Input
-                                placeholder="Basic usage"
+                                placeholder="Nhập mã định danh"
                                 value={Identifier}
                                 onChange={(e) => setIdentifier(e.target.value)}
                               />
@@ -835,7 +838,7 @@ function DependentPerson() {
                 <button className="btn-cancel" onClick={handleCancelDependent}>
                   Hủy bỏ
                 </button>
-                <button className="btn-edit" onClick={fetchRelationshipsType}>
+                <button className="btn-edit" onClick={handleEdit}>
                   Chỉnh sửa
                 </button>
               </div>
@@ -866,7 +869,7 @@ function DependentPerson() {
                           <th className="text">Người phụ thuộc:</th>
                           <td className="input-text">
                             <Input
-                              placeholder="Basic usage"
+                              placeholder="Nhập tên người phụ thuộc"
                               value={guardian}
                               onChange={(e) => setGuardian(e.target.value)}
                             />
@@ -950,10 +953,40 @@ function DependentPerson() {
                           </span>
                         </tr>
                         <tr>
+                          <th className="text">Giới tính:</th>
+                          <td>
+                            <Select
+                              className="select-input"
+                              value={dependentGender}
+                              style={{
+                                width: 120,
+                              }}
+                              onChange={handleChangeDependentGender}
+                              options={[
+                                {
+                                  value: true,
+                                  label: "Nam",
+                                },
+                                {
+                                  value: false,
+                                  label: "Nữ",
+                                },
+                                dependentGender !== null
+                                  ? {
+                                    value: null,
+                                    label: "Bỏ chọn",
+                                  }
+                                  : null,
+                              ].filter(Boolean)}
+                              placeholder="Chọn giới tính"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
                           <th className="text">Mã định danh:</th>
                           <td className="input-text">
                             <Input
-                              placeholder="Basic usage"
+                              placeholder="Nhập mã định danh"
                               value={Identifier}
                               onChange={(e) => setIdentifier(e.target.value)}
                             />

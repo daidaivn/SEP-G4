@@ -1207,7 +1207,6 @@ function ListEmployeeComponent() {
                       <div className="box-child-employee1 div-detail">
                         <p>Địa chỉ: </p>
                         <textarea
-                          disabled
                           value={originalAddress}
                           onChange={(e) => setOriginalAddress(e.target.value)}
                         />

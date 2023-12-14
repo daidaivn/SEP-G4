@@ -26,6 +26,19 @@ const updateDepartment = (id,name) =>{
   console.log(requestBody);
   return axios.put(`/CCMSapi/Departments/UpdateDepartment`,requestBody);
 };
+
+const CreateDependent = (eid,name,code, gd, ) =>{
+  const requestBody = {
+    employeeId: eid,
+    fullName: name,
+    identifierCode: code,
+    gender: gd,
+
+  };
+  console.log(requestBody);
+  return axios.put(`/CCMSapi/Departments/CreateDependent`,requestBody);
+};
+
 const detailOfDepartment = (ID)=>{
   const id = ID;
   return axios.get(`/CCMSapi/Departments/GetEmployeeInDepartment/DepartmentDetail/${id}`);
