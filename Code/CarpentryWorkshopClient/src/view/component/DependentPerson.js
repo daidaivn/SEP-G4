@@ -132,7 +132,6 @@ function DependentPerson() {
       }
     );
   };
-  console.log("date", status);
 
   const update = () => {
     toast.promise(
@@ -232,7 +231,6 @@ function DependentPerson() {
         setRelationshipsType(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -242,7 +240,6 @@ function DependentPerson() {
         setEmployees(rs);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -252,7 +249,6 @@ function DependentPerson() {
         setDependent(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 

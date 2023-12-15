@@ -61,12 +61,6 @@ const GroupComponent = () => {
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
 
-  console.log("userEmployeeID", userEmployeeID);
-  const log = () => {
-    console.log("leader", selectedChangeid);
-    console.log("Subleader", selectedChangeid1);
-    console.log("TeamName", newTeamName);
-  };
   const handleChangeSelectEdit = (value) => {
     setChangeSelectEdit(value);
   };
@@ -120,7 +114,6 @@ const GroupComponent = () => {
     setIdChange(id);
     setNameChange(name);
     setRoleMember(role);
-    console.log("id", id);
 
     setIsModalOpenChange(true);
     fetDataTeamContinue();
@@ -146,7 +139,7 @@ const GroupComponent = () => {
       }
     );
   };
-  log();
+
   const ChangeNameTeam = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -256,20 +249,16 @@ const GroupComponent = () => {
     searchData(Inputvalue)
       .then((data) => {
         setRoles(data);
-        console.log("data", data);
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
   const fetDataTeamContinue = () => {
     fetTeamContinue(teamID)
       .then((data) => {
         setTeamsContinue(data);
-        console.log("data", data);
       })
       .catch((error) => {
-        console.error("Lỗi khi tải dữ liệu nhóm:", error);
       });
   };
   const fetchDataCreateTeam = () => {
@@ -340,7 +329,6 @@ const GroupComponent = () => {
       }
     );
   };
-  console.log("teamName", teamName);
   const cancelTeamMember = () => {
     toast.promise(
       CancelTeam(teamID)
@@ -358,12 +346,10 @@ const GroupComponent = () => {
     );
   };
   const handleGetAllMember = () => {
-    console.log(selectedChangeid1);
     fetchAllStaffs(userEmployeeID)
       .then((data) => {
         setGetStaffsNoTeam(data);
         showModalAdd();
-        console.log("data", data);
       })
       .catch((error) => {
         console.error("Lỗi khi tải dữ liệu nhóm:", error);
@@ -444,7 +430,6 @@ const GroupComponent = () => {
       };
     }
   });
-  console.log("getStaffsNoTeam", getStaffsNoTeam);
 
   useEffect(() => {
     fetchData();

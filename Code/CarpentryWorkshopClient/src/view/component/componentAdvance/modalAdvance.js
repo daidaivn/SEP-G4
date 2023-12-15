@@ -21,8 +21,6 @@ const ModalAdvance = ({
         toast.promise(
             CreateAdvanceSalary(inputAdvance)
                 .then((data) => {
-                    console.log('data',data);
-                    
                     handleCancelAdvance()
                     FetchAllAdvances()
                     return toast.error(data);
@@ -42,7 +40,6 @@ const ModalAdvance = ({
                 .then((data) => {
                     handleCancelAdvance()
                     FetchAllAdvances()
-                    console.log('data',data);
                     return toast.error(data);
                 })
                 .catch((error) => {
@@ -74,7 +71,6 @@ const ModalAdvance = ({
             }
         );
     };
-    console.log('handleCancel', handleCancel);
 
     function handleCheckAncance(event) {
         setInputAdvance({
@@ -140,8 +136,6 @@ const ModalAdvance = ({
     }
     return dobstring;
   };
-
-  console.log("inputAdvance", inputAdvance);
 
     return (
         <Modal className="modal" open={isModalOpenAdvance} onOk={handleOkAdvance}>

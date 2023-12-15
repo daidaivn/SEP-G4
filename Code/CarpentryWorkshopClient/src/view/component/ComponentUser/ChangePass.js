@@ -18,13 +18,6 @@ const ChangePass = ({
   const [reCapcha, setReCapcha] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showVeryPassword, setShowVeryPassword] = useState(false);
-
-  const accountName =
-    localStorage.getItem("accountName") ||
-    sessionStorage.getItem("accountName");
-
-  console.log("accountName", accountName);
-
   const validateData = () => {
     const errors = [];
     const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;

@@ -89,43 +89,6 @@ function ListEmployeeComponent() {
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
 
-
-
-  const log = () => {
-    console.log("id", id);
-    console.log("LastName", originalLastName);
-    console.log("FirstName", originalFirstName);
-    console.log("PhoneNumber", originalPhoneNumber);
-    console.log("Gender", originalGender);
-    console.log("NationalityID", originalNationality);
-    console.log("Address", originalAddress);
-    console.log("CIC", originalCIC);
-    console.log("TaxId", originalTaxId);
-    console.log("DOB", originalDOB);
-    console.log("TaxStatus", originalStatus);
-    console.log("avt", avt);
-    console.log("Email", originalEmail);
-    console.log("================Department====================");
-    console.log("Roles:", updatedRoleDepartments);
-    console.log("Roles:", updatedRoleDepartmentsAdd);
-    console.log("================Contrasct====================");
-    console.log("contractID:", contractId);
-    console.log("contractCode:", contractCode);
-    console.log("contractStartDate:", contractStartDate);
-    console.log("contractEndDate:", contractEndDate);
-    console.log("contractType:", contractType);
-    console.log("contractLink:", contractLink);
-    console.log("contractStatus:", contractStatus);
-    console.log("contractImage", contractImage);
-    console.log("amount", amount);
-    console.log('originalOffice', originalOffice);
-
-  };
-
-  console.log("id2323", id);
-
-  console.log('originalOffice', originalOffice);
-
   const handleContractAmountChange = (e) => {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setAmount(formattedValue);
@@ -139,9 +102,6 @@ function ListEmployeeComponent() {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setOriginalCIC(formattedValue);
   };
-  console.log('originalImage', originalImage);
-
-
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -197,21 +157,16 @@ function ListEmployeeComponent() {
   const featchAllContract = () => {
     GetAllContractType()
       .then((data) => {
-        console.log("", data);
         setContractTypes(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
   const featchEmployeeContract = (value) => {
-    console.log(value);
 
     GetEmployeeContract(value)
       .then((data) => {
-        console.log("setContract", data);
-
         setContract(data);
         setContractID(data.contractId);
         setContractCode(data.contractCode);
@@ -225,7 +180,6 @@ function ListEmployeeComponent() {
         setOriginalOffice(data.isOffice)
       })
       .catch((error) => {
-        console.log("error", error);
       });
   };
 
@@ -558,7 +512,6 @@ function ListEmployeeComponent() {
         .then((data) => {
           handleCancelAdd();
           AddContract(data);
-          console.log(data);
 
           return toast.error(data);
         })
@@ -586,7 +539,6 @@ function ListEmployeeComponent() {
           originalOffice
         )
           .then((data) => {
-            console.log("data", data);
             fetchData();
             resolve(data);
             resetOriginalDetail();
@@ -607,7 +559,6 @@ function ListEmployeeComponent() {
     GetAllCountry()
       .then((data) => {
         setCountries(data);
-        console.log(data);
       })
       .catch((error) => { });
   };
@@ -622,7 +573,6 @@ function ListEmployeeComponent() {
     setIsEditingRole(true);
     setIsModalOpenEditRole(true);
     allRole(idDetail.roleDepartments[0]?.departmentID)
-    console.log("clickkk",idDetail.roleDepartments[0]?.departmentID)
   };
   const handleSaveRole = () => {
     setIsEditingRole(false);
@@ -694,7 +644,6 @@ function ListEmployeeComponent() {
         setEmployees(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -838,15 +787,12 @@ function ListEmployeeComponent() {
     searchandfilter(e.target.value, filterGender, filterStatus, filterRole);
   };
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
   };
   const { Option } = Select;
   const handleChangeAddEmployee = (value) => {
-    console.log(`selected ${value}`);
   };
   const [value, setValue] = useState(1);
   const onChangeRadio = (e) => {
-    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);

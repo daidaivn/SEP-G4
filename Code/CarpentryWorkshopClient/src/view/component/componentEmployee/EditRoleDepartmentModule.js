@@ -50,8 +50,6 @@ const EditRoleDepartmentModule = ({
                         roleDepartments: newRoleDepartments,
                       });
                       allRole(newRoleDepartments[0].departmentID);
-                      console.log('newRoleDepartments', newRoleDepartments[0].departmentID);
-
                     }}
                     style={{
                       width: "100%",

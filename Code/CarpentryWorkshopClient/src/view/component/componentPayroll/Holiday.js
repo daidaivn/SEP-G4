@@ -64,7 +64,6 @@ const Holiday = ({
             employeeID: data.employeeId,
             employeeName: data.fullName,
           });
-          console.log("employeeInput", employeeInput);
           return data;
         })
         .catch((error) => {

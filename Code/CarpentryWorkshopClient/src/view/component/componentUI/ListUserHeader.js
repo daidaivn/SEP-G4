@@ -52,9 +52,6 @@ function ListUserHeader() {
     }
     return dobstring;
   };
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
   const toggleUserAll = () => {
     setUserAllVisible(!userAllVisible);
   };
@@ -102,21 +99,16 @@ function ListUserHeader() {
   const handleCancelUserRole = () => {
     setIsModalOpenUserRole(false);
   };
-  console.log('1233', userEmployeeID);
-  console.log('1233', months);
-  console.log('1233', date);
+ 
 
 
   const getSalaryDetail = () => {
     toast.promise(
       GetEmployeeDetailSalary(userEmployeeID, months, date)
         .then((data) => {
-          console.log('3333', data);
           setSalaryUser(data);
-          console.log("salary", data);
         })
         .catch((error) => {
-          console.log("1233", error)
           throw toast.error(error.response.data);
         }),
       {
