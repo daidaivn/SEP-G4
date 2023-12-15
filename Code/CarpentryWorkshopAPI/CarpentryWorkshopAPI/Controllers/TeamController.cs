@@ -197,16 +197,14 @@ namespace CarpentryWorkshopAPI.Controllers
                     .ThenInclude(re => re.Role)
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Department)
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower()))
-                    && emp.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower()) && re.Department.DepartmentId == leader.DepartmentId && re.EndDate == null))
                     .ToList();
                 var exleader = _context.EmployeeTeams
                     .Where(x => x.EndDate == null)
                     .Include(x => x.Employee)
                     .ThenInclude(e => e.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower()))
-                    && et.Employee.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(lead.ToLower()) && re.Department.DepartmentId == leader.DepartmentId && re.EndDate == null) && et.EndDate == null)
                     .Select(et => et.Employee)
                     .ToList();
                 var newlead = leaderlist.Except(exleader).ToList();
@@ -233,16 +231,14 @@ namespace CarpentryWorkshopAPI.Controllers
                 var subleaderlist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower()))
-                    && emp.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
+                    .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower()) && re.Department.DepartmentId == leader.DepartmentId && re.EndDate == null))
                     .ToList();
                 var subexleader = _context.EmployeeTeams
                     .Where(x => x.EndDate == null)
                     .Include(x => x.Employee)
                     .ThenInclude(e => e.RolesEmployees)
                     .ThenInclude(re => re.Role)
-                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower()))
-                    && et.Employee.RolesEmployees.Any(re => re.Department.DepartmentId == leader.DepartmentId))
+                    .Where(et => et.Employee.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sublead.ToLower()) && re.Department.DepartmentId == leader.DepartmentId && re.EndDate == null) && et.EndDate == null)
                     .Select(et => et.Employee)
                     .ToList();
                 var newsublead = subleaderlist.Except(subexleader).ToList();
