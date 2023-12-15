@@ -332,7 +332,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
 
-                string rolename = "Nhân viên";
+                string rolename = "Công nhân";
                 var elist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(x => x.Role)
@@ -383,6 +383,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(w => w.WorkArea)
                     .Include(x => x.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re =>re.EndDate == null) && et.EndDate == null))
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
@@ -801,7 +802,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(e => e.RolesEmployees)
                     .Include(t => t.WorkSchedules)
                         .ThenInclude(wc => wc.ShiftType)
-                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId && re.EndDate == null)))
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId && re.EndDate == null) && et.EndDate == null))
                     .ToListAsync();
                 if (teams.Count < 0)
                 {
