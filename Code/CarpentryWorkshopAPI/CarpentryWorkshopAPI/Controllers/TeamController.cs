@@ -502,7 +502,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 //.Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(sa.ToLower())))
                 //.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate))
                 //.FirstOrDefault();
-                string st = "Nhân viên";
+                string st = "Công nhân";
                 var staff = members
                 .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower()))
                 && emp.EmployeeId != team.TeamLeaderId && emp.EmployeeId != team.TeamSubLeaderId)
