@@ -345,6 +345,8 @@ const GroupComponent = () => {
     toast.promise(
       CancelTeam(teamID)
         .then((data) => {
+          fetchData();
+          setIsModalOpenDetail(false);
           return toast.success(data);
         })
         .catch((error) => {
