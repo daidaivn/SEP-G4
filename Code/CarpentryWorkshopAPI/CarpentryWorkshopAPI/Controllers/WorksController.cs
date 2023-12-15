@@ -34,7 +34,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 string[] split = workInputDTO.Date.Split('-');
                 string start = split[0];
                 string end = split[1];
-                string role = "Trưởng phòng";
+                string role = "Trưởng phòng sản xuất";
                 var department = await _context.RolesEmployees
                     .Include(re => re.Role)
                     .Include(re => re.Department)
@@ -57,6 +57,8 @@ namespace CarpentryWorkshopAPI.Controllers
                  .Include(w => w.WorkArea)
                  .Include(w => w.TeamWorks)
                  .ThenInclude(w => w.Team)
+                 .ThenInclude(w=>w.EmployeeTeams)
+                 .ThenInclude(w=>w.Employee)
                  .ToListAsync();  // Use ToListAsync here to asynchronously fetch the data
                 var endDate = DateTime.ParseExact(end + "/" + workInputDTO.Year, "dd/MM/yyyy",
                                   System.Globalization.CultureInfo.InvariantCulture);
@@ -67,7 +69,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 if (workInputDTO.Year > 0)
                 {
-                    work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Year == workInputDTO.Year)).ToList();
+                    work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Year == workInputDTO.Year) ).ToList();
                 }
                 var result = work.Select(w => new
                 {
@@ -87,7 +89,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                         : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
                                             ? "Done"
                                             : "NotDone")),
-                }).OrderBy(e=>e.Date);
+                }).OrderBy(e=>e.Date).ToList();
                 return Ok(result);
             }
             catch (Exception ex)

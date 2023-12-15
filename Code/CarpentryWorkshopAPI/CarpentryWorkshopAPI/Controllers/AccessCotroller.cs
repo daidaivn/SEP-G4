@@ -73,8 +73,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("Chức vụ này không có quyền ở trang này");
                 }
-                string admin = "Admin";
-                if (role.RoleName.ToLower().Equals(admin.ToLower())) 
+                string admin = "Decentralization";
+                if (page.PageName.ToLower().Equals(admin.ToLower())) 
                 {
                     return BadRequest("Không được bỏ chọn cho chức vụ này");
                 }

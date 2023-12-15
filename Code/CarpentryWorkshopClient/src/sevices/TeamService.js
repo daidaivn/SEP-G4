@@ -87,6 +87,12 @@ const ChangeTeamName = (name, id) => {
     `/CCMSapi/Team/ChangeTeamName?newName=${newName}&teamid=${teamid}`
   );
 };
+const CancelTeam = (id) => {
+  const teamid = Number(id);
+  return axios.post(
+    `/CCMSapi/Team/CancelTeam?teamId=${teamid}`
+  );
+};
 export {
   fetchAllTeam,
   createTeam,
@@ -101,5 +107,6 @@ export {
   createTeamMember,
   searchData,
   DeleteTeamMember,
-  ChangeTeamName
+  ChangeTeamName,
+  CancelTeam,
 };

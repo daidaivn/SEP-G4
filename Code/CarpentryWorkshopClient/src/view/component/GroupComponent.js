@@ -22,6 +22,7 @@ import {
   searchData,
   DeleteTeamMember,
   ChangeTeamName,
+  CancelTeam,
 } from "../../sevices/TeamService";
 import {
   addGroup,
@@ -220,7 +221,7 @@ const GroupComponent = () => {
   const fetchData = () => {
     let isDataLoaded = false;
     let toastId = null;
-  
+
     fetchAllTeam(userEmployeeID)
       .then((data) => {
         isDataLoaded = true;
@@ -234,11 +235,11 @@ const GroupComponent = () => {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Lỗi không có team'); // Hiển thị thông báo lỗi ngay lập tức
+        toast.error("Lỗi không có team"); // Hiển thị thông báo lỗi ngay lập tức
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
   };
@@ -340,7 +341,22 @@ const GroupComponent = () => {
     );
   };
   console.log("teamName", teamName);
-
+  const cancelTeamMember = () => {
+    toast.promise(
+      CancelTeam(teamID)
+        .then((data) => {
+          fetchData();
+          setIsModalOpenDetail(false);
+          return toast.success(data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
+      {
+        pending: "Đang tải dữ liệu",
+      }
+    );
+  };
   const handleGetAllMember = () => {
     console.log(selectedChangeid1);
     fetchAllStaffs(userEmployeeID)
@@ -478,6 +494,7 @@ const GroupComponent = () => {
           showModalChangeName={showModalChangeName}
           handleGetAllMember={handleGetAllMember}
           DelteMemberForTeam={DelteMemberForTeam}
+          cancelTeamMember={cancelTeamMember}
         />
 
         <NewGroupEmployeeModule
