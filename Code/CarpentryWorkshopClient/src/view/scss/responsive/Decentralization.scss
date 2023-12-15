@@ -9,9 +9,9 @@
     }
   }
   .table-Decent thead tr td {
-    font-size: 16px !important;
+    font-size: 15px !important;
     p {
-      font-size: 16px !important;
+      font-size: 15px !important;
     }
   }
   tbody tr td {
@@ -19,13 +19,14 @@
   }
   .table-Decent thead tr td:nth-child(1),
   .tbody-decent tbody tr td:nth-child(1) {
-    flex-basis: 100px !important;
+    flex-basis: 171px;
   }
   .tbody-decent tbody tr {
-    padding: 15px 25px 15px 12px !important;
+    padding: 15px 0px 15px 12px !important;
   }
   .tbody-decent tbody {
-    padding: 0 5px !important;
-    max-height: 215px !important;
+    padding: 0 5px;
+    max-height: 331px;
+    gap: 5px;
   }
 }

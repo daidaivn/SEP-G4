@@ -18,6 +18,7 @@ const ChangePass = ({
   const [reCapcha, setReCapcha] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showVeryPassword, setShowVeryPassword] = useState(false);
+  
   const validateData = () => {
     const errors = [];
     const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;

@@ -3,7 +3,6 @@ import { Input } from "antd";
 import { Select } from "antd";
 function Filter() {
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
   };
   return (
     <div className="list-search-filter-add">

@@ -142,6 +142,8 @@ function ListEmployeeComponent() {
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
+    allRole(idDetail.roleDepartments[0]?.departmentID)
+
   };
 
   const handleBack = () => {
@@ -572,8 +574,9 @@ function ListEmployeeComponent() {
   const handleEditRole = () => {
     setIsEditingRole(true);
     setIsModalOpenEditRole(true);
-    allRole(idDetail.roleDepartments[0]?.departmentID)
   };
+
+
   const handleSaveRole = () => {
     setIsEditingRole(false);
     setIsModalOpenEditRole(false);
@@ -1072,7 +1075,7 @@ function ListEmployeeComponent() {
                           onChange={(e) => setOriginalLastName(e.target.value)}
                         />
                       </div>
-                      <div className="div1-modal-cn div2-fix">
+                      <div className="div1-modal-cn div2-fix name_reponsive">
                         <p>Tên:</p>
                         <Input
                           value={originalFirstName}
