@@ -30,11 +30,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employeeDepartment = _context.RolesEmployees
                     .Include(re => re.Role).Include(re => re.Department).Where(re => re.EmployeeId == employeeid && re.Role.RoleName.Contains("Trưởng phòng") && re.EndDate == null)
                     .Select(re => new
-                {
-                    DepartmentId = re.DepartmentId,
-                    DepartmentName = re.Department.DepartmentName,
-                }).FirstOrDefault();
-                if(employeeDepartment == null)
+                    {
+                        DepartmentId = re.DepartmentId,
+                        DepartmentName = re.Department.DepartmentName,
+                    }).FirstOrDefault();
+                if (employeeDepartment == null)
                 {
                     return BadRequest("Không có chức vụ trưởng phòng");
                 }
@@ -45,7 +45,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Include(t => t.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
                             .ThenInclude(e => e.RolesEmployees)
-                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == employeeDepartment.DepartmentId)))
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == employeeDepartment.DepartmentId && re.EndDate == null) && et.EndDate == null))
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
@@ -60,12 +60,6 @@ namespace CarpentryWorkshopAPI.Controllers
                             .FirstOrDefault() ?? string.Empty
                     })
                     .ToList();
-
-                if (!teams.Any())
-                {
-                    return NotFound();
-                }
-
                 return Ok(teams);
             }
             catch (Exception ex)
@@ -279,7 +273,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeID = emp.EmployeeId,
                             Image = emp.Image,
-                            FullName = $"{emp.FirstName} {emp.LastName}",
+                            FullName = $"{emp.LastName} {emp.FirstName}",
                             Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                             PhoneNumber = emp.PhoneNumber,
                             Roles = emp.RolesEmployees
@@ -314,7 +308,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeID = emp.EmployeeId,
                             Image = emp.Image,
-                            FullName = $"{emp.FirstName} {emp.LastName}",
+                            FullName = $"{emp.LastName} {emp.FirstName}",
                             Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                             PhoneNumber = emp.PhoneNumber,
                             Roles = emp.RolesEmployees
@@ -365,7 +359,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             EmployeeID = emp.EmployeeId,
                             Image = emp.Image,
-                            FullName = $"{emp.FirstName} {emp.LastName}",
+                            FullName = $"{emp.LastName} {emp.FirstName}",
                             Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                             PhoneNumber = emp.PhoneNumber,
                             Roles = emp.RolesEmployees
@@ -513,7 +507,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 //.FirstOrDefault();
                 string st = "Nhân viên";
                 var staff = members
-                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower())) 
+                .Where(emp => emp.RolesEmployees.Any(re => re.Role.RoleName.ToLower().Equals(st.ToLower()))
                 && emp.EmployeeId != team.TeamLeaderId && emp.EmployeeId != team.TeamSubLeaderId)
                 .GroupBy(emp => emp.EmployeeId)
                 .Select(group => group.OrderByDescending(emp => emp.EmployeeTeams.Max(et => et.StartDate)).First())
@@ -811,7 +805,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(e => e.RolesEmployees)
                     .Include(t => t.WorkSchedules)
                         .ThenInclude(wc => wc.ShiftType)
-                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId)))
+                    .Where(t => t.EmployeeTeams.All(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId)))
                     .ToListAsync();
                 if (teams.Count < 0)
                 {
@@ -871,7 +865,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         ShiftType = shiftType,
                         TeamId = team.TeamId,
                         TeamName = team.TeamName,
-                        NumberMember = team.EmployeeTeams.Where(et=>et.EndDate == null).Select(et => et.EmployeeId).Distinct().Count(),
+                        NumberMember = team.EmployeeTeams.Where(et => et.EndDate == null).Select(et => et.EmployeeId).Distinct().Count(),
                         Year = DateTime.Now.Year,
                         DataForWork = day,
                     });
@@ -879,6 +873,22 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
 
                 return result;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(409, "Lỗi máy chủ");
+            }
+        }
+        [HttpGet]
+        public IActionResult CancelTeam(int teamId)
+        {
+            try
+            {
+                var team = _context.EmployeeTeams.Where(em=>em.TeamId == teamId).ToList();
+                team.ForEach(ws => ws.EndDate = DateTime.Now);
+                _context.EmployeeTeams.UpdateRange(team);
+                _context.SaveChanges();
+                return Ok("Xóa nhóm thành công");
             }
             catch (Exception ex)
             {
