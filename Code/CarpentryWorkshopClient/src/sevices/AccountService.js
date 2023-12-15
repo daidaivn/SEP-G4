@@ -11,7 +11,6 @@ const ChangeUserNameAndPassWord = (id, userName, password) =>{
     userName: userName,
     password: password
   };
-  console.log('acount', requestBody);
   return axios.post(`/CCMSapi/Accounts/ChangeUserNameAndPassWord`,requestBody);
 }
 export {forgotPassword, ChangeUserNameAndPassWord};

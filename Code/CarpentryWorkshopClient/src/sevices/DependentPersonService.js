@@ -10,7 +10,6 @@ const SearchDependents = (inputName, filterGender, filterStatus) => {
     gender: filterGender,
     status: filterStatus,
   };
-  console.log(`/CCMSapi/Employee/SearchEmployee`, requestBody);
   
   return axios.post(
     `/CCMSapi/Dependents/SearchDependents`, requestBody
@@ -33,7 +32,6 @@ const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,ident
     dobString: dobString,
     status: status,
   };
-  console.log(`/CCMSapi/Dependents/UpdateDependent`, requestBody);
   
   return axios.put(
     `/CCMSapi/Dependents/UpdateDependent`, requestBody

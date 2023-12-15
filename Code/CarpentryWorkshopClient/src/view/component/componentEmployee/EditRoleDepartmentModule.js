@@ -28,12 +28,43 @@ const EditRoleDepartmentModule = ({
         <div className="body-add-role-employee">
           <table>
             <thead>
-              <td>Chức vụ</td>
               <td>Phòng ban</td>
+              <td>Chức vụ</td>
             </thead>
             <div className="body-table">
               {[...Array(1)].map((_, index) => (
                 <tr key={index}>
+                  <Select
+                    className="select-input"
+                    value={
+                      idDetail.roleDepartments[index]?.departmentID || null
+                    }
+                    onChange={(value) => {
+                      const newRoleDepartments = [...idDetail.roleDepartments];
+                      newRoleDepartments[index] = {
+                        ...newRoleDepartments[index],
+                        departmentID: value,
+                      };
+                      setIdDetail({
+                        ...idDetail,
+                        roleDepartments: newRoleDepartments,
+                      });
+                      allRole(newRoleDepartments[0].departmentID);
+                      console.log('newRoleDepartments', newRoleDepartments[0].departmentID);
+
+                    }}
+                    style={{
+                      width: "100%",
+                    }}
+                    options={[
+                      { value: null, label: "Bỏ phòng - ban" },
+                      ...departments.map((department) => ({
+                        value: department.departmentId,
+                        label: department.departmentName,
+                      })),
+                    ]}
+                  />
+
                   <Select
                     className="select-input"
                     value={idDetail.roleDepartments[index]?.roleID || null}
@@ -56,36 +87,6 @@ const EditRoleDepartmentModule = ({
                       ...roles.map((role) => ({
                         value: role.roleId,
                         label: role.roleName,
-                      })),
-                    ]}
-                  />
-                  <Select
-                    className="select-input"
-                    value={
-                      idDetail.roleDepartments[index]?.departmentID || null
-                    }
-                    onChange={(value) => {
-                      const newRoleDepartments = [...idDetail.roleDepartments];
-                      newRoleDepartments[index] = {
-                        ...newRoleDepartments[index],
-                        departmentID: value,
-                      };
-                      setIdDetail({
-                        ...idDetail,
-                        roleDepartments: newRoleDepartments,
-                      });
-                      allRole(newRoleDepartments[0].departmentID);
-                      console.log('newRoleDepartments',newRoleDepartments[0].departmentID);
-                      
-                    }}
-                    style={{
-                      width: "100%",
-                    }}
-                    options={[
-                      { value: null, label: "Bỏ phòng - ban" },
-                      ...departments.map((department) => ({
-                        value: department.departmentId,
-                        label: department.departmentName,
                       })),
                     ]}
                   />

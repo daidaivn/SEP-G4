@@ -9,7 +9,6 @@ const SearchRoles = (inputName, filterStatus) => {
     inputText: inputName,
     status: filterStatus,
   };
-  console.log(`/CCMSapi/Role/SearchRole`, requestBody);
 
   return axios.post(
     `/CCMSapi/Role/SearchRole`, requestBody
@@ -17,7 +16,6 @@ const SearchRoles = (inputName, filterStatus) => {
 };
 const GetRoleById = (ID) => {
   const rid = ID;
-  console.log('rid', rid);
 
   return axios.get(
     `/CCMSapi/Role/GetRoleEmployeeById?roleid=${rid}`
@@ -29,7 +27,7 @@ const UpdateRole = (id, name, status) => {
     roleName: name,
     status: status
   };
-  console.log(`/CCMSapi/Role/UpdateRole`, requestBody);
+
   return axios.put(
     `CCMSapi/Role/EditRole`, requestBody
   );
@@ -40,7 +38,6 @@ const EditRole = (eId, updatedRoleDepartments) => {
     employeeId: eId,
     rds: updatedRoleDepartments
   };
-  console.log(`/CCMSapi/Role/EditRole`, requestBody);
   
   return axios.post(`/CCMSapi/Role/EditRole`, requestBody);
 
