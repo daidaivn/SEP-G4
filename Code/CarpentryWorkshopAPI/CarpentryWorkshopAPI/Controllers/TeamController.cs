@@ -197,7 +197,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
 
-                string lead = "Trưởng ca";
+                string lead = "Trưởng ca sản xuất";
                 var leaderlist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
@@ -235,7 +235,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Include(x => x.Department)
                     .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
-                string sublead = "Phó ca";
+                string sublead = "Phó ca sản xuất";
                 var subleaderlist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(re => re.Role)
