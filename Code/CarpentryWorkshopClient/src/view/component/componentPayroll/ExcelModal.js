@@ -115,7 +115,6 @@ const ExcelModal = ({
                 window.URL.revokeObjectURL(url);
             })
             .catch((error) => {
-                console.log('error', error);
             });
     };
 

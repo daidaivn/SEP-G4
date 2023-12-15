@@ -55,8 +55,6 @@ const LoginComponent = () => {
               sessionStorage.setItem("department", JSON.stringify(response.department));
             }
 
-            console.log('response.department',response.department);
-            
             navigate("/");
             resolve(response);
           })

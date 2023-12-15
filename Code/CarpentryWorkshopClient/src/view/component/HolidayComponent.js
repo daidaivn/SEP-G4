@@ -47,10 +47,6 @@ const HolidayComponent = () => {
 
   const [inputHolidays, setInputHolidays] = useState(initialInputHolidaysState);
 
-  console.log("inputHolidays", inputHolidays);
-
-  console.log("months", months);
-  console.log("selectedYear", selectedYear);
 
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
@@ -79,7 +75,6 @@ const HolidayComponent = () => {
     setIsModalOpenHoliday(true);
     GetHolidays(id)
       .then((data) => {
-        console.log("data", data);
         setInputHolidays({
           Idholiday: data.holidayID || "chưa có",
           nameHoliday: data.holidayName || "chưa có tên",
@@ -88,18 +83,15 @@ const HolidayComponent = () => {
         });
       })
       .catch((error) => {
-        console.log("error", error);
       });
   };
 
   const handleCreateHolidayDetail = () => {
     CreateHolidayDetail(inputHolidays)
       .then((data) => {
-        console.log("data", data);
         handleCancelHoliday();
       })
       .catch((error) => {
-        console.log("error", error);
       });
   };
 
@@ -123,14 +115,12 @@ const HolidayComponent = () => {
         setfetchAllHolidays(data);
       })
       .catch((error) => {
-        console.log("error", error);
       });
   };
   useEffect(() => {
     FetchAllHolidays();
   }, [inputSearch, months, selectedYear]);
 
-  console.log("fetchAllHolidays", fetchAllHolidays);
 
   return (
     <>

@@ -23,7 +23,6 @@ const ListModuleDetail3 = ({
   workidDetail,
   FetchDataForSchedule,
 }) => {
-  console.log('ac',actionWork);
   
   const CheckActionEditAndAdd = () => {
     if (actionWork === "addWork") {

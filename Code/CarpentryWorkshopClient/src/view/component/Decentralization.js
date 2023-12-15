@@ -26,7 +26,6 @@ const Decentralization = () => {
     return perms;
   }, [decentralizations]);
 
-  console.log("p", permissions);
 
   // Kiểm tra permission
   const hasPermission = (pageId, roleId) => {
@@ -35,12 +34,10 @@ const Decentralization = () => {
 
   const handleCheckboxChange = (e, pageId, roleId) => {
     const isChecked = e.target.checked;
-    console.log(isChecked);
 
     if (isChecked) {
       addRolePage(pageId, roleId)
         .then((response) => {
-          console.log("Thêm thành công");
           fetchData();
         })
         .catch((error) => {

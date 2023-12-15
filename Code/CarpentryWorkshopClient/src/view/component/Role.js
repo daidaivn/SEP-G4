@@ -19,11 +19,9 @@ import { Option } from "antd/es/mentions";
 function Role() {
   const [role, setRole] = useState([]);
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
   };
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [isModalOpenDetail, setIsModalOpenDetail] = useState(false);
-  const [isModalOpenChange, setIsModalOpenChange] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const [filterStatus, setFilterStatus] = useState(null);
   const [inputSearch, setInputSearch] = useState("");
@@ -32,12 +30,6 @@ function Role() {
   const [roleDetail, setroleDetail] = useState([]);
   const [switchChecked, setSwitchChecked] = useState(true);
 
-  const handleChange1 = (value) => {
-    console.log(`selected ${value}`);
-  };
-  const showModalGroup = () => {
-    setIsModalOpenGroup(true);
-  };
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
@@ -52,20 +44,6 @@ function Role() {
   };
   const handleCancelDetail = () => {
     setIsModalOpenDetail(false);
-  };
-
-  const showModalChange = () => {
-    setIsModalOpenChange(true);
-  };
-  const handleOkChange = () => {
-    setIsModalOpenChange(false);
-  };
-  const handleCancelChange = () => {
-    setIsModalOpenChange(false);
-  };
-
-  const showModalAdd = () => {
-    setIsModalOpenAdd(true);
   };
   const handleOkAdd = () => {
     setIsModalOpenAdd(false);
@@ -101,9 +79,6 @@ function Role() {
             showModalDetail();
             setroleDetail(data);
             resolve();
-            console.log("data", roleDetail);
-            console.log("id", RoleID);
-            console.log("name", RoleName);
           })
           .catch((error) => {
             resolve(error);

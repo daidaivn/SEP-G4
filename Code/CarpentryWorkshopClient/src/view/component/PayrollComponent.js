@@ -84,7 +84,6 @@ const PayrollComponent = () => {
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
   };
 
   const convertDobToISO = (dobstring) => {
@@ -247,7 +246,6 @@ const PayrollComponent = () => {
     false
   );
   const dataConver = months + "-" + date;
-  console.log("date", dataConver);
   const featchDataReward = () => {
     toast.promise(
       new Promise((resolve) => {
@@ -255,7 +253,6 @@ const PayrollComponent = () => {
           .then((data) => {
             setReward(data);
             resolve(data);
-            console.log("reward", data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -312,7 +309,6 @@ const PayrollComponent = () => {
   const handleCancelTypeReward = () => {
     setIsModalOpenTypeReward(false);
   };
-  console.log("data1", dataActualSalary);
 
   //modal Sửa tên thưởng
   const [isModalOpenEditReward, setIsModalOpenEditReward] = useState(false);
@@ -448,7 +444,6 @@ const PayrollComponent = () => {
       .then((data) => {
         isDataLoaded = true;
         setSalaryDetail(data);
-        console.log("salaryDetail", data);
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }

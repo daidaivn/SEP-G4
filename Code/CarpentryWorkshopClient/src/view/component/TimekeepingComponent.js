@@ -20,17 +20,12 @@ import {
 } from "../../sevices/TimekeepingService";
 import { el } from "date-fns/locale";
 const TimekeepingComponent = () => {
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
   const [checksInOut, setChecksInOut] = useState([]);
   const [work, setWork] = useState([]);
   const [number, setNumber] = useState(null);
   const [employeeId, setEmployeeId] = useState("");
   const [date, setDate] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
-  const [timeIn, setTimeIn] = useState("");
-  const [timeOut, setTimeOut] = useState("");
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -45,7 +40,6 @@ const TimekeepingComponent = () => {
           setEmployCheckInOut(data);
           fetchData();
           setIsModalOpenListEmployee(true);
-          console.log("employ", data);
           return data;
         })
         .catch((error) => {
@@ -69,7 +63,6 @@ const TimekeepingComponent = () => {
   };
 
   const handleCheckInOut = (employeeID, action) => {
-    console.log("employeeID", employeeID);
     const actionText = action === "start" ? "Bắt đầu" : "Ngưng";
     const successText =
       action === "start"
@@ -179,7 +172,6 @@ const TimekeepingComponent = () => {
       }
     }, 1500);
   };
-  console.log("userEmployeeID:", userEmployeeID);
 
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
@@ -222,8 +214,6 @@ const TimekeepingComponent = () => {
       }
     }, 1500);
   };
-  console.log("data:", work);
-  //Thay doi trang thai công việc trong ngày
 
   const [isEditing, setIsEditing] = useState(false);
   const handleEdit = () => {

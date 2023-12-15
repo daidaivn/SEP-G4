@@ -202,7 +202,6 @@ const CalendarComponent = () => {
       new Promise((resolve) => {
         GetWorkDetailById(TeamID)
           .then((data) => {
-            console.log("setWorkDetailById", data);
             resolve(data);
             setWorkDetailById({
               workId: data.workId,
@@ -230,22 +229,18 @@ const CalendarComponent = () => {
   const fetchAllUnitCosts = () => {
     GetAllUnitCosts()
       .then((data) => {
-        console.log(data);
         setAllUnitCosts(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
   const fetchAllWorkAreas = () => {
     GetAllWorkAreas()
       .then((data) => {
-        console.log("fetchAllWorkAreas", data);
         setAllWorkAreas(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -275,30 +270,19 @@ const CalendarComponent = () => {
     fetchShiftType(id)
       .then((data) => {
         setShiftType(data);
-        console.log('shift', data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
   const detailTeam = (id) =>{
     detailTeamByID(id)
       .then((data) => {
         setDetailTeamID(data);
-        console.log('team', data);
-        
       })
       .catch((error) => {
-        console.log(error);
       });
 
   }
-  console.log('shift', shift);
-
-  console.log('selectedWeek',selectedWeek);
-
-  
-  
 
   useEffect(() => {
     FetchDataForSchedule();

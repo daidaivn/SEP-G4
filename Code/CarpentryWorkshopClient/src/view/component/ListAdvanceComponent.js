@@ -53,8 +53,6 @@ const ListAdvanceComponent = () => {
     note: "",
   };
   const [inputAdvance, setInputAdvance] = useState(initialInputAdvanceState);
-  console.log("months", months);
-  console.log("selectedYear", selectedYear);
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
       const parts = dobstring.split("-");
@@ -80,7 +78,6 @@ const ListAdvanceComponent = () => {
         setFetchAllAdvances(data);
       })
       .catch((error) => {
-        console.log("error", error);
       });
   };
 
@@ -113,7 +110,6 @@ const ListAdvanceComponent = () => {
   useEffect(() => {
     FetchAllAdvances();
   }, [inputSearch, months, selectedYear]);
-  console.log("advance", fetchAllAdvances);
   return (
     <>
       <div className="col-right-container">
