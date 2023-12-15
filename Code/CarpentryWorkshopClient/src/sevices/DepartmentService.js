@@ -28,7 +28,6 @@ const updateDepartment = (id, name) => {
     departmentName: name,
     status: null,
   };
-  console.log(requestBody);
   return axios.put(`/CCMSapi/Departments/UpdateDepartment`, requestBody);
 };
 
@@ -42,7 +41,6 @@ const CreateDependent = (eid, name, code, gd, dob, stt, relaId) => {
     status: stt,
     relationshipId: Number(relaId),
   };
-  console.log("requestBody111",requestBody);
   return axios.post(`/CCMSapi/Dependents/CreateDependent`, requestBody);
 };
 

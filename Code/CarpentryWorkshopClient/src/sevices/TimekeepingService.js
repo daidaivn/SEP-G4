@@ -17,7 +17,6 @@ const updateDataWorks = (
     teamWorkId: id,
     numberProduct: number,
   };
-  console.log(`/CCMSapi/TeamWorks/UpdateTeamWork`, requestBody);
 
   return axios.post(`/CCMSapi/TeamWorks/UpdateTeamWork`, requestBody);
 };
@@ -33,7 +32,7 @@ const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
     checkIn: checkIn,
     checkOut: checkOut,
   };
-  console.log('update',requestBody);
+  
   return axios.post(`/CCMSapi/CheckInOut/UpdateCheckInOutForEmployee`, requestBody);
 };
 export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks, GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee};

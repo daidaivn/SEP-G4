@@ -68,7 +68,7 @@ function ListEmployeeComponent() {
   const [originalDepartment, setOriginalDepartment] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [originalOffice, setOriginalOffice] = useState("");
-  
+
 
   //contract
   const [contractId, setContractID] = useState("");
@@ -89,7 +89,7 @@ function ListEmployeeComponent() {
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
 
-  
+
 
   const log = () => {
     console.log("id", id);
@@ -118,13 +118,13 @@ function ListEmployeeComponent() {
     console.log("contractStatus:", contractStatus);
     console.log("contractImage", contractImage);
     console.log("amount", amount);
-    console.log('originalOffice',originalOffice);
-    
+    console.log('originalOffice', originalOffice);
+
   };
 
   console.log("id2323", id);
 
-  console.log('originalOffice',originalOffice);
+  console.log('originalOffice', originalOffice);
 
   const handleContractAmountChange = (e) => {
     const formattedValue = e.target.value.replace(/\D/g, "");
@@ -141,7 +141,7 @@ function ListEmployeeComponent() {
   };
   console.log('originalImage', originalImage);
 
-  
+
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -152,12 +152,12 @@ function ListEmployeeComponent() {
         toast.error('Kích thước hình ảnh quá lớn. Vui lòng tải lên một hình ảnh nhỏ hơn 100kb.');
         return; // Don't proceed with upload if size is over limit
       }
-  
+
       const reader = new FileReader();
       reader.onload = async (event) => {
         const base64Image = event.target.result;
         setOriginalImage(base64Image); // Save base64 string to state
-  
+
         const previewUrl = URL.createObjectURL(file);
         setPreviewImage(previewUrl); // Update preview image
       };
@@ -556,7 +556,6 @@ function ListEmployeeComponent() {
         originalImage
       )
         .then((data) => {
-          fetchData();
           handleCancelAdd();
           AddContract(data);
           console.log(data);
@@ -588,6 +587,7 @@ function ListEmployeeComponent() {
         )
           .then((data) => {
             console.log("data", data);
+            fetchData();
             resolve(data);
             resetOriginalDetail();
           })
@@ -621,6 +621,8 @@ function ListEmployeeComponent() {
   const handleEditRole = () => {
     setIsEditingRole(true);
     setIsModalOpenEditRole(true);
+    allRole(idDetail.roleDepartments[0]?.departmentID)
+    console.log("clickkk",idDetail.roleDepartments[0]?.departmentID)
   };
   const handleSaveRole = () => {
     setIsEditingRole(false);
@@ -1490,28 +1492,28 @@ function ListEmployeeComponent() {
                   ></Input>
                 </tr>
                 <tr>
-                <div className="input-date">
-                  <Select
-                    className="select-input"
-                    value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
-                    style={{
-                      width: "100%",
-                    }}
-                    options={[
-                      {
-                        value: true,
-                        label: "Khối văn phòng",
-                      },
-                      {
-                        value: false,
-                        label: "Khối sản xuất",
-                      },
-                    ]
-                    }
-                    disabled
-                  />
-                </div>
-              </tr>
+                  <div className="input-date">
+                    <Select
+                      className="select-input"
+                      value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
+                      style={{
+                        width: "100%",
+                      }}
+                      options={[
+                        {
+                          value: true,
+                          label: "Khối văn phòng",
+                        },
+                        {
+                          value: false,
+                          label: "Khối sản xuất",
+                        },
+                      ]
+                      }
+                      disabled
+                    />
+                  </div>
+                </tr>
                 <tr>
                   <div className="input-date">
                     <Input

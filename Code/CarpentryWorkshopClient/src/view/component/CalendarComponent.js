@@ -103,7 +103,6 @@ const CalendarComponent = () => {
   if (Array.isArray(userPagesArray) && userPagesArray.includes("Calendar")) {
     var calendarPageName = "Calendar";
   }
-  console.log("calendarPageName", calendarPageName);
 
   const handleChangeUnitCostId = (value) => {
     setWorkDetailById({
@@ -185,7 +184,6 @@ const CalendarComponent = () => {
             resolve(data);
             setIsModalOpenListShift(true);
             setAllWorks(data);
-            console.log("GetAllWorks", data);
           })
           .catch((error) => {
             resolve(Promise.reject(error));
@@ -197,7 +195,6 @@ const CalendarComponent = () => {
       }
     );
   };
-  console.log("workDetailById", workDetailById);
 
   const fetchWorkDetailById = (TeamID) => {
     setWorkidDetail(TeamID);

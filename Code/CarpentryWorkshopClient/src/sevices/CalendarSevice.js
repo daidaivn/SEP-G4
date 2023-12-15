@@ -12,7 +12,6 @@ const GetAllWorks = (userEmployeeID ,selectedWeek, selectedYear) => {
     date: selectedWeek,
     year: selectedYear,
   };
-  console.log('requestBody',requestBody);
   return axios.post(
     `/CCMSapi/Works/GetAllWorks`,requestBody
   );
@@ -20,7 +19,6 @@ const GetAllWorks = (userEmployeeID ,selectedWeek, selectedYear) => {
 
 const GetWorkDetailById = (tId) => {
   const wid = tId;
-  console.log(`/CCMSapi/Works/GetWorkDetailById/${wid}`);
   
   return axios.get(
     `/CCMSapi/Works/GetWorkDetailById/${wid}`
@@ -78,9 +76,6 @@ const AddWork = (workDetailById, userEmployeeID, teamId) => {
     employeeId: Number(userEmployeeID),
     dateString:date
   };
-
-  console.log('requestBody',requestBody);
-  
   return axios.post(
     `/CCMSapi/Works/AddWork`,requestBody
   );
@@ -94,9 +89,6 @@ const GetDataForSchedule = (userEmployeeID,selectedWeek, selectedYear, iText) =>
     inputText:iText
   };
 
-  console.log('inputText',iText);
-  
-  console.log('requestBody',requestBody);
   return axios.post(
     `/CCMSapi/Team/GetDataForSchedule`,requestBody
   );

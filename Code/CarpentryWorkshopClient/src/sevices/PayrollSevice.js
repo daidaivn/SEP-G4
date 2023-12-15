@@ -66,7 +66,6 @@ const CreateAndEditPersonalReward = (bonusId, employeeId, bonusAmount, bonusName
         bonusReason: bonusReason,
         bonusDatestring: '',
     }
-    console.log('person', requestBody);
     return axios.post(`/CCMSapi/Reward/CreateAndEditPersonalReward`,requestBody);
 };
 const CreateAndUpdateSpecialOccasion = (bonusId, employeeId, bonusAmount, bonusName, bonusReason) => {
@@ -78,7 +77,7 @@ const CreateAndUpdateSpecialOccasion = (bonusId, employeeId, bonusAmount, bonusN
         occasionDateString: '',
         occasionNote: bonusReason,
     }
-    console.log('special', requestBody);
+
     return axios.post(`/CCMSapi/Reward/CreateAndEditSpecialOccasion`,requestBody);
 };
 const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusReason) => {
@@ -89,7 +88,7 @@ const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusRea
         bonusDatestring: '',
         bonusReason: bonusReason,
     }
-    console.log('special', requestBody);
+
     return axios.post(`/CCMSapi/Reward/CreateAndEditCompanyReward`,requestBody);
 };
 const GetEmployeeDetailSalary = (eid, EMonth, EYear) => {

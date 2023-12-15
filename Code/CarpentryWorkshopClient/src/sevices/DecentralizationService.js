@@ -15,8 +15,6 @@ const addRolePage = (pageId, roleId) => {
 };
 
 const deleteRolePage = (pageId, roleId) => {
-  console.log(pageId);
-  console.log(roleId);
   return axios.delete(`/CCMSapi/AccessCotroller/DeleteRolePage/${roleId}/${pageId}`);
 };
 const formatDateTimeForInput = (dateTime) => {

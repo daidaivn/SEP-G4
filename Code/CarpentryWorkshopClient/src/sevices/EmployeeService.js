@@ -14,7 +14,6 @@ const SearchEmployees = (inputName, filterGender, filterStatus, filterRole) => {
     status: filterStatus,
     roleID: filterRole,
   };
-  console.log(`/CCMSapi/Employee/SearchEmployee`, requestBody);
 
   return axios.post(`/CCMSapi/Employee/SearchEmployee`, requestBody);
 };
@@ -57,7 +56,6 @@ const UpdateEmployee = (
     email: Email,
     image: Image,
   };
-  console.log(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 
   return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
 };
@@ -77,7 +75,6 @@ const CreateEmployee = (
   Email,
   Image
 ) => {
-  console.log('Imagesevice',Image);
 
   const requestBody = {
     lastName: originalLastName,

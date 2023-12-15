@@ -20,14 +20,6 @@ const CreateContract = (
   amount,
   originalOffice
 ) => {
-  console.log(id);
-  console.log(contractStartDate);
-  console.log(contractEndDate);
-  console.log(contractLink);
-  console.log(contractStatus);
-  console.log(contractType);
-  console.log(contractCode);
-  console.log(amount);
 
   const eid = id;
   const requestBody = {
@@ -42,7 +34,6 @@ const CreateContract = (
     isOffice: originalOffice
   };
 
-  console.log('requestBody', requestBody);
 
   return axios.post(
     `CCMSapi/Contract/CreateContract?employeeid=${eid}`,
@@ -76,7 +67,6 @@ const UpdateContract = (
     amount: Number(amount),
     isOffice: originalOffice
   };
-  console.log('data contract', requestBody);
 
   return axios.put(
     `CCMSapi/Contract/UpdateContract`,

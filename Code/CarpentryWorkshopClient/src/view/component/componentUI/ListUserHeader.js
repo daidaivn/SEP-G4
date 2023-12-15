@@ -282,7 +282,7 @@ function ListUserHeader() {
               />
             </svg>
             <div className="change-pass">
-              <p>Đổi tài khỏa mật khẩu</p>
+              <p>Đổi tài khoản mật khẩu</p>
             </div>
           </div>
         </div>

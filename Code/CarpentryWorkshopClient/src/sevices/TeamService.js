@@ -45,7 +45,6 @@ const changeSubLeaderId = (teamOld, teamNew) => {
 const changeStafId = (teamNew, employeeTeamId) => {
   const newTeam = teamNew;
   const employee = employeeTeamId;
-  console.log( `/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`);
   
   return axios.post(
     `/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`
@@ -53,7 +52,7 @@ const changeStafId = (teamNew, employeeTeamId) => {
 };
 const fetTeamContinue = (teamId) => {
   const teamid = teamId;
-  console.log('teamid', teamid);
+
   return axios.get(`/CCMSapi/Team/GetAvailableTeam?teamid=${teamid}`);
 };
 const createTeamMember = (teamId, memberIDS) => {
@@ -71,7 +70,6 @@ const createTeamMember = (teamId, memberIDS) => {
 };
 const searchData = (Input) => {
   const input = Input;
-  console.log(`/CCMSapi/Team/SearchTeam?input=${input}`);
   return axios.post(`/CCMSapi/Team/SearchTeam?input=${input}`);
 };
 
