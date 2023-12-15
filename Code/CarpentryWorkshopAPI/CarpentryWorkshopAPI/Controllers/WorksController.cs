@@ -57,17 +57,20 @@ namespace CarpentryWorkshopAPI.Controllers
                  .Include(w => w.WorkArea)
                  .Include(w => w.TeamWorks)
                  .ThenInclude(w => w.Team)
+                 .ThenInclude(w=>w.EmployeeTeams)
+                 .ThenInclude(w=>w.Employee)
                  .ToListAsync();  // Use ToListAsync here to asynchronously fetch the data
                 var endDate = DateTime.ParseExact(end + "/" + workInputDTO.Year, "dd/MM/yyyy",
                                   System.Globalization.CultureInfo.InvariantCulture);
                 var startDate = DateTime.ParseExact(start + "/" + workInputDTO.Year, "dd/MM/yyyy",
                                System.Globalization.CultureInfo.InvariantCulture);
 
-                work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value >= startDate && tw.Date.Value <= endDate)).ToList();
+                work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value >= startDate && tw.Date.Value <= endDate) && 
+                w.TeamWorks.Any( tw => tw.Team.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId && re.EndDate == null)))).ToList();
 
                 if (workInputDTO.Year > 0)
                 {
-                    work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Year == workInputDTO.Year)).ToList();
+                    work = work.Where(w => w.TeamWorks.Any(tw => tw.Date.HasValue && tw.Date.Value.Year == workInputDTO.Year) ).ToList();
                 }
                 var result = work.Select(w => new
                 {
@@ -87,7 +90,7 @@ namespace CarpentryWorkshopAPI.Controllers
                                         : ((w.TeamWorks.OrderByDescending(tw => tw.Date).FirstOrDefault().Date.Value.Date > DateTime.Now.Date && w.TeamWorks.Sum(e => e.TotalProduct) >= w.TotalProduct)
                                             ? "Done"
                                             : "NotDone")),
-                }).OrderBy(e=>e.Date);
+                }).OrderBy(e=>e.Date).ToList();
                 return Ok(result);
             }
             catch (Exception ex)
