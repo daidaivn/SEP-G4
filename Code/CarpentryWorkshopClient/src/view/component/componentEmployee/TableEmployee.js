@@ -35,7 +35,9 @@ function TableEmployee({
               }}
             >
               <td>
-                <img src={employee.image} alt="avt" loading="lazy"/>
+                <div className="image-container">
+                  <img src={employee.image} alt="avt" loading="lazy" />
+                </div>
               </td>
               <td>{employee.employeeIdstring}</td>
               <td>{employee.fullName}</td>

@@ -1,13 +1,14 @@
 @media (min-width: 768px) and (max-width: 1536px) {
   .list-table-calendar {
-    width: 1020px !important;
+    width: 100%
   }
   .list-table-calendar .body-calendar tbody tr td svg {
     width: 23px;
     height: 23px;
   }
   .list-table-calendar .body-calendar tbody tr td:nth-child(1) {
-    flex-basis: 242px !important;
+    flex-basis: 242px;
+    padding: 17px 0px;
   }
   .ListWork svg {
     width: 25px;
