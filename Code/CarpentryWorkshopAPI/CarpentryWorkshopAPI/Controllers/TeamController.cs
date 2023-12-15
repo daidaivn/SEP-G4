@@ -801,7 +801,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(e => e.RolesEmployees)
                     .Include(t => t.WorkSchedules)
                         .ThenInclude(wc => wc.ShiftType)
-                    .Where(t => t.EmployeeTeams.All(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId)))
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.DepartmentId == department.DepartmentId && re.EndDate == null)))
                     .ToListAsync();
                 if (teams.Count < 0)
                 {
