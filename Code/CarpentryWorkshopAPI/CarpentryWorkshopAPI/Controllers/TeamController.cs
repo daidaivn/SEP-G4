@@ -875,12 +875,16 @@ namespace CarpentryWorkshopAPI.Controllers
                 return StatusCode(409, "Lỗi máy chủ");
             }
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult CancelTeam(int teamId)
         {
             try
             {
                 var team = _context.EmployeeTeams.Where(em=>em.TeamId == teamId).ToList();
+                if(team.Count() <= 0)
+                {
+                    return BadRequest("không thể tìm thấy nhóm");
+                }
                 team.ForEach(ws => ws.EndDate = DateTime.Now);
                 _context.EmployeeTeams.UpdateRange(team);
                 _context.SaveChanges();

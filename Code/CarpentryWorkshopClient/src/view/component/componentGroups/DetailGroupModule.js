@@ -11,6 +11,7 @@ const DetailModal = ({
   showModalChangeName,
   handleGetAllMember,
   DelteMemberForTeam,
+  cancelTeamMember,
 }) => {
   return (
     <div className="detail-group-all">
@@ -268,6 +269,12 @@ const DetailModal = ({
               onClick={handleGetAllMember}
             >
               Thêm nhân viên
+            </button>
+            <button
+              className="btn-edit btn-fix-group"
+              onClick={cancelTeamMember}
+            >
+              Kết thúc nhóm
             </button>
           </div>
         </div>
