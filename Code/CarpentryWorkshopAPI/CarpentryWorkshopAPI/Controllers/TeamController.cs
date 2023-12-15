@@ -383,6 +383,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(w => w.WorkArea)
                     .Include(x => x.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re =>re.EndDate == null) && et.EndDate == null))
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
