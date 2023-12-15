@@ -332,7 +332,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(x => x.EmployeeId == leadId && x.Role.RoleName.ToLower().Contains(leade.ToLower()))
                     .FirstOrDefault();
 
-                string rolename = "Nhân viên";
+                string rolename = "Công nhân";
                 var elist = _context.Employees
                     .Include(x => x.RolesEmployees)
                     .ThenInclude(x => x.Role)
