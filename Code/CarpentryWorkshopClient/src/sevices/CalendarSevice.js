@@ -76,6 +76,7 @@ const AddWork = (workDetailById, userEmployeeID, teamId) => {
     employeeId: Number(userEmployeeID),
     dateString:date
   };
+  console.log('work', requestBody);
   return axios.post(
     `/CCMSapi/Works/AddWork`,requestBody
   );
