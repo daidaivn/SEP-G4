@@ -90,6 +90,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 var teamId = await _context.Teams
                 .Where(t => t.TeamLeaderId == teamLeaderId || t.TeamSubLeaderId == teamLeaderId)
                 .Include(et => et.WorkSchedules).ThenInclude(et => et.ShiftType).Include(et => et.TeamWorks).ThenInclude(et => et.Work)
+                .Include(et=>et.EmployeeTeams)
+                .Where(t=>t.EmployeeTeams.Any(et=>et.EndDate == null))
                 .Select(et => new
                 {
                     TimeIn = et.WorkSchedules.Select(ws => ws.ShiftType.StartTime).Single(),
