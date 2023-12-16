@@ -31,7 +31,6 @@ const LoginComponent = () => {
   const handleLogin = () => {
     // Hiển thị toast.pending khi bắt đầu đăng nhập
     toast.promise(
-      new Promise((resolve) => {
         apiLogin
           .login(userData)
           .then((response) => {
@@ -56,16 +55,13 @@ const LoginComponent = () => {
             }
 
             navigate("/");
-            resolve(response);
+            return toast.success("Đăng nhập thành công");
           })
           .catch((error) => {
-            resolve(Promise.reject(error));
-          });
+            throw toast.error(error.response.data);
       }),
       {
         pending: "Đang xử lý đăng nhập",
-        success: "Đăng nhập thành công",
-        error: "Lỗi đăng nhập",
       }
     );
   };
