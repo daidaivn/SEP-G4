@@ -32,7 +32,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
         }
         [HttpPost]
@@ -82,7 +83,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
         }
         [HttpPost]
@@ -103,7 +105,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
         }
     }

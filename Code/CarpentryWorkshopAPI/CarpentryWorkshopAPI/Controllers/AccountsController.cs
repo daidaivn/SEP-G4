@@ -42,7 +42,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
             if (user == null)
             {
-                return Unauthorized("Tài khoản không đúng.");
+                return Unauthorized("Tài khoản hoặc mật khẩu không đúng.");
             }
             HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
             var jwtSection = _configuration.GetSection("JWT");
@@ -244,7 +244,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
 
         }
@@ -290,7 +291,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
 
         }
