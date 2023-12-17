@@ -69,6 +69,7 @@ const NewContractModal = ({
                           }))
                         : []
                     }
+                    placeholder="Loại hợp đồng"
                   />
                 </div>
               </tr>
