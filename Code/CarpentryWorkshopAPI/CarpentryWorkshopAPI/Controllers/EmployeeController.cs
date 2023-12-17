@@ -258,7 +258,6 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-
                 var employee = await _context.Employees
                    .Include(emp => emp.RolesEmployees)
                        .ThenInclude(roleemp => roleemp.Role)
@@ -391,7 +390,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return NotFound("Không tìm thấy dữ liệu");
                 }
-
                 if (await _context.Employees.AnyAsync(x => x.EmployeeId != updateEmployeeDTO.EmployeeId && x.Email == updateEmployeeDTO.Email))
                 {
                     return StatusCode(409, "Email đã tồn tại");
