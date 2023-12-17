@@ -37,66 +37,62 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost("gettoken")]
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
-            try
+            //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
+            if (user == null)
             {
-                //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
-                var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
-                if (user == null)
-                {
-                    return Unauthorized("Tài khoản hoặc mật khẩu không đúng.");
-                }
-                HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
-                var jwtSection = _configuration.GetSection("JWT");
-                var secretKey = jwtSection["SecretKey"];
-                var key = Encoding.UTF8.GetBytes(secretKey);
-
-                var employee = user.Employee;
-
-                var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
-                var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
-                var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
-                var image = user.Employee.Image;
-                var claims = new List<Claim>
+                return Unauthorized("Tài khoản không đúng.");
+            }
+            HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
+            var jwtSection = _configuration.GetSection("JWT");
+            var secretKey = jwtSection["SecretKey"];
+            var key = Encoding.UTF8.GetBytes(secretKey);
+            
+            var employee = user.Employee;
+            if(employee.Status == false)
+            {
+                return Unauthorized("Tài khoản không có quyền vào trang web");
+            }
+            var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
+            var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
+            var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
+            var image = user.Employee.Image;
+            var claims = new List<Claim>
              {
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim("Name", employee.FirstName + " " + employee.LastName)
             };
-                foreach (var page in pages)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, page));
-                }
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.UtcNow.AddHours(8),
-                    Audience = jwtSection["Audience"],
-                    Issuer = jwtSection["Issuer"],
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                var tokenString = tokenHandler.WriteToken(token);
-
-                var loginResponse = new
-                {
-                    Token = tokenString,
-                    Name = employee.FirstName + " " + employee.LastName,
-                    Pages = pages,
-                    Roles = roles,
-                    Department = departments,
-                    EmployeeID = employee.EmployeeId,
-                    UserAccount = user.UserName,
-                    Image = image,
-                };
-
-                return Ok(loginResponse);
-            }
-            catch (Exception ex)
+            foreach (var page in pages)
             {
-                return StatusCode(500, "Lỗi máy chủ");
+                claims.Add(new Claim(ClaimTypes.Role, page));
             }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(8),
+                Audience = jwtSection["Audience"],
+                Issuer = jwtSection["Issuer"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            var loginResponse = new
+            {
+                Token = tokenString,
+                Name = employee.FirstName + " " + employee.LastName,
+                Pages = pages,
+                Roles = roles,
+                Department = departments,
+                EmployeeID = employee.EmployeeId,
+                UserAccount = user.UserName,
+                Image= image,
+            };
+
+            return Ok(loginResponse);
         }
 
 
@@ -221,6 +217,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Tài khoản này không tồn tại");
                 }
+                if(account.Employee.Status == false)
+                {
+                    return BadRequest("Tài khoản không còn quyền vào hệ thống")
+                }
                 var user = account.UserName;
                 var pass = _accountService.GenerateRandomString(8);
                 account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
@@ -251,8 +251,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Lỗi máy chủ");
-
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
@@ -298,8 +297,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Lỗi máy chủ");
-
+                return BadRequest("Lỗi dữ liệu");
             }
 
         }
