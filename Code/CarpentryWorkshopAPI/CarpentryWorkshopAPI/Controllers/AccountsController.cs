@@ -48,9 +48,12 @@ namespace CarpentryWorkshopAPI.Controllers
             var jwtSection = _configuration.GetSection("JWT");
             var secretKey = jwtSection["SecretKey"];
             var key = Encoding.UTF8.GetBytes(secretKey);
-
+            
             var employee = user.Employee;
-
+            if(employee.Status == false)
+            {
+                return Unauthorized("Tài khoản không có quyền vào trang web");
+            }
             var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
             var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
             var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
@@ -213,6 +216,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (account == null)
                 {
                     return BadRequest("Tài khoản này không tồn tại");
+                }
+                if(account.Employee.Status == false)
+                {
+                    return BadRequest("Tài khoản không còn quyền vào hệ thống")
                 }
                 var user = account.UserName;
                 var pass = _accountService.GenerateRandomString(8);
