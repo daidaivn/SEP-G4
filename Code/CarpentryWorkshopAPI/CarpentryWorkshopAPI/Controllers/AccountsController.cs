@@ -37,59 +37,66 @@ namespace CarpentryWorkshopAPI.Controllers
         [HttpPost("gettoken")]
         public async Task<IActionResult> GetToken([FromBody] LoginRequest request)
         {
-            //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
-            var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
-            if (user == null)
+            try
             {
-                return Unauthorized("Tài khoản hoặc mật khẩu không đúng.");
-            }
-            HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
-            var jwtSection = _configuration.GetSection("JWT");
-            var secretKey = jwtSection["SecretKey"];
-            var key = Encoding.UTF8.GetBytes(secretKey);
+                //string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            var employee = user.Employee;
+                var user = await YourAuthenticationLogicAsync(request.UserName, request.Password);
+                if (user == null)
+                {
+                    return Unauthorized("Tài khoản hoặc mật khẩu không đúng.");
+                }
+                HttpContext.Session.SetInt32("CurrentEmployeeId", user.EmployeeId);
+                var jwtSection = _configuration.GetSection("JWT");
+                var secretKey = jwtSection["SecretKey"];
+                var key = Encoding.UTF8.GetBytes(secretKey);
 
-            var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
-            var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
-            var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
-            var image = user.Employee.Image;
-            var claims = new List<Claim>
+                var employee = user.Employee;
+
+                var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
+                var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
+                var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
+                var image = user.Employee.Image;
+                var claims = new List<Claim>
              {
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim("Name", employee.FirstName + " " + employee.LastName)
             };
-            foreach (var page in pages)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, page));
+                foreach (var page in pages)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, page));
+                }
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.UtcNow.AddHours(8),
+                    Audience = jwtSection["Audience"],
+                    Issuer = jwtSection["Issuer"],
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
+
+                var loginResponse = new
+                {
+                    Token = tokenString,
+                    Name = employee.FirstName + " " + employee.LastName,
+                    Pages = pages,
+                    Roles = roles,
+                    Department = departments,
+                    EmployeeID = employee.EmployeeId,
+                    UserAccount = user.UserName,
+                    Image = image,
+                };
+
+                return Ok(loginResponse);
             }
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
+            catch (Exception ex)
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(8),
-                Audience = jwtSection["Audience"],
-                Issuer = jwtSection["Issuer"],
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            var loginResponse = new
-            {
-                Token = tokenString,
-                Name = employee.FirstName + " " + employee.LastName,
-                Pages = pages,
-                Roles = roles,
-                Department = departments,
-                EmployeeID = employee.EmployeeId,
-                UserAccount = user.UserName,
-                Image= image,
-            };
-
-            return Ok(loginResponse);
+                return StatusCode(500, "Lỗi máy chủ");
+            }
         }
 
 
