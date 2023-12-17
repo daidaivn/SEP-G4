@@ -85,7 +85,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
 
 
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
 
             }
 
@@ -125,7 +125,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
             }
 
 
@@ -177,7 +177,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
         }
 
@@ -211,7 +212,8 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
+
             }
         }
         [Authorize(Roles = "ListDepartment")]

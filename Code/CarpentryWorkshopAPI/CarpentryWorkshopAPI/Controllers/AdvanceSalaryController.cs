@@ -32,7 +32,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
             }
         }
         [HttpGet]
@@ -86,7 +86,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
             }
         }
         [HttpGet]
@@ -103,7 +103,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
             }
         }
         [HttpPost]
@@ -134,13 +134,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var newAd = await _advanceService.CreateAdvance(createAdvanceDTO);
                 if (newAd == null)
                 {
-                    return BadRequest("Lỗi dữ liệu");
+                    return StatusCode(500, "Lỗi máy chủ");
                 }
                 return Ok(newAd);
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
             }
         }
         [HttpPost]
@@ -171,13 +171,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 var updateAd = await _advanceService.UpdateAdvance(updateAdvanceDTO);
                 if (updateAd == null)
                 {
-                    return BadRequest("Lỗi dữ liệu");
+                    return StatusCode(500, "Lỗi máy chủ");
                 }
                 return Ok(updateAd);
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi dữ liệu");
+                return StatusCode(500, "Lỗi máy chủ");
             }
         }
     }
