@@ -219,7 +219,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 if(account.Employee.Status == false)
                 {
-                    return BadRequest("Tài khoản không còn quyền vào hệ thống")
+                    return BadRequest("Tài khoản không còn quyền vào hệ thống");
                 }
                 var user = account.UserName;
                 var pass = _accountService.GenerateRandomString(8);
