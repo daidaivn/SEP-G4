@@ -392,11 +392,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     })
                     .ToList();
 
-                if (availableTeams == null)
-                {
-                    return NotFound();
-                }
-
                 return Ok(availableTeams);
             }
             catch (Exception ex)

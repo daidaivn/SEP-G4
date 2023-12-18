@@ -23,6 +23,7 @@ const EditEmployee = ({
     if (timeOut === 1) {
       timeOut = "";
     }
+    console.log('timeIn' ,timeIn);
     toast.promise(
       UpdateCheckInOutForEmployee(id, timeIn, timeOut)
         .then((data) => {
@@ -92,7 +93,7 @@ const EditEmployee = ({
                         onChange={(newTime) =>
                           handleTimeInputChange(
                             1,
-                            newTime,
+                            dayjs(newTime).format("HH:mm"),
                             employee.checkInOutId
                           )
                         }
@@ -108,7 +109,7 @@ const EditEmployee = ({
                         format="HH:mm"
                         onChange={(newTime) =>
                           handleTimeInputChange(
-                            newTime,
+                            dayjs(newTime).format("HH:mm"),
                             1,
                             employee.checkInOutId
                           )

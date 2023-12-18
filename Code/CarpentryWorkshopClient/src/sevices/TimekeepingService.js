@@ -32,7 +32,6 @@ const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
     checkIn: checkIn,
     checkOut: checkOut,
   };
-  
   return axios.post(`/CCMSapi/CheckInOut/UpdateCheckInOutForEmployee`, requestBody);
 };
 export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks, GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee};
