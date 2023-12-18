@@ -431,7 +431,7 @@ function Role() {
                         ))
                       ) : (
                         <p>
-                          Không có nhân viên trong chức vụ {roleDetail.roleName}
+                          Thông tin nhân viên trong chức vụ chưa sẵn sàng hoặc không tồn tại {roleDetail.roleName}
                           .
                         </p>
                       )}
