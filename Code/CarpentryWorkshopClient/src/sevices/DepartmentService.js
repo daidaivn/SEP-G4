@@ -1,7 +1,7 @@
 import axios from "./customize-axios";
 
 const fetchAllDepadment = () => {
-  return axios.get("/CCMSapi/Departments/GetAllDepartments");
+  return axios.get("/CWMSapi/Departments/GetAllDepartments");
 };
 
 const searchAndFilterDepartment = (departmentName, status) => {
@@ -10,7 +10,7 @@ const searchAndFilterDepartment = (departmentName, status) => {
     status: status,
   };
   return axios.post(
-    `/CCMSapi/Departments/SearchAndFilterDepartment/search`,
+    `/CWMSapi/Departments/SearchAndFilterDepartment/search`,
     name
   );
 };
@@ -18,7 +18,7 @@ const searchAndFilterDepartment = (departmentName, status) => {
 const addDepartment = (Name) => {
   const name = Name;
   return axios.post(
-    `/CCMSapi/Departments/CreateDepartment?departmentName=${name}`
+    `/CWMSapi/Departments/CreateDepartment?departmentName=${name}`
   );
 };
 
@@ -28,7 +28,7 @@ const updateDepartment = (id, name) => {
     departmentName: name,
     status: null,
   };
-  return axios.put(`/CCMSapi/Departments/UpdateDepartment`, requestBody);
+  return axios.put(`/CWMSapi/Departments/UpdateDepartment`, requestBody);
 };
 
 const CreateDependent = (eid, name, code, gd, dob, stt, relaId) => {
@@ -41,13 +41,13 @@ const CreateDependent = (eid, name, code, gd, dob, stt, relaId) => {
     status: stt,
     relationshipId: Number(relaId),
   };
-  return axios.post(`/CCMSapi/Dependents/CreateDependent`, requestBody);
+  return axios.post(`/CWMSapi/Dependents/CreateDependent`, requestBody);
 };
 
 const detailOfDepartment = (ID) => {
   const id = ID;
   return axios.get(
-    `/CCMSapi/Departments/GetEmployeeInDepartment/DepartmentDetail/${id}`
+    `/CWMSapi/Departments/GetEmployeeInDepartment/DepartmentDetail/${id}`
   );
 };
 export {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     public class SalaryController : Controller
     {
         private readonly ISalaryService _salaryService;

@@ -19,15 +19,15 @@ using System.Text;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IAccountService _accountService;
         private IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public AccountsController(SEPG4CCMSContext context, IMapper mapper, IConfiguration configuration, IAccountService accountService)
+        public AccountsController(SEPG4CWMSContext context, IMapper mapper, IConfiguration configuration, IAccountService accountService)
         {
             _context = context;
             _mapper = mapper;

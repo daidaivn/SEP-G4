@@ -2,7 +2,7 @@ import axios from "./customize-axios";
 
 const fetchAllTeam = (id) => {
   const userEmployeeID= id;
-  return axios.post(`/CCMSapi/Team/GetAllTeams?employeeid=${userEmployeeID}`);
+  return axios.post(`/CWMSapi/Team/GetAllTeams?employeeid=${userEmployeeID}`);
 
 };
 const createTeam = (teamName, teamleaderId, teamsubleaderId) => {
@@ -10,36 +10,36 @@ const createTeam = (teamName, teamleaderId, teamsubleaderId) => {
   const teamleaderid = teamleaderId;
   const teamsubleaderid = teamsubleaderId;
   return axios.post(
-    `/CCMSapi/Team/AddTeam?name=${name}&teamleaderid=${teamleaderid}&teamsubleaderid=${teamsubleaderid}`
+    `/CWMSapi/Team/AddTeam?name=${name}&teamleaderid=${teamleaderid}&teamsubleaderid=${teamsubleaderid}`
   );
 };
 const detailTeamByID = (teamID) => {
-  return axios.get(`/CCMSapi/Team/GetTeamMembers/${teamID}/members`);
+  return axios.get(`/CWMSapi/Team/GetTeamMembers/${teamID}/members`);
 };
 const fetchAllLeader = (id) => {
   const userEmployeeID= id;
-  return axios.post(`/CCMSapi/Team/GetLeaderForTeam?leadId=${userEmployeeID}`);
+  return axios.post(`/CWMSapi/Team/GetLeaderForTeam?leadId=${userEmployeeID}`);
 };
 const fetchAllSubLeader = (id) => {
   const userEmployeeID= id;
-  return axios.post(`/CCMSapi/Team/GetSubLeaderForTeam?leadId=${userEmployeeID}`);
+  return axios.post(`/CWMSapi/Team/GetSubLeaderForTeam?leadId=${userEmployeeID}`);
 };
 const fetchAllStaffs = id => {
   const userEmployeeID= id;
-  return axios.get(`/CCMSapi/Team/GetStaffs?leadId=${userEmployeeID}`);
+  return axios.get(`/CWMSapi/Team/GetStaffs?leadId=${userEmployeeID}`);
 };
 const changeLeaderId = (teamOld, teamNew) => {
   const oldTeam = teamOld;
   const newTeam = teamNew;
   return axios.put(
-    `/CCMSapi/Team/ChangeLeaderTwoTeam?oldTeamId=${oldTeam}&newTeamId=${newTeam}`
+    `/CWMSapi/Team/ChangeLeaderTwoTeam?oldTeamId=${oldTeam}&newTeamId=${newTeam}`
   );
 };
 const changeSubLeaderId = (teamOld, teamNew) => {
   const oldTeam = teamOld;
   const newTeam = teamNew;
   return axios.put(
-    `/CCMSapi/Team/ChangeSubLeaderTwoTeam?oldTeamId=${oldTeam}&newTeamId=${newTeam}`
+    `/CWMSapi/Team/ChangeSubLeaderTwoTeam?oldTeamId=${oldTeam}&newTeamId=${newTeam}`
   );
 };
 const changeStafId = (teamNew, employeeTeamId) => {
@@ -47,13 +47,13 @@ const changeStafId = (teamNew, employeeTeamId) => {
   const employee = employeeTeamId;
   
   return axios.post(
-    `/CCMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`
+    `/CWMSapi/Team/ChangeTeamStaff?teamid=${newTeam}&employeeid=${employee}`
   );
 };
 const fetTeamContinue = (teamId) => {
   const teamid = teamId;
 
-  return axios.get(`/CCMSapi/Team/GetAvailableTeam?teamid=${teamid}`);
+  return axios.get(`/CWMSapi/Team/GetAvailableTeam?teamid=${teamid}`);
 };
 const createTeamMember = (teamId, memberIDS) => {
   const teamid = teamId;
@@ -62,7 +62,7 @@ const createTeamMember = (teamId, memberIDS) => {
     teamId: teamid,
     memberIds: memberIds
   };
-  return axios.post('/CCMSapi/Team/AddTeamMember', requestData, {
+  return axios.post('/CWMSapi/Team/AddTeamMember', requestData, {
     headers: {
       'Content-Type': 'application/json',
     }
@@ -70,27 +70,27 @@ const createTeamMember = (teamId, memberIDS) => {
 };
 const searchData = (Input) => {
   const input = Input;
-  return axios.post(`/CCMSapi/Team/SearchTeam?input=${input}`);
+  return axios.post(`/CWMSapi/Team/SearchTeam?input=${input}`);
 };
 
 const DeleteTeamMember = (eid, tid) => {
   const employeeid = eid;
   const teamid = tid;
   return axios.post(
-    `/CCMSapi/Team/DeleteTeamMember?employeeid=${employeeid}&teamid=${teamid}`
+    `/CWMSapi/Team/DeleteTeamMember?employeeid=${employeeid}&teamid=${teamid}`
   );
 };
 const ChangeTeamName = (name, id) => {
   const newName = name;
   const teamid = id;
   return axios.post(
-    `/CCMSapi/Team/ChangeTeamName?newName=${newName}&teamid=${teamid}`
+    `/CWMSapi/Team/ChangeTeamName?newName=${newName}&teamid=${teamid}`
   );
 };
 const CancelTeam = (id) => {
   const teamid = Number(id);
   return axios.post(
-    `/CCMSapi/Team/CancelTeam?teamId=${teamid}`
+    `/CWMSapi/Team/CancelTeam?teamId=${teamid}`
   );
 };
 export {

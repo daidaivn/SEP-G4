@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CarpentryWorkshopAPI.Models
 {
-    public partial class SEPG4CCMSContext : DbContext
+    public partial class SEPG4CWMSContext : DbContext
     {
-        public SEPG4CCMSContext()
+        public SEPG4CWMSContext()
         {
         }
 
-        public SEPG4CCMSContext(DbContextOptions<SEPG4CCMSContext> options)
+        public SEPG4CWMSContext(DbContextOptions<SEPG4CWMSContext> options)
             : base(options)
         {
         }
@@ -73,7 +73,7 @@ namespace CarpentryWorkshopAPI.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server =tcp:sepg4.database.windows.net,1433; database =SEP-G4-CCMS;User ID=admin123;Password=Sepg4@#$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("server =tcp:sepg4.database.windows.net,1433; database =SEP-G4-CWMS;User ID=admin123;Password=Sepg4@#$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 

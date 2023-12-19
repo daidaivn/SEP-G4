@@ -10,9 +10,9 @@ namespace CarpentryWorkshopAPI.Services.Advance
 {
     public class AdvanceService : IAdvanceService
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public AdvanceService(SEPG4CCMSContext context, IMapper mapper)
+        public AdvanceService(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

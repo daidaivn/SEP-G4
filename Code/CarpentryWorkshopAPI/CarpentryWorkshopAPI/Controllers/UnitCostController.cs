@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     public class UnitCostController : Controller
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public UnitCostController(SEPG4CCMSContext context, IMapper mapper)
+        public UnitCostController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

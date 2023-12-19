@@ -7,20 +7,20 @@ const FetchDataAdvance = (inputText, month, year) => {
     month: month,
     year: year
   };
-  return axios.post(`/CCMSapi/AdvanceSalary/GetAllAdvanceSalarys`, requestBody);
+  return axios.post(`/CWMSapi/AdvanceSalary/GetAllAdvanceSalarys`, requestBody);
 }
 
 const GetEmployees = (id) => {
   const employeeidstring = id;
   return axios.get(
-    `/CCMSapi/AdvanceSalary/GetEmployees?employeeidstring=${employeeidstring}`
+    `/CWMSapi/AdvanceSalary/GetEmployees?employeeidstring=${employeeidstring}`
   );
 };
 
 const GetAdvanceSalaryDetail = (id) => {
   const AdvanceID = id;
   return axios.get(
-    `/CCMSapi/AdvanceSalary/GetAdvanceSalaryDetail?advanceSalaryId=${AdvanceID}`
+    `/CWMSapi/AdvanceSalary/GetAdvanceSalaryDetail?advanceSalaryId=${AdvanceID}`
   );
 };
 
@@ -39,7 +39,7 @@ const CreateAdvanceSalary = (inputAdvance) => {
   };
 
   return axios.post(
-    `/CCMSapi/AdvanceSalary/CreateAdvanceSalary`,requestBody
+    `/CWMSapi/AdvanceSalary/CreateAdvanceSalary`,requestBody
   );
 };
 
@@ -59,7 +59,7 @@ const UpdateAdvanceSalary = (inputAdvance) => {
   };
 
   return axios.post(
-    `/CCMSapi/AdvanceSalary/UpdateAdvanceSalary`,requestBody
+    `/CWMSapi/AdvanceSalary/UpdateAdvanceSalary`,requestBody
   );
 };
 

@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
     public class RelationshipsTypeController : ControllerBase
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public RelationshipsTypeController(SEPG4CCMSContext context, IMapper mapper)
+        public RelationshipsTypeController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

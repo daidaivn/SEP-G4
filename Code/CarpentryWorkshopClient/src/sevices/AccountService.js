@@ -3,7 +3,7 @@ import axios from "./customize-axios"; // Import Axios instance
 
 
 const forgotPassword = (email) =>{
-  return axios.post(`/CCMSapi/Accounts/ForgotPassword?emailInput=${email}`);
+  return axios.post(`/CWMSapi/Accounts/ForgotPassword?emailInput=${email}`);
 }
 const ChangeUserNameAndPassWord = (id, userName, password) =>{
   const requestBody = {
@@ -11,6 +11,6 @@ const ChangeUserNameAndPassWord = (id, userName, password) =>{
     userName: userName,
     password: password
   };
-  return axios.post(`/CCMSapi/Accounts/ChangeUserNameAndPassWord`,requestBody);
+  return axios.post(`/CWMSapi/Accounts/ChangeUserNameAndPassWord`,requestBody);
 }
 export {forgotPassword, ChangeUserNameAndPassWord};

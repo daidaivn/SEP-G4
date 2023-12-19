@@ -86,7 +86,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 };
             });
 
-builder.Services.AddDbContext<SEPG4CCMSContext>(options =>
+builder.Services.AddDbContext<SEPG4CWMSContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 

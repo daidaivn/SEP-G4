@@ -7,7 +7,7 @@ const GetAllHolidays = (inputSearch,month, year) => {
     year: Number(year),
 }
   return axios.post(
-    `/CCMSapi/Holiday/GetAllHolidays`, requestBody
+    `/CWMSapi/Holiday/GetAllHolidays`, requestBody
   );
 };
 
@@ -26,14 +26,14 @@ const CreateHolidayDetail = (inputHolidays) => {
   };
 
   return axios.post(
-    `/CCMSapi/Holiday/CreateHolidayDetail`,requestBody
+    `/CWMSapi/Holiday/CreateHolidayDetail`,requestBody
   );
 };
 
 const GetHolidays = (id) => {
   const holidayid = id;
   return axios.get(
-    `/CCMSapi/Holiday/GetHolidays?holidayid=${holidayid}`
+    `/CWMSapi/Holiday/GetHolidays?holidayid=${holidayid}`
   );
 };
 

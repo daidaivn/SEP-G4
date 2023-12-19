@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     public class RoleStatusHistoryController : Controller
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public RoleStatusHistoryController(SEPG4CCMSContext context, IMapper mapper)
+        public RoleStatusHistoryController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

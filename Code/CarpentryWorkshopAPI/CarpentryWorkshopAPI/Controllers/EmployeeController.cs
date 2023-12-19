@@ -14,13 +14,13 @@ namespace CarpentryWorkshopAPI.Controllers
 {
 
     [ApiController]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     public class EmployeeController : Controller
     {
         private readonly IAccountService _accountService;
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private IMapper _mapper;
-        public EmployeeController(SEPG4CCMSContext context, IMapper mapper, IAccountService accountService)
+        public EmployeeController(SEPG4CWMSContext context, IMapper mapper, IAccountService accountService)
         {
             _context = context;
             _mapper = mapper;

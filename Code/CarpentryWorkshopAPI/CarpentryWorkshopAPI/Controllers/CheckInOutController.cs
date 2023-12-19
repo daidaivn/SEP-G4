@@ -8,15 +8,15 @@ using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
     [Authorize(Roles = "TimeKeeping")]
     public class CheckInOutController : ControllerBase
     {
 
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private IMapper _mapper;
-        public CheckInOutController(SEPG4CCMSContext context, IMapper mapper)
+        public CheckInOutController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

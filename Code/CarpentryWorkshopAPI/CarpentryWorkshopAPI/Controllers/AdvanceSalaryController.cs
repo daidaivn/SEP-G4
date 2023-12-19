@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     public class AdvanceSalaryController : Controller
     {
         private readonly IAdvanceService _advanceService;
-        private readonly SEPG4CCMSContext _context;
-        public AdvanceSalaryController(IAdvanceService advanceService, SEPG4CCMSContext context)
+        private readonly SEPG4CWMSContext _context;
+        public AdvanceSalaryController(IAdvanceService advanceService, SEPG4CWMSContext context)
         {
             _advanceService = advanceService;
             _context = context;

@@ -1,7 +1,7 @@
 import axios from "./customize-axios";
 
 const fetchAllRole = () => {
-  return axios.get("/CCMSapi/Role/GetAllRoles");
+  return axios.get("/CWMSapi/Role/GetAllRoles");
 };
 
 const SearchRoles = (inputName, filterStatus) => {
@@ -11,14 +11,14 @@ const SearchRoles = (inputName, filterStatus) => {
   };
 
   return axios.post(
-    `/CCMSapi/Role/SearchRole`, requestBody
+    `/CWMSapi/Role/SearchRole`, requestBody
   );
 };
 const GetRoleById = (ID) => {
   const rid = ID;
 
   return axios.get(
-    `/CCMSapi/Role/GetRoleEmployeeById?roleid=${rid}`
+    `/CWMSapi/Role/GetRoleEmployeeById?roleid=${rid}`
   );
 };
 const UpdateRole = (id, name, status) => {
@@ -29,7 +29,7 @@ const UpdateRole = (id, name, status) => {
   };
 
   return axios.put(
-    `CCMSapi/Role/EditRole`, requestBody
+    `CWMSapi/Role/EditRole`, requestBody
   );
 };
 
@@ -39,14 +39,14 @@ const EditRole = (eId, updatedRoleDepartments) => {
     rds: updatedRoleDepartments
   };
   
-  return axios.post(`/CCMSapi/Role/EditRole`, requestBody);
+  return axios.post(`/CWMSapi/Role/EditRole`, requestBody);
 
 };
 
 const GetRolesByDepartmentId = (departmentID) => {
   const departmentId = departmentID;
   return axios.get(
-    `/CCMSapi/Role/GetRolesByDepartmentId?departmentId=${departmentId}`
+    `/CWMSapi/Role/GetRolesByDepartmentId?departmentId=${departmentId}`
   );
 };
 

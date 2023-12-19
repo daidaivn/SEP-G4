@@ -1,10 +1,10 @@
 import axios from "./customize-axios";
 
 const fetchAllEmplyee = () => {
-  return axios.get("/CCMSapi/Employee/GetAllEmployee");
+  return axios.get("/CWMSapi/Employee/GetAllEmployee");
 };
 const fetchEmplyeebyid = (id) => {
-  return axios.get("/CCMSapi/Employee/GetEmployeeDetail/" + id);
+  return axios.get("/CWMSapi/Employee/GetEmployeeDetail/" + id);
 };
 
 const SearchEmployees = (inputName, filterGender, filterStatus, filterRole) => {
@@ -15,15 +15,15 @@ const SearchEmployees = (inputName, filterGender, filterStatus, filterRole) => {
     roleID: filterRole,
   };
 
-  return axios.post(`/CCMSapi/Employee/SearchEmployee`, requestBody);
+  return axios.post(`/CWMSapi/Employee/SearchEmployee`, requestBody);
 };
 const DetailID = (id) => {
   var eid = id;
-  return axios.get(`/CCMSapi/Employee/GetEmployeeDetail?eid=${eid}`);
+  return axios.get(`/CWMSapi/Employee/GetEmployeeDetail?eid=${eid}`);
 };
 const DetailEmployeebasic = (id) => {
   var eid = id;
-  return axios.get(`/CCMSapi/Employee/GetEmployeeDetailBasic?employeeidstring=${eid}`);
+  return axios.get(`/CWMSapi/Employee/GetEmployeeDetailBasic?employeeidstring=${eid}`);
 };
 
 const UpdateEmployee = (
@@ -57,7 +57,7 @@ const UpdateEmployee = (
     image: Image,
   };
 
-  return axios.post(`/CCMSapi/Employee/UpdateEmployee`, requestBody);
+  return axios.post(`/CWMSapi/Employee/UpdateEmployee`, requestBody);
 };
 
 const CreateEmployee = (
@@ -92,12 +92,12 @@ const CreateEmployee = (
     image: Image,
   };
 
-  return axios.post(`/CCMSapi/Employee/CreateEmployee`, requestBody);
+  return axios.post(`/CWMSapi/Employee/CreateEmployee`, requestBody);
 };
 
 const GetAllCountry = () => {
   return axios.get(
-    `/CCMSapi/Country/GetAllCountry`
+    `/CWMSapi/Country/GetAllCountry`
   );
 };
 export { fetchAllEmplyee, fetchEmplyeebyid, SearchEmployees, DetailID, UpdateEmployee, GetAllCountry, CreateEmployee, DetailEmployeebasic};

@@ -10,10 +10,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
 {
     public class ExcelSalarySevice : IExcelSalarySevice
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
 
-        public ExcelSalarySevice(SEPG4CCMSContext context, IMapper mapper)
+        public ExcelSalarySevice(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

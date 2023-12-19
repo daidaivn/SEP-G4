@@ -9,9 +9,9 @@ namespace CarpentryWorkshopAPI.Services.Bonus
 {
     public class BonusService : IBonusService
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public BonusService(SEPG4CCMSContext context, IMapper mapper)
+        public BonusService(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -10,13 +10,13 @@ using System.Text;
 namespace CarpentryWorkshopAPI.Controllers
 {
     [Authorize(Roles = "DependentPerson")]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsController : ControllerBase
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public DependentsController(SEPG4CCMSContext context, IMapper mapper)
+        public DependentsController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

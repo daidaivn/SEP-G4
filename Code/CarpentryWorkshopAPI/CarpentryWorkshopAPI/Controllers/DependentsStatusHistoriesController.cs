@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
     public class DependentsStatusHistoriesController : ControllerBase
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
 
-        public DependentsStatusHistoriesController(SEPG4CCMSContext context)
+        public DependentsStatusHistoriesController(SEPG4CWMSContext context)
         {
             _context = context;
         }

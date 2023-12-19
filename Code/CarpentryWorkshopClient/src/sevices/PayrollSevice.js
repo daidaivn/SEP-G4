@@ -6,18 +6,18 @@ const fetchAllSalaries = (iText, month, year) => {
         month: month,
         year: year,
     }
-    return axios.post(`/CCMSapi/Salary/GetAllSalary`,requestBody);
+    return axios.post(`/CWMSapi/Salary/GetAllSalary`,requestBody);
 };
 
 const fetchAllReward = (date) => {
-    return axios.get(`/CCMSapi/Reward/GetAllRewards?date=${date}`);
+    return axios.get(`/CWMSapi/Reward/GetAllRewards?date=${date}`);
 };
 const fetchAllSalaryDetail = (month,year) => {
-    return axios.get(`/CCMSapi/ExcelSalary/GetEmployeesByContractDate/ContractsByDate/${month}/${year}`);
+    return axios.get(`/CWMSapi/ExcelSalary/GetEmployeesByContractDate/ContractsByDate/${month}/${year}`);
 };
 const ExportSalaryExcel = (month, year) => {
     return axios.get(
-        `/CCMSapi/ExcelSalary/ExportSalaryExcel/export/${month}/${year}`,
+        `/CWMSapi/ExcelSalary/ExportSalaryExcel/export/${month}/${year}`,
         { responseType: "blob" }
     );
 };
@@ -36,7 +36,7 @@ const GetEmployeeAllowanceDetail = (eid, EMonth, EYear) => {
     const month = EMonth;
     const year = EYear;
     return axios.get(
-        `/CCMSapi/Salary/GetEmployeeAllowanceDetail?employeeid=${employeeid}&month=${month}&year=${year}`
+        `/CWMSapi/Salary/GetEmployeeAllowanceDetail?employeeid=${employeeid}&month=${month}&year=${year}`
     );
 };
 
@@ -45,7 +45,7 @@ const GetEmployeeDeductionDetail = (eid, EMonth, EYear) => {
     const month = EMonth;
     const year = EYear;
     return axios.get(
-        `/CCMSapi/Salary/GetEmployeeDeductionDetail?employeeid=${employeeid}&month=${month}&year=${year}`
+        `/CWMSapi/Salary/GetEmployeeDeductionDetail?employeeid=${employeeid}&month=${month}&year=${year}`
     );
 };
 
@@ -54,7 +54,7 @@ const GetEmployeeActualSalaryDetail = (eid, EMonth, EYear) => {
     const month = EMonth;
     const year = EYear;
     return axios.get(
-        `/CCMSapi/Salary/GetEmployeeActualSalaryDetail?employeeid=${employeeid}&month=${month}&year=${year}`
+        `/CWMSapi/Salary/GetEmployeeActualSalaryDetail?employeeid=${employeeid}&month=${month}&year=${year}`
     );
 }; 
 const CreateAndEditPersonalReward = (bonusId, employeeId, bonusAmount, bonusName, bonusReason) => {
@@ -66,7 +66,7 @@ const CreateAndEditPersonalReward = (bonusId, employeeId, bonusAmount, bonusName
         bonusReason: bonusReason,
         bonusDatestring: '',
     }
-    return axios.post(`/CCMSapi/Reward/CreateAndEditPersonalReward`,requestBody);
+    return axios.post(`/CWMSapi/Reward/CreateAndEditPersonalReward`,requestBody);
 };
 const CreateAndUpdateSpecialOccasion = (bonusId, employeeId, bonusAmount, bonusName, bonusReason) => {
     const requestBody = {
@@ -78,7 +78,7 @@ const CreateAndUpdateSpecialOccasion = (bonusId, employeeId, bonusAmount, bonusN
         occasionNote: bonusReason,
     }
 
-    return axios.post(`/CCMSapi/Reward/CreateAndEditSpecialOccasion`,requestBody);
+    return axios.post(`/CWMSapi/Reward/CreateAndEditSpecialOccasion`,requestBody);
 };
 const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusReason) => {
     const requestBody = {
@@ -89,14 +89,14 @@ const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusRea
         bonusReason: bonusReason,
     }
 
-    return axios.post(`/CCMSapi/Reward/CreateAndEditCompanyReward`,requestBody);
+    return axios.post(`/CWMSapi/Reward/CreateAndEditCompanyReward`,requestBody);
 };
 const GetEmployeeDetailSalary = (eid, EMonth, EYear) => {
     const employeeid = eid;
     const month = EMonth;
     const year = EYear;
     return axios.get(
-        `/CCMSapi/ExcelSalary/GetEmployeesByContractDate/ContractsByDate/${month}/${year}/${employeeid}`
+        `/CWMSapi/ExcelSalary/GetEmployeesByContractDate/ContractsByDate/${month}/${year}/${employeeid}`
     );
 };
 export {

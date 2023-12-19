@@ -3,7 +3,7 @@ import axios from "./customize-axios";
 const GetTeamForSchedule = (id) => {
     const userEmployeeID = id
     return axios.get(
-        `/CCMSapi/Team/GetTeamForSchedule?teamleaderid=${userEmployeeID}`
+        `/CWMSapi/Team/GetTeamForSchedule?teamleaderid=${userEmployeeID}`
     );
 };
 const GetAllWorks = (userEmployeeID ,selectedWeek, selectedYear) => {
@@ -13,7 +13,7 @@ const GetAllWorks = (userEmployeeID ,selectedWeek, selectedYear) => {
     year: selectedYear,
   };
   return axios.post(
-    `/CCMSapi/Works/GetAllWorks`,requestBody
+    `/CWMSapi/Works/GetAllWorks`,requestBody
   );
 };
 
@@ -21,7 +21,7 @@ const GetWorkDetailById = (tId) => {
   const wid = tId;
   
   return axios.get(
-    `/CCMSapi/Works/GetWorkDetailById/${wid}`
+    `/CWMSapi/Works/GetWorkDetailById/${wid}`
   );
 };
 const UpdateWork = (workDetailById) => {
@@ -49,7 +49,7 @@ const UpdateWork = (workDetailById) => {
     dateString:date
   };
   return axios.put(
-    `/CCMSapi/Works/UpdateWork`,requestBody
+    `/CWMSapi/Works/UpdateWork`,requestBody
   );
 };
 
@@ -78,7 +78,7 @@ const AddWork = (workDetailById, userEmployeeID, teamId) => {
   };
   console.log('work', requestBody);
   return axios.post(
-    `/CCMSapi/Works/AddWork`,requestBody
+    `/CWMSapi/Works/AddWork`,requestBody
   );
 };
 
@@ -91,7 +91,7 @@ const GetDataForSchedule = (userEmployeeID,selectedWeek, selectedYear, iText) =>
   };
 
   return axios.post(
-    `/CCMSapi/Team/GetDataForSchedule`,requestBody
+    `/CWMSapi/Team/GetDataForSchedule`,requestBody
   );
 };
 

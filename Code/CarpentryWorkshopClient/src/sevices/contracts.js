@@ -2,11 +2,11 @@ import axios from "./customize-axios";
 
 const GetEmployeeContract = (id) => {
   const eid = id;
-  return axios.get(`/CCMSapi/Contract/GetEmployeeContract?eid=${eid}`);
+  return axios.get(`/CWMSapi/Contract/GetEmployeeContract?eid=${eid}`);
 };
 
 const GetAllContractType = () => {
-  return axios.get(`CCMSapi/ContractType/GetAllContractType`);
+  return axios.get(`CWMSapi/ContractType/GetAllContractType`);
 };
 
 const CreateContract = (
@@ -36,7 +36,7 @@ const CreateContract = (
 
 
   return axios.post(
-    `CCMSapi/Contract/CreateContract?employeeid=${eid}`,
+    `CWMSapi/Contract/CreateContract?employeeid=${eid}`,
     requestBody
   );
 };
@@ -69,7 +69,7 @@ const UpdateContract = (
   };
 
   return axios.put(
-    `CCMSapi/Contract/UpdateContract`,
+    `CWMSapi/Contract/UpdateContract`,
     requestBody
   );
 };

@@ -8,9 +8,9 @@ namespace CarpentryWorkshopAPI.Services.SpecialOccasion
 {
     public class SpecialOccasionService : ISpecialOccasion
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public SpecialOccasionService(SEPG4CCMSContext context, IMapper mapper)
+        public SpecialOccasionService(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace CarpentryWorkshopAPI.Controllers
 {
     [ApiController]
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     public class UnitCostStatusHistoriesController : Controller
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private readonly IMapper _mapper;
-        public UnitCostStatusHistoriesController(SEPG4CCMSContext context, IMapper mapper)
+        public UnitCostStatusHistoriesController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@azure/storage-blob": "^12.17.0",
-    "base-64": "^1.0.0",
-    "react-window": "^1.8.9",
-    "xlsx-populate": "^1.21.0"
-  }
-}

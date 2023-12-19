@@ -1,13 +1,13 @@
 import axios from "./customize-axios";
 
 const fetchAllCheckInOut = (EmployeeID) => {
-  return axios.get(`/CCMSapi/CheckInOut/GetEmployeesByTeamLeaderIdOrTeamSubLeaderId/GetEmployeesByTeamLeaderId/${EmployeeID}`);
+  return axios.get(`/CWMSapi/CheckInOut/GetEmployeesByTeamLeaderIdOrTeamSubLeaderId/GetEmployeesByTeamLeaderId/${EmployeeID}`);
 };
 const addAllCheckInOut = (EmployeeID) => {
-  return axios.post(`/CCMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
+  return axios.post(`/CWMSapi/CheckInOut/AddCheckInOutForEmployee?employeeId=${EmployeeID}`);
 };
 const fetchAllDataWorks = (EmployeeID) => {
-  return axios.post(`/CCMSapi/TeamWorks/GetWorkDetaiForShiftManage?id=${EmployeeID}`);
+  return axios.post(`/CWMSapi/TeamWorks/GetWorkDetaiForShiftManage?id=${EmployeeID}`);
 };
 const updateDataWorks = (
   id,
@@ -18,11 +18,11 @@ const updateDataWorks = (
     numberProduct: number,
   };
 
-  return axios.post(`/CCMSapi/TeamWorks/UpdateTeamWork`, requestBody);
+  return axios.post(`/CWMSapi/TeamWorks/UpdateTeamWork`, requestBody);
 };
 const GetDataCheckInOutByDateAndEmployeeId = (employeeId, dateString) => {
   return axios.get(
-    `/CCMSapi/CheckInOut/GetDataCheckInOutByDateAndEmployeeId?employeeId=${employeeId}&dateString=${dateString}`
+    `/CWMSapi/CheckInOut/GetDataCheckInOutByDateAndEmployeeId?employeeId=${employeeId}&dateString=${dateString}`
   );
 };
 const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
@@ -32,6 +32,6 @@ const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
     checkIn: checkIn,
     checkOut: checkOut,
   };
-  return axios.post(`/CCMSapi/CheckInOut/UpdateCheckInOutForEmployee`, requestBody);
+  return axios.post(`/CWMSapi/CheckInOut/UpdateCheckInOutForEmployee`, requestBody);
 };
 export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks, GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee};

@@ -7,14 +7,14 @@ using System.Data;
 
 namespace CarpentryWorkshopAPI.Controllers
 {
-    [Route("CCMSapi/[controller]/[action]")]
+    [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
     public class UserAccountsController : ControllerBase
     {
-        private readonly SEPG4CCMSContext _context;
+        private readonly SEPG4CWMSContext _context;
         private IMapper _mapper;
 
-        public UserAccountsController(SEPG4CCMSContext context, IMapper mapper)
+        public UserAccountsController(SEPG4CWMSContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -87,7 +87,7 @@ namespace CarpentryWorkshopAPI.Controllers
             var userAccount = _mapper.Map<UserAccount>(userAccountDTO);
             if (_context.UserAccounts == null)
             {
-                return Problem("Entity set 'SEPG4CCMSContext.UserAccounts'  is null.");
+                return Problem("Entity set 'SEPG4CWMSContext.UserAccounts'  is null.");
             }
             if (userAccount == null)
             {

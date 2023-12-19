@@ -1,7 +1,7 @@
 import axios from "./customize-axios";
 
 const fetchAllDependent = () => {
-  return axios.get("/CCMSapi/Dependents/GetAllDependentPeople");
+  return axios.get("/CWMSapi/Dependents/GetAllDependentPeople");
 };
 
 const SearchDependents = (inputName, filterGender, filterStatus) => {
@@ -12,13 +12,13 @@ const SearchDependents = (inputName, filterGender, filterStatus) => {
   };
   
   return axios.post(
-    `/CCMSapi/Dependents/SearchDependents`, requestBody
+    `/CWMSapi/Dependents/SearchDependents`, requestBody
   );
 };
 const GetDependentPeopleById = (ID) => {
   const id = ID;
   return axios.get(
-    `https://sep-g4-api.azurewebsites.net/CCMSapi/Dependents/GetDependentPeopleById/${id}`
+    `https://sep-g4-api.azurewebsites.net/CWMSapi/Dependents/GetDependentPeopleById/${id}`
   );
 };
 
@@ -34,7 +34,7 @@ const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,ident
   };
   
   return axios.put(
-    `/CCMSapi/Dependents/UpdateDependent`, requestBody
+    `/CWMSapi/Dependents/UpdateDependent`, requestBody
   );
 };
 export { fetchAllDependent,SearchDependents,GetDependentPeopleById, UpdateDependent };

@@ -1,6 +1,6 @@
 import axios from "./customize-axios";
 
 const fetchAllPages = () => {
-  return axios.get("/CCMSapi/Pages/GetAllPage");
+  return axios.get("/CWMSapi/Pages/GetAllPage");
 };
 export { fetchAllPages };
