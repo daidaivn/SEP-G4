@@ -571,7 +571,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (employeeSearchDTO.RoleID.HasValue && employeeSearchDTO.RoleID.Value != 0)
                 {
                     query = query.Where(entity =>
-                        entity.RolesEmployees.Any(roleemp => roleemp.Role.RoleId == employeeSearchDTO.RoleID)
+                        entity.RolesEmployees.Any(roleemp => roleemp.Role.RoleId == employeeSearchDTO.RoleID && roleemp.EndDate == null)
                     );
                 }
 
