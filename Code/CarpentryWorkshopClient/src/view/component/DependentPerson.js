@@ -649,7 +649,7 @@ function DependentPerson() {
         <div className="modal-dependent-all">
           {" "}
           <Modal
-            className="modal-dependent"
+            className="modal-dependent modal-posive"
             open={isEditing}
             on
             Ok={handleSave}
