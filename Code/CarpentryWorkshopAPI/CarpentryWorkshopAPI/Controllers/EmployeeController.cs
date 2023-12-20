@@ -583,7 +583,9 @@ namespace CarpentryWorkshopAPI.Controllers
                     FullName = $"{employee.FirstName} {employee.LastName}",
                     Gender = (bool)employee.Gender ? "Nam" : "Nữ",
                     PhoneNumber = employee.PhoneNumber,
-                    Roles = employee.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel)
+                    Roles = employee.RolesEmployees
+                        .Where(re => re.EndDate == null)
+                        .OrderByDescending(re => re.Role.RoleLevel)
                         .Select(re => re.Role.RoleName)
                         .FirstOrDefault(),
                     Status = employee.Status
