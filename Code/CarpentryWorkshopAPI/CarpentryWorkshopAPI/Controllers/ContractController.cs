@@ -211,7 +211,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.ContractsStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Tạo hợp đồng thành công");
+                return Ok("Tạo nhân viên mới thành công");
             }
             catch (Exception ex)
             {

@@ -43,7 +43,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         EmployeeID = emp.EmployeeId,
                         EmployeeIdstring = emp.EmployeeId.ToString($"D{employeeIdLength}"),
                         Image = emp.Image,
-                        FullName = $"{emp.LastName} {emp.FirstName}",
+                        FullName = $"{emp.FirstName} {emp.LastName}",
                         Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                         PhoneNumber = emp.PhoneNumber,
                         Roles = emp.RolesEmployees
@@ -245,7 +245,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 _context.Employees.Remove(delete);
                 _context.SaveChanges();
-                return Ok("success");
+                return Ok("Xóa nhân viên thành công");
             }
             catch (Exception ex)
             {
@@ -459,7 +459,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.EmployeesStatusHistories.Add(newhistory);
                 _context.SaveChanges();
-                return Ok("Cập nhận thông tin nhân viên thành công.");
+                return Ok("Cập nhật thông tin nhân viên thành công.");
             }
             catch (Exception ex)
             {
@@ -543,6 +543,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var query = _context.Employees
                     .Include(emp => emp.RolesEmployees)
                     .ThenInclude(roleemp => roleemp.Role)
+                    .Where(emp => emp.RolesEmployees.Any(re => re.EndDate == null))
                     .ToList()
                     .AsQueryable();
 
