@@ -298,7 +298,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     DependentId = de.DependentId,
                     EmployeeId = de.DependentId,
-                    EmployeesName = de.Employee.FirstName + " " + de.Employee.LastName,
+                    EmployeesName = de.Employee.LastName + " " + de.Employee.FirstName,
                     FullName = de.FullName,
                     IdentifierCode = de.IdentifierCode,
                     Gender = de.Gender,

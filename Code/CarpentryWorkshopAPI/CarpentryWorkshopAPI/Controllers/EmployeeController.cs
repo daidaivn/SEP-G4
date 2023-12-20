@@ -43,7 +43,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         EmployeeID = emp.EmployeeId,
                         EmployeeIdstring = emp.EmployeeId.ToString($"D{employeeIdLength}"),
                         Image = emp.Image,
-                        FullName = $"{emp.FirstName} {emp.LastName}",
+                        FullName = $"{emp.LastName} {emp.FirstName}",
                         Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                         PhoneNumber = emp.PhoneNumber,
                         Roles = emp.RolesEmployees
@@ -580,7 +580,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     EmployeeID = employee.EmployeeId,
                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
                     Image = employee.Image,
-                    FullName = $"{employee.FirstName} {employee.LastName}",
+                    FullName = $"{employee.LastName} {employee.FirstName}",
                     Gender = (bool)employee.Gender ? "Nam" : "Nữ",
                     PhoneNumber = employee.PhoneNumber,
                     Roles = employee.RolesEmployees
