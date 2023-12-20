@@ -181,7 +181,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
         }
         [HttpDelete("{Aid}")]
-        public async Task<IActionResult> UpdateAdvanceSalary(int Aid)
+        public async Task<IActionResult> DeleteAdvance(int Aid)
         {
             try
             {              

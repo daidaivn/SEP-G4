@@ -62,5 +62,9 @@ const UpdateAdvanceSalary = (inputAdvance) => {
     `/CWMSapi/AdvanceSalary/UpdateAdvanceSalary`,requestBody
   );
 };
-
-export { FetchDataAdvance, GetEmployees, GetAdvanceSalaryDetail, CreateAdvanceSalary, UpdateAdvanceSalary };
+const DeleteAdvance = (id) => {
+  return axios.delete(
+    `/CWMSapi/AdvanceSalary/DeleteAdvance/${id}`
+  );
+};
+export { FetchDataAdvance, GetEmployees, GetAdvanceSalaryDetail, CreateAdvanceSalary, UpdateAdvanceSalary , DeleteAdvance};
