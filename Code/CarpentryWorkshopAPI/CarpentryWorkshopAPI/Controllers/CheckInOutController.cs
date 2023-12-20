@@ -616,16 +616,19 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (checkInOutDTO.Id > 0)
                 {
                     var checkInOut = _context.CheckInOuts.Where(a => a.CheckInOutId == checkInOutDTO.Id).FirstOrDefault();
-
+                    
                     if (checkInOut != null)
                     {
+                        if(string.IsNullOrEmpty(checkInOutDTO.CheckOut) && string.IsNullOrEmpty(checkInOutDTO.CheckIn))
+                        {
+                            return BadRequest("Dữ liệu không thể chỉnh sửa");
+                        }
                         checkInOut.TimeCheckOut = !string.IsNullOrEmpty(checkInOutDTO.CheckOut) && TimeSpan.TryParse(checkInOutDTO.CheckOut, out var checkOut) ? checkOut : checkInOut.TimeCheckOut;
                         checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutDTO.CheckIn) && TimeSpan.TryParse(checkInOutDTO.CheckIn, out var checkIn) ? checkIn : checkInOut.TimeCheckIn;
                         if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
                         }
-
                         _context.CheckInOuts.Update(checkInOut);
                         _context.SaveChanges();
                         return Ok("success");

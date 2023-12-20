@@ -16,14 +16,20 @@ const EditEmployee = ({
   date,
   employeeId,
 }) => {
+  
   const handleTimeInputChange = (timeIn, timeOut, id) => {
+  
+    if(timeIn === null || timeOut === null || timeIn === '' || timeOut === '' || timeIn === 'Invalid Date' || timeOut === 'Invalid Date' ){
+      return;
+    }
     if (timeIn === 1) {
       timeIn = "";
     }
     if (timeOut === 1) {
       timeOut = "";
     }
-    console.log('timeIn' ,timeIn);
+    console.log('timeIn', timeIn);
+    console.log('timeOut', timeOut);
     toast.promise(
       UpdateCheckInOutForEmployee(id, timeIn, timeOut)
         .then((data) => {
@@ -39,7 +45,7 @@ const EditEmployee = ({
         }),
       {
         pending: "Đang xử lý",
-        success: "Thành công",
+        success: "",
       }
     );
   };
@@ -92,11 +98,12 @@ const EditEmployee = ({
                         format="HH:mm"
                         onChange={(newTime) =>
                           handleTimeInputChange(
-                            1,
                             dayjs(newTime).format("HH:mm"),
+                            1,
                             employee.checkInOutId
                           )
                         }
+                        onBlur={handleCancelListEmployee}
                       />
                     </td>
                     <td>
@@ -109,8 +116,8 @@ const EditEmployee = ({
                         format="HH:mm"
                         onChange={(newTime) =>
                           handleTimeInputChange(
-                            dayjs(newTime).format("HH:mm"),
                             1,
+                            dayjs(newTime).format("HH:mm"),
                             employee.checkInOutId
                           )
                         }

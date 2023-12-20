@@ -32,6 +32,7 @@ const UpdateCheckInOutForEmployee = (id, checkIn, checkOut) => {
     checkIn: checkIn,
     checkOut: checkOut,
   };
+  console.log('dataCheckIn', requestBody);
   return axios.post(`/CWMSapi/CheckInOut/UpdateCheckInOutForEmployee`, requestBody);
 };
 export { fetchAllCheckInOut, addAllCheckInOut ,fetchAllDataWorks, updateDataWorks, GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee};
