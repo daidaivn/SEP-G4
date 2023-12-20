@@ -80,6 +80,7 @@ const PayrollComponent = () => {
 
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
+  const [salaryDetailData, setSalaryDetailData] = useState([]);
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
@@ -444,6 +445,7 @@ const PayrollComponent = () => {
       .then((data) => {
         isDataLoaded = true;
         setSalaryDetail(data);
+        setSalaryDetailData(data)
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
@@ -461,9 +463,22 @@ const PayrollComponent = () => {
       }
     }, 1500);
   };
+  
   useEffect(() => {
     fetDataSalaryDetail();
-  }, [iText, date, months]);
+  }, [date, months]);
+
+  const handleSearchChange = (e) => {
+    const searchText = e.target.value;
+    setIText(searchText);
+    const filteredData = salaryDetailData.filter((detail) =>
+      detail.fullName.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setSalaryDetail(filteredData);
+  };
+
+  console.log('sal',salaryDetail);
+  
 
   return (
     <>
@@ -487,6 +502,8 @@ const PayrollComponent = () => {
           months={months}
           setIText={setIText}
           iText={iText}
+          handleSearchChange={handleSearchChange}
+          salaryDetail={handleSearchChange}
         />
         <ListTable
           salaryDetail={salaryDetail}
