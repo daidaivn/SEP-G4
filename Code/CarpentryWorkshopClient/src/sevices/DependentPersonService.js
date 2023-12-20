@@ -22,7 +22,7 @@ const GetDependentPeopleById = (ID) => {
   );
 };
 
-const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,identifierCode, dobString, status) => {
+const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,identifierCode, dobString, status, gender) => {
   const requestBody = {
     dependentId : dependentId,
     employeeId: employeeId,
@@ -31,6 +31,7 @@ const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,ident
     identifierCode: identifierCode,
     dobString: dobString,
     status: status,
+    gender: Boolean(gender)
   };
   
   return axios.put(

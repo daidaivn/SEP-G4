@@ -326,57 +326,6 @@ const TimekeepingComponent = () => {
             </i>
             <Input placeholder="Tìm kiếm"></Input>
           </div>
-          <div className="list-filter">
-            <i className="list-filter-icon1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M14.3201 19.07C14.3201 19.68 13.92 20.48 13.41 20.79L12.0001 21.7C10.6901 22.51 8.87006 21.6 8.87006 19.98V14.63C8.87006 13.92 8.47006 13.01 8.06006 12.51L4.22003 8.47C3.71003 7.96 3.31006 7.06001 3.31006 6.45001V4.13C3.31006 2.92 4.22008 2.01001 5.33008 2.01001H18.67C19.78 2.01001 20.6901 2.92 20.6901 4.03V6.25C20.6901 7.06 20.1801 8.07001 19.6801 8.57001"
-                  stroke="#3A5A40"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M16.07 16.5201C17.8373 16.5201 19.27 15.0874 19.27 13.3201C19.27 11.5528 17.8373 10.1201 16.07 10.1201C14.3027 10.1201 12.87 11.5528 12.87 13.3201C12.87 15.0874 14.3027 16.5201 16.07 16.5201Z"
-                  stroke="#3A5A40"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M19.87 17.1201L18.87 16.1201"
-                  stroke="#3A5A40"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </i>
-            <Select
-              className="select-input"
-              defaultValue="Trạng thái: bật"
-              style={{
-                width: 120,
-              }}
-              options={[
-                {
-                  value: true,
-                  label: "Trạng thái: bật",
-                },
-                {
-                  value: false,
-                  label: "Trạng thái: tắt",
-                },
-              ]}
-            />
-          </div>
           <div className="ListWork">
             <svg
               onClick={showModalDetailShift}
