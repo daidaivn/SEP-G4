@@ -188,6 +188,18 @@ namespace CarpentryWorkshopAPI.Controllers
 
                             });
                         }
+                        else if (DateTime.Now > DateOut)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 6,//tan ca 
+                                CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+                            });
+                        }
                         else
                         {
                             result.Add(new
@@ -339,7 +351,19 @@ namespace CarpentryWorkshopAPI.Controllers
 
                             });
                         }
-                        else
+                        else if (DateTime.Now > DateOut)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 6,//tan ca 
+                                CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+                            });
+                        }
+                        else 
                         {
                             result.Add(new
                             {
