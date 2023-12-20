@@ -188,6 +188,18 @@ namespace CarpentryWorkshopAPI.Controllers
 
                             });
                         }
+                        else if (DateTime.Now > DateOut)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 6,//tan ca 
+                                CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+                            });
+                        }
                         else
                         {
                             result.Add(new
@@ -269,11 +281,11 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 var result = new List<object>();
                 var time = new List<object>();
+                TimeSpan timeIn = new TimeSpan(7, 0, 0);
+                TimeSpan timeOut = new TimeSpan(16, 0, 0);
                 foreach (var employee in employees)
                 {
                     var employeeRole = _context.RolesEmployees.Include(re => re.Role).OrderBy(re => re.Role.RoleLevel).FirstOrDefault(re => (re.Role.RoleName == "Trưởng ca" || re.Role.RoleName == "Phó ca") && re.EmployeeId == employee.EmployeeId);
-                    TimeSpan timeIn = new TimeSpan(7, 0, 0);
-                    TimeSpan timeOut = new TimeSpan(16, 0, 0);
                     if (employeeRole != null)
                     {
                         var teamId = await _context.Teams
@@ -307,9 +319,26 @@ namespace CarpentryWorkshopAPI.Controllers
                         .OrderBy(c => c.Date)
                         .ThenBy(c => c.TimeCheckIn)
                         .LastOrDefaultAsync();
+                    if (DateTime.Now > DateOut && latestCheckOutTime != null && latestCheckOutTime.TimeCheckIn != null)
+                    {
+                        if (latestCheckOutTime.TimeCheckOut == null)
+                        {
+                            var AutoCheck = await _context.CheckInOuts
+                                .Where(c => c.EmployeeId == employee.EmployeeId && c.Date == currentDate)
+                                .OrderBy(c => c.Date)
+                                .ThenBy(c => c.TimeCheckIn)
+                                .LastOrDefaultAsync();
+                            if (AutoCheck != null)
+                            {
+                                AutoCheck.TimeCheckOut = timeOut;
+                                _context.Update(AutoCheck);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
                     if (checkInTime == null)
                     {
-                        if (DateTime.Now > DateIn)
+                        if (DateTime.Now > DateIn && DateTime.Now < DateOut)
                         {
                             result.Add(new
                             {
@@ -322,7 +351,19 @@ namespace CarpentryWorkshopAPI.Controllers
 
                             });
                         }
-                        else
+                        else if (DateTime.Now > DateOut)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 6,//tan ca 
+                                CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+                            });
+                        }
+                        else 
                         {
                             result.Add(new
                             {
@@ -380,8 +421,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 time.Add(new
                 {
-                    TimeIn = "",
-                    Timeout = "",
+                    TimeIn = timeIn.ToString("h':'m"),
+                    Timeout = timeOut.ToString("h':'m"),
                     Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
                     Result = result
                 });

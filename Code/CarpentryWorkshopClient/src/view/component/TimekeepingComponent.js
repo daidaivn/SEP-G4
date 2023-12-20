@@ -626,7 +626,6 @@ const TimekeepingComponent = () => {
                       ) : (
                         <span
                           className="go-out"
-                          onClick={() => handleCheckEnd(employee.employeeId)}
                         >
                           <p>Ngưng</p>
                         </span>
