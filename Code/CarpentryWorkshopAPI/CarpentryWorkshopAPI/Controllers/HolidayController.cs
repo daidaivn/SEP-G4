@@ -112,6 +112,10 @@ namespace CarpentryWorkshopAPI.Controllers
                                System.Globalization.CultureInfo.InvariantCulture);
                 var endDate = DateTime.ParseExact(holidayDetailDTO.EndDatestring, "dd-MM-yyyy",
                                System.Globalization.CultureInfo.InvariantCulture);
+                if (startDate > endDate)
+                {
+                    return StatusCode(409,"Ngày bắt đầu không thể muộn hơn ngày kết thúc");
+                }
                 Holiday newHoliday = new Holiday()
                 {
                     HolidayName = holidayDetailDTO.HolidayName
@@ -147,6 +151,10 @@ namespace CarpentryWorkshopAPI.Controllers
                                System.Globalization.CultureInfo.InvariantCulture);
                 var endDate = DateTime.ParseExact(holidayDTO.EndDatestring, "dd-MM-yyyy",
                                System.Globalization.CultureInfo.InvariantCulture);
+                if (startDate > endDate)
+                {
+                    return StatusCode(409, "Ngày bắt đầu không thể muộn hơn ngày kết thúc");
+                }
                 var updateHoliday = await _context.Holidays.Where(x => x.HolidayId == holidayDTO.HolidayId).FirstOrDefaultAsync();
                 updateHoliday.HolidayName = holidayDTO.HolidayName;
                 _context.Holidays.Update(updateHoliday);

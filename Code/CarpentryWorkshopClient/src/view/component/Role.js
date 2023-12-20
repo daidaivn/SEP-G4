@@ -218,96 +218,7 @@ function Role() {
               onChange={handleChangeInnputSearch}
             ></Input>
           </div>
-          <div className="list-filter">
-            <i className="list-filter-icon1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M14.3201 19.07C14.3201 19.68 13.92 20.48 13.41 20.79L12.0001 21.7C10.6901 22.51 8.87006 21.6 8.87006 19.98V14.63C8.87006 13.92 8.47006 13.01 8.06006 12.51L4.22003 8.47C3.71003 7.96 3.31006 7.06001 3.31006 6.45001V4.13C3.31006 2.92 4.22008 2.01001 5.33008 2.01001H18.67C19.78 2.01001 20.6901 2.92 20.6901 4.03V6.25C20.6901 7.06 20.1801 8.07001 19.6801 8.57001"
-                  stroke="#3A5A40"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M16.07 16.5201C17.8373 16.5201 19.27 15.0874 19.27 13.3201C19.27 11.5528 17.8373 10.1201 16.07 10.1201C14.3027 10.1201 12.87 11.5528 12.87 13.3201C12.87 15.0874 14.3027 16.5201 16.07 16.5201Z"
-                  stroke="#3A5A40"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M19.87 17.1201L18.87 16.1201"
-                  stroke="#3A5A40"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </i>
-            <Select
-              className="select-input"
-              value={filterStatus}
-              style={{
-                width: 120,
-              }}
-              onChange={handleChangeFilterStatus}
-              options={[
-                {
-                  value: true,
-                  label: "Bật",
-                },
-                {
-                  value: false,
-                  label: "Tắt",
-                },
-                filterStatus !== null
-                  ? {
-                      value: null,
-                      label: "Bỏ chọn",
-                    }
-                  : null,
-              ].filter(Boolean)}
-              placeholder="Chọn trạng thái"
-            />
           </div>
-          <i className="icon-responsive icon-filter">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-            >
-              <path
-                d="M7.15979 9.53513C7.15979 9.84013 6.95977 10.2401 6.70477 10.3951L5.99979 10.8501C5.34479 11.2551 4.43478 10.8001 4.43478 9.99013V7.31512C4.43478 6.96012 4.23479 6.50513 4.02979 6.25513L2.10977 4.23512C1.85477 3.98012 1.65479 3.53013 1.65479 3.22513V2.06512C1.65479 1.46012 2.10979 1.00513 2.66479 1.00513H9.33478C9.88978 1.00513 10.3448 1.46012 10.3448 2.01512V3.12512C10.3448 3.53012 10.0898 4.03513 9.83978 4.28513"
-                stroke="white"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M8.03506 8.26006C8.91872 8.26006 9.63507 7.54372 9.63507 6.66006C9.63507 5.77641 8.91872 5.06006 8.03506 5.06006C7.15141 5.06006 6.43506 5.77641 6.43506 6.66006C6.43506 7.54372 7.15141 8.26006 8.03506 8.26006Z"
-                stroke="white"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M9.93506 8.56006L9.43506 8.06006"
-                stroke="white"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </i>
-         
-        </div>
         
         <table className="list-table">
           <thead>
@@ -315,7 +226,6 @@ function Role() {
               <td>STT</td>
               <td>Chức vụ</td>
               <td>Số thành viên chức vụ</td>
-              <td>Trạng thái</td>
             </tr>
           </thead>
           {role.length === 0 ? (
@@ -330,11 +240,6 @@ function Role() {
                   <td>{index + 1}</td>
                   <td>{role.roleName}</td>
                   <td>{role.employees.length}</td>
-                  <td>
-                    <Form.Item valuePropName="checked">
-                      <Switch checked={role.status} />
-                    </Form.Item>
-                  </td>
                 </tr>
               ))}
             </tbody>

@@ -85,8 +85,19 @@ function DependentPerson() {
   const handleOkDependent = () => {
     setIsModalOpenDependent(false);
   };
+
+  function reset() {
+    setGuardian("");
+    setEmployeeId("");
+    setRelationship("");
+    setIdentifier("");
+    setDate("");
+    setStatus(false);
+  }
+
   const handleCancelDependent = () => {
     setIsModalOpenDependent(false);
+    reset()
   };
   const handleEdit = () => {
     setIsEditing(true);
@@ -198,25 +209,24 @@ function DependentPerson() {
     }
 
     toast.promise(
-        CreateDependent(
-          employeeId,
-          guardian,
-          Identifier,
-          dependentGender,
-          date,
-          isChecked,
-          Relationship,
-
-        )
-          .then((data) => {
-            handleSave();
-            fetchDepartmentById(dependentId);
-            fetchData();
-            return toast.success(data);
-          })
-          .catch((error) => {
-            throw toast.error(error.response.data);
-      }),
+      CreateDependent(
+        employeeId,
+        guardian,
+        Identifier,
+        dependentGender,
+        date,
+        isChecked,
+        Relationship,
+      )
+        .then((data) => {
+          handleSave();
+          fetchDepartmentById(dependentId);
+          fetchData();
+          return toast.success(data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
         pending: "Đang tải dữ liệu",
         success: "Thêm thông tin thành công",
