@@ -115,5 +115,20 @@ namespace CarpentryWorkshopAPI.Services.Advance
             _context.SaveChanges();
             return "Chỉnh sửa tạm ứng thành công";
         }
+        public async Task<dynamic> DeleteAdvance(int Aid)
+        {
+            if(Aid < 0)
+            {
+                return "ID không hợp lệ";
+            }
+            var advance = _context.AdvancesSalaries.Find(Aid);
+            if(advance == null)
+            {
+                return "Lỗi dữ liệu";
+            }
+            _context.AdvancesSalaries.Remove(advance);
+            _context.SaveChanges();
+            return "Xóa tạm ứng thành công";
+        }
     }
 }

@@ -180,5 +180,22 @@ namespace CarpentryWorkshopAPI.Controllers
                 return StatusCode(500, "Lỗi máy chủ");
             }
         }
+        [HttpDelete("{Aid}")]
+        public async Task<IActionResult> UpdateAdvanceSalary(int Aid)
+        {
+            try
+            {              
+                var updateAd = await _advanceService.DeleteAdvance(Aid);
+                if (updateAd == null)
+                {
+                    return StatusCode(500, "Lỗi máy chủ");
+                }
+                return Ok(updateAd);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Lỗi máy chủ");
+            }
+        }
     }
 }
