@@ -609,6 +609,7 @@ function ListEmployeeComponent() {
     setContractStatus(true);
     setContractImage("");
     setAmount("");
+    setPreviewImage("")
     setOriginalOffice("")
   };
 
@@ -1048,7 +1049,7 @@ function ListEmployeeComponent() {
             className="modal-employee"
             visible={isModalOpen}
             onOk={UpdateEditEmployee}
-            onCancel={handleCancel}
+            onCancel={handleBack}
             width={1252}
           >
             <div className="modal-add-employee">

@@ -24,6 +24,9 @@ const Menucomponent = () => {
   if (!department.length) {
     department = JSON.parse(sessionStorage.getItem("department")) || [];
   }
+
+  const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
+
   const hasAccessiblePage = userPages.some((page) =>
     [
       "ListEmployee",
@@ -117,7 +120,7 @@ const Menucomponent = () => {
               >
                 <i className="icon-plane"></i>
 
-                <span className="text">Quản Lý nghỉ lễ</span>
+                <span className="text">{isHumanResourcesDepartment ? "Quản lý nghỉ lễ" : "Lịch nghỉ lễ"}</span>
               </NavLink>
             </div>
           )}

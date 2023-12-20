@@ -54,6 +54,8 @@ const HolidayComponent = () => {
     department = JSON.parse(sessionStorage.getItem("department")) || [];
   }
 
+  const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
+
   console.log('department', department);
 
 
@@ -112,7 +114,7 @@ const HolidayComponent = () => {
     );
   };
 
-console.log('inputHolidays',inputHolidays);
+  console.log('inputHolidays', inputHolidays);
 
 
   const handleUpdateHolidayDetail = () => {
@@ -164,7 +166,7 @@ console.log('inputHolidays',inputHolidays);
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>Quản lý nghỉ lễ</h2>
+            <h2>{isHumanResourcesDepartment ? "Quản lý nghỉ lễ" : "Lịch nghỉ lễ"}</h2>
             <span>
               Lưu thông tin các ngày nghỉ lễ của công ty
             </span>
