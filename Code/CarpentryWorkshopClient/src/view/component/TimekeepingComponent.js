@@ -165,6 +165,7 @@ const TimekeepingComponent = () => {
     fetchAllCheckInOut(userEmployeeID)
       .then((data) => {
         setChecksInOut(data);
+        console.log('checkInoutData',data);
         setChecksInOutData(data);
         isDataLoaded = true;
         if (toastId) {
@@ -219,6 +220,7 @@ const TimekeepingComponent = () => {
       .then((data) => {
         isDataLoaded = true;
         setWork(data);
+        setNumber(data.numberOFProductToday);
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
@@ -245,29 +247,21 @@ const TimekeepingComponent = () => {
     if (!check) {
       return;
     }
-    let isDataLoaded = false;
-    let toastId = null;
-    updateDataWorks(work.teamWorkId, number)
-      .then((data) => {
-        isDataLoaded = true;
-        fetchDataWorkPerDay();
-        if (toastId) {
-          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
-        }
-      })
-      .catch((error) => {
-        isDataLoaded = true;
-        if (toastId) {
-          toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
-        }
-        toast.error("Thay đổi dữ liệu không thành công"); // Hiển thị thông báo lỗi ngay lập tức
-      });
-    setTimeout(() => {
-      if (!isDataLoaded) {
-        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+    toast.promise(
+      updateDataWorks(work.teamWorkId, number)
+        .then((data) => {
+          fetchDataWorkPerDay();
+          handleCancelDetailShift();
+          return data;
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
+      {
+        pending: "Đang xử lý",
+        success: "Thành công",
       }
-    }, 1500);
-    setIsEditing(false);
+    );
   };
   const handleCancel = () => {
     setIsEditing(false);
@@ -277,8 +271,14 @@ const TimekeepingComponent = () => {
       <div className="col-right-container">
         <div className="list-container-header">
           <div className="list-text-header">
-            <h2>{isProductioneManager ? "Công việc và Điểm danh" : "Điểm danh"}</h2>
-            <span>{isProductioneManager ? "Quản lý công việc nhóm và điểm danh hàng ngày" : "Quản lý điểm danh của phòng - ban hằng ngày"}</span>
+            <h2>
+              {isProductioneManager ? "Công việc và Điểm danh" : "Điểm danh"}
+            </h2>
+            <span>
+              {isProductioneManager
+                ? "Quản lý công việc nhóm và điểm danh hàng ngày"
+                : "Quản lý điểm danh của phòng - ban hằng ngày"}
+            </span>
           </div>
           <ListUserHeader />
         </div>
@@ -623,11 +623,16 @@ const TimekeepingComponent = () => {
                         >
                           <p>Bắt đầu</p>
                         </span>
-                      ) : (
+                      ): employee.checkStatus === "CheckIn" ? (
                         <span
                           className="go-out"
+                          onClick={() => handleCheckStart(employee.employeeId)}
                         >
                           <p>Ngưng</p>
+                        </span>
+                      ) :  (
+                        <span className="go-out">
+                          <p>Ca đã kết thúc</p>
                         </span>
                       )}
                     </td>
@@ -674,7 +679,7 @@ const TimekeepingComponent = () => {
                   <Input type="date" value={convertDobToISO(work.date)}></Input>
                 </div>
                 <div className="footer-modal">
-                  <span className="back" onClick={handleCancel}>
+                  <span className="back" onClick={handleCancelDetailShift}>
                     Hủy bỏ
                   </span>
                   <span className="edit save" onClick={handleSave}>
@@ -744,7 +749,7 @@ const TimekeepingComponent = () => {
                       ></Input>
                     </div>
                     <div className="footer-modal">
-                      <span className="back" onClick={handleCancel}>
+                      <span className="back" onClick={handleCancelDetailShift}>
                         Hủy bỏ
                       </span>
                       <span className="edit save" onClick={handleSave}>
@@ -760,9 +765,7 @@ const TimekeepingComponent = () => {
 
         <EditEmployee
           isModalOpenListEmployee={isModalOpenListEmployee}
-          handleSave={handleSave}
           handleCancelListEmployee={handleCancelListEmployee}
-          handleCancel={handleCancel}
           employCheckInOut={employCheckInOut}
           convertDobToISO={convertDobToISO}
           convertTimeToInputFormat={convertTimeToInputFormat}

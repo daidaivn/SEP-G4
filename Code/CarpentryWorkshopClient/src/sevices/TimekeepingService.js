@@ -17,7 +17,7 @@ const updateDataWorks = (
     teamWorkId: id,
     numberProduct: number,
   };
-
+  console.log('teamwork', requestBody);
   return axios.post(`/CWMSapi/TeamWorks/UpdateTeamWork`, requestBody);
 };
 const GetDataCheckInOutByDateAndEmployeeId = (employeeId, dateString) => {
