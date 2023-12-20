@@ -115,7 +115,9 @@ namespace CarpentryWorkshopAPI.Controllers
                     DateOut = DateOut.AddDays(1);
                 }
                 var employees = await _context.EmployeeTeams
-                    .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null)
+                    .Include(et=>et.Employee)
+                    .ThenInclude(et=>et.RolesEmployees)
+                    .Where(et => et.TeamId == teamId.TeamId && et.EndDate == null && et.Employee.Status == true && et.Employee.RolesEmployees.Any(re=>re.EndDate == null))
                     .Select(et => et.Employee)
                     .ToListAsync();
                 if (employees.Count() == 0)
@@ -260,7 +262,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             else
             {
-                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Include(e=>e.Department).Where(e => e.DepartmentId == personCheckInOut.DepartmentId && e.EndDate == null).Select(e => e.Employee).Distinct().ToListAsync();
+                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Include(e=>e.Department).Where(e => e.DepartmentId == personCheckInOut.DepartmentId && e.EndDate == null && e.Employee.Status == true).Select(e => e.Employee).Distinct().ToListAsync();
                 if (employees.Count() == 0)
                 {
                     return NotFound("Không tìm thấy nhân viên trong nhóm có ngày kết thúc trống");

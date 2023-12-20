@@ -43,7 +43,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         EmployeeID = emp.EmployeeId,
                         EmployeeIdstring = emp.EmployeeId.ToString($"D{employeeIdLength}"),
                         Image = emp.Image,
-                        FullName = $"{emp.FirstName} {emp.LastName}",
+                        FullName = $"{emp.LastName} {emp.FirstName}",
                         Gender = (bool)emp.Gender ? "Nam" : "Nữ",
                         PhoneNumber = emp.PhoneNumber,
                         Roles = emp.RolesEmployees
@@ -571,7 +571,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (employeeSearchDTO.RoleID.HasValue && employeeSearchDTO.RoleID.Value != 0)
                 {
                     query = query.Where(entity =>
-                        entity.RolesEmployees.Any(roleemp => roleemp.Role.RoleId == employeeSearchDTO.RoleID)
+                        entity.RolesEmployees.Any(roleemp => roleemp.Role.RoleId == employeeSearchDTO.RoleID && roleemp.EndDate == null)
                     );
                 }
 
@@ -580,10 +580,12 @@ namespace CarpentryWorkshopAPI.Controllers
                     EmployeeID = employee.EmployeeId,
                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
                     Image = employee.Image,
-                    FullName = $"{employee.FirstName} {employee.LastName}",
+                    FullName = $"{employee.LastName} {employee.FirstName}",
                     Gender = (bool)employee.Gender ? "Nam" : "Nữ",
                     PhoneNumber = employee.PhoneNumber,
-                    Roles = employee.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel)
+                    Roles = employee.RolesEmployees
+                        .Where(re => re.EndDate == null)
+                        .OrderByDescending(re => re.Role.RoleLevel)
                         .Select(re => re.Role.RoleName)
                         .FirstOrDefault(),
                     Status = employee.Status

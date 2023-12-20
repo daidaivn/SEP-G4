@@ -616,6 +616,7 @@ function DependentPerson() {
             <tr>
               <td>STT</td>
               <td>Họ và tên</td>
+              <td>Nhân viên</td>
               <td>Giới tính</td>
               <td>Mã định danh</td>
               <td>Trạng thái</td>
@@ -632,6 +633,7 @@ function DependentPerson() {
                 >
                   <td>{index + 1}</td>
                   <td>{dependent.fullName}</td>
+                  <td>{dependent.employeesName}</td>
                   <td>{dependent.genderString}</td>
                   <td>{dependent.identifierCode}</td>
                   <td>
