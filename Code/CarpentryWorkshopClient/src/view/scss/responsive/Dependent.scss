@@ -4,7 +4,7 @@
     font-size: 25px !important;
   }
   .name-person-dependent {
-    width: 400px !important;
+    width: 100% !important;
   }
   .table-info-detail tr .text,
   .table-info-detail tr .input-text {
@@ -13,16 +13,22 @@
   .modal-dependent-all {
     position: relative;
   }
-  .modal-dependent {
-    position: absolute;
-    top: 100px;
-    right: 500px;
+  .modal-dependent .modal-group{
+    width: 100% !important
   }
+  .modal-dependent-all .ant-modal .ant-modal-content {
+    top: -79px !important;
+  }
+
   .info-detail-dependent {
     width: 700px;
   }
   .table-info-detail tr .text,
   .table-info-detail tr .input-text select {
     font-size: 18px !important;
+  }
+
+  .department-scroll{
+    max-height: 322px;
   }
 }

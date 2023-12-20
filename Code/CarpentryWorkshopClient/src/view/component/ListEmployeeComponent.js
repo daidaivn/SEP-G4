@@ -526,25 +526,25 @@ function ListEmployeeComponent() {
 
   const AddContract = (eid) => {
     toast.promise(
-        CreateContract(
-          eid,
-          contractStartDate,
-          contractEndDate,
-          contractLink,
-          contractStatus,
-          contractType,
-          contractCode,
-          amount,
-          originalOffice
-        )
-          .then((data) => {
-            fetchData();
-            throw toast.success(data);
-            resetOriginalDetail();
-          })
-          .catch((error) => {
-            throw toast.error(error.response.data);
-      }),
+      CreateContract(
+        eid,
+        contractStartDate,
+        contractEndDate,
+        contractLink,
+        contractStatus,
+        contractType,
+        contractCode,
+        amount,
+        originalOffice
+      )
+        .then((data) => {
+          fetchData();
+          throw toast.success(data);
+          resetOriginalDetail();
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
         pending: "Đang xử lý",
         success: "Thêm mới nhân viên thành công",
@@ -800,7 +800,7 @@ function ListEmployeeComponent() {
       label: role.roleName,
     })),
   ];
-  
+
   const handleChangeFilterGender = (value) => {
     setFilterGender(value);
     searchandfilter(inputSearch, value, filterStatus, filterRole);
@@ -912,7 +912,7 @@ function ListEmployeeComponent() {
   }
 
   return (
-    <div className="col-right-container">
+    <div className="col-right-container employee-controller">
       <div className="list-container-header">
         <div className="list-text-header">
           <h2>Danh sách nhân viên</h2>
@@ -1008,7 +1008,7 @@ function ListEmployeeComponent() {
         originalOffice={originalOffice}
         allRole={allRole}
         handleSearchChange={handleSearchChange}
-        employees ={employees}
+        employees={employees}
         inputSearch={inputSearch}
       />
       <div className="list-text-header-res">
@@ -1052,482 +1052,484 @@ function ListEmployeeComponent() {
           handleEditRole={handleEditRole}
         />
       )}
+      <div className="modal-employees">
+        {/* upload file img */}
+        {isEditing ? (
+          <div className="modal-res">
+            {" "}
+            <Modal
+              className="modal-employee"
+              visible={isModalOpen}
+              onOk={UpdateEditEmployee}
+              onCancel={handleBack}
+              width={1252}
+            >
+              <div className="modal-add-employee">
+                <div className="modal-head-employee">
+                  <h3>Sửa thông tin nhân viên</h3>
+                </div>
+                <div className="modal-add-employee-all">
+                  <div className="modal-employee-box1">
+                    <div className="modal-child-body1">
+                      <div className="img-body1">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                        />
+                        {previewImage && (
+                          <img src={previewImage} alt="Xem trước ảnh" />
+                        )}
+                      </div>
+                    </div>
 
-      {/* upload file img */}
-      {isEditing ? (
-        <div className="modal-res">
-          {" "}
-          <Modal
-            className="modal-employee"
-            visible={isModalOpen}
-            onOk={UpdateEditEmployee}
-            onCancel={handleBack}
-            width={1252}
-          >
-            <div className="modal-add-employee">
-              <div className="modal-head-employee">
-                <h3>Sửa thông tin nhân viên</h3>
-              </div>
-              <div className="modal-add-employee-all">
-                <div className="modal-employee-box1">
-                  <div className="modal-child-body1">
-                    <div className="img-body1">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                      />
-                      {previewImage && (
-                        <img src={previewImage} alt="Xem trước ảnh" />
-                      )}
+                    <div className="modal-child-body2">
+                      <div className="div-modal-child2 div-detail div1-modal-child2">
+                        <div className="div1-modal-cn">
+                          <p>Họ:</p>
+                          <Input
+                            value={originalLastName}
+                            onChange={(e) => setOriginalLastName(e.target.value)}
+                          />
+                        </div>
+                        <div className="div1-modal-cn div2-fix name_reponsive">
+                          <p>Tên:</p>
+                          <Input
+                            value={originalFirstName}
+                            onChange={(e) => setOriginalFirstName(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Số điện thoại:</p>
+                        <Input
+                          value={originalPhoneNumber}
+                          onChange={handlePhoneNumberChange}
+                          placeholder="Nhập số điện thoại"
+                        />
+                      </div>
+                      <div className="div-modal-child2">
+                        <p>Giới tính: </p>
+                        <div className="radio-employee">
+                          <Radio.Group
+                            onChange={(e) => setOriginalGender(e.target.value)}
+                            value={originalGender}
+                          >
+                            <Radio value={true} className="gender">
+                              Nam
+                            </Radio>
+                            <Radio value={false} className="gender">
+                              Nữ
+                            </Radio>
+                          </Radio.Group>
+                        </div>
+                      </div>
+                      <div className="div-modal-child2">
+                        <p>Quốc tịch:</p>
+                        <Select
+                          className="select-input"
+                          value={originalNationality}
+                          onChange={(value) => setOriginalNationality(value)}
+                          style={{
+                            width: "100%",
+                          }}
+                          options={countries.map((country) => ({
+                            value: country.countryId,
+                            label: country.countryName,
+                          }))}
+                        />
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Ngày sinh:</p>
+                        <Input
+                          type="date"
+                          value={convertDobToISO(originalDOB)}
+                          onChange={(e) =>
+                            setOriginalDOB(convertDobToISO(e.target.value))
+                          }
+                        />
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Mã định danh: </p>
+                        <Input
+                          value={originalCIC}
+                          onChange={handleCICChange}
+                          placeholder="Ví dụ: CMND, CCCD"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-employee-box2">
+                    <div className="modal-box2-child">
+                      <div className="box2-child-cn ">
+                        <div className="box-child-employee1 div-detail">
+                          <p>Mã số thuế:</p>
+                          <Input
+                            value={originalTaxId}
+                            onChange={(e) => setOriginalTaxId(e.target.value)}
+                          />
+                        </div>
+                        <div className="box-child-employee1 div-detail">
+                          <p>Địa chỉ: </p>
+                          <textarea
+                            value={originalAddress}
+                            onChange={(e) => setOriginalAddress(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="box2-child-cn">
+                        <div className="box-child-employee1 div-detail">
+                          <p>Email:</p>
+                          <Input
+                            value={originalEmail}
+                            onChange={(e) => setOriginalEmail(e.target.value)}
+                            placeholder="Nhập email"
+                          />
+                        </div>
+                        <div className="box-child-employee1 div-detail">
+                          <p>Trạng thái:</p>
+                          <Form.Item valuePropName="checked" className="action">
+                            <Switch
+                              checked={originalStatus}
+                              onChange={(checked) => setOriginalStatus(checked)}
+                            />
+                          </Form.Item>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer modal-footer-add">
+                  <div className="btn-left">
+                    <div
+                      className="modal-footer1 add-origin"
+                      onClick={handleEditContract}
+                    >
+                      Sửa hợp đồng
+                    </div>
+                    <div
+                      className="modal-footer1 add-origin"
+                      onClick={handleEditRole}
+                    >
+                      Sửa chức vụ
                     </div>
                   </div>
 
-                  <div className="modal-child-body2">
-                    <div className="div-modal-child2 div-detail div1-modal-child2">
-                      <div className="div1-modal-cn">
-                        <p>Họ:</p>
-                        <Input
-                          value={originalLastName}
-                          onChange={(e) => setOriginalLastName(e.target.value)}
-                        />
-                      </div>
-                      <div className="div1-modal-cn div2-fix name_reponsive">
-                        <p>Tên:</p>
-                        <Input
-                          value={originalFirstName}
-                          onChange={(e) => setOriginalFirstName(e.target.value)}
+                  <div className="modal-footer modal-footer2">
+                    <button className="btn-cancel" onClick={handleBack}>
+                      Hủy bỏ
+                    </button>
+                    <button
+                      className="btn-edit btn-save"
+                      onClick={UpdateEditEmployee}
+                    >
+                      Lưu
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+          </div>
+        ) : (
+          <div className="modal-res">
+            {" "}
+            <Modal
+              className="modal-employee"
+              visible={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              width={1252}
+            >
+              {/* Modail view detail */}
+              <div className="modal-add-employee">
+                <div className="modal-head-employee">
+                  <h3>Thông tin nhân viên chi tiết</h3>
+                </div>
+                <div className="modal-add-employee-all">
+                  <div className="modal-employee-box1">
+                    <div className="modal-child-body1">
+                      <div className="img-body1">
+                        <img
+                          src={idDetail && idDetail.image ? idDetail.image : avt}
+                          alt="avt"
+                          loading="lazy"
                         />
                       </div>
                     </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Số điện thoại:</p>
+                    <div className="modal-child-body2">
+                      <div className="div-modal-child2 div-detail">
+                        <p>Họ và tên:</p>
+                        <Input
+                          value={
+                            idDetail && idDetail.fullName
+                              ? idDetail.fullName
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Giới tính: </p>
+                        <div className="radio-employee">
+                          <Input
+                            value={
+                              idDetail && idDetail.genderstring
+                                ? idDetail.genderstring
+                                : "Chưa có thông tin"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Quốc tịch:</p>
+                        <Input
+                          value={
+                            idDetail && idDetail.country
+                              ? idDetail.country
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </div>
+
+                      <div className="div-modal-child2 div-detail">
+                        <p>Mã định danh: </p>
+                        <Input
+                          value={
+                            idDetail && idDetail.cic
+                              ? idDetail.cic
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Ngày sinh:</p>
+                        <Input
+                          type="date"
+                          value={
+                            idDetail && idDetail.dobstring
+                              ? convertDobToISO(idDetail.dobstring)
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </div>
+                      <div className="div-modal-child2 div-detail">
+                        <p>Số điện thoại: </p>
+                        <Input
+                          value={
+                            idDetail && idDetail.phoneNumber
+                              ? idDetail.phoneNumber
+                              : "Chưa có thông tin"
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-employee-box2">
+                    <div className="modal-box2-child">
+                      <div className="box2-child-cn">
+                        <div className="box-child-employee1 div-detail">
+                          <p>Mã số thuế:</p>
+                          <Input
+                            value={
+                              idDetail && idDetail.taxId
+                                ? idDetail.taxId
+                                : "Chưa có thông tin"
+                            }
+                          />
+                        </div>
+                        <div className="box-child-employee1 div-detail">
+                          <p>Địa chỉ: </p>
+                          <textarea
+                            disabled
+                            value={
+                              idDetail && idDetail.address
+                                ? idDetail.address
+                                : "Chưa có thông tin"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="box2-child-cn">
+                        <div className="box-child-employee1 div-detail">
+                          <p>Email:</p>
+                          <Input
+                            value={
+                              idDetail && idDetail.email
+                                ? idDetail.email
+                                : "Chưa có thông tin"
+                            }
+                          />
+                        </div>
+                        <div className="box-child-employee1 div-detail">
+                          <p>Trạng thái:</p>
+                          <Switch
+                            checked={
+                              idDetail && idDetail.status
+                                ? idDetail.status
+                                : false
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer modal-footer-add">
+                  <div className="btn-left">
+                    <div
+                      className="modal-footer1"
+                      onClick={showModalViewContract1}
+                    >
+                      Xem hợp đồng
+                    </div>
+                    <div className="modal-footer1" onClick={showModalViewRole1}>
+                      Xem chức vụ
+                    </div>
+                  </div>
+
+                  <div className="modal-footer modal-footer2">
+                    <button className="btn-cancel" onClick={handleCancel}>
+                      Thoát
+                    </button>
+                    <button className="btn-edit" onClick={handleEdit}>
+                      Chỉnh sửa
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+          </div>
+        )}
+        <Modal
+          className="modal"
+          open={isModalOpenViewContract1}
+          onOk={handleOkViewContract1}
+          onCancel={handleCancelViewContract1}
+        >
+          <div className="modal-add-roleyee-employee modal-contract fix-close">
+            <div className="modal-head">
+              <h3>Hợp đồng</h3>
+              <div className="close" onClick={handleCancelViewContract1}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M35 7.30769L22.3077 20L35 32.6923L32.6923 35L20 22.3077L7.30769 35L5 32.6923L17.6923 20L5 7.30769L7.30769 5L20 17.6923L32.6923 5L35 7.30769Z"
+                    fill="white"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="body-add-role-employee">
+              <table>
+                <thead className="thead-first"></thead>
+                <div className="body-table body-table-contract">
+                  <tr>
+                    <Input
+                      className="select-input"
+                      placeholder="Mã hợp đồng"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                      value={contractCode}
+                    />
+                    <div className="input-date">
                       <Input
-                        value={originalPhoneNumber}
-                        onChange={handlePhoneNumberChange}
-                        placeholder="Nhập số điện thoại"
-                      />
-                    </div>
-                    <div className="div-modal-child2">
-                      <p>Giới tính: </p>
-                      <div className="radio-employee">
-                        <Radio.Group
-                          onChange={(e) => setOriginalGender(e.target.value)}
-                          value={originalGender}
-                        >
-                          <Radio value={true} className="gender">
-                            Nam
-                          </Radio>
-                          <Radio value={false} className="gender">
-                            Nữ
-                          </Radio>
-                        </Radio.Group>
-                      </div>
-                    </div>
-                    <div className="div-modal-child2">
-                      <p>Quốc tịch:</p>
-                      <Select
                         className="select-input"
-                        value={originalNationality}
-                        onChange={(value) => setOriginalNationality(value)}
+                        value={contract.contractTypeName}
                         style={{
                           width: "100%",
                         }}
-                        options={countries.map((country) => ({
-                          value: country.countryId,
-                          label: country.countryName,
-                        }))}
                       />
                     </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Ngày sinh:</p>
-                      <Input
-                        type="date"
-                        value={convertDobToISO(originalDOB)}
-                        onChange={(e) =>
-                          setOriginalDOB(convertDobToISO(e.target.value))
+                  </tr>
+                  <tr>
+                    <p className="salary-contract">Lương hợp đồng:</p>
+                    <Input
+                      type="text"
+                      placeholder="Lương hợp đồng"
+                      value={contract.amount}
+                    ></Input>
+                  </tr>
+                  <tr>
+                    <div className="input-date">
+                      <Select
+                        className="select-input"
+                        value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
+                        style={{
+                          width: "100%",
+                        }}
+                        options={[
+                          {
+                            value: true,
+                            label: "Khối văn phòng",
+                          },
+                          {
+                            value: false,
+                            label: "Khối sản xuất",
+                          },
+                        ]
                         }
+                        disabled
                       />
                     </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Mã định danh: </p>
+                  </tr>
+                  <tr>
+                    <div className="input-date">
                       <Input
-                        value={originalCIC}
-                        onChange={handleCICChange}
-                        placeholder="Ví dụ: CMND, CCCD"
+                        className="select-input"
+                        placeholder="Thời gian bắt đầu"
+                        type="date"
+                        style={{
+                          width: "100%",
+                        }}
+                        value={convertDobToISO(contractStartDate)}
                       />
                     </div>
-                  </div>
-                </div>
-                <div className="modal-employee-box2">
-                  <div className="modal-box2-child">
-                    <div className="box2-child-cn ">
-                      <div className="box-child-employee1 div-detail">
-                        <p>Mã số thuế:</p>
-                        <Input
-                          value={originalTaxId}
-                          onChange={(e) => setOriginalTaxId(e.target.value)}
-                        />
-                      </div>
-                      <div className="box-child-employee1 div-detail">
-                        <p>Địa chỉ: </p>
-                        <textarea
-                          value={originalAddress}
-                          onChange={(e) => setOriginalAddress(e.target.value)}
-                        />
-                      </div>
+                    <div className="input-date">
+                      <Input
+                        className="select-input"
+                        placeholder="Thời gian kết thúc"
+                        type="date"
+                        style={{
+                          width: "100%",
+                        }}
+                        value={convertDobToISO(contractEndDate)}
+                      />
                     </div>
-                    <div className="box2-child-cn">
-                      <div className="box-child-employee1 div-detail">
-                        <p>Email:</p>
-                        <Input
-                          value={originalEmail}
-                          onChange={(e) => setOriginalEmail(e.target.value)}
-                          placeholder="Nhập email"
-                        />
-                      </div>
-                      <div className="box-child-employee1 div-detail">
-                        <p>Trạng thái:</p>
+                  </tr>
+                  <tr>
+                    <div className="input-date">
+                      <Input
+                        className="select-input"
+                        placeholder="Đường dẫn hợp đồng"
+                        style={{
+                          width: "100%",
+                        }}
+                        value={contractLink}
+                      />
+                      <div className="input-date-cn">
+                        <p>Trạng thái: </p>
                         <Form.Item valuePropName="checked" className="action">
-                          <Switch
-                            checked={originalStatus}
-                            onChange={(checked) => setOriginalStatus(checked)}
-                          />
+                          <Switch checked={contractStatus} />
                         </Form.Item>
                       </div>
                     </div>
-                  </div>
+                  </tr>
                 </div>
-              </div>
-              <div className="modal-footer modal-footer-add">
-                <div className="btn-left">
-                  <div
-                    className="modal-footer1 add-origin"
-                    onClick={handleEditContract}
-                  >
-                    Sửa hợp đồng
-                  </div>
-                  <div
-                    className="modal-footer1 add-origin"
-                    onClick={handleEditRole}
-                  >
-                    Sửa chức vụ
-                  </div>
-                </div>
-
-                <div className="modal-footer modal-footer2">
-                  <button className="btn-cancel" onClick={handleBack}>
-                    Hủy bỏ
-                  </button>
-                  <button
-                    className="btn-edit btn-save"
-                    onClick={UpdateEditEmployee}
-                  >
-                    Lưu
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Modal>
-        </div>
-      ) : (
-        <div className="modal-res">
-          {" "}
-          <Modal
-            className="modal-employee"
-            visible={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width={1252}
-          >
-            {/* Modail view detail */}
-            <div className="modal-add-employee">
-              <div className="modal-head-employee">
-                <h3>Thông tin nhân viên chi tiết</h3>
-              </div>
-              <div className="modal-add-employee-all">
-                <div className="modal-employee-box1">
-                  <div className="modal-child-body1">
-                    <div className="img-body1">
-                      <img
-                        src={idDetail && idDetail.image ? idDetail.image : avt}
-                        alt="avt"
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                  <div className="modal-child-body2">
-                    <div className="div-modal-child2 div-detail">
-                      <p>Họ và tên:</p>
-                      <Input
-                        value={
-                          idDetail && idDetail.fullName
-                            ? idDetail.fullName
-                            : "Chưa có thông tin"
-                        }
-                      />
-                    </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Giới tính: </p>
-                      <div className="radio-employee">
-                        <Input
-                          value={
-                            idDetail && idDetail.genderstring
-                              ? idDetail.genderstring
-                              : "Chưa có thông tin"
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Quốc tịch:</p>
-                      <Input
-                        value={
-                          idDetail && idDetail.country
-                            ? idDetail.country
-                            : "Chưa có thông tin"
-                        }
-                      />
-                    </div>
-
-                    <div className="div-modal-child2 div-detail">
-                      <p>Mã định danh: </p>
-                      <Input
-                        value={
-                          idDetail && idDetail.cic
-                            ? idDetail.cic
-                            : "Chưa có thông tin"
-                        }
-                      />
-                    </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Ngày sinh:</p>
-                      <Input
-                        type="date"
-                        value={
-                          idDetail && idDetail.dobstring
-                            ? convertDobToISO(idDetail.dobstring)
-                            : "Chưa có thông tin"
-                        }
-                      />
-                    </div>
-                    <div className="div-modal-child2 div-detail">
-                      <p>Số điện thoại: </p>
-                      <Input
-                        value={
-                          idDetail && idDetail.phoneNumber
-                            ? idDetail.phoneNumber
-                            : "Chưa có thông tin"
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-employee-box2">
-                  <div className="modal-box2-child">
-                    <div className="box2-child-cn">
-                      <div className="box-child-employee1 div-detail">
-                        <p>Mã số thuế:</p>
-                        <Input
-                          value={
-                            idDetail && idDetail.taxId
-                              ? idDetail.taxId
-                              : "Chưa có thông tin"
-                          }
-                        />
-                      </div>
-                      <div className="box-child-employee1 div-detail">
-                        <p>Địa chỉ: </p>
-                        <textarea
-                          disabled
-                          value={
-                            idDetail && idDetail.address
-                              ? idDetail.address
-                              : "Chưa có thông tin"
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="box2-child-cn">
-                      <div className="box-child-employee1 div-detail">
-                        <p>Email:</p>
-                        <Input
-                          value={
-                            idDetail && idDetail.email
-                              ? idDetail.email
-                              : "Chưa có thông tin"
-                          }
-                        />
-                      </div>
-                      <div className="box-child-employee1 div-detail">
-                        <p>Trạng thái:</p>
-                        <Switch
-                          checked={
-                            idDetail && idDetail.status
-                              ? idDetail.status
-                              : false
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer modal-footer-add">
-                <div className="btn-left">
-                  <div
-                    className="modal-footer1"
-                    onClick={showModalViewContract1}
-                  >
-                    Xem hợp đồng
-                  </div>
-                  <div className="modal-footer1" onClick={showModalViewRole1}>
-                    Xem chức vụ
-                  </div>
-                </div>
-
-                <div className="modal-footer modal-footer2">
-                  <button className="btn-cancel" onClick={handleCancel}>
-                    Thoát
-                  </button>
-                  <button className="btn-edit" onClick={handleEdit}>
-                    Chỉnh sửa
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Modal>
-        </div>
-      )}
-      <Modal
-        className="modal"
-        open={isModalOpenViewContract1}
-        onOk={handleOkViewContract1}
-        onCancel={handleCancelViewContract1}
-      >
-        <div className="modal-add-roleyee-employee modal-contract fix-close">
-          <div className="modal-head">
-            <h3>Hợp đồng</h3>
-            <div className="close" onClick={handleCancelViewContract1}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M35 7.30769L22.3077 20L35 32.6923L32.6923 35L20 22.3077L7.30769 35L5 32.6923L17.6923 20L5 7.30769L7.30769 5L20 17.6923L32.6923 5L35 7.30769Z"
-                  fill="white"
-                />
-              </svg>
+                <thead className="thead-last"></thead>
+              </table>
             </div>
           </div>
-          <div className="body-add-role-employee">
-            <table>
-              <thead className="thead-first"></thead>
-              <div className="body-table body-table-contract">
-                <tr>
-                  <Input
-                    className="select-input"
-                    placeholder="Mã hợp đồng"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                    value={contractCode}
-                  />
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      value={contract.contractTypeName}
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                </tr>
-                <tr>
-                  <p className="salary-contract">Lương hợp đồng:</p>
-                  <Input
-                    type="text"
-                    placeholder="Lương hợp đồng"
-                    value={contract.amount}
-                  ></Input>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Select
-                      className="select-input"
-                      value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
-                      style={{
-                        width: "100%",
-                      }}
-                      options={[
-                        {
-                          value: true,
-                          label: "Khối văn phòng",
-                        },
-                        {
-                          value: false,
-                          label: "Khối sản xuất",
-                        },
-                      ]
-                      }
-                      disabled
-                    />
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian bắt đầu"
-                      type="date"
-                      style={{
-                        width: "100%",
-                      }}
-                      value={convertDobToISO(contractStartDate)}
-                    />
-                  </div>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Thời gian kết thúc"
-                      type="date"
-                      style={{
-                        width: "100%",
-                      }}
-                      value={convertDobToISO(contractEndDate)}
-                    />
-                  </div>
-                </tr>
-                <tr>
-                  <div className="input-date">
-                    <Input
-                      className="select-input"
-                      placeholder="Đường dẫn hợp đồng"
-                      style={{
-                        width: "100%",
-                      }}
-                      value={contractLink}
-                    />
-                    <div className="input-date-cn">
-                      <p>Trạng thái: </p>
-                      <Form.Item valuePropName="checked" className="action">
-                        <Switch checked={contractStatus} />
-                      </Form.Item>
-                    </div>
-                  </div>
-                </tr>
-              </div>
-              <thead className="thead-last"></thead>
-            </table>
-          </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
+
 
       <ViewRole1
         isModalOpenViewRole1={isModalOpenViewRole1}

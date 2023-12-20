@@ -30,7 +30,7 @@ const DetailModal = ({
           </div>
           <div className=" modal-group">
             <div className="info-detail-group">
-              <div className="info-body-group">
+              <div className="info-body-group group-modal-responsive">
                 {detailTeamID.shiftManager ||
                 detailTeamID.shiftAssistant ||
                 (detailTeamID.staff && detailTeamID.staff.length > 0) ? (

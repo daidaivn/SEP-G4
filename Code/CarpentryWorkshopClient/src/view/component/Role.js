@@ -142,7 +142,7 @@ function Role() {
 
   return (
     <>
-      <div className="col-right-container">
+      <div className="col-right-container role-container">
         <div className="list-container-header">
           <div className="list-text-header">
             <h2>Danh sách chức vụ</h2>
@@ -276,7 +276,7 @@ function Role() {
           {" "}
           <Modal
             open={isModalOpenDetail}
-            className="modal-detail-role"
+            className="modal-detail-role role-container-modal"
             on
             Ok={handleOkDetail}
             onCancel={handleCancelDetail}

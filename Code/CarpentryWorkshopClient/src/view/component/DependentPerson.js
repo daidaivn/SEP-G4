@@ -646,6 +646,7 @@ function DependentPerson() {
             </tbody>
           )}
         </table>
+        
         <div className="modal-dependent-all">
           {" "}
           <Modal
