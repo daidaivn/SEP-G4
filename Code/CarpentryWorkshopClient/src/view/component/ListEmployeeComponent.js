@@ -25,9 +25,7 @@ import {
   CreateContract,
   UpdateContract,
 } from "../../sevices/contracts";
-import profile from "../assets/images/Ellipse 72.svg";
 import MenuResponsive from "./componentUI/MenuResponsive";
-import Filter from "./componentUI/Filter";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { Select } from "antd";
 import {
@@ -46,6 +44,8 @@ function ListEmployeeComponent() {
   const [contractTypes, setContractTypes] = useState([]);
 
   const [roles, setRoles] = useState([]);
+  const [filterRoles, setFilterRoles] = useState([]);
+
   const [departments, setDepartments] = useState([]);
 
   const [id, setId] = useState(null);
@@ -633,6 +633,7 @@ function ListEmployeeComponent() {
     setIsModalOpenEditContract(true);
   };
 
+
   const allRole = (departmentID) => {
     GetRolesByDepartmentId(departmentID)
       .then((data) => {
@@ -640,6 +641,19 @@ function ListEmployeeComponent() {
       })
       .catch((error) => { });
   };
+
+  const fetchFilterAllRole = () => {
+    fetchAllRole()
+      .then((data) => {
+        setFilterRoles(data)
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  };
+
+  console.log('roles', filterRole);
+
 
   const searchandfilter = (ipSearch, ftGender, ftStatus, ftRole) => {
     SearchEmployees(ipSearch, ftGender, ftStatus, ftRole)
@@ -755,6 +769,7 @@ function ListEmployeeComponent() {
     fetchData();
     fetDataDepartment();
     featchAllContract();
+    fetchFilterAllRole();
   }, [id]);
 
   function handleSelectChange(value) {
@@ -768,15 +783,16 @@ function ListEmployeeComponent() {
       ? [
         {
           value: null,
-          label: "Bỏ chọn",
+          label: "Tất cả chức vụ",
         },
       ]
       : []),
-    ...roles.map((role) => ({
+    ...filterRoles.map((role) => ({
       value: role.roleID,
       label: role.roleName,
     })),
   ];
+  
   const handleChangeFilterGender = (value) => {
     setFilterGender(value);
     searchandfilter(inputSearch, value, filterStatus, filterRole);
@@ -792,12 +808,6 @@ function ListEmployeeComponent() {
   const handleChange = (value) => {
   };
   const { Option } = Select;
-  const handleChangeAddEmployee = (value) => {
-  };
-  const [value, setValue] = useState(1);
-  const onChangeRadio = (e) => {
-    setValue(e.target.value);
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModalDetail = () => {

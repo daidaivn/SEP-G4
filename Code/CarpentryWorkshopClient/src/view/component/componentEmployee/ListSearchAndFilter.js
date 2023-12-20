@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Input} from "antd";
+import { Select, Input } from "antd";
 import AddEmployeeModal from './AddEmployeeModal';
 import NewContractModal from './NewContracModal';
 import NewRoleDepartmentModal from './NewRoleDepartmentModule';
@@ -254,11 +254,11 @@ const ListSearchAndFilter = ({
         </i>
         <Select
           className="select-input"
-          value={filterRole}
+          defaultValue={null}
           style={{ width: 120 }}
           onChange={handleSelectChange}
           options={selectOptions}
-          placeholder="Chọn chức vụ"
+          placeholder="Tất cả chức vụ"
         />
       </div>
       <div className="list-filter">

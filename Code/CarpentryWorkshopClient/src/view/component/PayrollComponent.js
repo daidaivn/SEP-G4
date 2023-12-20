@@ -476,7 +476,6 @@ const PayrollComponent = () => {
     );
     setSalaryDetail(filteredData);
   };
-
   console.log('sal',salaryDetail);
   
 
