@@ -4,9 +4,7 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 const EditEmployee = ({
   isModalOpenListEmployee,
-  handleSave,
   handleCancelListEmployee,
-  handleCancel,
   employCheckInOut,
   convertDobToISO,
   convertTimeToInputFormat,
@@ -55,7 +53,6 @@ const EditEmployee = ({
       <Modal
         className="modal"
         open={isModalOpenListEmployee}
-        onOk={handleSave}
         onCancel={handleCancelListEmployee}
       >
         <div className="modal-add-roleyee-employee modal-shift-all">
