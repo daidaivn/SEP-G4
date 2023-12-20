@@ -452,7 +452,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     totalOT = totaldayOT * dailyWage;
                     totalHolidaySalary = totaldayHolidaySalary * dailyWage * 2;
                 }
-
                 if (department != null && department.IsOffice == 4)
                 {
                     basicSalary = latestContract.Amount ?? 0;
@@ -499,8 +498,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     EmployeeId = e.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
                     OrderNumber = sequence++,
                     FullName = e.LastName + " " + e.FirstName,
-                    Position = e.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
-                    Location = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
+                    Position = e.RolesEmployees.Where(re=>re.EndDate == null).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                    Location = department.IsOffice == 4 ? "SX" : "VP",
                     Gender = (bool)e.Gender ? "Nam" : "Nữ",
                     ActualWork = actualWorkDays,
                     HolidayWork = workDaysOnHolidays,
