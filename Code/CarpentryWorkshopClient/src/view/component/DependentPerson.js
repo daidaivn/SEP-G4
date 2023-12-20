@@ -206,7 +206,6 @@ function DependentPerson() {
           date,
           isChecked,
           Relationship,
-
         )
           .then((data) => {
             handleSave();

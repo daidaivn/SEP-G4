@@ -69,8 +69,6 @@ function ListEmployeeComponent() {
   const [previewImage, setPreviewImage] = useState(null);
   const [originalOffice, setOriginalOffice] = useState("");
 
-
-  //contract
   const [contractId, setContractID] = useState("");
   const [contractCode, setContractCode] = useState("");
   const [contractStartDate, setContractStartDate] = useState(""); // Tên state đã được sửa
@@ -514,8 +512,6 @@ function ListEmployeeComponent() {
         .then((data) => {
           handleCancelAdd();
           AddContract(data);
-
-          return toast.error(data);
         })
         .catch((error) => {
           throw toast.error(error.response.data);
@@ -528,7 +524,6 @@ function ListEmployeeComponent() {
 
   const AddContract = (eid) => {
     toast.promise(
-      new Promise((resolve) => {
         CreateContract(
           eid,
           contractStartDate,
@@ -542,12 +537,11 @@ function ListEmployeeComponent() {
         )
           .then((data) => {
             fetchData();
-            resolve(data);
+            throw toast.success(data);
             resetOriginalDetail();
           })
           .catch((error) => {
-            resolve(Promise.reject(error));
-          });
+            throw toast.error(error.response.data);
       }),
       {
         pending: "Đang xử lý",
