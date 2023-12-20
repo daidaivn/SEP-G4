@@ -577,6 +577,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employeesDTO = query.Select(employee => new EmployeeListDTO
                 {
                     EmployeeID = employee.EmployeeId,
+                    EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
                     Image = employee.Image,
                     FullName = $"{employee.FirstName} {employee.LastName}",
                     Gender = (bool)employee.Gender ? "Nam" : "Nữ",
