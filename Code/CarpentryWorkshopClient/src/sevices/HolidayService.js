@@ -30,6 +30,27 @@ const CreateHolidayDetail = (inputHolidays) => {
   );
 };
 
+
+const UpdateHolidayDetail = (inputHolidays) => {
+  const {
+    Idholiday,
+    nameHoliday,
+    startDate,
+    endDate
+  } = inputHolidays;
+
+  const requestBody = {
+    holidayId: Idholiday,
+    holidayName: nameHoliday ,
+    startDatestring: startDate,
+    endDatestring: endDate,
+  };
+
+  return axios.post(
+    `/CWMSapi/Holiday/UpdateHolidayDetail`,requestBody
+  );
+};
+
 const GetHolidays = (id) => {
   const holidayid = id;
   return axios.get(
@@ -37,4 +58,4 @@ const GetHolidays = (id) => {
   );
 };
 
-export {GetAllHolidays, CreateHolidayDetail, GetHolidays};
+export {GetAllHolidays, CreateHolidayDetail, GetHolidays, UpdateHolidayDetail};

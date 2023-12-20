@@ -7,10 +7,12 @@ import "../scss/responsive/responsive.scss";
 import { Input, Modal, Select } from "antd";
 import ListUserHeader from "./componentUI/ListUserHeader";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   GetAllHolidays,
   CreateHolidayDetail,
   GetHolidays,
+  UpdateHolidayDetail
 } from "../../sevices/HolidayService";
 import {
   createYearOptions,
@@ -94,12 +96,40 @@ const HolidayComponent = () => {
   };
 
   const handleCreateHolidayDetail = () => {
-    CreateHolidayDetail(inputHolidays)
-      .then((data) => {
-        handleCancelHoliday();
-      })
-      .catch((error) => {
-      });
+    toast.promise(
+      CreateHolidayDetail(inputHolidays)
+        .then((data) => {
+          FetchAllHolidays();
+          handleCancelHoliday();
+          return toast.success(data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
+      {
+        pending: "Đang tải dữ liệu",
+      }
+    );
+  };
+
+console.log('inputHolidays',inputHolidays);
+
+
+  const handleUpdateHolidayDetail = () => {
+    toast.promise(
+      UpdateHolidayDetail(inputHolidays)
+        .then((data) => {
+          FetchAllHolidays();
+          handleCancelHoliday();
+          return toast.success(data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
+      {
+        pending: "Đang tải dữ liệu",
+      }
+    );
   };
 
   const handleStartDateChange = (e) => {
@@ -136,7 +166,7 @@ const HolidayComponent = () => {
           <div className="list-text-header">
             <h2>Quản lý nghỉ lễ</h2>
             <span>
-              Lưu thông tin bắt đầu làm việc và ngưng làm việc củ một nhóm
+              Lưu thông tin các ngày nghỉ lễ của công ty
             </span>
           </div>
           <ListUserHeader />
@@ -202,7 +232,7 @@ const HolidayComponent = () => {
               placeholder="Chọn năm"
             />
           </div>
-          {department.includes("Phòng kế toán") && (
+          {department.includes("Phòng nhân sự") && (
             <div
               className="ListWork"
               onClick={() => {
@@ -246,7 +276,7 @@ const HolidayComponent = () => {
               <td>Tên ngày nghỉ</td>
               <td>Ngày bắt đầu nghỉ</td>
               <td>Số ngày nghỉ</td>
-              {department.includes("Phòng kế toán") && (
+              {department.includes("Phòng nhân sự") && (
                 <td>Chỉnh sửa</td>
               )}
             </tr>
@@ -258,7 +288,7 @@ const HolidayComponent = () => {
                 <td>{holiday.holidayName}</td>
                 <td>{holiday.date}</td>
                 <td>{holiday.numberOfHoliday} ngày</td>
-                {department.includes("Phòng kế toán") && (
+                {department.includes("Phòng nhân sự") && (
                   <td>
                     <p
                       onClick={() => {
@@ -340,7 +370,7 @@ const HolidayComponent = () => {
                 <div className="btn cancel" onClick={handleCancelHoliday}>
                   Hủy bỏ
                 </div>
-                <div className="btn save" onClick={handleCreateHolidayDetail}>
+                <div className="btn save" onClick={action === "add" ? handleCreateHolidayDetail : handleUpdateHolidayDetail}>
                   Lưu
                 </div>
               </div>
