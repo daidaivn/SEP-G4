@@ -47,6 +47,7 @@ const ModalAdvance = ({
                 }),
             {
                 pending: "Đang xử lý",
+                success: "Tạo ứng lương thành công",
             }
         );
     }
@@ -142,7 +143,7 @@ const ModalAdvance = ({
             <div className="modal-add-holiday">
                 <div className="body">
                     <div className="head">
-                        <h3>Tạo ứng lương</h3>
+                    {action === "add" ? <h3>Tạo ứng lương</h3> : <h3>Sửa lương tạm ứng</h3>}
                     </div>
                 </div>
                 <div className="footer">

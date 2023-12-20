@@ -348,7 +348,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 .Include(e => e.RolesEmployees)
                 .ThenInclude(re => re.Department)
                 .Include(e => e.HoursWorkDays)
-                .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate))
+                .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate) && e.Status == true)
                 .ToListAsync();
 
             int sequence = 1;
