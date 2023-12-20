@@ -93,27 +93,6 @@ const EditContractModal = ({
                     } // Thêm dòng này để cập nhật giá trị vào state
                   />
                 </div>
-                <div className="input-date">
-                  <Select
-                    className="select-input"
-                    value={originalOffice} // Thêm dòng này để hiển thị giá trị từ state
-                    style={{
-                      width: "100%",
-                    }}
-                    onChange={(value) => setOriginalOffice(value)} // Thêm dòng này để cập nhật giá trị vào state
-                    options={[
-                      {
-                        value: true,
-                        label: "Khối văn phòng",
-                      },
-                      {
-                        value: false,
-                        label: "Khối sản xuất",
-                      },
-                    ]
-                    }
-                  />
-                </div>
               </tr>
               <tr>
                 <div className="input-date">
