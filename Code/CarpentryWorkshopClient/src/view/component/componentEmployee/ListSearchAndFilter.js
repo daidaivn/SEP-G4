@@ -90,7 +90,10 @@ const ListSearchAndFilter = ({
   setAmount,
   setOriginalOffice,
   originalOffice,
-  allRole
+  allRole,
+  handleSearchChange,
+  employees,
+  inputSearch
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -157,8 +160,10 @@ const ListSearchAndFilter = ({
         </i>
         <Input
           placeholder="Tìm kiếm"
-          onChange={handleChangeInnputSearch}
+          value={inputSearch}
+          onChange={handleSearchChange}
         ></Input>
+        
       </div>
       <div className="list-filter">
         <i className="list-filter-icon1">
