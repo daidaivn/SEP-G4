@@ -29,21 +29,15 @@ import {
   Tax,
   Other,
   Advancesalary,
-  EditRewardPersonal,
 } from "./componentPayroll";
 
 import {
-  fetchAllSalaries,
   fetchAllReward,
   GetEmployeeAllowanceDetail,
   GetEmployeeDeductionDetail,
   GetEmployeeActualSalaryDetail,
-  CreateAndEditPersonalReward,
-  CreateAndUpdateSpecialOccasion,
-  CreateAndUpdateCompanyRerward,
   fetchAllSalaryDetail,
 } from "../../sevices/PayrollSevice";
-import { fetchAllEmplyee } from "../../sevices/EmployeeService";
 
 const PayrollComponent = () => {
   const [salaries, setSalaries] = useState([]);

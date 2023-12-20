@@ -294,7 +294,7 @@ function ListDepartmentComponent() {
             onCancel={handleCancelDetail}
             width={566}
           >
-            <div className="modal-dependent modal-detail-group">
+            <div className="modal-dependent">
               <div className="modal-head">
                 {" "}
                 <h3>{departmentName}</h3>

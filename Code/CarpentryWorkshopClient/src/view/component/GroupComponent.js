@@ -438,7 +438,7 @@ const GroupComponent = () => {
   //UI
   return (
     <>
-      <div className="col-right-container">
+      <div className="col-right-container group-container">
         <div className="list-container-header">
           <div className="list-text-header">
             <h2>Danh sách nhóm</h2>

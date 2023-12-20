@@ -7,10 +7,8 @@ import EditContractModal from './EditContractModal';
 import ViewContractModal from './ViewContractModal';
 
 const ListSearchAndFilter = ({
-  handleChangeInnputSearch,
   filterGender,
   handleChangeFilterGender,
-  filterRole,
   handleSelectChange,
   selectOptions,
   filterStatus,
