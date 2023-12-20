@@ -317,7 +317,6 @@ const HolidayComponent = () => {
             ))}
           </tbody>
         </table>
-
         {/* modal tạo lịch nghỉ lễ */}
         <Modal
           className="modal"
@@ -337,7 +336,7 @@ const HolidayComponent = () => {
             </div>
             <div className="footer">
               <div className="item-body">
-                <p>Ngày nghỉ lễ</p>
+                <p>Tên ngày nghỉ lễ</p>
                 <input
                   type="text"
                   name="nameHoliday"
