@@ -338,7 +338,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     if (checkInTime == null)
                     {
-                        if (DateTime.Now > DateIn)
+                        if (DateTime.Now > DateIn && DateTime.Now < DateOut)
                         {
                             result.Add(new
                             {
@@ -421,8 +421,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 time.Add(new
                 {
-                    TimeIn = timeIn.ToString("HH':'mm"),
-                    Timeout = timeOut.ToString("HH':'mm"),
+                    TimeIn = timeIn.ToString("h':'m"),
+                    Timeout = timeOut.ToString("h':'m"),
                     Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
                     Result = result
                 });
