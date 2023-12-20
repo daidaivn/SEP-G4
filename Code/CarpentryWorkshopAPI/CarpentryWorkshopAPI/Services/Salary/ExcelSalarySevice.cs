@@ -470,7 +470,7 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 }
 
                 var personalRelief = 11000000.00;
-                var totaldependent = e.Dependents.Where(x => x.EmployeeId == e.EmployeeId).Count();
+                var totaldependent = e.Dependents.Where(x => x.EmployeeId == e.EmployeeId && e.Status == true).Count();
                 var dependentRelief = 4400000.00 * totaldependent;
                 var totalActualSalary = actualWorkdaySalary + totalHolidaySalary + totalOT + mealAllowance + clotherAllowance + carAllowance + bussinessSalary;
                 var taxableIncome = totalActualSalary - mealAllowance - clotherAllowance;
