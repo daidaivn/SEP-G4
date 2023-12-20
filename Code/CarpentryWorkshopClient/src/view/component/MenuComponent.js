@@ -41,12 +41,16 @@ const Menucomponent = () => {
     localStorage.removeItem("userRoles");
     localStorage.removeItem("userPages");
     localStorage.removeItem("userEmployeeID");
+    localStorage.removeItem("department");
+
 
     sessionStorage.removeItem("userToken");
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("userRoles");
     sessionStorage.removeItem("userPages");
     sessionStorage.removeItem("userEmployeeID");
+    sessionStorage.removeItem("department");
+
 
     navigate("/login");
   };
