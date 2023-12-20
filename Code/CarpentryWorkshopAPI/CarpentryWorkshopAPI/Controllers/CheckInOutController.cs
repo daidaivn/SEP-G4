@@ -262,7 +262,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             else
             {
-                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Include(e=>e.Department).Where(e => e.DepartmentId == personCheckInOut.DepartmentId && e.EndDate == null && e.Status == true).Select(e => e.Employee).Distinct().ToListAsync();
+                var employees = await _context.RolesEmployees.Include(e => e.Employee).Include(e => e.Role).Include(e=>e.Department).Where(e => e.DepartmentId == personCheckInOut.DepartmentId && e.EndDate == null && e.Employee.Status == true).Select(e => e.Employee).Distinct().ToListAsync();
                 if (employees.Count() == 0)
                 {
                     return NotFound("Không tìm thấy nhân viên trong nhóm có ngày kết thúc trống");
