@@ -13,6 +13,8 @@ const ListSearchFilterAdd = ({
   months,
   setIText,
   iText,
+  handleSearchChange,
+  salaryDetail
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -80,8 +82,13 @@ const ListSearchFilterAdd = ({
         <Input
           placeholder="Tìm kiếm"
           value={iText}
-          onChange={(e) => setIText(e.target.value)}
+          onChange={handleSearchChange}
         ></Input>
+        {Array.isArray(salaryDetail) && salaryDetail.map((detail) => (
+          <div key={detail.employeeId}>
+            {detail.fullName} - {detail.position}
+          </div>
+        ))}
       </div>
       <div className="list-filter">
         <Select

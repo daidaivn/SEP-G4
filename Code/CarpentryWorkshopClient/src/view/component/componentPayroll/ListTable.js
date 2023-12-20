@@ -218,9 +218,6 @@ const ListTable = ({
                   VNĐ{" "}
                 </td>
                 <td
-                  onClick={() =>
-                    fetchEmployeeAllowanceDetail(Salary.employeeId)
-                  }
                 >
                   {Salary.allowances.meal +
                     Salary.allowances.uniform +
@@ -235,9 +232,6 @@ const ListTable = ({
                   VNĐ{" "}
                 </td>
                 <td
-                  onClick={() =>
-                    fetchEmployeeDeductionDetail(Salary.employeeId)
-                  }
                 >
                   {Salary.deductions.socialInsurance +
                     Salary.deductions.healthInsurance +
@@ -277,9 +271,6 @@ const ListTable = ({
                   VNĐ{" "}
                 </td>
                 <td
-                  onClick={() =>
-                    fetchEmployeeActualSalaryDetail(Salary.employeeId)
-                  }
                 >
                   {Salary.actualReceived === 0
                     ? "0"
