@@ -26,7 +26,8 @@ const Menucomponent = () => {
   }
 
   const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
-
+  const isProductioneManager = department.includes("Phòng sản xuất");
+  
   const hasAccessiblePage = userPages.some((page) =>
     [
       "ListEmployee",
@@ -176,7 +177,7 @@ const Menucomponent = () => {
               >
                 <i className="icon-caseworker"></i>
 
-                <span className="text">Công việc | Điểm danh</span>
+                <span className="text">{isProductioneManager ? "Công việc | Điểm danh" : "Điểm danh"}</span>
               </NavLink>
             </div>
           )}
