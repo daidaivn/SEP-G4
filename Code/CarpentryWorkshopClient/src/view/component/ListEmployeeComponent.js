@@ -39,6 +39,8 @@ import avt from "../assets/images/Frame 1649.svg";
 import ViewRole1 from "./componentEmployee/ViewRole1";
 function ListEmployeeComponent() {
   const [employees, setEmployees] = useState([]);
+  const [employeesData, setEmployeesData] = useState([]);
+
   const [countries, setCountries] = useState([]);
   const [contract, setContract] = useState([]);
   const [contractTypes, setContractTypes] = useState([]);
@@ -707,6 +709,7 @@ function ListEmployeeComponent() {
       .then((data) => {
         isDataLoaded = true;
         setEmployees(data);
+        setEmployeesData(data)
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
@@ -724,6 +727,16 @@ function ListEmployeeComponent() {
       }
     }, 1500);
   };
+
+  const handleSearchChange = (e) => {
+    const searchText = e.target.value;
+    setInputSearch(searchText);
+    const filteredData = employeesData.filter((detail) =>
+      detail.fullName.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setEmployees(filteredData);
+  };
+
   const handlelDetail = (value) => {
     toast.promise(
       new Promise((resolve) => {
@@ -796,10 +809,7 @@ function ListEmployeeComponent() {
     setFilterStatus(value);
     searchandfilter(inputSearch, filterGender, value, filterRole);
   };
-  const handleChangeInnputSearch = (e) => {
-    setInputSearch(e.target.value);
-    searchandfilter(e.target.value, filterGender, filterStatus, filterRole);
-  };
+
   const handleChange = (value) => {
   };
   const { Option } = Select;
@@ -914,7 +924,6 @@ function ListEmployeeComponent() {
         <ListUserHeader />
       </div>
       <ListSearchAndFilter
-        handleChangeInnputSearch={handleChangeInnputSearch}
         filterGender={filterGender}
         handleChangeFilterGender={handleChangeFilterGender}
         filterRole={handleSelectChange}
@@ -998,6 +1007,9 @@ function ListEmployeeComponent() {
         setOriginalOffice={setOriginalOffice}
         originalOffice={originalOffice}
         allRole={allRole}
+        handleSearchChange={handleSearchChange}
+        employees ={employees}
+        inputSearch={inputSearch}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>
