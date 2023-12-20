@@ -3,20 +3,34 @@
   .modal-role-all {
     position: relative;
   }
+
   .modal-detail-role {
     position: absolute !important;
     right: 600px;
     top: 100px;
   }
+
   .role-container-modal .modal-group {
     width: 800px !important;
   }
+
+  .role-container-modal .ant-modal-content {
+    right: -285px !important;
+    top: -92px !important;
+  }
+
+  .role-container-modal .department-scroll{
+    max-height: 361px !important;
+  }
+
   .box1-modal-group .box2-child {
     width: unset !important;
   }
+
   .box1-modal-group {
     gap: 20px !important;
   }
+
   .modal-add-group .modal-footer-deparment {
     padding-bottom: 20px !important;
   }

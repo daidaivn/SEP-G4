@@ -16,8 +16,21 @@
   .modal-dependent .modal-group{
     width: 100% !important
   }
-  .modal-dependent-all .ant-modal .ant-modal-content {
-    top: -79px !important;
+  .dependent-container-modal-edit .ant-modal-content {
+    right: -378px !important;
+    top: -106px !important;
+  }
+
+  .dependent-container-modal-edit .modal-head{
+    height: 88px !important;
+  }
+  .dependent-container-modal-edit .modal-head h3{
+    padding-top: 25px;
+  }
+
+  .dependent-container-modal-all .ant-modal-content {
+    right: -378px !important;
+    top: -106px !important;
   }
 
   .info-detail-dependent {

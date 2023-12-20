@@ -650,7 +650,7 @@ function DependentPerson() {
         <div className="modal-dependent-all">
           {" "}
           <Modal
-            className="modal-dependent modal-posive"
+            className="modal-dependent modal-posive dependent-container-modal-edit"
             open={isEditing}
             on
             Ok={handleSave}
@@ -797,10 +797,10 @@ function DependentPerson() {
             </div>
           </Modal>
         </div>
-        <div className="modal-dependent-all">
+        <div className="modal-dependent-all ">
           {" "}
           <Modal
-            className="modal-dependent"
+            className="modal-dependent dependent-container-modal-edit"
             open={isModalOpenDependent}
             on
             Ok={handleOkDependent}
@@ -883,7 +883,7 @@ function DependentPerson() {
         <div className="modal-dependent-all">
           {" "}
           <Modal
-            className="modal-dependent"
+            className="modal-dependent dependent-container-modal-edit"
             open={isModalOpenAdd}
             on
             Ok={handleOkAdd}
@@ -894,7 +894,7 @@ function DependentPerson() {
               {" "}
               <h3>Thêm người phụ thuộc</h3>
             </div>
-            <div className="modal-body modal-body-dependent">
+            <div className="modal-body modal-body-dependent dependent-container-modal">
               <div className="info-detail-dependent">
                 <Row>
                   <Col span={24}>
