@@ -19,13 +19,16 @@ import {
   UpdateCheckInOutForEmployee,
 } from "../../sevices/TimekeepingService";
 import { el } from "date-fns/locale";
+import { convertLegacyProps } from "antd/es/button";
 const TimekeepingComponent = () => {
   const [checksInOut, setChecksInOut] = useState([]);
+  const [checksInOutData, setChecksInOutData] = useState([]);
   const [work, setWork] = useState([]);
   const [number, setNumber] = useState(null);
   const [employeeId, setEmployeeId] = useState("");
   const [date, setDate] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
+  const [iText, setIText] = useState("");
   const userEmployeeID =
     localStorage.getItem("userEmployeeID") ||
     sessionStorage.getItem("userEmployeeID");
@@ -38,8 +41,8 @@ const TimekeepingComponent = () => {
       GetDataCheckInOutByDateAndEmployeeId(id, date1)
         .then((data) => {
           setEmployCheckInOut(data);
-          fetchData();
           setIsModalOpenListEmployee(true);
+          console.log("employCheck", data);
           return data;
         })
         .catch((error) => {
@@ -51,7 +54,6 @@ const TimekeepingComponent = () => {
         }),
       {
         pending: "Đang xử lý",
-        success: "Thanh cong",
       }
     );
   };
@@ -59,9 +61,12 @@ const TimekeepingComponent = () => {
     setIsModalOpenListEmployee(false);
   };
   const handleCancelListEmployee = () => {
+    resetEmployeeCheckInOut();
     setIsModalOpenListEmployee(false);
   };
-
+  const resetEmployeeCheckInOut = () => {
+    setEmployCheckInOut([]);
+  };
   const handleCheckInOut = (employeeID, action) => {
     const actionText = action === "start" ? "Bắt đầu" : "Ngưng";
     const successText =
@@ -100,8 +105,7 @@ const TimekeepingComponent = () => {
     }
     return dobstring;
   };
-  dayjs.locale("vn");
-  //Convert time
+
   const convertTimeToInputFormat = (timeString) => {
     if (timeString) {
       const parts = timeString.split(":");
@@ -154,6 +158,7 @@ const TimekeepingComponent = () => {
     fetchAllCheckInOut(userEmployeeID)
       .then((data) => {
         setChecksInOut(data);
+        setChecksInOutData(data);
         isDataLoaded = true;
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
@@ -172,7 +177,16 @@ const TimekeepingComponent = () => {
       }
     }, 1500);
   };
-
+  const handleSearchChange = (e) => {
+    const searchText = e.target.value;
+    setIText(searchText);
+    if (checksInOutData && checksInOutData[0] && checksInOutData[0].result) {
+      const filteredData = checksInOutData[0].result.filter((detail) =>
+        detail.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setChecksInOut([{ result: filteredData }]);
+    }
+  };
   useEffect(() => {
     // Ban đầu, gọi hàm tải dữ liệu
     fetchData();
@@ -210,7 +224,7 @@ const TimekeepingComponent = () => {
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
   };
@@ -239,11 +253,11 @@ const TimekeepingComponent = () => {
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
-        toast.error('Thay đổi dữ liệu không thành công'); // Hiển thị thông báo lỗi ngay lập tức
+        toast.error("Thay đổi dữ liệu không thành công"); // Hiển thị thông báo lỗi ngay lập tức
       });
     setTimeout(() => {
       if (!isDataLoaded) {
-        toastId = toast('Đang xử lý...', { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
+        toastId = toast("Đang xử lý...", { autoClose: false }); // Hiển thị thông báo pending sau 1.5s nếu dữ liệu chưa được tải
       }
     }, 1500);
     setIsEditing(false);
@@ -324,7 +338,11 @@ const TimekeepingComponent = () => {
                 </g>
               </svg>
             </i>
-            <Input placeholder="Tìm kiếm"></Input>
+            <Input
+              placeholder="Tìm kiếm"
+              value={iText}
+              onChange={handleSearchChange}
+            ></Input>
           </div>
           <div className="list-filter">
             <i className="list-filter-icon1">
@@ -687,7 +705,7 @@ const TimekeepingComponent = () => {
                     </td>
                     <td
                       onClick={() => {
-                        checksInOut.map((dateString, index) =>
+                        checksInOut.map((dateString) =>
                           showModalListEmployee(
                             employee.employeeId,
                             dateString.date
@@ -813,13 +831,18 @@ const TimekeepingComponent = () => {
                       <p>Số sản phẩm đã hoàn thành</p>
                       <Input
                         type="text"
-                        value={number != null ? number : work.numberOFProductToday}
+                        value={
+                          number != null ? number : work.numberOFProductToday
+                        }
                         onChange={(e) => setNumber(e.target.value)}
                       ></Input>
                     </div>
                     <div className="item-modal">
                       <p>Ngày làm việc</p>
-                      <Input type="date" value={convertDobToISO(work.date)}></Input>
+                      <Input
+                        type="date"
+                        value={convertDobToISO(work.date)}
+                      ></Input>
                     </div>
                     <div className="footer-modal">
                       <span className="back" onClick={handleCancel}>
