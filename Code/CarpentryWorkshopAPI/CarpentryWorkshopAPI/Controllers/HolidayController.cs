@@ -190,6 +190,53 @@ namespace CarpentryWorkshopAPI.Controllers
                 return BadRequest("Lỗi dữ liệu");
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> DeleteHolidayDetail([FromBody] HolidayDTO holidayDTO)
+        {
+            try
+            {
+                var startDate = DateTime.ParseExact(holidayDTO.StartDatestring, "dd-MM-yyyy",
+                              System.Globalization.CultureInfo.InvariantCulture);
+                var endDate = DateTime.ParseExact(holidayDTO.EndDatestring, "dd-MM-yyyy",
+                               System.Globalization.CultureInfo.InvariantCulture);
+                if (startDate > endDate)
+                {
+                    return StatusCode(409, "Ngày bắt đầu không thể muộn hơn ngày kết thúc");
+                }
+                var updateHoliday = await _context.Holidays.Where(x => x.HolidayId == holidayDTO.HolidayId).FirstOrDefaultAsync();
+                updateHoliday.HolidayName = holidayDTO.HolidayName;
+                _context.Holidays.Update(updateHoliday);
+                var updateHolidayDetail = await _context.HolidaysDetails
+                    .Where(x => x.HolidayId == holidayDTO.HolidayId)
+                    .OrderBy(x => x.Date)
+                    .ToListAsync();
+                int index = 0;
+                while (startDate <= endDate && index < updateHolidayDetail.Count)
+                {
+                    updateHolidayDetail[index].Date = startDate;
+                    startDate = startDate.AddDays(1);
+                    index++;
+                }
+                while (startDate <= endDate)
+                {
+                    var newHolidayDetail = new HolidaysDetail
+                    {
+                        HolidayId = holidayDTO.HolidayId,
+                        Date = startDate,
+                    };
+                    updateHolidayDetail.Add(newHolidayDetail);
+                    startDate = startDate.AddDays(1);
+                }
+
+                _context.HolidaysDetails.UpdateRange(updateHolidayDetail);
+                await _context.SaveChangesAsync();
+                return Ok("Chỉnh sửa chi tiết ngày lễ thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
         //[HttpPost]
         //public async Task<IActionResult> CreateAndUpdateHoliday([FromBody] HolidayDTO holidayDTO)
         //{
