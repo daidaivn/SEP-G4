@@ -4,6 +4,7 @@ import { Input, Modal, Switch, Form, Select } from "antd";
 import { AddWork, UpdateWork } from "../../../sevices/CalendarSevice";
 import { useEffect, useState } from "react";
 import { updateDataWorks } from "../../../sevices/TimekeepingService";
+import { set } from "date-fns";
 const ListModuleDetail3 = ({
   isModalOpenDetailShift,
   handleOkDetailShift,
@@ -27,6 +28,7 @@ const ListModuleDetail3 = ({
   const [actionEdit, setActionEdit] = useState("Disable");
   const [numberProduct, setNumberProduct] = useState("");
   const GetActionEdit = () => {
+
     if (actionEdit === "Disable") {
       setActionEdit("edit");
     } else {
@@ -47,6 +49,11 @@ const ListModuleDetail3 = ({
     return true;
   };
   const EditWorkProduct = () =>{
+    const isConfirmed = window.confirm("Bạn có chắc chắn muốn sử thông tin");
+    if (!isConfirmed) {
+      // If not confirmed, return without executing the rest of the function
+      return;
+    }
     const check = validateData(workDetailById.numberProduct);
     if (!check) {
       return;
@@ -56,6 +63,7 @@ const ListModuleDetail3 = ({
       toast.promise(
         updateDataWorks(workDetailById.teamWorkId, workDetailById.numberProduct)
           .then((data) => {
+            setActionEdit("Disable");
             return data;
           })
           .catch((error) => {
@@ -69,7 +77,6 @@ const ListModuleDetail3 = ({
     }else{
       return;
     }
-
   }
   const CheckActionEditAndAdd = () => {
     if (actionWork === "addWork") {
