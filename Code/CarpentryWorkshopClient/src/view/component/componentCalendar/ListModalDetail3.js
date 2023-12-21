@@ -200,7 +200,6 @@ const ListModuleDetail3 = ({
                 } : undefined}
                 disabled={actionWork === "viewWork"}
               />
-
             </div>
             <div className="item-modal">
               <p>Số sản phẩm cần sản xuất</p>
@@ -214,6 +213,15 @@ const ListModuleDetail3 = ({
                   }
                 } : undefined}
                 disabled={actionWork === "viewWork"}
+              />
+            </div>
+            <div className="item-modal">
+              <p>Số sản phẩm đã hoàn thành</p>
+              <Input
+                type="number"
+                value={workDetailById.numberProduct}
+                placeholder="Số sản phẩm đã hoàn thành"
+                disabled
               />
             </div>
             <div className="item-modal">
