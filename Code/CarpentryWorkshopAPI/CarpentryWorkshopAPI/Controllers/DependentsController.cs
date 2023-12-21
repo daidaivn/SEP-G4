@@ -70,7 +70,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 .Select(de => new DependentListDTO
                 {
                     DependentId = de.DependentId,
-                    EmployeeId = de.DependentId,
+                    EmployeeId = de.EmployeeId,
                     EmployeesName = de.Employee.FirstName + " " + de.Employee.LastName,
                     FullName = de.FullName,
                     IdentifierCode = de.IdentifierCode,
