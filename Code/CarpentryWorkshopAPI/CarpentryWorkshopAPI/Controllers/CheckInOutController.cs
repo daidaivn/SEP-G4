@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using DocumentFormat.OpenXml.Bibliography;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -748,6 +749,37 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 _context.CheckInOuts.Add(autoCheckin);
                 _context.SaveChanges();
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetTimeKeepingInfo(int month, int year)
+        {
+            try
+            {
+                var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
+                var employeeIdLength = maxEmployeeId.ToString().Length;
+
+                var employeeAttendance = await _context.Employees
+                    .Select(emp => new
+                    {
+                        EmployeeID = emp.EmployeeId,
+                        EmployeeIdstring = emp.EmployeeId.ToString($"D{employeeIdLength}"),
+                        EmployeeName = emp.FirstName + " " + emp.LastName,
+                        Status = _context.HoursWorkDays
+                                .Where(x => x.EmployeeId == emp.EmployeeId)
+                                .Select(x => x.Hour >= 6.5 ? "Yes" : "No")
+                                .FirstOrDefault()
+                    })
+                    .ToListAsync();
+                if (employeeAttendance == null)
+                {
+                    return NotFound("Không tìm thấy dữ liệu");
+                }
+                return Ok(employeeAttendance);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest("Lỗi máy chủ");
             }
         }
     }
