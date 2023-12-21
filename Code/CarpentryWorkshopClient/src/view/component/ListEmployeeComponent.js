@@ -535,7 +535,6 @@ function ListEmployeeComponent() {
         contractType,
         contractCode,
         amount,
-        originalOffice
       )
         .then((data) => {
           fetchData();
