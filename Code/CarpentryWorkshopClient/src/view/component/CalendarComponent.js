@@ -59,6 +59,7 @@ const CalendarComponent = () => {
     workAreaId: "",
     status: "",
     date: getTomorrowDateSEAsia(),
+    teamWorkId,
   });
   const innitShift= {
     ShiftId: "",
@@ -175,6 +176,7 @@ const CalendarComponent = () => {
       workAreaId: "",
       date: "",
       numberProduct:"",
+      teamWorkId:"",
     });
   };
 
@@ -218,6 +220,7 @@ const CalendarComponent = () => {
               workAreaId: data.workAreaId,
               status: data.status,
               date: data.date,
+              teamWorkId: data.teamWorkId,
             });
           })
           .catch((error) => {

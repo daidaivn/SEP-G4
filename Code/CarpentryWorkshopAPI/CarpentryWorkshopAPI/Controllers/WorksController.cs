@@ -113,6 +113,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         WorkId = w.WorkId,
                         WorkName = w.WorkName,
                         NumberProduct = w.TeamWorks != null ? w.TeamWorks.Sum(e => e.TotalProduct) : 0,
+                        TeamWorkId = w.TeamWorks.Select(e => e.TeamWorkId).FirstOrDefault(),
                         TeamName = w.TeamWorks.Select(tw => tw.Team.TeamName).Distinct(),
                         TotalProduct = w.TotalProduct,
                         Cost = w.Cost,
