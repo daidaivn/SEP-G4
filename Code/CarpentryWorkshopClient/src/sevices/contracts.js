@@ -18,7 +18,6 @@ const CreateContract = (
   contractType,
   contractCode,
   amount,
-  originalOffice
 ) => {
 
   const eid = id;
@@ -31,9 +30,7 @@ const CreateContract = (
     contractCode: contractCode,
     image: "",
     amount: Number(amount),
-    isOffice: originalOffice
   };
-
 
   return axios.post(
     `CWMSapi/Contract/CreateContract?employeeid=${eid}`,
