@@ -516,7 +516,6 @@ function ListEmployeeComponent() {
           AddContract(data);
         })
         .catch((error) => {
-          throw toast.error(error.response.data);
         }),
       {
         pending: "Đang xử lý",
