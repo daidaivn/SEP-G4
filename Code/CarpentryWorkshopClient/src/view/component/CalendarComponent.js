@@ -59,7 +59,7 @@ const CalendarComponent = () => {
     workAreaId: "",
     status: "",
     date: getTomorrowDateSEAsia(),
-    teamWorkId,
+    teamWorkId:"",
   });
   const innitShift= {
     ShiftId: "",

@@ -23,7 +23,7 @@ const ListModuleDetail3 = ({
   workidDetail,
   FetchDataForSchedule,
 }) => {
-  console.log("workDetailById", workDetailById);
+ 
   const [actionEdit, setActionEdit] = useState("Disable");
   const [numberProduct, setNumberProduct] = useState("");
   const GetActionEdit = () => {
@@ -46,14 +46,15 @@ const ListModuleDetail3 = ({
     }
     return true;
   };
-  const EditWorkProduct = (id, number) =>{
-    const check = validateData(id);
+  const EditWorkProduct = () =>{
+    const check = validateData(workDetailById.numberProduct);
     if (!check) {
       return;
     }
+    console.log('teamWorkId',workDetailById.teamWorkId);
     if(actionEdit === "edit"){
       toast.promise(
-        updateDataWorks(id, number)
+        updateDataWorks(workDetailById.teamWorkId, workDetailById.numberProduct)
           .then((data) => {
             return data;
           })
@@ -285,7 +286,7 @@ const ListModuleDetail3 = ({
             </div>
             <div className="item-modal">
               <p>Số sản phẩm đã hoàn thành</p>
-              <svg onClick={()=>{GetActionEdit()}}
+              <svg onClick={()=> {GetActionEdit(); EditWorkProduct()}}
                 xmlns="http://www.w3.org/2000/svg"
                 width="31"
                 height="30"
@@ -299,8 +300,19 @@ const ListModuleDetail3 = ({
               </svg>
               <Input
                 type="number"
-                value={numberProduct}
-                onChange={(e) => {setNumberProduct(e.target.value)}}
+                value={workDetailById.numberProduct}
+                onChange={
+                  actionEdit === "edit"
+                    ? (e) => {
+                        if (e.target.value.match(/^\d*$/)) {
+                          setWorkDetailById({
+                            ...workDetailById,
+                            numberProduct: e.target.value,
+                          });
+                        }
+                      }
+                    : undefined
+                }
                 placeholder="Số sản phẩm đã hoàn thành"
                 disabled={actionEdit == "Disable"}
               />
