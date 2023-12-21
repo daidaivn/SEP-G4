@@ -545,8 +545,6 @@ function ListEmployeeComponent() {
         }),
       {
         pending: "Đang xử lý",
-        success: "Thêm mới nhân viên thành công",
-        error: "Lỗi thêm nhân viên",
       }
     );
   };

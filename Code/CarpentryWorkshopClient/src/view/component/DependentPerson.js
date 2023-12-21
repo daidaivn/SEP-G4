@@ -230,7 +230,7 @@ function DependentPerson() {
         Relationship,
       )
         .then((data) => {
-          handleSave();
+          setIsModalOpenAdd(false);
           fetchData();
           return data;
         })
