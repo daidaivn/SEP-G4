@@ -50,6 +50,7 @@ const CalendarComponent = () => {
   const [workDetailById, setWorkDetailById] = useState({
     workId: "",
     workName: "",
+    numberProduct:"",
     unitCostName: "",
     unitCostId: "",
     unitCost: "",
@@ -173,6 +174,7 @@ const CalendarComponent = () => {
       workArea: "",
       workAreaId: "",
       date: "",
+      numberProduct:"",
     });
   };
 
@@ -202,12 +204,14 @@ const CalendarComponent = () => {
       new Promise((resolve) => {
         GetWorkDetailById(TeamID)
           .then((data) => {
+            console.log(data)
             resolve(data);
             setWorkDetailById({
               workId: data.workId,
               workName: data.workName || "Chưa có",
               unitCostName: data.uniCostName || "Chưa có",
               unitCostId: data.unitCostId,
+              numberProduct: data.numberProduct,
               unitCost: data.cost || "Chưa có",
               totalProduct: data.totalProduct || "Chưa có",
               workArea: data.workArea || "Chưa có",
