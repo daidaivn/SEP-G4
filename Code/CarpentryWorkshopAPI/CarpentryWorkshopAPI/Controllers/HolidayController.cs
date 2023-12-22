@@ -116,6 +116,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(409, "Ngày bắt đầu không thể muộn hơn ngày kết thúc");
                 }
+                if (startDate < DateTime.Now)
+                {
+                    return StatusCode(409, "không thể thêm sửa những ngày nghỉ đã qua");
+                }
                 Holiday newHoliday = new Holiday()
                 {
                     HolidayName = holidayDetailDTO.HolidayName
@@ -154,6 +158,10 @@ namespace CarpentryWorkshopAPI.Controllers
                 if (startDate > endDate)
                 {
                     return StatusCode(409, "Ngày bắt đầu không thể muộn hơn ngày kết thúc");
+                }
+                if(startDate < DateTime.Now)
+                {
+                    return StatusCode(409, "không thể chỉnh sửa những ngày nghỉ đã qua");
                 }
                 var updateHoliday = await _context.Holidays.Where(x => x.HolidayId == holidayDTO.HolidayId).FirstOrDefaultAsync();
                 updateHoliday.HolidayName = holidayDTO.HolidayName;
