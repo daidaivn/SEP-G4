@@ -57,6 +57,7 @@ const PayrollComponent = () => {
   const [dataDeduction, setDataDeduction] = useState([]);
   const [dataActualSalary, setActualSalary] = useState([]);
 
+
   //personal reward
   const initialInputEmployeeState = {
     employeeStringID: "",
@@ -65,6 +66,8 @@ const PayrollComponent = () => {
     amount: "",
     reason: "",
     bonusName: "",
+    id:"",
+    bonusDate:"",
   };
   const [employees, setEmployees] = useState([]);
   const [employeeID, setEmployeesID] = useState("");
@@ -273,18 +276,20 @@ const PayrollComponent = () => {
   const showModalRewardPersonal = () => {
     setIsModalOpenRewardPersonal(true);
   };
-  const [ActionEdit, setActionEdit] = useState("");
-  const showModalRewardPersonalEdit = (id, name, Amount, employeeId, beneficiary, bonusDatestring) => {
+  const [actionEdit, setActionEdit] = useState("");
+  const showModalRewardPersonalEdit = (id, name, Amount, employeeId, beneficiary, bonusNote, date) => {
     setActionEdit("PersonEdit");
     setIsModalOpenRewardPersonal(true);
     setBonusName(name);
     setBonusAmount(Amount);
     setEmployeeInput({
-      employeeStringID: employeeId,
+      employeeID: employeeId,
       employeeName: beneficiary,
+      id: id,
+      bonusDate: date,
     }
     );
-    setBonusReason("");
+    setBonusReason(bonusNote);
   };
   const resetPersonDetail = () => {
     setBonusAmount("");
@@ -293,6 +298,7 @@ const PayrollComponent = () => {
     setBonusName("");
     setEmployeeName("");
     setEmployeeInput(initialInputEmployeeState);
+    setActionEdit("");
   };
 
   //modal Thưởng toàn thể công ty
@@ -586,7 +592,7 @@ const PayrollComponent = () => {
           featchDataReward={featchDataReward}
           setIsModalOpenRewardPersonal={setIsModalOpenRewardPersonal}
           validateData={validateData}
-          showModalRewardPersonalEdit={showModalRewardPersonalEdit}
+          actionEdit={actionEdit}
         />
         <Holiday
           isModalOpenHoliday={isModalOpenHoliday}

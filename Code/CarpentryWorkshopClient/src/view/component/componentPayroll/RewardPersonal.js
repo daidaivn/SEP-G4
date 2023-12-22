@@ -20,7 +20,7 @@ const RewardPersonal = ({
   resetPersonDetail,
   setIsModalOpenRewardPersonal,
   validateData,
-  showModalRewardPersonalEdit,
+  actionEdit,
 }) => {
   const FetchEmployees = (id) => {
     toast.promise(
@@ -74,9 +74,14 @@ const RewardPersonal = ({
     if (!isDataValid) {
       return;
     }
+    let id = 0;
+    if(actionEdit == "PersonEdit"){
+      id = employeeInput.id;
+    }
+    console.log('PR', id);
     toast.promise(
       CreateAndEditPersonalReward(
-        0,
+        id,
         employeeInput.employeeID,
         bonusAmount,
         bonusName,
@@ -114,7 +119,7 @@ const RewardPersonal = ({
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            <p>Thưởng cá nhân</p>
+            {actionEdit == "PersonEdit" ? <p> Sửa thưởng cá nhân</p> : <p>Thưởng cá nhân</p>}
           </div>
           <div className="body-modal">
             <div className="item-modal">
