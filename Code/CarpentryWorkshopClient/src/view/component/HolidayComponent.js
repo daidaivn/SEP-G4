@@ -160,7 +160,7 @@ const HolidayComponent = () => {
       return;
     }
     toast.promise(
-      DeleteHoliday(id)
+      DeleteHolidayDetail(id)
         .then((data) => {
           FetchAllHolidays();
           return toast.success(data);
@@ -327,8 +327,7 @@ const HolidayComponent = () => {
                     </p>
                     <p
                       onClick={() => {
-                        FetchHolidays(holiday.holidayID);
-                        setAction("edit");
+                        DeleteHoliday(holiday.holidayID);
                       }}
                     >
                       <svg
