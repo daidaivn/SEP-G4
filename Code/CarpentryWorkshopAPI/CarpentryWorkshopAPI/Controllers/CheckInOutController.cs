@@ -772,7 +772,7 @@ namespace CarpentryWorkshopAPI.Controllers
                          .Select(hwd => new
                          {
                              Date = hwd.Day.Value.ToString("dd'-'MM'-'yyyy"),
-                             Status = hwd.Hour >= 6.5 ? "Yes" : (hwd.Hour <= 0 ? "No" : "Other")
+                             Status = hwd.Hour >= 6.5 ? "Yes" : "No"
                          })
                          .ToList()
                  })
