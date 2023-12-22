@@ -33,14 +33,16 @@ const updateDepartment = (id, name) => {
 
 const CreateDependent = (eid, name, code, gd, dob, stt, relaId) => {
   const requestBody = {
+    dependentId: 0,
     employeeId: Number(eid),
     fullName: name,
     identifierCode: code,
-    gender: gd,
+    gender: Boolean(gd),
     dobString: dob,
     status: stt,
     relationshipId: Number(relaId),
   };
+  console.log('dependperson', requestBody);
   return axios.post(`/CWMSapi/Dependents/CreateDependent`, requestBody);
 };
 

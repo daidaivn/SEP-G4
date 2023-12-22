@@ -124,12 +124,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var newct = new Models.Contract();
                 if (await _context.Contracts.AnyAsync(x => x.ContractCode.ToLower().Equals(createContractDTO.ContractCode.ToLower())))
                 {
-                    var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
-                    if (history != null)
-                    {
-                        _context.UserAccountsStatusHistories.Remove(history);
-                        _context.SaveChanges();
-                    }
+                    
                     var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
                     if (account != null)
                     {

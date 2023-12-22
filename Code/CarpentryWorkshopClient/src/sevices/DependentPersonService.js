@@ -31,9 +31,11 @@ const UpdateDependent = (dependentId, employeeId, guardian, relationshipId,ident
     identifierCode: identifierCode,
     dobString: dobString,
     status: status,
+    noteReason: "",
     gender: Boolean(gender)
   };
-  
+  console.log('ga', guardian);
+  console.log('dependent', requestBody);
   return axios.put(
     `/CWMSapi/Dependents/UpdateDependent`, requestBody
   );

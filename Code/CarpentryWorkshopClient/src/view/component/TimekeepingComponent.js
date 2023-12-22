@@ -624,7 +624,7 @@ const TimekeepingComponent = () => {
                         >
                           <p>Bắt đầu</p>
                         </span>
-                      ): employee.checkStatus === "CheckIn" ? (
+                      ): employee.checkStatus === "CheckOut" ? (
                         <span
                           className="go-out"
                           onClick={() => handleCheckStart(employee.employeeId)}

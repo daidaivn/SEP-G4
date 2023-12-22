@@ -516,7 +516,6 @@ function ListEmployeeComponent() {
           AddContract(data);
         })
         .catch((error) => {
-          throw toast.error(error.response.data);
         }),
       {
         pending: "Đang xử lý",
@@ -535,7 +534,6 @@ function ListEmployeeComponent() {
         contractType,
         contractCode,
         amount,
-        originalOffice
       )
         .then((data) => {
           fetchData();
@@ -547,8 +545,6 @@ function ListEmployeeComponent() {
         }),
       {
         pending: "Đang xử lý",
-        success: "Thêm mới nhân viên thành công",
-        error: "Lỗi thêm nhân viên",
       }
     );
   };

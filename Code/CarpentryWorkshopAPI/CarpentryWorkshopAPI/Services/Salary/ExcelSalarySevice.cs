@@ -393,22 +393,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     bussinessSalary = 0;
                 }
-
-
-                var totalOT = e.HoursWorkDays
-                .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
-                .Sum(h => h.DailyRate) * 1;
-
-
-                var totalHolidaySalary = e.HoursWorkDays
-                .Where(hwd => hwd.Day.HasValue &&
-                              holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
-                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
-                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
-                .Sum(ths => ths.DailyRate) * 2;
-
-
-
                 var bonus = e.BonusDetails
                 .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
                 .Sum(bd => bd.BonusAmount);
@@ -420,19 +404,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     totalBs = 0;
                 }
-                if (totalHolidaySalary == null)
-                {
-                    totalHolidaySalary = 0;
-                }
-                if (totalOT == null)
-                {
-                    totalOT = 0;
-                }
-
-                decimal basicSalary = 0;
-                decimal dailyWage = 0;
-                decimal actualWorkdaySalary = 0;
-
                 string meal = "Tiền ăn ca";
                 var mealAllowanceBasic = e.EmployeesAllowances
                    .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
@@ -457,25 +428,54 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 var advances = e.AdvancesSalaries
                          .Where(x => x.EmployeeId == e.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
                          .Sum(x => x.Amount);
-
-                var roleEmployee = e.RolesEmployees.FirstOrDefault(); 
+                decimal basicSalary = 0;
+                decimal dailyWage = 0;
+                decimal actualWorkdaySalary = 0;
+                decimal totalOT = 0;
+                decimal totalHolidaySalary = 0;
+                var roleEmployee = e.RolesEmployees.Where(re => re.EndDate == null).FirstOrDefault();
                 var department = roleEmployee?.Department;
-
+                var totaldayOT = e.HoursWorkDays
+                .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+                .Count();
+                var totaldayHolidaySalary = e.HoursWorkDays
+                .Where(hwd => hwd.Day.HasValue &&
+                              holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
+                .Count();
                 if (department != null && department.IsOffice != 4)
                 {
                     basicSalary = latestContract.Amount ?? 0;
                     dailyWage = basicSalary / workingDaysInMonth;
                     actualWorkdaySalary = actualWorkDays * dailyWage;
+                    totalOT = totaldayOT * dailyWage;
+                    totalHolidaySalary = totaldayHolidaySalary * dailyWage * 2;
                 }
-
                 if (department != null && department.IsOffice == 4)
                 {
                     basicSalary = latestContract.Amount ?? 0;
                     actualWorkdaySalary = e.HoursWorkDays
-                        .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == e.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
+                        .Where(h => h.Day.Value >= startDate && h.Day.Value <= endDate && h.EmployeeId == e.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
                         .Sum(h => (decimal)(h.DailyRate ?? 0));
+                    totalOT = e.HoursWorkDays
+                        .Where(h => h.Day.Value >= startDate && h.Day.Value <= endDate && h.EmployeeId == e.EmployeeId && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+                        .Sum(h => (decimal)(h.DailyRate ?? 0));
+                    totalHolidaySalary = e.HoursWorkDays
+                        .Where(hwd => hwd.Day.HasValue &&
+                              holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                              TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
+                        .Sum(hwd => (decimal)(hwd.DailyRate ?? 0));
                 }
-
+                if (totalHolidaySalary == null)
+                {
+                    totalHolidaySalary = 0;
+                }
+                if (totalOT == null)
+                {
+                    totalOT = 0;
+                }
                 var personalRelief = 11000000.00;
                 var totaldependent = e.Dependents.Where(x => x.EmployeeId == e.EmployeeId && e.Status == true).Count();
                 var dependentRelief = 4400000.00 * totaldependent;
@@ -498,8 +498,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                     EmployeeId = e.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
                     OrderNumber = sequence++,
                     FullName = e.LastName + " " + e.FirstName,
-                    Position = e.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
-                    Location = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
+                    Position = e.RolesEmployees.Where(re=>re.EndDate == null).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                    Location = department.IsOffice == 4 ? "SX" : "VP",
                     Gender = (bool)e.Gender ? "Nam" : "Nữ",
                     ActualWork = actualWorkDays,
                     HolidayWork = workDaysOnHolidays,
@@ -674,7 +674,10 @@ namespace CarpentryWorkshopAPI.Services.Salary
                         .ThenInclude(at => at.Allowance)
                         .Include(e => e.BonusDetails)
                         .Include(e => e.SpecialOccasions)
-                .Include(e => e.RolesEmployees).ThenInclude(re => re.Role)
+                .Include(e => e.RolesEmployees)
+                .ThenInclude(re => re.Role)
+                .Include(e => e.RolesEmployees)
+                .ThenInclude(re => re.Department)
                 .Include(e => e.HoursWorkDays)
                 .Where(e => e.Contracts.Any(c => c.StartDate <= endDate && c.EndDate >= startDate) && e.EmployeeId == employeeId)
                 .FirstOrDefaultAsync();
@@ -723,15 +726,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
             {
                 bussinessSalary = 0;
             }
-            var totalOT = employees.HoursWorkDays
-            .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
-            .Sum(h => h.DailyRate) * 1;
-            var totalHolidaySalary = employees.HoursWorkDays
-            .Where(hwd => hwd.Day.HasValue &&
-                          holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
-                          TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
-                          TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
-            .Sum(ths => ths.DailyRate) * 2;
             var bonus = employees.BonusDetails
             .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
             .Sum(bd => bd.BonusAmount);
@@ -743,19 +737,6 @@ namespace CarpentryWorkshopAPI.Services.Salary
             {
                 totalBs = 0;
             }
-            if (totalHolidaySalary == null)
-            {
-                totalHolidaySalary = 0;
-            }
-            if (totalOT == null)
-            {
-                totalOT = 0;
-            }
-
-            decimal basicSalary = 0;
-            decimal dailyWage = 0;
-            decimal actualWorkdaySalary = 0;
-
             string meal = "Tiền ăn ca";
             var mealAllowanceBasic = employees.EmployeesAllowances
                .Where(ea => ea.AllowanceType != null && ea.AllowanceType.Allowance != null
@@ -780,19 +761,53 @@ namespace CarpentryWorkshopAPI.Services.Salary
             var advances = employees.AdvancesSalaries
                      .Where(x => x.EmployeeId == employees.EmployeeId && x.Date.Value >= startDate && x.Date.Value <= endDate)
                      .Sum(x => x.Amount);
-            if (latestContract != null && (bool)latestContract.IsOffice == true)
+            decimal basicSalary = 0;
+            decimal dailyWage = 0;
+            decimal actualWorkdaySalary = 0;
+            decimal totalOT = 0;
+            decimal totalHolidaySalary = 0;
+            var roleEmployee = employees.RolesEmployees.Where(re => re.EndDate == null).FirstOrDefault();
+            var department = roleEmployee?.Department;
+            var totaldayOT = employees.HoursWorkDays
+            .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+            .Count();
+            var totaldayHolidaySalary = employees.HoursWorkDays
+            .Where(hwd => hwd.Day.HasValue &&
+                          holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                          TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                          TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
+            .Count();
+            if (department != null && department.IsOffice != 4)
             {
                 basicSalary = latestContract.Amount ?? 0;
                 dailyWage = basicSalary / workingDaysInMonth;
                 actualWorkdaySalary = actualWorkDays * dailyWage;
+                totalOT = totaldayOT * dailyWage;
+                totalHolidaySalary = totaldayHolidaySalary * dailyWage * 2;
             }
-            if (latestContract != null && (bool)latestContract.IsOffice == false)
+            if (department != null && department.IsOffice == 4)
             {
                 basicSalary = latestContract.Amount ?? 0;
                 actualWorkdaySalary = employees.HoursWorkDays
-                .Where(h => h.Day >= startDate && h.Day <= endDate && h.EmployeeId == employees.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
-                .Sum(h => (decimal)(h.DailyRate ?? 0));
-
+                    .Where(h => h.Day.Value >= startDate && h.Day.Value <= endDate && h.EmployeeId == employees.EmployeeId && h.Day.Value.DayOfWeek != DayOfWeek.Sunday)
+                    .Sum(h => (decimal)(h.DailyRate ?? 0));
+                totalOT = employees.HoursWorkDays
+                    .Where(h => h.Day.Value >= startDate && h.Day.Value <= endDate && h.EmployeeId == employees.EmployeeId && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
+                    .Sum(h => (decimal)(h.DailyRate ?? 0));
+                totalHolidaySalary = employees.HoursWorkDays
+                    .Where(hwd => hwd.Day.HasValue &&
+                          holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
+                          TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
+                          TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
+                    .Sum(hwd => (decimal)(hwd.DailyRate ?? 0));
+            }
+            if (totalHolidaySalary == null)
+            {
+                totalHolidaySalary = 0;
+            }
+            if (totalOT == null)
+            {
+                totalOT = 0;
             }
 
             var personalRelief = 11000000.00;
@@ -817,8 +832,8 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 EmployeeId = employees.EmployeeId.ToString().PadLeft(maxEmployeeId.ToString().Length, '0'),
                 OrderNumber = sequence++,
                 FullName = employees.LastName + " " + employees.FirstName,
-                Position = employees.RolesEmployees.OrderByDescending(re => re.Role.RoleLevel).FirstOrDefault()?.Role.RoleName ?? "No Role",
-                Location = latestContract != null && (bool)latestContract.IsOffice ? "VP" : "SX",
+                Position = employees.RolesEmployees.Where(re => re.EndDate == null).FirstOrDefault()?.Role.RoleName ?? "No Role",
+                Location = department.IsOffice == 4 ? "SX" : "VP",
                 Gender = (bool)employees.Gender ? "Nam" : "Nữ",
                 ActualWork = actualWorkDays,
                 HolidayWork = workDaysOnHolidays,

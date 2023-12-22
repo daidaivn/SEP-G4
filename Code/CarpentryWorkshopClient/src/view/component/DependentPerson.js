@@ -54,6 +54,8 @@ function DependentPerson() {
     setFilterStatus(value);
     searchandfilter(inputSearch, filterGender, value);
   };
+
+  console.log("em",employeeId)
   const handleChangeFilterGender = (value) => {
     setFilterGender(value);
     searchandfilter(inputSearch, value, filterStatus);
@@ -119,6 +121,7 @@ function DependentPerson() {
           .then((data) => {
             showModalDependent();
             resolve(data);
+            console.log('detail', data);
             const {
               dependentId,
               employeesName,
@@ -167,7 +170,6 @@ function DependentPerson() {
         )
           .then((data) => {
             handleSave();
-            fetchDepartmentById(dependentId);
             fetchData();
             resolve(data);
           })
@@ -228,10 +230,9 @@ function DependentPerson() {
         Relationship,
       )
         .then((data) => {
-          handleSave();
-          fetchDepartmentById(dependentId);
+          setIsModalOpenAdd(false);
           fetchData();
-          return toast.success(data);
+          return data;
         })
         .catch((error) => {
           throw toast.error(error.response.data);
@@ -239,7 +240,6 @@ function DependentPerson() {
       {
         pending: "Đang tải dữ liệu",
         success: "Thêm thông tin thành công",
-        error: "Lỗi thêm người phụ thuộc",
       }
     );
   };
@@ -868,8 +868,8 @@ function DependentPerson() {
                               name="employeeId"
                               id="employeeId"
                               className="select"
-                              onChange={(e) => setEmployeeId(e.target.value)}
                               value={employeeId}
+                              onChange={(e) => setEmployeeId(e.target.value)}
                             >
                               {employees.map((employee) => (
                                 <option
