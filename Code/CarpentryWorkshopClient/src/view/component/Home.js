@@ -340,7 +340,8 @@ const Home = () => {
                             </svg>
                           </i>
                         ) : dateInfo.status === "No" ? (
-                          <i>
+                          <i onClick={() => {showModalListEmployee(employee.employeeId,dateInfo.date);
+                          }}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"

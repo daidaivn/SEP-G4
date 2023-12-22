@@ -59,7 +59,12 @@ const EditEmployee = ({
       >
         <div className="modal-add-roleyee-employee modal-shift-all">
           <div className="modal-head-employee modal-shift-head ">
-            <h3>Chỉnh sửa điểm danh</h3>
+            {actionEdit ? (
+              <h3>Chỉnh sửa điểm danh</h3>
+            ) : (
+              <h3>Chi tiết điểm danh</h3>
+            )}
+
             <svg
               onClick={handleCancelListEmployee}
               xmlns="http://www.w3.org/2000/svg"
