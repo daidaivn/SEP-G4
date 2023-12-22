@@ -225,7 +225,7 @@ const Home = () => {
             employeeTimeKeepings.map((employee) => (
               <tr key={employee.employeeId}>
                 <td>{employee.employeeIdstring}</td>
-                <td>{employee.employeeName}</td>
+                <td><div>{employee.employeeName}</div></td>
                 {getDaysInMonthArray().map((day) => {
                   const dateInfo = employee.dateScreen.find(
                     (item) => item.date === day.replace(/\s\/\s/, "-")
