@@ -64,17 +64,32 @@ namespace CarpentryWorkshopAPI.Controllers
                 var department = await _context.Departments
                     .AsNoTracking()
                     .FirstOrDefaultAsync(d => d.DepartmentId == departmentId);
-
+                var roles = new List<Role>();
                 if (department == null)
                 {
                     return NotFound($"Department with ID {departmentId} not found.");
                 }
-
-                var roles = await _context.Roles
-                    .AsNoTracking()
-                    .Where(r => r.IsOffice == department.IsOffice)
+                string rol = "Trưởng phòng";
+                var rolemp = await _context.RolesEmployees
+                    .Where(x => x.DepartmentId == department.DepartmentId && x.EndDate == null)
+                    .Select(x => x.RoleId)
                     .ToListAsync();
-
+                roles = await _context.Roles
+                     .AsNoTracking()
+                     .Where(r => r.IsOffice == department.IsOffice)
+                     .ToListAsync();
+                foreach (var item in rolemp)
+                {
+                    var emprole = await _context.Roles.Where(x => x.RoleId == item).FirstOrDefaultAsync();
+                    if (emprole.RoleName.ToLower().Contains(rol.ToLower()))
+                    {
+                        roles = await _context.Roles
+                         .AsNoTracking()
+                         .Where(r => r.IsOffice == department.IsOffice && r.RoleId != emprole.RoleId)
+                         .ToListAsync();
+                    }
+                }
+                    
                 return Ok(roles);
             }
             catch (Exception ex)
