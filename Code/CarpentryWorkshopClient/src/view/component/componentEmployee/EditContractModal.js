@@ -29,7 +29,8 @@ const EditContractModal = ({
   setOriginalOffice,
   originalOffice,
   handleFileChange,
-  setsaveFileContract
+  setsaveFileContract,
+  saveFileContract
 }) => {
   return (
     <Modal
@@ -98,7 +99,7 @@ const EditContractModal = ({
               </tr>
               <tr>
                 <div className="input-date">
-                <input type="file" onChange={(e) => setsaveFileContract(e.target.files[0])} />
+                  <input type="file" onChange={(e) => setsaveFileContract(e.target.files[0])} />
                   <div className="input-date-cn">
                     <p>Trạng thái: </p>
                     <Form.Item valuePropName="checked" className="action">

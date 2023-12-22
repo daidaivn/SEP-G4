@@ -25,6 +25,8 @@ const NewContractModal = ({
   setAmount,
   originalOffice,
   setOriginalOffice,
+  saveFileContract,
+  setsaveFileContract
 }) => {
   return (
     <Modal
@@ -64,9 +66,9 @@ const NewContractModal = ({
                     options={
                       contractTypes
                         ? contractTypes.map((contractType) => ({
-                            value: contractType.contractTypeId,
-                            label: contractType.contractName,
-                          }))
+                          value: contractType.contractTypeId,
+                          label: contractType.contractName,
+                        }))
                         : []
                     }
                     placeholder="Loại hợp đồng"
@@ -100,15 +102,7 @@ const NewContractModal = ({
               </tr>
               <tr>
                 <div className="input-date">
-                  <Input
-                    className="select-input"
-                    placeholder="Đường dẫn hợp đồng"
-                    style={{
-                      width: "100%",
-                    }}
-                    value={contractLink} // Thêm dòng này để hiển thị giá trị từ state
-                    onChange={(e) => setContractLink(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
-                  />
+                  <input type="file" onChange={(e) => setsaveFileContract(e.target.files[0])} />
                 </div>
               </tr>
             </div>

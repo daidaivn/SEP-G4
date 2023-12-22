@@ -93,8 +93,8 @@ function ListEmployeeComponent() {
 
   const [saveFileContract, setsaveFileContract] = useState("");
 
-  console.log('saveFileContract',saveFileContract);
-  
+  console.log('saveFileContract', saveFileContract);
+
 
   const handleContractAmountChange = (e) => {
     const formattedValue = e.target.value.replace(/\D/g, "");
@@ -172,8 +172,6 @@ function ListEmployeeComponent() {
       });
   };
 
-  console.log('contractLink',contractLink);
-  
 
   const featchEmployeeContract = (value) => {
 
@@ -184,8 +182,8 @@ function ListEmployeeComponent() {
         setContractCode(data.contractCode);
         setContractStatus(data.status);
         setContractType(data.contractTypeId);
-        setContractStartDate(data.startDate); // Tên state đã được sửa
-        setContractEndDate(data.endDate); // Tên state đã được sửa
+        setContractStartDate(data.startDate);
+        setContractEndDate(data.endDate);
         setContractLink(data.linkDoc);
         setContractImage(data.image);
         setAmount(data.amount);
@@ -237,6 +235,14 @@ function ListEmployeeComponent() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!originalEmail || (originalEmail && !emailRegex.test(originalEmail))) {
       errors.push("Email không hợp lệ.");
+    }
+
+    if (!originalEmail || (originalEmail && !emailRegex.test(originalEmail))) {
+      errors.push("Email không hợp lệ.");
+    }
+
+    if (!saveFileContract) {
+      errors.push("Vui lòng chọn hợp đồng");
     }
 
     if (errors.length > 0) {
@@ -408,9 +414,9 @@ function ListEmployeeComponent() {
     }
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
-  
+
       const storageRef = ref(storage, `contract-files/${fileName}`);
-  
+
       uploadBytes(storageRef, saveFileContract)
         .then((snapshot) => {
           return getDownloadURL(snapshot.ref);
@@ -424,8 +430,36 @@ function ListEmployeeComponent() {
         });
     }
   };
-  
-  
+
+
+  const handleFileChangeAdd = () => {
+    const isDataValid = validateData();
+    const isDataDepartment = validateDataDepartment();
+    const isDataContract = validateDataContract();
+
+    if (!isDataValid || !isDataDepartment || !isDataContract) {
+      return;
+    }
+    if (saveFileContract) {
+      const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
+      console.log('qqqq');
+
+      const storageRef = ref(storage, `contract-files/${fileName}`);
+
+      uploadBytes(storageRef, saveFileContract)
+        .then((snapshot) => {
+          return getDownloadURL(snapshot.ref);
+        })
+        .then((downloadURL) => {
+          setContractLink(downloadURL);
+          console.log('downloadURL', downloadURL);
+          AddEmployee();
+        })
+        .catch((error) => {
+          toast.error("Lỗi lưu file hợp đồng");
+        });
+    }
+  };
 
   const EditName = () => {
     toast.promise(
@@ -521,14 +555,6 @@ function ListEmployeeComponent() {
   };
 
   const AddEmployee = () => {
-    const isDataValid = validateData();
-    const isDataDepartment = validateDataDepartment();
-    const isDataContract = validateDataContract();
-
-    if (!isDataValid || !isDataDepartment || !isDataContract) {
-      return;
-    }
-
     toast.promise(
       CreateEmployee(
         originalLastName,
@@ -546,10 +572,10 @@ function ListEmployeeComponent() {
         originalImage
       )
         .then((data) => {
-          handleCancelAdd();
           AddContract(data);
         })
         .catch((error) => {
+          throw toast.error(error.response.data);
         }),
       {
         pending: "Đang xử lý",
@@ -562,7 +588,6 @@ function ListEmployeeComponent() {
       CreateContract(
         eid,
         contractStartDate,
-        contractEndDate,
         contractLink,
         contractStatus,
         contractType,
@@ -571,10 +596,12 @@ function ListEmployeeComponent() {
       )
         .then((data) => {
           fetchData();
-          throw toast.success(data);
+          handleCancelAdd();
+          return toast.success(data);
           resetOriginalDetail();
         })
         .catch((error) => {
+          console.log('contractLink',error);
           throw toast.error(error.response.data);
         }),
       {
@@ -646,12 +673,6 @@ function ListEmployeeComponent() {
     setsaveFileContract("")
   };
 
-  const handleCancelView = () => {
-    setIsEditing(false); // Đặt trạng thái chỉnh sửa về false
-    setIsModalOpen(true);
-    setIsModalOpen(false);
-    resetOriginalDetail();
-  };
   const handleCancelView1 = () => {
     setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
     setIsModalOpenEditRole(true);
@@ -692,7 +713,6 @@ function ListEmployeeComponent() {
       });
   };
 
-
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
       const parts = dobstring.split("-");
@@ -706,24 +726,7 @@ function ListEmployeeComponent() {
     }
     return dobstring;
   };
-  const convertTimeToInputFormat = (timeString) => {
-    if (timeString) {
-      const parts = timeString.split(":");
 
-      if (parts.length === 3) {
-        const hours = parts[0];
-        const minutes = parts[1];
-
-        // Extract seconds and remove fractional seconds
-        const secondsWithFraction = parts[2];
-        const seconds = secondsWithFraction.split(".")[0];
-
-        return `${hours}:${minutes}:${seconds}`;
-      }
-      return timeString;
-    }
-    return timeString;
-  };
   const fetDataDepartment = () => {
     fetchAllDepadment()
       .then((data) => {
@@ -773,6 +776,7 @@ function ListEmployeeComponent() {
       new Promise((resolve) => {
         DetailID(value)
           .then((data) => {
+
             setIdDetail(data);
             setOriginalLastName(
               data.fullName.split(" ").slice(0, -1).join(" ")
@@ -790,6 +794,7 @@ function ListEmployeeComponent() {
             setOriginalEmail(data.email);
             setPreviewImage(data.image)
             setOriginalImage(data.image)
+
             resolve(data);
           })
           .catch((error) => {
@@ -1043,6 +1048,8 @@ function ListEmployeeComponent() {
         inputSearch={inputSearch}
         handleFileChange={handleFileChange}
         setsaveFileContract={setsaveFileContract}
+        saveFileContract={saveFileContract}
+        handleFileChangeAdd={handleFileChangeAdd}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>

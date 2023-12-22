@@ -12,7 +12,6 @@ const GetAllContractType = () => {
 const CreateContract = (
   id,
   contractStartDate,
-  contractEndDate,
   contractLink,
   contractStatus,
   contractType,
@@ -20,20 +19,29 @@ const CreateContract = (
   amount,
 ) => {
 
+  console.log('id',id);
+  console.log('contractStartDate',contractStartDate);
+  console.log('contractLink',contractLink);
+  console.log('contractStatus',contractStatus);
+  console.log('contractType',contractType);
+  console.log('contractCode',contractCode);
+  console.log('amount',amount);
+  
+
   const eid = id;
   const requestBody = {
     startDatestring: contractStartDate,
-    endDatestring: contractEndDate,
     linkDoc: contractLink,
     status: contractStatus,
     contractTypeID: Number(contractType),
     contractCode: contractCode,
-    image: "",
     amount: Number(amount),
   };
+  console.log('requestBody',requestBody);
+  
 
   return axios.post(
-    `CWMSapi/Contract/CreateContract?employeeid=${eid}`,
+    `/CWMSapi/Contract/CreateContract?employeeid=${eid}`,
     requestBody
   );
 };
