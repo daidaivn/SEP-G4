@@ -19,6 +19,7 @@ import {
   createYearOptions,
   getWeekRange,
   getMonthsInYear,
+  createYearOptionsHoliday
 } from "../logicTime/getWeeDays";
 import { da } from "date-fns/locale";
 const HolidayComponent = () => {
@@ -32,7 +33,7 @@ const HolidayComponent = () => {
   const handleCancelHoliday = () => {
     setIsModalOpenHoliday(false);
   };
-  const yearOptions = createYearOptions();
+  const yearOptions = createYearOptionsHoliday();
 
   const [months, setMonths] = useState("");
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -160,7 +161,7 @@ const HolidayComponent = () => {
       return;
     }
     toast.promise(
-      DeleteHoliday(id)
+      DeleteHolidayDetail(id)
         .then((data) => {
           FetchAllHolidays();
           return toast.success(data);
@@ -327,8 +328,7 @@ const HolidayComponent = () => {
                     </p>
                     <p
                       onClick={() => {
-                        FetchHolidays(holiday.holidayID);
-                        setAction("edit");
+                        DeleteHoliday(holiday.holidayID);
                       }}
                     >
                       <svg

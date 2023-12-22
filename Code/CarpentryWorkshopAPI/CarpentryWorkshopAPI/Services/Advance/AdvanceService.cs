@@ -101,10 +101,6 @@ namespace CarpentryWorkshopAPI.Services.Advance
             var newAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
             newAdvance.Date = date;
             newAdvance.Status = true;
-            if (newAdvance.Date.Value.Month < DateTime.Now.Month)
-            {
-                return "Lương ứng này không thể tạo";
-            }
             await _context.AdvancesSalaries.AddAsync(newAdvance);
             await _context.SaveChangesAsync();
             return "Tạo tạm ứng thành công";

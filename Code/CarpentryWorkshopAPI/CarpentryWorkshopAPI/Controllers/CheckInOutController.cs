@@ -339,20 +339,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     if (checkInTime == null)
                     {
-                        if (DateTime.Now > DateIn && DateTime.Now < DateOut)
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.LastName + " " + employee.FirstName,
-                                Status = 3, //Vắng mặt
-                                CheckStatus = "CheckIn",
-                                TimeIn = "",
-                                Timeout = "",
-
-                            });
-                        }
-                        else if (DateTime.Now > DateOut)
+                        if (DateTime.Now > DateOut)
                         {
                             result.Add(new
                             {
@@ -360,6 +347,19 @@ namespace CarpentryWorkshopAPI.Controllers
                                 Name = employee.LastName + " " + employee.FirstName,
                                 Status = 6,//tan ca 
                                 CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
+                        else if (DateTime.Now > DateIn && DateTime.Now < DateOut
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 3, //Vắng mặt
+                                CheckStatus = "CheckIn",
                                 TimeIn = "",
                                 Timeout = "",
                             });

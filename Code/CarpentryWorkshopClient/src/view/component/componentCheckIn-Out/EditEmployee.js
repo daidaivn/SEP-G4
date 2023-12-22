@@ -13,11 +13,12 @@ const EditEmployee = ({
   showModalListEmployee,
   date,
   employeeId,
+  actionEdit
 }) => {
-  
+
   const handleTimeInputChange = (timeIn, timeOut, id) => {
-  
-    if(timeIn === null || timeOut === null || timeIn === '' || timeOut === '' || timeIn === 'Invalid Date' || timeOut === 'Invalid Date' ){
+
+    if (timeIn === null || timeOut === null || timeIn === '' || timeOut === '' || timeIn === 'Invalid Date' || timeOut === 'Invalid Date') {
       return;
     }
     if (timeIn === 1) {
@@ -34,6 +35,7 @@ const EditEmployee = ({
           showModalListEmployee(employeeId, date);
           return data;
         })
+
         .catch((error) => {
           if (error.response && error.response.status === 404) {
             throw toast.error(error.response.data);
@@ -57,7 +59,11 @@ const EditEmployee = ({
       >
         <div className="modal-add-roleyee-employee modal-shift-all">
           <div className="modal-head-employee modal-shift-head ">
-            <h3>Chỉnh sửa điểm danh</h3>
+            {actionEdit ? (
+              <h3>Chỉnh sửa điểm danh</h3>
+            ) : (
+              <h3>Chi tiết điểm danh</h3>
+            )}
             <svg
               onClick={handleCancelListEmployee}
               xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +89,7 @@ const EditEmployee = ({
               </thead>
               <div className="body-table-edit scrollbar" id="style-15">
                 {employCheckInOut.map((employee, index) => (
-                  <tr>
+                  <tr key={index}>
                     <td>{index + 1}</td>
                     <td>
                       <TimePicker
@@ -101,6 +107,7 @@ const EditEmployee = ({
                           )
                         }
                         onBlur={handleCancelListEmployee}
+                        disabled={!actionEdit} // Disable TimePicker if actionEdit is false
                       />
                     </td>
                     <td>
@@ -118,6 +125,7 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
+                        disabled={!actionEdit} // Disable TimePicker if actionEdit is false
                       />
                     </td>
                   </tr>
@@ -125,6 +133,7 @@ const EditEmployee = ({
 
                 <tr></tr>
               </div>
+
               <thead className="thead-last"></thead>
             </table>
           </div>
