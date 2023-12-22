@@ -153,24 +153,24 @@ namespace CarpentryWorkshopAPI.Controllers
                     _context.SaveChanges();
                     return StatusCode(409, "Đường dẫn hợp đồng đã tồn tại");
                 }
-                if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
-                {
-                    var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
-                    if (history != null)
-                    {
-                        _context.UserAccountsStatusHistories.Remove(history);
-                        _context.SaveChanges();
-                    }
-                    var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
-                    if (account != null)
-                    {
-                        _context.UserAccounts.Remove(account);
-                        _context.SaveChanges();
-                    }
-                    _context.Employees.Remove(emp);
-                    _context.SaveChanges();
-                    return StatusCode(409, "Đường dẫn chưa được triển khai");
-                }
+                //if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
+                //{
+                //    var history = await _context.UserAccountsStatusHistories.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                //    if (history != null)
+                //    {
+                //        _context.UserAccountsStatusHistories.Remove(history);
+                //        _context.SaveChanges();
+                //    }
+                //    var account = await _context.UserAccounts.Where(x => x.EmployeeId == emp.EmployeeId).FirstOrDefaultAsync();
+                //    if (account != null)
+                //    {
+                //        _context.UserAccounts.Remove(account);
+                //        _context.SaveChanges();
+                //    }
+                //    _context.Employees.Remove(emp);
+                //    _context.SaveChanges();
+                //    return StatusCode(409, "Đường dẫn chưa được triển khai");
+                //}
 
                 var months = await _context.ContractTypes
                     .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
