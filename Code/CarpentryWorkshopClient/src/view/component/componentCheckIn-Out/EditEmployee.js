@@ -34,6 +34,7 @@ const EditEmployee = ({
           showModalListEmployee(employeeId, date);
           return data;
         })
+        
         .catch((error) => {
           if (error.response && error.response.status === 404) {
             throw toast.error(error.response.data);
