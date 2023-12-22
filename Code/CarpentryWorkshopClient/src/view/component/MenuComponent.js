@@ -6,6 +6,7 @@ import "../scss/fonts.scss";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState } from "react";
 import logo from "../assets/images/logo.png";
+
 const Menucomponent = () => {
   const [activeDiv, setActiveDiv] = useState("div1");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -16,10 +17,12 @@ const Menucomponent = () => {
   const handleDivClick = (divId) => {
     setActiveDiv(divId);
   };
+
   let userPages = JSON.parse(localStorage.getItem("userPages")) || [];
   if (!userPages.length) {
     userPages = JSON.parse(sessionStorage.getItem("userPages")) || [];
   }
+
   let department = JSON.parse(localStorage.getItem("department")) || [];
   if (!department.length) {
     department = JSON.parse(sessionStorage.getItem("department")) || [];

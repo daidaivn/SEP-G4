@@ -42,6 +42,7 @@ const TimekeepingComponent = () => {
 
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const showModalListEmployee = (id, date1) => {
+    console.log('date1',date1);
     setDate(date1);
     setEmployeeId(id);
     toast.promise(

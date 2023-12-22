@@ -310,7 +310,7 @@ const HolidayComponent = () => {
                       onClick={() => {
                         FetchHolidays(holiday.holidayID);
                         setAction("edit");
-                      }}
+                      }} 
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

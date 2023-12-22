@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
+using DocumentFormat.OpenXml.Bibliography;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -748,6 +749,43 @@ namespace CarpentryWorkshopAPI.Controllers
 
                 _context.CheckInOuts.Add(autoCheckin);
                 _context.SaveChanges();
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetTimeKeepingInfo(int month, int year)
+        {
+            try
+            {
+                var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
+                var employeeIdLength = maxEmployeeId.ToString().Length;
+
+                var employeeAttendance = await _context.Employees
+                 .Select(employee => new
+                 {
+                     EmployeeId = employee.EmployeeId,
+                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
+                     EmployeeName = $"{employee.FirstName} {employee.LastName}",
+                     DateScreen = _context.HoursWorkDays
+                         .Where(hwd => hwd.EmployeeId == employee.EmployeeId 
+                         && hwd.Day.Value.Month == month && hwd.Day.Value.Year == year)
+                         .OrderBy(x => x.Day)
+                         .Select(hwd => new
+                         {
+                             Date = hwd.Day.Value.ToString("dd'-'MM'-'yyyy"),
+                             Status = hwd.Hour >= 6.5 ? "Yes" : (hwd.Hour <= 0 ? "No" : "Other")
+                         })
+                         .ToList()
+                 })
+                 .ToListAsync();
+                if (employeeAttendance == null)
+                {
+                    return NotFound("Không tìm thấy dữ liệu");
+                }
+                return Ok(employeeAttendance);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest("Lỗi máy chủ");
             }
         }
     }
