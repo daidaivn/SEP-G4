@@ -27,7 +27,9 @@ const EditContractModal = ({
   handleContractAmountChange,
   setAmount,
   setOriginalOffice,
-  originalOffice
+  originalOffice,
+  handleFileChange,
+  setsaveFileContract
 }) => {
   return (
     <Modal
@@ -96,15 +98,7 @@ const EditContractModal = ({
               </tr>
               <tr>
                 <div className="input-date">
-                  <Input
-                    className="select-input"
-                    placeholder="Đường dẫn hợp đồng"
-                    style={{
-                      width: "100%",
-                    }}
-                    value={contractLink} // Thêm dòng này để hiển thị giá trị từ state
-                    onChange={(e) => setContractLink(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
-                  />
+                <input type="file" onChange={(e) => setsaveFileContract(e.target.files[0])} />
                   <div className="input-date-cn">
                     <p>Trạng thái: </p>
                     <Form.Item valuePropName="checked" className="action">
@@ -124,7 +118,7 @@ const EditContractModal = ({
           <button className="btn-cancel" onClick={handleCancelEditContract}>
             Hủy bỏ
           </button>
-          <button className="btn-edit btn-save" onClick={EditName}>
+          <button className="btn-edit btn-save" onClick={handleFileChange}>
             Lưu
           </button>
         </div>
