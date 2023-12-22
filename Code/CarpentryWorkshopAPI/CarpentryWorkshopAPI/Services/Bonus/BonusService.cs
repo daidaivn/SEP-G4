@@ -20,7 +20,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
         public dynamic CreateAndUpdatePersonalReward(PersonalRewardDTO personalRewardDTO)
         {
 
-            if (personalRewardDTO.BonusId == 0)
+            if (personalRewardDTO.BonusId <= 0)
             {
                 var newPR = _mapper.Map<BonusDetail>(personalRewardDTO);
                 newPR.BonusDate = DateTime.Now.Date;
@@ -30,13 +30,21 @@ namespace CarpentryWorkshopAPI.Services.Bonus
             }
             else
             {
-                var newPR = _mapper.Map<BonusDetail>(personalRewardDTO);
+                var newPR = _context.BonusDetails.Where(bd=>bd.BonusId == personalRewardDTO.BonusId).FirstOrDefault();
+                if(newPR == null) 
+                {
+                    return "không có thông tin";
+                }
                 newPR.BonusDate = !string.IsNullOrEmpty(personalRewardDTO.BonusDatestring) &&
                 DateTime.TryParseExact(personalRewardDTO.BonusDatestring, "dd-MM-yyyy",
                                        System.Globalization.CultureInfo.InvariantCulture,
                                        System.Globalization.DateTimeStyles.None, out var parsedDate)
                 ? parsedDate
                 : newPR.BonusDate;
+                newPR.BonusReason = personalRewardDTO.BonusReason;
+                newPR.BonusName = personalRewardDTO.BonusName;
+                newPR.BonusAmount = personalRewardDTO.BonusAmount;
+                newPR.EmployeeId = personalRewardDTO.EmployeeId;
                 _context.BonusDetails.Update(newPR);
                 _context.SaveChanges();
                 return "Chỉnh sửa thưởng cá nhân thành công";
@@ -135,6 +143,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         OccasionType = ps.OccasionType,
                         Amount = ps.Amount,
                         OccasionDateString = ps.OccasionDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        BonusReason = ps.OccasionNote,
                     }).ToList();
                 var persondto = _mapper.Map<List<DTO.AllRewardDTO.PR>>(person);
                 var company = _context.CompanyWideBonus
@@ -152,7 +161,8 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         Beneficiary = "Toàn thể công ty",
                         BonusAmount = item.BonusAmount,
                         BonusName = item.BonusName,
-                        BonusDatestring = item.BonusDate.Value.ToString("dd'-'MM'-'yyyy")
+                        BonusDatestring = item.BonusDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        BonusReason= item.BonusReason,
                     };
                     companydto.Add(cwrs);
                 }

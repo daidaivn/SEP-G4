@@ -57,11 +57,17 @@ const PayrollComponent = () => {
   const [dataDeduction, setDataDeduction] = useState([]);
   const [dataActualSalary, setActualSalary] = useState([]);
 
+
   //personal reward
   const initialInputEmployeeState = {
     employeeStringID: "",
     employeeID: "",
     employeeName: "",
+    amount: "",
+    reason: "",
+    bonusName: "",
+    id:"",
+    bonusDate:"",
   };
   const [employees, setEmployees] = useState([]);
   const [employeeID, setEmployeesID] = useState("");
@@ -78,8 +84,7 @@ const PayrollComponent = () => {
 
   const day = currentDateTime.getDate();
   const formattedDate = new Date().toISOString().split("T")[0];
-  const handleChange = (value) => {
-  };
+  const handleChange = (value) => {};
 
   const convertDobToISO = (dobstring) => {
     if (dobstring) {
@@ -125,10 +130,8 @@ const PayrollComponent = () => {
   };
 
   //modal sửa thưởng cá nhân
-  const [
-    isModalOpenEditRewardPersonal,
-    setIsModalOpenEditRewardPersonal,
-  ] = useState(false);
+  const [isModalOpenEditRewardPersonal, setIsModalOpenEditRewardPersonal] =
+    useState(false);
   const showModalEditRewardPersonal = () => {
     setIsModalOpenEditRewardPersonal(true);
   };
@@ -138,7 +141,6 @@ const PayrollComponent = () => {
   const handleCancelEditRewardPersonal = () => {
     setIsModalOpenEditRewardPersonal(false);
   };
-
   //modal Excel
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const showModalExcel = () => {
@@ -223,9 +225,8 @@ const PayrollComponent = () => {
   };
 
   //modal lương ứng
-  const [isModalOpenAdvancesalary, setIsModalOpenAdvancesalary] = useState(
-    false
-  );
+  const [isModalOpenAdvancesalary, setIsModalOpenAdvancesalary] =
+    useState(false);
   const showModalAdvancesalary = () => {
     setIsModalOpenAdvancesalary(true);
   };
@@ -237,9 +238,8 @@ const PayrollComponent = () => {
   };
 
   //modal Thưởng công ty
-  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] = useState(
-    false
-  );
+  const [isModalOpenRewardCompany, setIsModalOpenRewardCompany] =
+    useState(false);
   const dataConver = months + "-" + date;
   const featchDataReward = () => {
     toast.promise(
@@ -271,13 +271,26 @@ const PayrollComponent = () => {
     setIsModalOpenRewardCompany(false);
   };
   //modal Thưởng cá nhân
-  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] = useState(
-    false
-  );
+  const [isModalOpenRewardPersonal, setIsModalOpenRewardPersonal] =
+    useState(false);
   const showModalRewardPersonal = () => {
     setIsModalOpenRewardPersonal(true);
   };
-
+  const [actionEdit, setActionEdit] = useState("");
+  const showModalRewardPersonalEdit = (id, name, Amount, employeeId, beneficiary, bonusNote, date) => {
+    setActionEdit("PersonEdit");
+    setIsModalOpenRewardPersonal(true);
+    setBonusName(name);
+    setBonusAmount(Amount);
+    setEmployeeInput({
+      employeeID: employeeId,
+      employeeName: beneficiary,
+      id: id,
+      bonusDate: date,
+    }
+    );
+    setBonusReason(bonusNote);
+  };
   const resetPersonDetail = () => {
     setBonusAmount("");
     setBonusReason("");
@@ -285,6 +298,7 @@ const PayrollComponent = () => {
     setBonusName("");
     setEmployeeName("");
     setEmployeeInput(initialInputEmployeeState);
+    setActionEdit("");
   };
 
   //modal Thưởng toàn thể công ty
@@ -342,9 +356,8 @@ const PayrollComponent = () => {
   };
 
   //modal hiển thị tất cả danh sách lương thực nhận
-  const [isModalOpenSalaryReceived, setIsModalOpenSalaryReceived] = useState(
-    false
-  );
+  const [isModalOpenSalaryReceived, setIsModalOpenSalaryReceived] =
+    useState(false);
   const showModalSalaryReceived = () => {
     setIsModalOpenSalaryReceived(true);
   };
@@ -439,7 +452,7 @@ const PayrollComponent = () => {
       .then((data) => {
         isDataLoaded = true;
         setSalaryDetail(data);
-        setSalaryDetailData(data)
+        setSalaryDetailData(data);
         if (toastId) {
           toast.dismiss(toastId); // Hủy thông báo nếu nó đã được hiển thị
         }
@@ -457,7 +470,7 @@ const PayrollComponent = () => {
       }
     }, 1500);
   };
-  
+
   useEffect(() => {
     fetDataSalaryDetail();
   }, [date, months]);
@@ -470,8 +483,7 @@ const PayrollComponent = () => {
     );
     setSalaryDetail(filteredData);
   };
-  console.log('sal',salaryDetail);
-  
+  console.log("sal", salaryDetail);
 
   return (
     <>
@@ -536,6 +548,7 @@ const PayrollComponent = () => {
           reward={reward}
           date={date}
           setDate={setDate}
+          showModalRewardPersonalEdit={showModalRewardPersonalEdit}
         />
         <RewardAll
           isModalOpenRewardAll={isModalOpenRewardAll}
@@ -579,6 +592,7 @@ const PayrollComponent = () => {
           featchDataReward={featchDataReward}
           setIsModalOpenRewardPersonal={setIsModalOpenRewardPersonal}
           validateData={validateData}
+          actionEdit={actionEdit}
         />
         <Holiday
           isModalOpenHoliday={isModalOpenHoliday}

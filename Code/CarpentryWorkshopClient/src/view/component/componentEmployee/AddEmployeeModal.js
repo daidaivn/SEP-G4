@@ -53,6 +53,7 @@ const AddEmployeeModal = ({
   handleImageUpload,
   previewImage,
   setPreviewImage,
+  handleFileChangeAdd
 }) => {
   return (
     <>
@@ -223,7 +224,7 @@ const AddEmployeeModal = ({
                 <button className="btn-cancel" onClick={handleOkAdd}>
                   Thoát
                 </button>
-                <button className="btn-edit btn-save" onClick={AddEmployee}>
+                <button className="btn-edit btn-save" onClick={handleFileChangeAdd}>
                   Lưu
                 </button>
               </div>

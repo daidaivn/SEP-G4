@@ -91,7 +91,11 @@ const ListSearchAndFilter = ({
   allRole,
   handleSearchChange,
   employees,
-  inputSearch
+  inputSearch,
+  handleFileChange,
+  setsaveFileContract,
+  saveFileContract,
+  handleFileChangeAdd
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -161,7 +165,7 @@ const ListSearchAndFilter = ({
           value={inputSearch}
           onChange={handleSearchChange}
         ></Input>
-        
+
       </div>
       <div className="list-filter">
         <i className="list-filter-icon1">
@@ -403,6 +407,7 @@ const ListSearchAndFilter = ({
         handleImageUpload={handleImageUpload}
         previewImage={previewImage}
         setPreviewImage={setPreviewImage}
+        handleFileChangeAdd={handleFileChangeAdd}
       />
 
       <NewContractModal
@@ -429,6 +434,9 @@ const ListSearchAndFilter = ({
         setAmount={setAmount}
         originalOffice={originalOffice}
         setOriginalOffice={setOriginalOffice}
+        saveFileContract={saveFileContract}
+        setsaveFileContract={setsaveFileContract}
+        handleFileChangeAdd={handleFileChangeAdd}
       />
       <NewRoleDepartmentModal
         isModalOpenAddRole={isModalOpenAddRole}
@@ -468,6 +476,9 @@ const ListSearchAndFilter = ({
           setAmount={setAmount}
           setOriginalOffice={setOriginalOffice}
           originalOffice={originalOffice}
+          handleFileChange={handleFileChange}
+          setsaveFileContract={setsaveFileContract}
+          saveFileContract={saveFileContract}
         />
       ) : (
         <ViewContractModal
