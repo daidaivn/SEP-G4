@@ -4,7 +4,10 @@ import dayjs from "dayjs";
 
 import { toast } from "react-toastify";
 import { GetTimeKeepingInfo } from "../../sevices/HomeService";
-import { GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee } from "../../sevices/TimekeepingService";
+import {
+  GetDataCheckInOutByDateAndEmployeeId,
+  UpdateCheckInOutForEmployee,
+} from "../../sevices/TimekeepingService";
 import { EditEmployee } from "./componentCheckIn-Out";
 import "../scss/HomeComponent.scss";
 
@@ -21,7 +24,7 @@ const Home = () => {
   const [employeeTimeKeepings, setEmployeeTimeKeepins] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
-  var actionEdit = false
+  var actionEdit = false;
 
   console.log("months", months);
   console.log("yearOptions", selectedYear);
@@ -34,8 +37,6 @@ const Home = () => {
       0
     ).getDate();
 
-
-    
     // Create an array of formatted dates in "DD/MM" format
     return Array.from({ length: daysInMonth }, (_, index) => {
       const day = index + 1;
@@ -49,20 +50,20 @@ const Home = () => {
   };
 
   const FetchTimeKeepingInfo = () => {
-    console.log('months',months);
-    
+    console.log("months", months);
+
     GetTimeKeepingInfo(months, selectedYear)
       .then((data) => {
-        console.log("data",data);
+        console.log("data", data);
         setEmployeeTimeKeepins(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
   };
-  
+
   const handleCancelListEmployee = () => {
     resetEmployeeCheckInOut();
     setIsModalOpenListEmployee(false);
@@ -109,15 +110,12 @@ const Home = () => {
     return dobstring;
   };
 
-  
-
-
   const showModalListEmployee = (id, date) => {
     toast.promise(
       GetDataCheckInOutByDateAndEmployeeId(id, date + "-" + selectedYear)
         .then((data) => {
-          console.log('data11',data);
-          
+          console.log("data11", data);
+
           setEmployCheckInOut(data);
           setIsModalOpenListEmployee(true);
           console.log("employCheck", data);
@@ -310,20 +308,28 @@ const Home = () => {
             employeeTimeKeepings.map((employee) => (
               <tr key={employee.employeeId}>
                 <td>{employee.employeeIdstring}</td>
-                <td><div>{employee.employeeName}</div></td>
+                <td>
+                  <div>{employee.employeeName}</div>
+                </td>
                 {getDaysInMonthArray().map((day) => {
                   const dateInfo = employee.dateScreen.find(
                     (item) => item.date === day.replace(/\s\/\s/, "-")
                   );
                   console.log(day.replace(/\s\/\s/, "-"));
                   console.log(dateInfo);
-                  console.log(dateInfo)
+                  console.log(dateInfo);
                   return (
                     <td key={day}>
                       {dateInfo ? (
                         dateInfo.status === "Yes" ? (
-                          <i  onClick={() => {showModalListEmployee(employee.employeeId,dateInfo.date);
-                          }}>
+                          <i
+                            onClick={() => {
+                              showModalListEmployee(
+                                employee.employeeId,
+                                dateInfo.date
+                              );
+                            }}
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -340,8 +346,14 @@ const Home = () => {
                             </svg>
                           </i>
                         ) : dateInfo.status === "No" ? (
-                          <i onClick={() => {showModalListEmployee(employee.employeeId,dateInfo.date);
-                          }}>
+                          <i
+                            onClick={() => {
+                              showModalListEmployee(
+                                employee.employeeId,
+                                dateInfo.date
+                              );
+                            }}
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -401,16 +413,16 @@ const Home = () => {
         </tbody>
       </table>
       <EditEmployee
-          isModalOpenListEmployee={isModalOpenListEmployee}
-          handleCancelListEmployee={handleCancelListEmployee}
-          employCheckInOut={employCheckInOut}
-          convertDobToISO={convertDobToISO}
-          convertTimeToInputFormat={convertTimeToInputFormat}
-          handleOkListEmployee={handleOkListEmployee}
-          UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
-          showModalListEmployee={showModalListEmployee}
-          actionEdit={actionEdit}
-        />
+        isModalOpenListEmployee={isModalOpenListEmployee}
+        handleCancelListEmployee={handleCancelListEmployee}
+        employCheckInOut={employCheckInOut}
+        convertDobToISO={convertDobToISO}
+        convertTimeToInputFormat={convertTimeToInputFormat}
+        handleOkListEmployee={handleOkListEmployee}
+        UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
+        showModalListEmployee={showModalListEmployee}
+        actionEdit={actionEdit}
+      />
     </div>
   );
 };

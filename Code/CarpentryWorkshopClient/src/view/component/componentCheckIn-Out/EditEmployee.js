@@ -64,7 +64,6 @@ const EditEmployee = ({
             ) : (
               <h3>Chi tiết điểm danh</h3>
             )}
-
             <svg
               onClick={handleCancelListEmployee}
               xmlns="http://www.w3.org/2000/svg"
