@@ -393,15 +393,22 @@ namespace CarpentryWorkshopAPI.Services.Salary
                 {
                     bussinessSalary = 0;
                 }
+
+
                 var totalOT = e.HoursWorkDays
                 .Where(h => h.Day >= startDate && h.Day <= endDate && h.Day.Value.DayOfWeek == DayOfWeek.Sunday)
                 .Sum(h => h.DailyRate) * 1;
+
+
                 var totalHolidaySalary = e.HoursWorkDays
                 .Where(hwd => hwd.Day.HasValue &&
                               holidays.Contains(TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone).Date) &&
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) >= startDate &&
                               TimeZoneInfo.ConvertTime(hwd.Day.Value, timeZone) <= endDate)
                 .Sum(ths => ths.DailyRate) * 2;
+
+
+
                 var bonus = e.BonusDetails
                 .Where(bd => bd.BonusDate >= startDate && bd.BonusDate <= endDate)
                 .Sum(bd => bd.BonusAmount);
