@@ -1,10 +1,15 @@
 // DateUtils.js
 
- const createYearOptions = () => {
+const createYearOptions = () => {
     const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
-    return years.map(year => ({ value: year, label: year.toString() }));
-};
+    const startYear = currentYear - 10;
+    const endYear = currentYear + 1;
+  
+    const years = Array.from({ length: endYear - startYear + 2 }, (_, i) => startYear + i);
+  
+    return years.map((year) => ({ value: year, label: year.toString() }));
+  };
+  
 
 const getMonthsInYear = (year) => {
     const months = [
