@@ -135,6 +135,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         OccasionType = ps.OccasionType,
                         Amount = ps.Amount,
                         OccasionDateString = ps.OccasionDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        BonusReason = ps.OccasionNote,
                     }).ToList();
                 var persondto = _mapper.Map<List<DTO.AllRewardDTO.PR>>(person);
                 var company = _context.CompanyWideBonus
@@ -152,7 +153,8 @@ namespace CarpentryWorkshopAPI.Services.Bonus
                         Beneficiary = "Toàn thể công ty",
                         BonusAmount = item.BonusAmount,
                         BonusName = item.BonusName,
-                        BonusDatestring = item.BonusDate.Value.ToString("dd'-'MM'-'yyyy")
+                        BonusDatestring = item.BonusDate.Value.ToString("dd'-'MM'-'yyyy"),
+                        BonusReason= item.BonusReason,
                     };
                     companydto.Add(cwrs);
                 }

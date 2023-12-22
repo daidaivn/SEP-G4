@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Modal, Select } from "antd";
 import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import { CreateAndEditPersonalReward } from "../../../sevices/PayrollSevice";
 import { DetailEmployeebasic } from "../../../sevices/EmployeeService";
 const RewardPersonal = ({
@@ -19,6 +20,7 @@ const RewardPersonal = ({
   resetPersonDetail,
   setIsModalOpenRewardPersonal,
   validateData,
+  showModalRewardPersonalEdit,
 }) => {
   const FetchEmployees = (id) => {
     toast.promise(
