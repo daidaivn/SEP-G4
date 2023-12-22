@@ -50,6 +50,11 @@ const UpdateHolidayDetail = (inputHolidays) => {
     `/CWMSapi/Holiday/UpdateHolidayDetail`,requestBody
   );
 };
+const DeleteHolidayDetail = (id) => {
+  return axios.delete(
+    `/CWMSapi/Holiday/DeleteHolidayDetail/${id}`
+  );
+};
 
 const GetHolidays = (id) => {
   const holidayid = id;
@@ -58,4 +63,4 @@ const GetHolidays = (id) => {
   );
 };
 
-export {GetAllHolidays, CreateHolidayDetail, GetHolidays, UpdateHolidayDetail};
+export {GetAllHolidays, CreateHolidayDetail, GetHolidays, UpdateHolidayDetail, DeleteHolidayDetail};
