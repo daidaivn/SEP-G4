@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Input, Select } from "antd";
-import { GetTimeKeepingInfo } from "../../sevices/HomeService";
+import dayjs from "dayjs";
 
+import { toast } from "react-toastify";
+import { GetTimeKeepingInfo } from "../../sevices/HomeService";
+import { GetDataCheckInOutByDateAndEmployeeId, UpdateCheckInOutForEmployee } from "../../sevices/TimekeepingService";
+import { EditEmployee } from "./componentCheckIn-Out";
 import "../scss/HomeComponent.scss";
 
 import { getMonthsInYear, createYearOptions } from "../logicTime/getWeeDays";
@@ -15,6 +19,9 @@ const Home = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const yearOptions = createYearOptions();
   const [employeeTimeKeepings, setEmployeeTimeKeepins] = useState("");
+  const [employCheckInOut, setEmployCheckInOut] = useState([]);
+  const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
+  var actionEdit = false
 
   console.log("months", months);
   console.log("yearOptions", selectedYear);
@@ -27,6 +34,8 @@ const Home = () => {
       0
     ).getDate();
 
+
+    
     // Create an array of formatted dates in "DD/MM" format
     return Array.from({ length: daysInMonth }, (_, index) => {
       const day = index + 1;
@@ -34,6 +43,9 @@ const Home = () => {
       const formattedMonth = months < 10 ? `0${months}` : months;
       return `${formattedDay} / ${formattedMonth}`;
     });
+  };
+  const handleOkListEmployee = () => {
+    setIsModalOpenListEmployee(false);
   };
 
   const FetchTimeKeepingInfo = () => {
@@ -49,6 +61,79 @@ const Home = () => {
 
   const handleChangeYear = (newYear) => {
     setSelectedYear(newYear);
+  };
+  
+  const handleCancelListEmployee = () => {
+    resetEmployeeCheckInOut();
+    setIsModalOpenListEmployee(false);
+  };
+
+  const resetEmployeeCheckInOut = () => {
+    setEmployCheckInOut([]);
+  };
+
+  const convertTimeToInputFormat = (timeString) => {
+    if (timeString) {
+      const parts = timeString.split(":");
+
+      if (parts.length >= 2 && parts.length <= 3) {
+        const hours = parts[0];
+        const minutes = parts[1];
+
+        // If seconds are present, extract and remove fractional seconds
+        const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
+        const parsedTime = dayjs(`${hours}:${minutes}:${seconds}`, "HH:mm");
+
+        // Format the parsed time as desired
+        const formattedTime = parsedTime.format("HH:mm");
+        return `${hours}:${minutes}:${seconds}`;
+      }
+
+      return timeString;
+    }
+
+    return timeString;
+  };
+
+  const convertDobToISO = (dobstring) => {
+    if (dobstring) {
+      const parts = dobstring.split("-");
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      return dobstring;
+    }
+    return dobstring;
+  };
+
+  
+
+
+  const showModalListEmployee = (id, date) => {
+    toast.promise(
+      GetDataCheckInOutByDateAndEmployeeId(id, date + "-" + selectedYear)
+        .then((data) => {
+          console.log('data11',data);
+          
+          setEmployCheckInOut(data);
+          setIsModalOpenListEmployee(true);
+          console.log("employCheck", data);
+          return data;
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            throw toast.error(error.response.data);
+          } else {
+            throw toast.error(error.response.data);
+          }
+        }),
+      {
+        pending: "Đang xử lý",
+      }
+    );
   };
 
   useEffect(() => {
@@ -232,11 +317,13 @@ const Home = () => {
                   );
                   console.log(day.replace(/\s\/\s/, "-"));
                   console.log(dateInfo);
+                  console.log(dateInfo)
                   return (
                     <td key={day}>
                       {dateInfo ? (
                         dateInfo.status === "Yes" ? (
-                          <i>
+                          <i  onClick={() => {showModalListEmployee(employee.employeeId,dateInfo.date);
+                          }}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -312,6 +399,17 @@ const Home = () => {
             ))}
         </tbody>
       </table>
+      <EditEmployee
+          isModalOpenListEmployee={isModalOpenListEmployee}
+          handleCancelListEmployee={handleCancelListEmployee}
+          employCheckInOut={employCheckInOut}
+          convertDobToISO={convertDobToISO}
+          convertTimeToInputFormat={convertTimeToInputFormat}
+          handleOkListEmployee={handleOkListEmployee}
+          UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
+          showModalListEmployee={showModalListEmployee}
+          actionEdit={actionEdit}
+        />
     </div>
   );
 };

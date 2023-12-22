@@ -38,6 +38,8 @@ const TimekeepingComponent = () => {
     department = JSON.parse(sessionStorage.getItem("department")) || [];
   }
 
+  var actionEdit = true
+
   const isProductioneManager = department.includes("Phòng sản xuất");
 
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
@@ -775,6 +777,7 @@ const TimekeepingComponent = () => {
           showModalListEmployee={showModalListEmployee}
           date={date}
           employeeId={employeeId}
+          actionEdit={actionEdit}
         />
       </div>
     </>
