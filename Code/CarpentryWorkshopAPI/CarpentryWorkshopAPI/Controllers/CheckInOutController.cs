@@ -771,7 +771,8 @@ namespace CarpentryWorkshopAPI.Controllers
                          .OrderBy(x => x.Day)
                          .Select(hwd => new
                          {
-                             Date = hwd.Day.Value.ToString("dd'-'MM'-'yyyy"),
+                             HourWorkDayId = hwd.HourWorkDayId, 
+                             Date = hwd.Day.Value.ToString("dd' / 'MM' / 'yyyy"),
                              Status = hwd.Hour >= 6.5 ? "Yes" : "No"
                          })
                          .ToList()
