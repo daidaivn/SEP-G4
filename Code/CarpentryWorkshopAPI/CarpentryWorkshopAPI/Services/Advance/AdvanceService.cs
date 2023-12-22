@@ -101,6 +101,10 @@ namespace CarpentryWorkshopAPI.Services.Advance
             var newAdvance = _mapper.Map<AdvancesSalary>(createAdvanceDTO);
             newAdvance.Date = date;
             newAdvance.Status = true;
+            if (newAdvance.Date.Value.Month < DateTime.Now.Month)
+            {
+                return "Lương ứng này không thể tạo";
+            }
             await _context.AdvancesSalaries.AddAsync(newAdvance);
             await _context.SaveChangesAsync();
             return "Tạo tạm ứng thành công";
@@ -109,6 +113,10 @@ namespace CarpentryWorkshopAPI.Services.Advance
         {
             DateTime date = DateTime.Now.Date;
             var updateAdvance = _mapper.Map<AdvancesSalary>(updateAdvanceDTO);
+            if (updateAdvance.Date.Value.Month < DateTime.Now.Month)
+            {
+                return "Lương ứng này không thể cập nhật";
+            }
             updateAdvance.Date = date;
             updateAdvance.Status = true;
             _context.AdvancesSalaries.Update(updateAdvance);
@@ -125,6 +133,10 @@ namespace CarpentryWorkshopAPI.Services.Advance
             if(advance == null)
             {
                 return "Lỗi dữ liệu";
+            }
+            if(advance.Date.Value.Month < DateTime.Now.Month)
+            {
+                return "Lương ứng này đã không thể xóa";
             }
             _context.AdvancesSalaries.Remove(advance);
             _context.SaveChanges();
