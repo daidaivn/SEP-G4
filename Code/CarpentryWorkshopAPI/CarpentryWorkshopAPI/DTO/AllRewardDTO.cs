@@ -13,6 +13,7 @@
             public string? OccasionType { get; set; }
             public decimal? Amount { get; set; }
             public string? OccasionDateString { get; set; }
+            public string? BonusReason { get; set; }
         }
         public class PR
         {
@@ -22,6 +23,7 @@
             public decimal? BonusAmount { get; set; }
             public string? BonusName { get; set; }
             public string? BonusDatestring { get; set; }
+            public string? BonusReason { get; set; }
         }
         public class CWR
         {
@@ -30,6 +32,7 @@
             public decimal? BonusAmount { get; set; }
             public string? BonusName { get; set; }
             public string? BonusDatestring { get; set; }
+            public string? BonusReason { get; set; }
         }
     }
 }
