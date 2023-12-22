@@ -773,6 +773,7 @@ namespace CarpentryWorkshopAPI.Controllers
                          {
                              HourWorkDayId = hwd.HourWorkDayId, 
                              Date = hwd.Day.Value.ToString("dd' / 'MM"),
+                             Year = hwd.Day.Value.Year,
                              Status = hwd.Hour >= 6.5 ? "Yes" : "No"
                          })
                          .ToList()
