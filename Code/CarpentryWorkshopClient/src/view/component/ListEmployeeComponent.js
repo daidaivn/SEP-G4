@@ -3,6 +3,8 @@ import "../scss/index.scss";
 import "../scss/ListEmployeeComponent.scss";
 import "../scss/responsive/responsive.scss";
 import "../scss/responsive/ListEmployee.scss";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { app } from "../../fireBase/FireBase";
 import "../scss/fonts.scss";
 import { Input, Switch, Form, Space } from "antd";
 import { toast } from "react-toastify";
@@ -89,6 +91,11 @@ function ListEmployeeComponent() {
   const [isEditing, setIsEditing] = useState(false);
   const [roleDepartmentValues, setRoleDepartmentValues] = useState([]);
 
+  const [saveFileContract, setsaveFileContract] = useState("");
+
+  console.log('saveFileContract',saveFileContract);
+  
+
   const handleContractAmountChange = (e) => {
     const formattedValue = e.target.value.replace(/\D/g, "");
     setAmount(formattedValue);
@@ -164,6 +171,9 @@ function ListEmployeeComponent() {
       .catch((error) => {
       });
   };
+
+  console.log('contractLink',contractLink);
+  
 
   const featchEmployeeContract = (value) => {
 
@@ -389,11 +399,35 @@ function ListEmployeeComponent() {
     return true;
   };
 
-  const EditName = () => {
+  const storage = getStorage(app);
+
+  const handleFileChange = () => {
     const isDataContract = validateDataContract();
     if (!isDataContract) {
       return;
     }
+    if (saveFileContract) {
+      const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
+  
+      const storageRef = ref(storage, `contract-files/${fileName}`);
+  
+      uploadBytes(storageRef, saveFileContract)
+        .then((snapshot) => {
+          return getDownloadURL(snapshot.ref);
+        })
+        .then((downloadURL) => {
+          setContractLink(downloadURL);
+          EditName();
+        })
+        .catch((error) => {
+          toast.error("Lỗi lưu file hợp đồng");
+        });
+    }
+  };
+  
+  
+
+  const EditName = () => {
     toast.promise(
       new Promise((resolve) => {
         UpdateContract(
@@ -609,6 +643,7 @@ function ListEmployeeComponent() {
     setAmount("");
     setPreviewImage("")
     setOriginalOffice("")
+    setsaveFileContract("")
   };
 
   const handleCancelView = () => {
@@ -1006,6 +1041,8 @@ function ListEmployeeComponent() {
         handleSearchChange={handleSearchChange}
         employees={employees}
         inputSearch={inputSearch}
+        handleFileChange={handleFileChange}
+        setsaveFileContract={setsaveFileContract}
       />
       <div className="list-text-header-res">
         <h2>Danh sách nhân viên</h2>

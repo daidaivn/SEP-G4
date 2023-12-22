@@ -91,7 +91,9 @@ const ListSearchAndFilter = ({
   allRole,
   handleSearchChange,
   employees,
-  inputSearch
+  inputSearch,
+  handleFileChange,
+  setsaveFileContract
 }) => {
   return (
     <div className="list-search-filter-add">
@@ -468,6 +470,8 @@ const ListSearchAndFilter = ({
           setAmount={setAmount}
           setOriginalOffice={setOriginalOffice}
           originalOffice={originalOffice}
+          handleFileChange={handleFileChange}
+          setsaveFileContract={setsaveFileContract}
         />
       ) : (
         <ViewContractModal
