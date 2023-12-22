@@ -770,8 +770,8 @@ namespace CarpentryWorkshopAPI.Controllers
                          && hwd.Day.Value.Month == month && hwd.Day.Value.Year == year)
                          .OrderBy(x => x.Day)
                          .Select(hwd => new
-                         {
-                             Date = hwd.Day.Value.ToString("dd'-'MM'-'yyyy"),
+                         { 
+                             Date = hwd.Day.Value.ToString("dd'-'MM"),
                              Status = hwd.Hour >= 6.5 ? "Yes" : "No"
                          })
                          .ToList()
