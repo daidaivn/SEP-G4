@@ -352,7 +352,7 @@ namespace CarpentryWorkshopAPI.Controllers
 
                             });
                         }
-                        else if (DateTime.Now > DateIn && DateTime.Now < DateOut
+                        else if (DateTime.Now > DateIn && DateTime.Now < DateOut)
                         {
                             result.Add(new
                             {
