@@ -23,7 +23,7 @@ const ModalAdvance = ({
                 .then((data) => {
                     handleCancelAdvance()
                     FetchAllAdvances()
-                    return toast.error(data);
+                    return toast.success(data);
                 })
                 .catch((error) => {
                     throw toast.error(error.response.data);
@@ -40,7 +40,7 @@ const ModalAdvance = ({
                 .then((data) => {
                     handleCancelAdvance()
                     FetchAllAdvances()
-                    return toast.error(data);
+                    return toast.success(data);
                 })
                 .catch((error) => {
                     throw toast.error(error.response.data);
