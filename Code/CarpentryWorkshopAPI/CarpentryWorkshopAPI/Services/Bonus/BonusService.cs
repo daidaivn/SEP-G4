@@ -91,7 +91,7 @@ namespace CarpentryWorkshopAPI.Services.Bonus
 
 
 
-                _context.CompanyWideBonus.Update(newCR);
+                _context.CompanyWideBonus.Update(UpdateCR);
                 _context.SaveChanges();
 
                 return "Chỉnh sửa thưởng công ty thành công";

@@ -88,7 +88,7 @@ const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusRea
         bonusDatestring: '',
         bonusReason: bonusReason,
     }
-
+    console.log('reward', requestBody);
     return axios.post(`/CWMSapi/Reward/CreateAndEditCompanyReward`,requestBody);
 };
 const GetEmployeeDetailSalary = (eid, EMonth, EYear) => {
