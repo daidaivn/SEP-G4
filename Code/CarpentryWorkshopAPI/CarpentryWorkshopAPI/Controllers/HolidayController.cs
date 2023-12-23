@@ -49,12 +49,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
 
                 var allholidays = holidaysQuery
-                    .GroupBy(x => x.Holiday.HolidayName)
+                    .GroupBy(x => x.HolidayId)
                     .Select(group => new
                     {
                         HolidayDetailID = group.OrderBy(x => x.Date).First().HolidayDetailId,
                         HolidayID = group.First().Holiday.HolidayId,
-                        HolidayName = group.Key,
+                        HolidayName = group.First().Holiday.HolidayName,
                         Date = group.OrderBy(x => x.Date).First().Date.Value.ToString("dd'-'MM'-'yyyy"),
                         NumberOfHoliday = _dayService.CalculateNumberOfHolidays(group)
                     })
