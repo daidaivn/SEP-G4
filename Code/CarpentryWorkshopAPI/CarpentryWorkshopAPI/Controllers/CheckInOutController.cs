@@ -11,7 +11,6 @@ namespace CarpentryWorkshopAPI.Controllers
 {
     [Route("CWMSapi/[controller]/[action]")]
     [ApiController]
-    [Authorize(Roles = "TimeKeeping")]
     public class CheckInOutController : ControllerBase
     {
 
@@ -81,6 +80,7 @@ namespace CarpentryWorkshopAPI.Controllers
         //    }
 
         //}
+        [Authorize(Roles = "TimeKeeping")]
 
         [HttpGet("GetEmployeesByTeamLeaderId/{teamLeaderId}")]
         public async Task<ActionResult<IEnumerable<object>>> GetEmployeesByTeamLeaderIdOrTeamSubLeaderId(int teamLeaderId)
@@ -434,6 +434,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 return time;
             }
         }
+
+        [Authorize(Roles = "TimeKeeping")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEmployeesCheckInOut()
         {
@@ -603,6 +605,9 @@ namespace CarpentryWorkshopAPI.Controllers
         //        return BadRequest("Lỗi dữ liệu");
         //    }
         //}
+
+
+        [Authorize(Roles = "TimeKeeping")]
         [HttpPost]
         public IActionResult AddCheckInOutForEmployee(int employeeId)
         {
@@ -751,6 +756,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.SaveChanges();
             }
         }
+
+        [Authorize(Roles = "Home")]
         [HttpGet]
         public async Task<IActionResult> GetTimeKeepingInfo(int month, int year)
         {

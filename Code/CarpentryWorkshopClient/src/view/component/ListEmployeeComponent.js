@@ -374,8 +374,8 @@ function ListEmployeeComponent() {
 
   const validateDataContract = () => {
     const errors = [];
-    
-  
+
+
     // Existing validations
     if (!contractCode) {
       errors.push("Vui lòng nhập mã hợp đồng.");
@@ -401,7 +401,7 @@ function ListEmployeeComponent() {
         );
       }
     }
-  
+
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -410,7 +410,7 @@ function ListEmployeeComponent() {
     }
     return true;
   };
-  
+
 
 
   const storage = getStorage(app);
@@ -498,7 +498,7 @@ function ListEmployeeComponent() {
       );
     }
   };
-  console.log('saveFileContract',saveFileContract.size);
+  console.log('saveFileContract', saveFileContract.size);
 
   const handleFileChangeAdd = () => {
 
@@ -618,7 +618,7 @@ function ListEmployeeComponent() {
         .then((data) => {
           setIsEditing(false);
           handlelDetail(id);
-          handleSave();
+          handleBack();
           fetchData();
           return toast.success(data);
         })
@@ -1177,7 +1177,7 @@ function ListEmployeeComponent() {
             <Modal
               className="modal-employee"
               visible={isModalOpen}
-              onOk={UpdateEditEmployee}
+              onOk={handleBack}
               onCancel={handleBack}
               width={1252}
             >
@@ -1199,7 +1199,6 @@ function ListEmployeeComponent() {
                         )}
                       </div>
                     </div>
-
                     <div className="modal-child-body2">
                       <div className="div-modal-child2 div-detail div1-modal-child2">
                         <div className="div1-modal-cn">
@@ -1207,17 +1206,19 @@ function ListEmployeeComponent() {
                           <Input
                             value={originalLastName}
                             onChange={(e) => setOriginalLastName(e.target.value)}
+                            placeholder="Nhập họ, tên đệm"
                           />
                         </div>
-                        <div className="div1-modal-cn div2-fix name_reponsive">
+                        <div className="div1-modal-cn div2-fix">
                           <p>Tên:</p>
                           <Input
                             value={originalFirstName}
                             onChange={(e) => setOriginalFirstName(e.target.value)}
+                            placeholder="Nhập tên"
                           />
                         </div>
                       </div>
-                      <div className="div-modal-child2 div-detail">
+                      <div className="div-modal-child2">
                         <p>Số điện thoại:</p>
                         <Input
                           value={originalPhoneNumber}
@@ -1225,6 +1226,7 @@ function ListEmployeeComponent() {
                           placeholder="Nhập số điện thoại"
                         />
                       </div>
+
                       <div className="div-modal-child2">
                         <p>Giới tính: </p>
                         <div className="radio-employee">
@@ -1245,18 +1247,19 @@ function ListEmployeeComponent() {
                         <p>Quốc tịch:</p>
                         <Select
                           className="select-input"
-                          value={originalNationality}
+                          value={originalNationality || undefined}
                           onChange={(value) => setOriginalNationality(value)}
                           style={{
                             width: "100%",
                           }}
+                          placeholder="Chọn quốc tịch"
                           options={countries.map((country) => ({
                             value: country.countryId,
                             label: country.countryName,
                           }))}
                         />
                       </div>
-                      <div className="div-modal-child2 div-detail">
+                      <div className="div-modal-child2 div-detail fix-res">
                         <p>Ngày sinh:</p>
                         <Input
                           type="date"
@@ -1266,7 +1269,7 @@ function ListEmployeeComponent() {
                           }
                         />
                       </div>
-                      <div className="div-modal-child2 div-detail">
+                      <div className="div-modal-child2 div-detail ">
                         <p>Mã định danh: </p>
                         <Input
                           value={originalCIC}
@@ -1284,6 +1287,7 @@ function ListEmployeeComponent() {
                           <Input
                             value={originalTaxId}
                             onChange={(e) => setOriginalTaxId(e.target.value)}
+                            placeholder="Nhập mã số thuế"
                           />
                         </div>
                         <div className="box-child-employee1 div-detail">
@@ -1291,6 +1295,7 @@ function ListEmployeeComponent() {
                           <textarea
                             value={originalAddress}
                             onChange={(e) => setOriginalAddress(e.target.value)}
+                            placeholder="Nhập địa chỉ"
                           />
                         </div>
                       </div>

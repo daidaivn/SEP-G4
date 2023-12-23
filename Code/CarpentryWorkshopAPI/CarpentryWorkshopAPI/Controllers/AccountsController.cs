@@ -59,7 +59,6 @@ namespace CarpentryWorkshopAPI.Controllers
                 var pages = user.Employee.RolesEmployees.Where(re => re.EndDate == null).SelectMany(u => u.Role.Pages).Select(p => p.PageName).Distinct().ToArray();
                 var roles = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Role.RoleName).ToArray();
                 var departments = user.Employee.RolesEmployees.Where(re => re.EndDate == null).Select(u => u.Department.DepartmentName).ToArray();
-                var image = user.Employee.Image;
                 var claims = new List<Claim>
              {
         new Claim(ClaimTypes.Name, user.UserName),
@@ -91,7 +90,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     Department = departments,
                     EmployeeID = employee.EmployeeId,
                     UserAccount = user.UserName,
-                    Image = image,
                 };
 
                 return Ok(loginResponse);
