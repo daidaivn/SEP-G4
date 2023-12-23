@@ -17,11 +17,6 @@ import { createYearOptions, getMonthsInYear } from "../../logicTime/getWeeDays";
 function ListUserHeader() {
   const [employee, setEmployee] = useState([]);
   const [gender, setGender] = useState("Nguyễn Văn An");
-  const [userDetail, setUserDetai] = useState({
-        userName: "",
-        userID:"",
-        userImage: ""
-  });
   
 
   const [capcha, setCapcha] = useState("");
