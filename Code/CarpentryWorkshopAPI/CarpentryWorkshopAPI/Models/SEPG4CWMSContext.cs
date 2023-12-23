@@ -168,7 +168,7 @@ namespace CarpentryWorkshopAPI.Models
             {
                 entity.Property(e => e.ContractId).HasColumnName("ContractID");
 
-                entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
+                entity.Property(e => e.Amount).HasColumnType("decimal(20, 2)");
 
                 entity.Property(e => e.ContractCode).HasMaxLength(20);
 
