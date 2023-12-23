@@ -6,7 +6,7 @@ import "../scss/responsive/ListEmployee.scss";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from "../../fireBase/FireBase";
 import "../scss/fonts.scss";
-import { Input, Switch, Form, Space } from "antd";
+import { Input, Switch, Form, Space, Button } from "antd";
 import { toast } from "react-toastify";
 import { Modal } from "antd";
 import { Radio } from "antd";
@@ -422,8 +422,7 @@ function ListEmployeeComponent() {
           return getDownloadURL(snapshot.ref);
         })
         .then((downloadURL) => {
-          setContractLink(downloadURL);
-          EditName();
+          EditName(downloadURL);
         })
         .catch((error) => {
           toast.error("Lỗi lưu file hợp đồng");
@@ -451,9 +450,7 @@ function ListEmployeeComponent() {
           return getDownloadURL(snapshot.ref);
         })
         .then((downloadURL) => {
-          setContractLink(downloadURL);
-          console.log('downloadURL', downloadURL);
-          AddEmployee();
+          AddEmployee(downloadURL);
         })
         .catch((error) => {
           toast.error("Lỗi lưu file hợp đồng");
@@ -461,7 +458,7 @@ function ListEmployeeComponent() {
     }
   };
 
-  const EditName = () => {
+  const EditName = (downloadURL) => {
     toast.promise(
       new Promise((resolve) => {
         UpdateContract(
@@ -469,7 +466,7 @@ function ListEmployeeComponent() {
           id,
           contractStartDate,
           contractEndDate,
-          contractLink,
+          downloadURL,
           contractStatus,
           contractType,
           contractCode,
@@ -554,7 +551,7 @@ function ListEmployeeComponent() {
     );
   };
 
-  const AddEmployee = () => {
+  const AddEmployee = (downloadURL) => {
     toast.promise(
       CreateEmployee(
         originalLastName,
@@ -572,7 +569,7 @@ function ListEmployeeComponent() {
         originalImage
       )
         .then((data) => {
-          AddContract(data);
+          AddContract(data,downloadURL);
         })
         .catch((error) => {
           throw toast.error(error.response.data);
@@ -583,12 +580,12 @@ function ListEmployeeComponent() {
     );
   };
 
-  const AddContract = (eid) => {
+  const AddContract = (eid,downloadURL) => {
     toast.promise(
       CreateContract(
         eid,
         contractStartDate,
-        contractLink,
+        downloadURL,
         contractStatus,
         contractType,
         contractCode,
@@ -601,7 +598,7 @@ function ListEmployeeComponent() {
           resetOriginalDetail();
         })
         .catch((error) => {
-          console.log('contractLink',error);
+          console.log('contractLink', error);
           throw toast.error(error.response.data);
         }),
       {
@@ -1523,14 +1520,17 @@ function ListEmployeeComponent() {
                   </tr>
                   <tr>
                     <div className="input-date">
-                      <Input
-                        className="select-input"
-                        placeholder="Đường dẫn hợp đồng"
-                        style={{
-                          width: "100%",
+                      <Button
+                        className="download-button"
+                        type="link"
+                        onClick={() => {
+                          if (contractLink) {
+                            window.open(contractLink, '_blank');
+                          }
                         }}
-                        value={contractLink}
-                      />
+                      >
+                        Tải xuống
+                      </Button>
                       <div className="input-date-cn">
                         <p>Trạng thái: </p>
                         <Form.Item valuePropName="checked" className="action">
