@@ -201,7 +201,20 @@ namespace CarpentryWorkshopAPI.Controllers
                                 Timeout = "",
                             });
                         }
-                        else
+                        else if (DateTime.Now.AddMinutes(5) < DateIn)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 7, //Chưa đến ca
+                                CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
+                        else 
                         {
                             result.Add(new
                             {
@@ -364,6 +377,19 @@ namespace CarpentryWorkshopAPI.Controllers
                                 Timeout = "",
                             });
                         }
+                        else if (DateTime.Now.AddMinutes(5) < DateIn)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 7, //Chưa đến ca
+                                CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
                         else 
                         {
                             result.Add(new
@@ -422,8 +448,8 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
                 time.Add(new
                 {
-                    TimeIn = timeIn.ToString("h':'m"),
-                    Timeout = timeOut.ToString("h':'m"),
+                    TimeIn = timeIn.ToString("hh':'mm"),
+                    Timeout = timeOut.ToString("hh':'mm"),
                     Date = DateTime.Now.Date.ToString("dd'-'MM'-'yyyy"),
                     Result = result
                 });
