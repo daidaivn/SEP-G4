@@ -58,7 +58,7 @@ const NewContractModal = ({
                 <div className="input-date">
                   <Select
                     className="select-input"
-                    value={contractType} // Thêm dòng này để hiển thị giá trị từ state
+                    value={contractType || undefined} // Thêm dòng này để hiển thị giá trị từ state
                     style={{
                       width: "100%",
                     }}
@@ -76,9 +76,8 @@ const NewContractModal = ({
                 </div>
               </tr>
               <tr>
-                <p className="salary-contract">Lương hợp đồng:</p>
                 <Input
-                  type="text"
+                  type="number"
                   placeholder="Lương hợp đồng"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
@@ -86,6 +85,7 @@ const NewContractModal = ({
               </tr>
               <tr>
                 <div className="input-date">
+                  <p className="salary-contract">Ngày bắt đầu hợp đồng:</p>
                   <Input
                     className="select-input"
                     placeholder="Thời gian bắt đầu"
@@ -96,13 +96,14 @@ const NewContractModal = ({
                     value={convertDobToISO(contractStartDate)} // Thêm dòng này để hiển thị giá trị từ state
                     onChange={(e) =>
                       setContractStartDate(convertDobToISO(e.target.value))
-                    } // Thêm dòng này để cập nhật giá trị vào state
+                    }
                   />
                 </div>
               </tr>
               <tr>
                 <div className="input-date">
-                  <input type="file" onChange={(e) => setsaveFileContract(e.target.files[0])} />
+                  <p className="salary-contract">Chọn file hợp đồng:</p>
+                  <Input className="select-input" type="file" onChange={(e) => setsaveFileContract(e.target.files[0])} />
                 </div>
               </tr>
             </div>
@@ -114,7 +115,7 @@ const NewContractModal = ({
             Hủy bỏ
           </button>
           <button className="btn-edit btn-save" onClick={handleOkAddContract}>
-            Lưu
+            Xong
           </button>
         </div>
       </div>

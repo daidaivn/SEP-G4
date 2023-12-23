@@ -114,11 +114,12 @@ const AddEmployeeModal = ({
                     <p>Quốc tịch:</p>
                     <Select
                       className="select-input"
-                      value={originalNationality}
+                      value={originalNationality || undefined}
                       onChange={(value) => setOriginalNationality(value)}
                       style={{
                         width: "100%",
                       }}
+                      placeholder="Chọn quốc tịch"
                       options={countries.map((country) => ({
                         value: country.countryId,
                         label: country.countryName,
