@@ -49,6 +49,8 @@ const EditEmployee = ({
       }
     );
   };
+
+
   return (
     <>
       {/* //chinh sua nhan vien */}
@@ -81,6 +83,7 @@ const EditEmployee = ({
             </svg>
           </div>
           <div className="body-add-role-employee">
+            <p>Tổng số giờ làm trong ngày: {employCheckInOut.hour}</p>
             <table className="table-modal-checkin">
               <thead>
                 <td>STT</td>
@@ -88,7 +91,7 @@ const EditEmployee = ({
                 <td>Giờ kết thúc</td>
               </thead>
               <div className="body-table-edit scrollbar" id="style-15">
-                {employCheckInOut.map((employee, index) => (
+                {employCheckInOut.checkInOut?.map((employee, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>

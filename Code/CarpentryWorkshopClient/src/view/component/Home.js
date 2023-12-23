@@ -8,7 +8,7 @@ import {
   GetDataCheckInOutByDateAndEmployeeId,
   UpdateCheckInOutForEmployee,
 } from "../../sevices/TimekeepingService";
-import { EditEmployee } from "./componentCheckIn-Out";
+import { EditEmployee, AddEmployee } from "./componentCheckIn-Out";
 import "../scss/HomeComponent.scss";
 
 import { getMonthsInYear, createYearOptions } from "../logicTime/getWeeDays";
@@ -24,7 +24,17 @@ const Home = () => {
   const [employeeTimeKeepings, setEmployeeTimeKeepins] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
-  var actionEdit = false;
+  const [isModalOpenAddEmployee, setIsModalOpenAddEmployee] = useState(false);
+  const [actionEdit, setActionEdit] = useState(false);
+
+  let department = JSON.parse(localStorage.getItem("department")) || [];
+  if (!department.length) {
+    department = JSON.parse(sessionStorage.getItem("department")) || [];
+  }
+
+  const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
+
+
 
   console.log("months", months);
   console.log("yearOptions", selectedYear);
@@ -57,7 +67,7 @@ const Home = () => {
         console.log("data", data);
         setEmployeeTimeKeepins(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleChangeYear = (newYear) => {
@@ -67,6 +77,11 @@ const Home = () => {
   const handleCancelListEmployee = () => {
     resetEmployeeCheckInOut();
     setIsModalOpenListEmployee(false);
+  };
+
+  const handleCancelAddEmployee = () => {
+    resetEmployeeCheckInOut();
+    setIsModalOpenAddEmployee(false);
   };
 
   const resetEmployeeCheckInOut = () => {
@@ -115,7 +130,6 @@ const Home = () => {
       GetDataCheckInOutByDateAndEmployeeId(id, date + "-" + selectedYear)
         .then((data) => {
           console.log("data11", data);
-
           setEmployCheckInOut(data);
           setIsModalOpenListEmployee(true);
           console.log("employCheck", data);
@@ -133,6 +147,9 @@ const Home = () => {
       }
     );
   };
+
+  console.log('isModalOpenAddEmployee', isModalOpenAddEmployee);
+
 
   useEffect(() => {
     FetchTimeKeepingInfo();
@@ -324,6 +341,9 @@ const Home = () => {
                         dateInfo.status === "Yes" ? (
                           <i
                             onClick={() => {
+                              if (isHumanResourcesDepartment) {
+                                setActionEdit(true);
+                              }
                               showModalListEmployee(
                                 employee.employeeId,
                                 dateInfo.date
@@ -348,6 +368,9 @@ const Home = () => {
                         ) : dateInfo.status === "No" ? (
                           <i
                             onClick={() => {
+                              if (isHumanResourcesDepartment) {
+                                setActionEdit(true);
+                              }
                               showModalListEmployee(
                                 employee.employeeId,
                                 dateInfo.date
@@ -370,7 +393,7 @@ const Home = () => {
                             </svg>
                           </i>
                         ) : (
-                          <i>
+                          <i                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -388,7 +411,13 @@ const Home = () => {
                           </i>
                         )
                       ) : (
-                        <i>
+                        <i
+                          onClick={() => {
+                            if (isHumanResourcesDepartment) {
+                              setIsModalOpenAddEmployee(true);
+                            }
+                          }}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="17"
@@ -422,6 +451,14 @@ const Home = () => {
         UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
         showModalListEmployee={showModalListEmployee}
         actionEdit={actionEdit}
+      />
+
+      <AddEmployee
+        handleCancelListEmployee={handleCancelListEmployee}
+        employCheckInOut={employCheckInOut}
+        convertTimeToInputFormat={convertTimeToInputFormat}
+        isModalOpenAddEmployee={isModalOpenAddEmployee}
+        handleCancelAddEmployee={handleCancelAddEmployee}
       />
     </div>
   );
