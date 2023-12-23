@@ -241,10 +241,6 @@ function ListEmployeeComponent() {
       errors.push("Email không hợp lệ.");
     }
 
-    if (!saveFileContract) {
-      errors.push("Vui lòng chọn hợp đồng");
-    }
-
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -412,49 +408,108 @@ function ListEmployeeComponent() {
     if (!isDataContract) {
       return;
     }
+  
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
-
       const storageRef = ref(storage, `contract-files/${fileName}`);
-
+  
       uploadBytes(storageRef, saveFileContract)
-        .then((snapshot) => {
-          return getDownloadURL(snapshot.ref);
-        })
+        .then((snapshot) => getDownloadURL(snapshot.ref))
         .then((downloadURL) => {
-          EditName(downloadURL);
+          toast.promise(
+            new Promise((resolve) => {
+              UpdateContract(
+                contractId,
+                id,
+                contractStartDate,
+                contractEndDate,
+                downloadURL,
+                contractStatus,
+                contractType,
+                contractCode,
+                contractImage,
+                amount,
+                originalOffice
+              )
+                .then((data) => {
+                  resolve(data);
+                  handleSaveContract();
+                  handlelDetail(id);
+                })
+                .catch((error) => {
+                  resolve(Promise.reject(error));
+                });
+            }),
+            {
+              pending: "Đang xử lý",
+              success: "Cập nhật hợp đồng thành công",
+              error: "Lỗi cập nhật hợp đồng",
+            }
+          );
         })
         .catch((error) => {
           toast.error("Lỗi lưu file hợp đồng");
         });
+    } else {
+      // No file selected, proceed with the contract update without downloadURL
+      toast.promise(
+        new Promise((resolve) => {
+          UpdateContract(
+            contractId,
+            id,
+            contractStartDate,
+            contractEndDate,
+            "", 
+            contractStatus,
+            contractType,
+            contractCode,
+            contractImage,
+            amount,
+            originalOffice
+          )
+            .then((data) => {
+              resolve(data);
+              handleSaveContract();
+              handlelDetail(id);
+            })
+            .catch((error) => {
+              console.log('error',error);
+              
+              resolve(Promise.reject(error));
+            });
+        }),
+        {
+          pending: "Đang xử lý",
+          success: "Cập nhật hợp đồng thành công",
+          error: "Lỗi cập nhật hợp đồng",
+        }
+      );
     }
   };
-
 
   const handleFileChangeAdd = () => {
     const isDataValid = validateData();
     const isDataDepartment = validateDataDepartment();
     const isDataContract = validateDataContract();
-
+  
     if (!isDataValid || !isDataDepartment || !isDataContract) {
       return;
     }
+  
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
-      console.log('qqqq');
-
       const storageRef = ref(storage, `contract-files/${fileName}`);
-
+  
       uploadBytes(storageRef, saveFileContract)
-        .then((snapshot) => {
-          return getDownloadURL(snapshot.ref);
-        })
+        .then((snapshot) => getDownloadURL(snapshot.ref))
         .then((downloadURL) => {
           AddEmployee(downloadURL);
         })
         .catch((error) => {
           toast.error("Lỗi lưu file hợp đồng");
         });
+    } else {
+      AddEmployee("");
     }
   };
 
@@ -569,7 +624,7 @@ function ListEmployeeComponent() {
         originalImage
       )
         .then((data) => {
-          AddContract(data,downloadURL);
+          AddContract(data, downloadURL);
         })
         .catch((error) => {
           throw toast.error(error.response.data);
@@ -580,7 +635,7 @@ function ListEmployeeComponent() {
     );
   };
 
-  const AddContract = (eid,downloadURL) => {
+  const AddContract = (eid, downloadURL) => {
     toast.promise(
       CreateContract(
         eid,
@@ -1467,16 +1522,20 @@ function ListEmployeeComponent() {
                 <thead className="thead-first"></thead>
                 <div className="body-table body-table-contract">
                   <tr>
-                    <Input
-                      className="select-input"
-                      placeholder="Mã hợp đồng"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                      value={contractCode}
-                    />
                     <div className="input-date">
+                      <p className="salary-contract salary-file">Loại hợp đồng:</p>
+                      <Input
+                        className="select-input"
+                        placeholder="Mã hợp đồng"
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                        }}
+                        value={contractCode}
+                      />
+                    </div>
+                    <div className="input-date">
+                      <p className="salary-contract salary-file">Loại hợp đồng:</p>
                       <Input
                         className="select-input"
                         value={contract.contractTypeName}
@@ -1487,15 +1546,18 @@ function ListEmployeeComponent() {
                     </div>
                   </tr>
                   <tr>
-                    <p className="salary-contract">Lương hợp đồng:</p>
-                    <Input
-                      type="text"
-                      placeholder="Lương hợp đồng"
-                      value={contract.amount}
-                    ></Input>
+                    <div className="input-date">
+                      <p className="salary-contract">Lương hợp đồng:</p>
+                      <Input
+                        type="text"
+                        placeholder="Lương hợp đồng"
+                        value={contract.amount}
+                      ></Input>
+                    </div>
                   </tr>
                   <tr>
                     <div className="input-date">
+                      <p className="salary-contract">Ngày bắt đầu hợp đồng:</p>
                       <Input
                         className="select-input"
                         placeholder="Thời gian bắt đầu"
@@ -1506,7 +1568,10 @@ function ListEmployeeComponent() {
                         value={convertDobToISO(contractStartDate)}
                       />
                     </div>
+                  </tr>
+                  <tr>
                     <div className="input-date">
+                      <p className="salary-contract">Ngày kết thúc hợp đồng:</p>
                       <Input
                         className="select-input"
                         placeholder="Thời gian kết thúc"
@@ -1520,17 +1585,20 @@ function ListEmployeeComponent() {
                   </tr>
                   <tr>
                     <div className="input-date">
-                      <Button
-                        className="download-button"
-                        type="link"
-                        onClick={() => {
-                          if (contractLink) {
-                            window.open(contractLink, '_blank');
-                          }
-                        }}
-                      >
-                        Tải xuống
-                      </Button>
+                      <p className="salary-contract salary-file">File hợp đồng:</p>
+                      <div className="input-date-cn">
+                        <Button
+                          className="download-button select-input"
+                          type="link"
+                          onClick={() => {
+                            if (contractLink) {
+                              window.open(contractLink, '_blank');
+                            }
+                          }}
+                        >
+                          Xem - Tải xuống
+                        </Button>
+                      </div>
                       <div className="input-date-cn">
                         <p>Trạng thái: </p>
                         <Form.Item valuePropName="checked" className="action">

@@ -89,7 +89,7 @@ const NewRoleDepartmentModal = ({
             Hủy bỏ
           </button>
           <button className="btn-edit btn-save" onClick={handleOkAddRole}>
-            Lưu
+            Xong
           </button>
         </div>
       </div>

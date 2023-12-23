@@ -48,17 +48,21 @@ const EditContractModal = ({
             <thead className="thead-first"></thead>
             <div className="body-table body-table-contract">
               <tr>
-                <Input
-                  className="select-input"
-                  placeholder="Mã hợp đồng"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                  }}
-                  value={contractCode} // Thêm dòng này để hiển thị giá trị từ state
-                  onChange={(e) => setContractCode(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
-                />
                 <div className="input-date">
+                  <p className="salary-contract salary-file">Mã hợp đồng:</p>
+                  <Input
+                    className="select-input"
+                    placeholder="Mã hợp đồng"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                    value={contractCode} // Thêm dòng này để hiển thị giá trị từ state
+                    onChange={(e) => setContractCode(e.target.value)} // Thêm dòng này để cập nhật giá trị vào state
+                  />
+                </div>
+                <div className="input-date">
+                  <p className="salary-contract salary-file">Loại hợp đồng:</p>
                   <Select
                     className="select-input"
                     value={contractType} // Thêm dòng này để hiển thị giá trị từ state
@@ -78,11 +82,14 @@ const EditContractModal = ({
                 </div>
               </tr>
               <tr>
-                <p className="salary-contract">Lương hợp đồng:</p>
-                <Input type="text" placeholder="Lương hợp đồng" value={amount} onChange={handleContractAmountChange}></Input>
+                <div className="input-date">
+                  <p className="salary-contract">Lương hợp đồng:</p>
+                  <Input type="text" placeholder="Lương hợp đồng" value={amount} onChange={handleContractAmountChange}></Input>
+                </div>
               </tr>
               <tr>
                 <div className="input-date">
+                  <p className="salary-contract">Ngày bắt đầu hợp đồng:</p>
                   <Input
                     className="select-input"
                     placeholder="Thời gian bắt đầu"
@@ -90,7 +97,7 @@ const EditContractModal = ({
                     style={{
                       width: "100%",
                     }}
-                    value={convertDobToISO(contractStartDate)} // Thêm dòng này để hiển thị giá trị từ state
+                    value={convertDobToISO(contractStartDate) || undefined} // Thêm dòng này để hiển thị giá trị từ state
                     onChange={(e) =>
                       setContractStartDate(convertDobToISO(e.target.value))
                     } // Thêm dòng này để cập nhật giá trị vào state
