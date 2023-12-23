@@ -15,16 +15,22 @@ const RewardAll = ({
   featchDataReward,
   setIsModalOpenRewardAll,
   validateData,
+  actionEdit,
+  employeeInput,
 }) => {
   const handleOkRewardAll = () => {
     const isDataValid = validateData();
-
+    
     if (!isDataValid) {
       return;
     }
+    let id = 0;
+    if(actionEdit == "RewardAllEdit") {
+      id = employeeInput.id; 
+    }
     toast.promise(
       new Promise((resolve) => {
-      CreateAndUpdateCompanyRerward(0,bonusAmount,bonusName,bonusReason)
+      CreateAndUpdateCompanyRerward(id,bonusAmount,bonusName,bonusReason)
           .then((data) => {
             resolve(data);
             resetPersonDetail();

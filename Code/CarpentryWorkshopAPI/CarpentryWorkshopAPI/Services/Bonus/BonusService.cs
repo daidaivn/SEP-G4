@@ -4,6 +4,7 @@ using CarpentryWorkshopAPI.IServices.IBonus;
 using CarpentryWorkshopAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CarpentryWorkshopAPI.Services.Bonus
 {
@@ -73,21 +74,22 @@ namespace CarpentryWorkshopAPI.Services.Bonus
             }
             else
             {
-
-                CompanyWideBonu newCR = new CompanyWideBonu()
+                var UpdateCR = _context.CompanyWideBonus.Where(re=>re.CompanyBonusId== companyRewardDTO.CompanyBonusId).FirstOrDefault();
+                if (UpdateCR == null)
                 {
-                    CompanyBonusId = companyRewardDTO.CompanyBonusId,
-                    BonusAmount = companyRewardDTO.BonusAmount,
-                    BonusName = companyRewardDTO.BonusName,
-                    BonusReason = companyRewardDTO.BonusReason,
-                };
-                if (!string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
+                    return "không có thông tin";
+                }
+                UpdateCR.BonusName = companyRewardDTO.BonusName;
+                UpdateCR.BonusReason = companyRewardDTO.BonusReason;
+                UpdateCR.BonusAmount= companyRewardDTO.BonusAmount;
+                UpdateCR.BonusDate = !string.IsNullOrEmpty(companyRewardDTO.BonusDatestring) &&
                                    DateTime.TryParseExact(companyRewardDTO.BonusDatestring, "dd-MM-yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture,
-                                   System.Globalization.DateTimeStyles.None, out var parsedDate))
-                {
-                    newCR.BonusDate = parsedDate;
-                }
+                                   System.Globalization.DateTimeStyles.None, out var parsedDate) 
+                ? parsedDate
+                : UpdateCR.BonusDate;
+
+
 
                 _context.CompanyWideBonus.Update(newCR);
                 _context.SaveChanges();
@@ -108,14 +110,21 @@ namespace CarpentryWorkshopAPI.Services.Bonus
             }
             else
             {
-                var newPR = _mapper.Map<Models.SpecialOccasion>(specialOccasionDTO);
-                if (DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
-                                       System.Globalization.CultureInfo.InvariantCulture,
-                                       System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                var newPR = _context.SpecialOccasions.FirstOrDefault(sp=>sp.OccasionId == specialOccasionDTO.OccasionId);
+                if (newPR == null)
                 {
-                    newPR.OccasionDate = parsedDate;
+                    return "không có thông tin";
                 }
-                newPR.OccasionDate = parsedDate;
+                newPR.OccasionDate = !string.IsNullOrEmpty(specialOccasionDTO.OccasionDateString) &&
+                                   DateTime.TryParseExact(specialOccasionDTO.OccasionDateString, "dd-MM-yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture,
+                                   System.Globalization.DateTimeStyles.None, out var parsedDate)
+                ? parsedDate
+                : newPR.OccasionDate;
+                newPR.OccasionNote = specialOccasionDTO.OccasionNote;
+                newPR.OccasionType = specialOccasionDTO.OccasionType;
+                newPR.EmployeeId = specialOccasionDTO.EmployeeId;
+                newPR.Amount= specialOccasionDTO.Amount;
                 _context.SpecialOccasions.Update(newPR);
                 _context.SaveChanges();
                 return "Chỉnh sửa hiếu hỉ thành công";
