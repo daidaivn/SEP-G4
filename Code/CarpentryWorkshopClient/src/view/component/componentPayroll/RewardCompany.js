@@ -126,7 +126,7 @@ const RewardCompany = ({
                         </div>
                         <div
                           className="child-reward last1"
-                          onClick={() => {showModalRewardAllEdit(item.id, item.bonusName ,item.bonusAmount, item.bonusReason , item.bonusDatestring)}}
+                          onClick={() => {showModalRewardAllEdit(item.companyBonusId, item.bonusName ,item.bonusAmount, item.bonusReason , item.bonusDatestring)}}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
