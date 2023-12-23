@@ -122,4 +122,14 @@
   .item-modal Input {
     font-size: 18px !important;
   }
+  .item-modal Input{
+    height: 47px;
+  }
+  .modal-detail-all .body-modal{
+    gap: 20px;
+  }
+  .calender-modal .ant-modal-content{
+    right: -82px !important;
+    top: -88px !important;
+  }
 }

@@ -176,20 +176,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     }
                     else if (checkInTime == null)
                     {
-                        if (DateTime.Now > DateIn)
-                        {
-                            result.Add(new
-                            {
-                                EmployeeId = employee.EmployeeId,
-                                Name = employee.LastName + " " + employee.FirstName,
-                                Status = 3, //Vắng mặt
-                                CheckStatus = "CheckIn",
-                                TimeIn = "",
-                                Timeout = "",
-
-                            });
-                        }
-                        else if (DateTime.Now > DateOut)
+                        if (DateTime.Now > DateOut)
                         {
                             result.Add(new
                             {
@@ -197,6 +184,19 @@ namespace CarpentryWorkshopAPI.Controllers
                                 Name = employee.LastName + " " + employee.FirstName,
                                 Status = 6,//tan ca 
                                 CheckStatus = "EndCheck",
+                                TimeIn = "",
+                                Timeout = "",
+
+                            });
+                        }
+                        else if (DateTime.Now > DateIn && DateTime.Now < DateOut)
+                        {
+                            result.Add(new
+                            {
+                                EmployeeId = employee.EmployeeId,
+                                Name = employee.LastName + " " + employee.FirstName,
+                                Status = 3, //Vắng mặt
+                                CheckStatus = "CheckIn",
                                 TimeIn = "",
                                 Timeout = "",
                             });
@@ -668,6 +668,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     
                     if (checkInOut != null)
                     {
+                        
                         if(string.IsNullOrEmpty(checkInOutDTO.CheckOut) && string.IsNullOrEmpty(checkInOutDTO.CheckIn))
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
@@ -677,6 +678,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
+                        }
+                        var checKInOutDay = _context.CheckInOuts.Where(ce => ce.Date == checkInOut.Date && ce.CheckInOutId != checkInOutDTO.Id && (ce.TimeCheckIn.Value >= checkInOut.TimeCheckIn || ce.TimeCheckOut <= checkInOut.TimeCheckOut)).ToList();
+                        if (checKInOutDay.Count() > 0)
+                        {
+                            return BadRequest("Dữ liệu không hợp lệ");
                         }
                         _context.CheckInOuts.Update(checkInOut);
                         _context.SaveChanges();

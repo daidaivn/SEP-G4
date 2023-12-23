@@ -28,15 +28,17 @@ import {
   createYearOptions,
   getWeekRange,
   createWeekOptions,
+  createYearOptionsHoliday
 } from "../logicTime/getWeeDays";
 import Item from "antd/es/list/Item";
 const CalendarComponent = () => {
-  const yearOptions = createYearOptions();
-  const weekOptions = createWeekOptions();
+  const yearOptions = createYearOptionsHoliday();
   const currentWeek = getWeekRange(new Date());
   const defaultValue = `${currentWeek.start}-${currentWeek.end}`;
   const [selectedWeek, setSelectedWeek] = useState(defaultValue);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const weekOptions = createWeekOptions(selectedYear);
+
   const [dataForSchedule, setDataForSchedule] = useState();
   const [actionWork, setActionWork] = useState();
   const [isModalOpenListShift, setIsModalOpenListShift] = useState(false);
@@ -288,7 +290,6 @@ const CalendarComponent = () => {
       })
       .catch((error) => {
       });
-
   }
 
   useEffect(() => {

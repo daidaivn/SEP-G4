@@ -24,6 +24,9 @@ const TableCalendar = ({
     ? parseWeekRange(selectedWeek)
     : parseWeekRange(defaultValue);
 
+    console.log('selectedWeek',selectedWeek);
+    
+
   return (
     <table className="list-table-calendar">
       <thead>
@@ -116,9 +119,10 @@ const TableCalendar = ({
                               const columnIndex = workIndex;
                               const selectedDate = weekDays[columnIndex];
                               const formattedDate = format(
-                                parse(selectedDate, "dd/MM", new Date()),
+                                parse(selectedDate, "MM/dd", new Date()),
                                 "dd-MM-yyyy"
                               );
+                              console.log("date", formattedDate);
                               setWorkDetailById({
                                 date: formattedDate,
                               });
