@@ -759,7 +759,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Dữ liệu không thể chỉnh sửa");
                 }
-                checkInOut.Date = DateTime.ParseExact(checkInOutAddDTO.Datestring, "dd-MM-yyyy",
+                checkInOut.Date = DateTime.ParseExact(checkInOutAddDTO.Datestring, "dd/MM/yyyy",
                            System.Globalization.CultureInfo.InvariantCulture);
                         _context.CheckInOuts.Add(checkInOut);
                         _context.SaveChanges();

@@ -26,15 +26,14 @@ const Home = () => {
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const [isModalOpenAddEmployee, setIsModalOpenAddEmployee] = useState(false);
   const [actionEdit, setActionEdit] = useState(false);
-
+  const [date, setDate] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
   let department = JSON.parse(localStorage.getItem("department")) || [];
   if (!department.length) {
     department = JSON.parse(sessionStorage.getItem("department")) || [];
   }
 
   const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
-
-
 
   console.log("months", months);
   console.log("yearOptions", selectedYear);
@@ -67,7 +66,7 @@ const Home = () => {
         console.log("data", data);
         setEmployeeTimeKeepins(data);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const handleChangeYear = (newYear) => {
@@ -93,15 +92,14 @@ const Home = () => {
       const parts = timeString.split(":");
 
       if (parts.length >= 2 && parts.length <= 3) {
-        const hours = parts[0];
-        const minutes = parts[1];
+        const hours = parts[0].padStart(2, "0"); // Ensure two-digit representation
+        const minutes = parts[1].padStart(2, "0"); // Ensure two-digit representation
 
         // If seconds are present, extract and remove fractional seconds
-        const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
-        const parsedTime = dayjs(`${hours}:${minutes}:${seconds}`, "HH:mm");
-
-        // Format the parsed time as desired
-        const formattedTime = parsedTime.format("HH:mm");
+        const seconds =
+          parts.length === 3 ? parts[2].split(".")[0].padStart(2, "0") : "00";
+        console.log('time', `${hours}:${minutes}:${seconds}`);
+        // Format the parsed time as "HH:mm:ss"
         return `${hours}:${minutes}:${seconds}`;
       }
 
@@ -126,6 +124,8 @@ const Home = () => {
   };
 
   const showModalListEmployee = (id, date) => {
+    setDate(date);
+    setEmployeeId(id);
     toast.promise(
       GetDataCheckInOutByDateAndEmployeeId(id, date + "-" + selectedYear)
         .then((data) => {
@@ -148,8 +148,7 @@ const Home = () => {
     );
   };
 
-  console.log('isModalOpenAddEmployee', isModalOpenAddEmployee);
-
+  console.log("isModalOpenAddEmployee", isModalOpenAddEmployee);
 
   useEffect(() => {
     FetchTimeKeepingInfo();
@@ -393,7 +392,7 @@ const Home = () => {
                             </svg>
                           </i>
                         ) : (
-                          <i                          >
+                          <i>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -450,7 +449,10 @@ const Home = () => {
         handleOkListEmployee={handleOkListEmployee}
         UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
         showModalListEmployee={showModalListEmployee}
+        date={date}
+        employeeId={employeeId}
         actionEdit={actionEdit}
+        setEmployCheckInOut={setEmployCheckInOut}
       />
 
       <AddEmployee
