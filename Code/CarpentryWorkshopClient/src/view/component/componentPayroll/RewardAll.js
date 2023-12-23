@@ -20,31 +20,27 @@ const RewardAll = ({
 }) => {
   const handleOkRewardAll = () => {
     const isDataValid = validateData();
-    
+
     if (!isDataValid) {
       return;
     }
     let id = 0;
-    if(actionEdit == "RewardAllEdit") {
-      id = employeeInput.id; 
+    if (actionEdit == "RewardAllEdit") {
+      id = employeeInput.id;
     }
     toast.promise(
-      new Promise((resolve) => {
-      CreateAndUpdateCompanyRerward(id,bonusAmount,bonusName,bonusReason)
-          .then((data) => {
-            resolve(data);
-            resetPersonDetail();
-            featchDataReward();
-            setIsModalOpenRewardAll(false);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
+      CreateAndUpdateCompanyRerward(id, bonusAmount, bonusName, bonusReason)
+        .then((data) => {
+          resetPersonDetail();
+          featchDataReward();
+          setIsModalOpenRewardAll(false);
+          return toast.success(data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
-        success:"add company success",
         pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
       }
     );
   };
@@ -68,11 +64,19 @@ const RewardAll = ({
           <div className="body-modal">
             <div className="item-modal">
               <p>Loại thưởng</p>
-              <Input type="text" value={bonusName} onChange={(e)=>setBonusName(e.target.value)}></Input>
+              <Input
+                type="text"
+                value={bonusName}
+                onChange={(e) => setBonusName(e.target.value)}
+              ></Input>
             </div>
             <div className="item-modal">
               <p>Số tiền thưởng:</p>
-              <Input type="text" value={bonusAmount} onChange={handleBonusAmountChange}></Input>
+              <Input
+                type="text"
+                value={bonusAmount}
+                onChange={handleBonusAmountChange}
+              ></Input>
             </div>
             <div className="item-modal">
               <p>Chi tiết thưởng</p>
@@ -80,7 +84,7 @@ const RewardAll = ({
                 type="text"
                 placeholder="Ví lý do gì đấy nên được thưởng các quyền lợi"
                 value={bonusReason}
-                onChange={(e)=>setBonusReason(e.target.value)}
+                onChange={(e) => setBonusReason(e.target.value)}
               ></Input>
             </div>
 
