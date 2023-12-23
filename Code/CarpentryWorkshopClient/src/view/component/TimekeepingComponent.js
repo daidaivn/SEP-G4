@@ -44,7 +44,7 @@ const TimekeepingComponent = () => {
 
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const showModalListEmployee = (id, date1) => {
-    console.log('date1',date1);
+    console.log('date1', date1);
     setDate(date1);
     setEmployeeId(id);
     toast.promise(
@@ -168,7 +168,7 @@ const TimekeepingComponent = () => {
     fetchAllCheckInOut(userEmployeeID)
       .then((data) => {
         setChecksInOut(data);
-        console.log('checkInoutData',data);
+        console.log('checkInoutData', data);
         setChecksInOutData(data);
         isDataLoaded = true;
         if (toastId) {
@@ -391,7 +391,11 @@ const TimekeepingComponent = () => {
               <td>Mã nhân viên</td>
               <td>Trạng thái</td>
               <td>Chi tiết điểm danh</td>
-              <td>Hành động</td>
+              {checksInOut[0].checkStatus !== "CheckOut" && checksInOut[0].checkStatus !== "CheckIn" ? (
+                <></>
+              ) : (
+                <td>Hành động</td>
+              )}
             </tr>
           </thead>
           {checksInOut.length === 0 ? (
@@ -618,27 +622,41 @@ const TimekeepingComponent = () => {
                     >
                       Chỉnh sửa
                     </td>
-                    <td>
-                      {employee.checkStatus === "CheckIn" ? (
-                        <span
-                          className="enter"
-                          onClick={() => handleCheckStart(employee.employeeId)}
+                    {employee.checkStatus !== "CheckOut" && employee.checkStatus !== "CheckIn" ? (
+                      <></>
+                    ) : (
+                      <>
+                        <td
+                          onClick={() => {
+                            checksInOut.map((dateString) =>
+                              showModalListEmployee(employee.employeeId, dateString.date)
+                            );
+                          }}
                         >
-                          <p>Bắt đầu</p>
-                        </span>
-                      ): employee.checkStatus === "CheckOut" ? (
-                        <span
-                          className="go-out"
-                          onClick={() => handleCheckStart(employee.employeeId)}
-                        >
-                          <p>Ngưng</p>
-                        </span>
-                      ) :  (
-                        <span className="go-out">
-                          <p>Ca đã kết thúc</p>
-                        </span>
-                      )}
-                    </td>
+                          Chỉnh sửa
+                        </td>
+                        <td>
+                          {employee.checkStatus === "CheckIn" ? (
+                            <span
+                              className="enter"
+                              onClick={() => handleCheckStart(employee.employeeId)}
+                            >
+                              <p>Bắt đầu</p>
+                            </span>
+                          ) : employee.checkStatus === "CheckOut" ? (
+                            <span
+                              className="go-out"
+                              onClick={() => handleCheckStart(employee.employeeId)}
+                            >
+                              <p>Ngưng</p>
+                            </span>
+                          ) : (
+                            <></>
+                          )}
+                        </td>
+                      </>
+                    )}
+
                   </tr>
                 ))}
             </tbody>
