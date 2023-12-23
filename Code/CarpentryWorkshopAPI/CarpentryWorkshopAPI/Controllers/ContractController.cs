@@ -228,12 +228,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return StatusCode(409, "Đường dẫn hợp đồng đã tồn tại");
                 }
-                if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
-                {
-                    return StatusCode(409, "Đường dẫn chưa được triển khai");
-                }
-                else
-                {
+                //if (_linkService.UrlIsValid(createContractDTO.LinkDoc, "https://www.google.com/drive/") == false)
+                //{
+                //    return StatusCode(409, "Đường dẫn chưa được triển khai");
+                //}
+                //else
+                //{
                     var months = await _context.ContractTypes
                         .Where(x => x.ContractTypeId == createContractDTO.ContractTypeID)
                         .Select(x => x.Month)
@@ -245,7 +245,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         return NotFound("Không tìm thấy dữ liệu");
                     }
                     _context.Contracts.Update(updatect);
-                }
+                //}
                 ContractsStatusHistory newhistory = new ContractsStatusHistory
                 {
                     ContractId = updatect.ContractId,
