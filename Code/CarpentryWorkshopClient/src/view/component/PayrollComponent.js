@@ -306,7 +306,18 @@ const PayrollComponent = () => {
   const showModalRewardAll = () => {
     setIsModalOpenRewardAll(true);
   };
-
+  const showModalRewardAllEdit = (id, name, Amount, bonusNote, date) => {
+    setActionEdit("RewardAllEdit");
+    setIsModalOpenRewardAll(true);
+    setBonusName(name);
+    setBonusAmount(Amount);
+    setEmployeeInput({
+      id: id,
+      bonusDate: date,
+    }
+    );
+    setBonusReason(bonusNote);
+  };
   //modal Các loại thưởng
   const [isModalOpenTypeReward, setIsModalOpenTypeReward] = useState(false);
   const showModalTypeReward = () => {
@@ -549,6 +560,7 @@ const PayrollComponent = () => {
           date={date}
           setDate={setDate}
           showModalRewardPersonalEdit={showModalRewardPersonalEdit}
+          showModalRewardAllEdit={showModalRewardAllEdit}
         />
         <RewardAll
           isModalOpenRewardAll={isModalOpenRewardAll}
@@ -563,6 +575,8 @@ const PayrollComponent = () => {
           featchDataReward={featchDataReward}
           setIsModalOpenRewardAll={setIsModalOpenRewardAll}
           validateData={validateData}
+          actionEdit={actionEdit}
+          employeeInput={employeeInput}
         />
         <TypeReward
           isModalOpenTypeReward={isModalOpenTypeReward}
