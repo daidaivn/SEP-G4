@@ -19,15 +19,6 @@ const CreateContract = (
   amount,
 ) => {
 
-  console.log('id',id);
-  console.log('contractStartDate',contractStartDate);
-  console.log('contractLink',contractLink);
-  console.log('contractStatus',contractStatus);
-  console.log('contractType',contractType);
-  console.log('contractCode',contractCode);
-  console.log('amount',amount);
-  
-
   const eid = id;
   const requestBody = {
     startDatestring: contractStartDate,
@@ -37,9 +28,6 @@ const CreateContract = (
     contractCode: contractCode,
     amount: Number(amount),
   };
-  console.log('requestBody',requestBody);
-  
-
   return axios.post(
     `/CWMSapi/Contract/CreateContract?employeeid=${eid}`,
     requestBody
@@ -59,6 +47,9 @@ const UpdateContract = (
   amount,
   originalOffice
 ) => {
+
+  console.log('lDoc',lDoc);
+  
   const requestBody = {
     contractId: cId,
     employeeId: eid,
