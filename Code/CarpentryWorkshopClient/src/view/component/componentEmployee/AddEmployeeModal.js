@@ -85,7 +85,7 @@ const AddEmployeeModal = ({
                       />
                     </div>
                   </div>
-                  <div className="div-modal-child2 div-detail">
+                  <div className="div-modal-child2">
                     <p>Số điện thoại:</p>
                     <Input
                       value={originalPhoneNumber}
