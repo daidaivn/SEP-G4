@@ -59,16 +59,17 @@ const RewardCompany = ({
                 <td className="last">Ngày khen thưởng</td>
                 <td className="last">Chỉnh sửa</td>
               </thead>
+              <div className="scrollable-container">
               {reward &&
-              reward.personalRewardList &&
-              Array.isArray(reward.personalRewardList) &&
-              reward.personalRewardList.length === 0 &&
-              reward.companyRewardList &&
-              Array.isArray(reward.companyRewardList) &&
-              reward.companyRewardList.length === 0 &&
-              reward.specialOcationList &&
-              Array.isArray(reward.specialOcationList) &&
-              reward.specialOcationList.length === 0 ? (
+                reward.personalRewardList &&
+                Array.isArray(reward.personalRewardList) &&
+                reward.personalRewardList.length === 0 &&
+                reward.companyRewardList &&
+                Array.isArray(reward.companyRewardList) &&
+                reward.companyRewardList.length === 0 &&
+                reward.specialOcationList &&
+                Array.isArray(reward.specialOcationList) &&
+                reward.specialOcationList.length === 0 ? (
                 <p>Thông tin chưa sẵn sàng hoặc không tồn tại.</p>
               ) : (
                 <React.Fragment>
@@ -91,7 +92,7 @@ const RewardCompany = ({
                         </div>
                         <div
                           className="child-reward last1"
-                          onClick={()=>{showModalHolidayEdit(item.occasionId, item.occasionType, item.amount, item.employeeId, item.beneficiary, item.bonusReason, item.occasionDateString)}}
+                          onClick={() => { showModalHolidayEdit(item.occasionId, item.occasionType, item.amount, item.employeeId, item.beneficiary, item.bonusReason, item.occasionDateString) }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +128,7 @@ const RewardCompany = ({
                         </div>
                         <div
                           className="child-reward last1"
-                          onClick={() => {showModalRewardAllEdit(item.companyBonusId, item.bonusName ,item.bonusAmount, item.bonusReason , item.bonusDatestring)}}
+                          onClick={() => { showModalRewardAllEdit(item.companyBonusId, item.bonusName, item.bonusAmount, item.bonusReason, item.bonusDatestring) }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +164,7 @@ const RewardCompany = ({
                         </div>
                         <div
                           className="child-reward last1"
-                          onClick={() => {showModalRewardPersonalEdit(item.bonusId, item.bonusName, item.bonusAmount, item.employeeId, item.beneficiary, item.bonusReason, item.bonusDatestring)}}
+                          onClick={() => { showModalRewardPersonalEdit(item.bonusId, item.bonusName, item.bonusAmount, item.employeeId, item.beneficiary, item.bonusReason, item.bonusDatestring) }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -182,6 +183,7 @@ const RewardCompany = ({
                     ))}
                 </React.Fragment>
               )}
+              </div>
             </div>
             <div className="div2">
               {/*show Modal Thưởng cá nhân */}
