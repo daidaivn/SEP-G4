@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Modal, Select } from "antd";
 import { toast } from "react-toastify";
 import { CreateAndUpdateSpecialOccasion } from "../../../sevices/PayrollSevice";
@@ -19,35 +19,39 @@ const Holiday = ({
   validateData,
   employeeInput,
   setEmployeeInput,
+  actionEdit,
+  rewardId,
 }) => {
+
   const handleOkHoliday = () => {
     const isDataValid = validateData();
     if (!isDataValid) {
       return;
     }
+    let id = 0;
+    console.log('rewrd', rewardId);
+    if(actionEdit === "HolidayEdit"){
+      id = rewardId;
+    }
     toast.promise(
-      new Promise((resolve) => {
-        CreateAndUpdateSpecialOccasion(
-          0,
-          employeeInput.employeeID,
-          bonusAmount,
-          bonusName,
-          bonusReason
-        )
-          .then((data) => {
-            resolve(data);
-            resetPersonDetail();
-            featchDataReward();
-            setIsModalOpenHoliday(false);
-          })
-          .catch((error) => {
-            resolve(Promise.reject(error));
-          });
-      }),
+      CreateAndUpdateSpecialOccasion(
+        id,
+        employeeInput.employeeID,
+        bonusAmount,
+        bonusName,
+        bonusReason
+      )
+        .then((data) => {
+          resetPersonDetail();
+          featchDataReward();
+          setIsModalOpenHoliday(false);
+          return toast.success(data);
+        })
+        .catch((error) => {
+          throw toast.error(error.response.data);
+        }),
       {
-        success: "add success",
         pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
       }
     );
   };
@@ -64,6 +68,7 @@ const Holiday = ({
             employeeID: data.employeeId,
             employeeName: data.fullName,
           });
+          console.log('employeeinput', employeeInput);
           return data;
         })
         .catch((error) => {

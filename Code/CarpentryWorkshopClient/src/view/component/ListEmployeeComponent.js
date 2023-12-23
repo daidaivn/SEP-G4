@@ -221,14 +221,14 @@ function ListEmployeeComponent() {
     }
 
     if (
-      !originalCIC &&
-      !(originalCIC.length === 9 || originalCIC.length === 12)
+      originalCIC &&
+      !(!originalCIC || originalCIC.length === 9 || originalCIC.length === 12)
     ) {
       errors.push("Mã định danh phải có 9 hoặc 12 số.");
     }
 
     const taxIdRegex = /^[0-9A-Za-z]{10}$|^[0-9A-Za-z]{13}$/;
-    if (originalTaxId && !taxIdRegex.test(originalTaxId)) {
+    if (!originalTaxId && !taxIdRegex.test(originalTaxId)) {
       errors.push("Mã số thuế phải có 10 hoặc 13 và kí tự khác.");
     }
 
@@ -374,6 +374,9 @@ function ListEmployeeComponent() {
 
   const validateDataContract = () => {
     const errors = [];
+    
+  
+    // Existing validations
     if (!contractCode) {
       errors.push("Vui lòng nhập mã hợp đồng.");
     }
@@ -383,15 +386,22 @@ function ListEmployeeComponent() {
     if (isNaN(amount)) {
       errors.push("Vui lòng nhập số tiền là số");
     }
-
     if (!contractStartDate) {
       errors.push("Vui lòng chọn thời gian bắt đầu hợp đồng không được phép.");
     }
-
-
     if (!contractType) {
       errors.push("Vui lòng chọn loại hợp đồng.");
     }
+
+    if (saveFileContract) {
+      const maxSize = 11 * 1024 * 1024;
+      if (saveFileContract.size > maxSize) {
+        errors.push(
+          `Dung lượng file quá lớn. Vui lòng chọn file nhỏ hơn 11mb.`
+        );
+      }
+    }
+  
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -400,6 +410,8 @@ function ListEmployeeComponent() {
     }
     return true;
   };
+  
+
 
   const storage = getStorage(app);
 
@@ -408,11 +420,11 @@ function ListEmployeeComponent() {
     if (!isDataContract) {
       return;
     }
-  
+
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
       const storageRef = ref(storage, `contract-files/${fileName}`);
-  
+
       uploadBytes(storageRef, saveFileContract)
         .then((snapshot) => getDownloadURL(snapshot.ref))
         .then((downloadURL) => {
@@ -459,7 +471,7 @@ function ListEmployeeComponent() {
             id,
             contractStartDate,
             contractEndDate,
-            "", 
+            contractLink,
             contractStatus,
             contractType,
             contractCode,
@@ -473,8 +485,8 @@ function ListEmployeeComponent() {
               handlelDetail(id);
             })
             .catch((error) => {
-              console.log('error',error);
-              
+              console.log('error', error);
+
               resolve(Promise.reject(error));
             });
         }),
@@ -486,20 +498,22 @@ function ListEmployeeComponent() {
       );
     }
   };
+  console.log('saveFileContract',saveFileContract.size);
 
   const handleFileChangeAdd = () => {
+
     const isDataValid = validateData();
     const isDataDepartment = validateDataDepartment();
     const isDataContract = validateDataContract();
-  
+
     if (!isDataValid || !isDataDepartment || !isDataContract) {
       return;
     }
-  
+
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
       const storageRef = ref(storage, `contract-files/${fileName}`);
-  
+
       uploadBytes(storageRef, saveFileContract)
         .then((snapshot) => getDownloadURL(snapshot.ref))
         .then((downloadURL) => {
@@ -509,9 +523,20 @@ function ListEmployeeComponent() {
           toast.error("Lỗi lưu file hợp đồng");
         });
     } else {
-      AddEmployee("");
+      const confirmUpload = window.confirm(
+        "Bạn chưa thêm file hợp đồng, bạn có muốn tiếp tục không?"
+      );
+
+      if (confirmUpload) {
+        AddEmployee("");
+      } else {
+        // Handle the case where the user cancels the upload
+        // You may choose to display a message or perform other actions
+        console.log("Upload canceled by user");
+      }
     }
   };
+
 
   const EditName = (downloadURL) => {
     toast.promise(
@@ -1587,17 +1612,19 @@ function ListEmployeeComponent() {
                     <div className="input-date">
                       <p className="salary-contract salary-file">File hợp đồng:</p>
                       <div className="input-date-cn">
-                        <Button
-                          className="download-button select-input"
-                          type="link"
-                          onClick={() => {
-                            if (contractLink) {
+                        {contractLink ? (
+                          <Button
+                            className="download-button select-input"
+                            type="link"
+                            onClick={() => {
                               window.open(contractLink, '_blank');
-                            }
-                          }}
-                        >
-                          Xem - Tải xuống
-                        </Button>
+                            }}
+                          >
+                            Xem - Tải xuống
+                          </Button>
+                        ) : (
+                          <p>Chưa có</p>
+                        )}
                       </div>
                       <div className="input-date-cn">
                         <p>Trạng thái: </p>

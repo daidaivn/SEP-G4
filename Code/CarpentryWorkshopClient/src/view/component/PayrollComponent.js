@@ -57,7 +57,6 @@ const PayrollComponent = () => {
   const [dataDeduction, setDataDeduction] = useState([]);
   const [dataActualSalary, setActualSalary] = useState([]);
 
-
   //personal reward
   const initialInputEmployeeState = {
     employeeStringID: "",
@@ -66,8 +65,8 @@ const PayrollComponent = () => {
     amount: "",
     reason: "",
     bonusName: "",
-    id:"",
-    bonusDate:"",
+    id: "",
+    bonusDate: "",
   };
   const [employees, setEmployees] = useState([]);
   const [employeeID, setEmployeesID] = useState("");
@@ -77,6 +76,7 @@ const PayrollComponent = () => {
   const [bonusName, setBonusName] = useState("");
   const [bonusDate, setBonusDate] = useState("");
   const [bonusReason, setBonusReason] = useState("");
+  const [rewardId, setRewardId] = useState("");
 
   //salary detail
   const [salaryDetail, setSalaryDetail] = useState([]);
@@ -277,7 +277,15 @@ const PayrollComponent = () => {
     setIsModalOpenRewardPersonal(true);
   };
   const [actionEdit, setActionEdit] = useState("");
-  const showModalRewardPersonalEdit = (id, name, Amount, employeeId, beneficiary, bonusNote, date) => {
+  const showModalRewardPersonalEdit = (
+    id,
+    name,
+    Amount,
+    employeeId,
+    beneficiary,
+    bonusNote,
+    date
+  ) => {
     setActionEdit("PersonEdit");
     setIsModalOpenRewardPersonal(true);
     setBonusName(name);
@@ -285,10 +293,9 @@ const PayrollComponent = () => {
     setEmployeeInput({
       employeeID: employeeId,
       employeeName: beneficiary,
-      id: id,
       bonusDate: date,
-    }
-    );
+    });
+    setRewardId(id);
     setBonusReason(bonusNote);
   };
   const resetPersonDetail = () => {
@@ -297,8 +304,18 @@ const PayrollComponent = () => {
     setEmployeesID("");
     setBonusName("");
     setEmployeeName("");
-    setEmployeeInput(initialInputEmployeeState);
+    setEmployeeInput({
+      employeeStringID: "",
+      employeeID: "",
+      employeeName: "",
+      amount: "",
+      reason: "",
+      bonusName: "",
+      id: "",
+      bonusDate: "",
+    });
     setActionEdit("");
+    setRewardId("");
   };
 
   //modal Thưởng toàn thể công ty
@@ -314,8 +331,9 @@ const PayrollComponent = () => {
     setEmployeeInput({
       id: id,
       bonusDate: date,
-    }
-    );
+    });
+    console.log('id', id);
+    console.log('RE', employeeInput.id);
     setBonusReason(bonusNote);
   };
   //modal Các loại thưởng
@@ -394,7 +412,29 @@ const PayrollComponent = () => {
   const showModalHoliday = () => {
     setIsModalOpenHoliday(true);
   };
-
+  const showModalHolidayEdit = (
+    id,
+    name,
+    amount,
+    employeeId,
+    beneficiary,
+    bonusNote,
+    date,
+  ) => {
+    setActionEdit("HolidayEdit");
+    setIsModalOpenHoliday(true);
+    setBonusName(name);
+    setBonusAmount(amount);
+    setEmployeeInput({
+      employeeID: employeeId,
+      employeeName: beneficiary,
+      bonusDate: date,
+    });
+    console.log('id',id);
+    setRewardId(id);
+    setBonusReason(bonusNote);
+  };
+  console.log('id1',rewardId);
   const fetchEmployeeActualSalaryDetail = (employeeId) => {
     toast.promise(
       new Promise((resolve) => {
@@ -561,6 +601,7 @@ const PayrollComponent = () => {
           setDate={setDate}
           showModalRewardPersonalEdit={showModalRewardPersonalEdit}
           showModalRewardAllEdit={showModalRewardAllEdit}
+          showModalHolidayEdit={showModalHolidayEdit}
         />
         <RewardAll
           isModalOpenRewardAll={isModalOpenRewardAll}
@@ -607,6 +648,7 @@ const PayrollComponent = () => {
           setIsModalOpenRewardPersonal={setIsModalOpenRewardPersonal}
           validateData={validateData}
           actionEdit={actionEdit}
+          rewardId={rewardId}
         />
         <Holiday
           isModalOpenHoliday={isModalOpenHoliday}
@@ -624,6 +666,8 @@ const PayrollComponent = () => {
           validateData={validateData}
           employeeInput={employeeInput}
           setEmployeeInput={setEmployeeInput}
+          actionEdit={actionEdit}
+          rewardId={rewardId}
         />
         {/* Modal Sửa tên thưởng */}
         <Modal

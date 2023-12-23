@@ -20,7 +20,6 @@ import {
   getWeekRange,
   getMonthsInYear,
 } from "../logicTime/getWeeDays";
-import { da } from "date-fns/locale";
 const ListAdvanceComponent = () => {
   //modal Tạo ứng lương
   const [isModalOpenAdvance, setIsModalOpenAdvance] = useState(false);
