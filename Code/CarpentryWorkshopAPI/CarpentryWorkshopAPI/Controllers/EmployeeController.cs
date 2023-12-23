@@ -333,13 +333,18 @@ namespace CarpentryWorkshopAPI.Controllers
                 };
                 _context.UserAccountsStatusHistories.Add(newUahistory);
                 _context.SaveChanges();
-                string htmlBody = "<p>Xin chào,</p>" +
-                  "<p>Dưới đây là nội dung email của bạn:</p>" +
-                  "<p><strong>Đây là tài khoản của bạn</strong></p>" +
-                  "<h3>Tài khoản: </h3>" + $"<h4>{username}</h4>" +
-                  "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
-                  "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
-                  "<p>Cảm ơn bạn đã đọc email này.</p>";
+                string htmlBody = $"<p>Xin chào, {newemp.FirstName + " " + newemp.LastName},</p>" +
+                    "<p>Chào mừng bạn đến với công ty Phú Cầu.</p>" +
+                    "<p>Thông tin tài khoản của bạn như sau:</p>" +
+                    "<ul>" +
+                        $"<li><strong>địa chỉ email: </strong>{newemp.Email}</li>" +
+                        $"<li><strong>tên tài khoản: </strong>{username}</li>" +
+                        $"<li><strong>mật khẩu: </strong>{pass}</li>" +
+                    "</ul>" +
+                    "<p>Bạn có thể đăng nhập vào tài khoản và thay đổi tài khoản mật khẩu của mình tại <a href='https://sep-g4-client.azurewebsites.net'>https://sep-g4-client.azurewebsites.net</a>.</p>" +
+                    "<p><strong>Tuyệt đối không cung cấp tài khoản mật khẩu cho bất cứ ai</strong></p>" +
+                    "<p>Trân trọng,</p>" +
+                    "<p>Công Ty Phú Cầu</p>";
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
                 email.To.Add(MailboxAddress.Parse($"{newemp.Email}"));
@@ -431,8 +436,8 @@ namespace CarpentryWorkshopAPI.Controllers
                     return StatusCode(409, "Email chưa được đăng kí");
                 }
                 if (updateEmployeeDTO.Email != employeeEmail) {
-                    string htmlBody = "<p>Xin chào,</p>" +
-                        "<p>Dưới đây là nội dung email của bạn:</p>" +
+                    string htmlBody = $"<p>Xin chào, {employee.FirstName + " " + employee.LastName },</p>" +
+                        "<p><strong>Công ty Phú Cầu xin thông báo: <strong></p>" +
                         "<p>Thông tin email của bạn đã được thay đổi.</p>" +
                         "<p>Cảm ơn bạn đã đọc email này.</p>";
                     var email = new MimeMessage();
