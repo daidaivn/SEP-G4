@@ -212,6 +212,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var exemp = _context.Employees.FirstOrDefault(x => x.EmployeeId == employeeid);
                 _context.Employees.Remove(exemp);
+                await _context.SaveChangesAsync();
                 return StatusCode(500, "Lỗi máy chủ");
 
             }

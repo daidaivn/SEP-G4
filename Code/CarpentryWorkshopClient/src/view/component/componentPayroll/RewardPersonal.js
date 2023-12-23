@@ -21,6 +21,7 @@ const RewardPersonal = ({
   setIsModalOpenRewardPersonal,
   validateData,
   actionEdit,
+  rewardId,
 }) => {
   const FetchEmployees = (id) => {
     toast.promise(
@@ -75,10 +76,9 @@ const RewardPersonal = ({
       return;
     }
     let id = 0;
-    if(actionEdit == "PersonEdit"){
-      id = employeeInput.id;
+    if (actionEdit == "PersonEdit") {
+      id = rewardId;
     }
-    console.log('PR', id);
     toast.promise(
       CreateAndEditPersonalReward(
         id,
@@ -91,15 +91,13 @@ const RewardPersonal = ({
           featchDataReward();
           resetPersonDetail();
           setIsModalOpenRewardPersonal(false);
-          return data;
+          return toast.success(data);
         })
         .catch((error) => {
           throw toast.error(error.response.data);
         }),
       {
-        success: "add person success",
         pending: "Đang tải dữ liệu",
-        error: "Lỗi tải dữ liệu",
       }
     );
   };
@@ -119,7 +117,11 @@ const RewardPersonal = ({
       >
         <div className="modal-detail-all">
           <div className="head-modal">
-            {actionEdit == "PersonEdit" ? <p> Sửa thưởng cá nhân</p> : <p>Thưởng cá nhân</p>}
+            {actionEdit == "PersonEdit" ? (
+              <p> Sửa thưởng cá nhân</p>
+            ) : (
+              <p>Thưởng cá nhân</p>
+            )}
           </div>
           <div className="body-modal">
             <div className="item-modal">
