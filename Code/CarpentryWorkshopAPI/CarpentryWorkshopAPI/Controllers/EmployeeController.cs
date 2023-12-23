@@ -68,6 +68,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var employeeDetailBasic = await _context.Employees
                    .Where(emp => emp.EmployeeId == eid)
+                   .Include(emp => emp.Contracts)
                    .Include(emp => emp.RolesEmployees)
                    .ThenInclude(roleemp => roleemp.Role)
                    .ThenInclude(role => role.RolesEmployees)
@@ -89,6 +90,7 @@ namespace CarpentryWorkshopAPI.Controllers
                        TaxId = emp.TaxId,
                        Email = emp.Email,
                        Status = emp.Status,
+                       BasicSalary = emp.Contracts.Select(c => c.Amount).FirstOrDefault(),
                        RoleDepartments = emp.RolesEmployees
                             .Where(e => e.EndDate == null)
                             .OrderByDescending(e => e.Role.RoleLevel)
