@@ -805,15 +805,20 @@ namespace CarpentryWorkshopAPI.Controllers
                 }
 
                 var teamSearchs = teams.Where(t => t.TeamName.ToLower().Normalize(NormalizationForm.FormD).Contains(searchTerm));
-
+                DateTime newDateTime = new DateTime(scheduleDataInputDTO.Year, 12, 31);
                 foreach (Team team in teamSearchs)
                 {
-                    var day = new List<object>();
-                    var teamworks = _context.TeamWorks.Where(tw => tw.TeamId == team.TeamId).ToList();
                     var endDate = DateTime.ParseExact(end + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
                     var startDate = DateTime.ParseExact(start + "/" + scheduleDataInputDTO.Year, "dd/MM/yyyy",
                                    System.Globalization.CultureInfo.InvariantCulture);
+                    var day = new List<object>();
+                    var teamworks = _context.TeamWorks.Where(tw => tw.TeamId == team.TeamId).ToList();
+                    
+                    if(startDate.Date == newDateTime.Date)
+                    {
+                        endDate = endDate.AddYears(1);
+                    }
                     var timeShift = team.WorkSchedules.Where(ws => ws.EndDate == null).Select(t => new
                     {
                         TimeIn = t.ShiftType.StartTime,
