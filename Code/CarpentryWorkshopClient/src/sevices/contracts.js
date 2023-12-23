@@ -64,6 +64,9 @@ const UpdateContract = (
     isOffice: originalOffice
   };
 
+  console.log('requestBody',requestBody);
+  
+
   return axios.put(
     `CWMSapi/Contract/UpdateContract`,
     requestBody
