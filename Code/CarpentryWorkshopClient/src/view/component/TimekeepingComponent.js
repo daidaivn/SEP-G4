@@ -126,10 +126,8 @@ const TimekeepingComponent = () => {
 
         // If seconds are present, extract and remove fractional seconds
         const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
-        const parsedTime = dayjs(`${hours}:${minutes}:${seconds}`, "HH:mm");
-
+        
         // Format the parsed time as desired
-        const formattedTime = parsedTime.format("HH:mm");
         return `${hours}:${minutes}:${seconds}`;
       }
 
