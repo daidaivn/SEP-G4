@@ -77,7 +77,7 @@ const CreateAndUpdateSpecialOccasion = (bonusId, employeeId, bonusAmount, bonusN
         occasionDateString: '',
         occasionNote: bonusReason,
     }
-
+    console.log('speRequestBody', requestBody);
     return axios.post(`/CWMSapi/Reward/CreateAndEditSpecialOccasion`,requestBody);
 };
 const CreateAndUpdateCompanyRerward = (bonusId, bonusAmount, bonusName, bonusReason) => {

@@ -13,6 +13,7 @@ const RewardCompany = ({
   setDate,
   showModalRewardPersonalEdit,
   showModalRewardAllEdit,
+  showModalHolidayEdit,
 }) => {
   let tableIndex = 0;
   return (
@@ -90,7 +91,7 @@ const RewardCompany = ({
                         </div>
                         <div
                           className="child-reward last1"
-                          onClick={showModalHoliday}
+                          onClick={()=>{showModalHolidayEdit(item.occasionId, item.occasionType, item.amount, item.employeeId, item.beneficiary, item.bonusReason, item.occasionDateString)}}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
