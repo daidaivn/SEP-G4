@@ -755,7 +755,22 @@ namespace CarpentryWorkshopAPI.Controllers
                         EmployeeName = ci.Employee.LastName + " " + ci.Employee.FirstName,
                     })
                     .ToListAsync();
-                return Ok(CheckInOut);
+                
+                    var hourWork = _context.HoursWorkDays.Where(s => s.EmployeeId == employeeId && s.Day.Value.Date == parsedDate.Date).Sum(s => s.Hour);
+                if(hourWork == null)
+                {
+                    hourWork = 0;
+                }
+                    int hours = (int)hourWork;
+                    int minutes = (int)((hourWork - hours) * 60);
+                    string formattedResult = $"{hours} giờ {minutes} phút";
+                var result = new
+                {
+                    Hour = formattedResult,
+                    CheckInOut = CheckInOut,
+                };
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
