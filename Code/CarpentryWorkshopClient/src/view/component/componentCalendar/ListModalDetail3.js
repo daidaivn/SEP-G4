@@ -24,7 +24,9 @@ const ListModuleDetail3 = ({
   workidDetail,
   FetchDataForSchedule,
 }) => {
- 
+  console.log('actionWork', actionWork);
+
+
   const [actionEdit, setActionEdit] = useState("Disable");
   const [numberProduct, setNumberProduct] = useState("");
   const GetActionEdit = () => {
@@ -48,8 +50,8 @@ const ListModuleDetail3 = ({
     }
     return true;
   };
-  const EditWorkProduct = () =>{
-    const isConfirmed = window.confirm("Bạn có chắc chắn muốn sử thông tin");
+  const EditWorkProduct = () => {
+    const isConfirmed = window.confirm("Bạn có chắc chắn muốn sửa thông tin");
     if (!isConfirmed) {
       // If not confirmed, return without executing the rest of the function
       return;
@@ -58,8 +60,8 @@ const ListModuleDetail3 = ({
     if (!check) {
       return;
     }
-    console.log('teamWorkId',workDetailById.teamWorkId);
-    if(actionEdit === "edit"){
+    console.log('teamWorkId', workDetailById.teamWorkId);
+    if (actionEdit === "edit") {
       toast.promise(
         updateDataWorks(workDetailById.teamWorkId, workDetailById.numberProduct)
           .then((data) => {
@@ -74,7 +76,7 @@ const ListModuleDetail3 = ({
           success: "Thành công",
         }
       );
-    }else{
+    } else {
       return;
     }
   }
@@ -169,9 +171,9 @@ const ListModuleDetail3 = ({
   };
 
   return (
-    <div className="modal-detail ">
+    <div className="modal-detail">
       <Modal
-        className="modal"
+        className="modal calender-modal"
         open={isModalOpenDetailShift}
         onOk={handleOkDetailShift}
         onCancel={handleCancelDetailWorkInList}
@@ -205,7 +207,7 @@ const ListModuleDetail3 = ({
               <></>
             )}
           </div>
-          <div className="body-modal">
+          <div className="body-modal" >
             <div className="item-modal">
               <p>Tên công việc</p>
               <Input
@@ -229,9 +231,9 @@ const ListModuleDetail3 = ({
                   placeholder="Chọn sản phẩm"
                   value={
                     workDetailById &&
-                    allUnitCosts.some(
-                      (uc) => uc.uniCostId === workDetailById.unitCostId
-                    )
+                      allUnitCosts.some(
+                        (uc) => uc.uniCostId === workDetailById.unitCostId
+                      )
                       ? workDetailById.unitCostId
                       : undefined
                   }
@@ -258,13 +260,13 @@ const ListModuleDetail3 = ({
                 onChange={
                   actionWork !== "viewWork"
                     ? (e) => {
-                        if (e.target.value.match(/^\d*$/)) {
-                          setWorkDetailById({
-                            ...workDetailById,
-                            unitCost: e.target.value,
-                          });
-                        }
+                      if (e.target.value.match(/^\d*$/)) {
+                        setWorkDetailById({
+                          ...workDetailById,
+                          unitCost: e.target.value,
+                        });
                       }
+                    }
                     : undefined
                 }
                 disabled={actionWork === "viewWork"}
@@ -279,38 +281,41 @@ const ListModuleDetail3 = ({
                 onChange={
                   actionWork !== "viewWork"
                     ? (e) => {
-                        if (e.target.value.match(/^\d*$/)) {
-                          setWorkDetailById({
-                            ...workDetailById,
-                            totalProduct: e.target.value,
-                          });
-                        }
+                      if (e.target.value.match(/^\d*$/)) {
+                        setWorkDetailById({
+                          ...workDetailById,
+                          totalProduct: e.target.value,
+                        });
                       }
+                    }
                     : undefined
                 }
                 disabled={actionWork === "viewWork"}
               />
             </div>
-            <div className="item-modal">
-              <p>Số sản phẩm đã hoàn thành</p>
-              <svg onClick={()=> {GetActionEdit(); EditWorkProduct()}}
-                xmlns="http://www.w3.org/2000/svg"
-                width="31"
-                height="30"
-                viewBox="0 0 31 30"
-                fill="none"
-              >
-                <path
-                  d="M21.6001 0H9.6001C3.6001 0 0.600098 3 0.600098 9V28.5C0.600098 29.325 1.2751 30 2.1001 30H21.6001C27.6001 30 30.6001 27 30.6001 21V9C30.6001 3 27.6001 0 21.6001 0ZM14.2651 21.99C13.8901 22.365 13.2001 22.71 12.6901 22.785L9.5701 23.22C9.4501 23.235 9.3301 23.25 9.2251 23.25C8.7001 23.25 8.2201 23.07 7.8751 22.725C7.4551 22.305 7.2751 21.69 7.3801 21.03L7.8151 17.91C7.8901 17.4 8.2351 16.695 8.6101 16.335L14.2651 10.68C14.3551 10.95 14.4751 11.22 14.6101 11.52C14.7451 11.79 14.8801 12.06 15.0301 12.315C15.1501 12.525 15.2851 12.735 15.4051 12.885C15.5551 13.11 15.7051 13.305 15.8101 13.41C15.8701 13.5 15.9301 13.56 15.9451 13.59C16.2751 13.965 16.6201 14.325 16.9501 14.595C17.0401 14.685 17.1001 14.73 17.1151 14.745C17.3101 14.895 17.4901 15.06 17.6701 15.165C17.8651 15.315 18.0751 15.45 18.2851 15.57C18.5401 15.72 18.8101 15.87 19.0951 16.005C19.3801 16.14 19.6501 16.245 19.9201 16.335L14.2651 21.99ZM22.4251 13.845L21.2551 15.015C21.1801 15.09 21.0751 15.135 20.9701 15.135C20.9401 15.135 20.8801 15.135 20.8501 15.12C18.2701 14.385 16.2151 12.33 15.4801 9.75C15.4351 9.615 15.4801 9.465 15.5851 9.36L16.7701 8.175C18.7051 6.24 20.5351 6.285 22.4251 8.175C23.3851 9.135 23.8651 10.065 23.8501 11.025C23.8501 11.97 23.3851 12.885 22.4251 13.845Z"
-                  fill="#FF8F19"
-                />
-              </svg>
-              <Input
-                type="number"
-                value={workDetailById.numberProduct}
-                onChange={
-                  actionEdit === "edit"
-                    ? (e) => {
+            {!(actionWork === 'addWork' || actionWork === 'editWork') && (
+              <div className="item-modal">
+                <p>Số sản phẩm đã hoàn thành</p>
+                {actionWork === "viewWork" && (
+                  <svg onClick={() => { GetActionEdit(); EditWorkProduct() }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="31"
+                    height="30"
+                    viewBox="0 0 31 30"
+                    fill="none"
+                  >
+                    <path
+                      d="M21.6001 0H9.6001C3.6001 0 0.600098 3 0.600098 9V28.5C0.600098 29.325 1.2751 30 2.1001 30H21.6001C27.6001 30 30.6001 27 30.6001 21V9C30.6001 3 27.6001 0 21.6001 0ZM14.2651 21.99C13.8901 22.365 13.2001 22.71 12.6901 22.785L9.5701 23.22C9.4501 23.235 9.3301 23.25 9.2251 23.25C8.7001 23.25 8.2201 23.07 7.8751 22.725C7.4551 22.305 7.2751 21.69 7.3801 21.03L7.8151 17.91C7.8901 17.4 8.2351 16.695 8.6101 16.335L14.2651 10.68C14.3551 10.95 14.4751 11.22 14.6101 11.52C14.7451 11.79 14.8801 12.06 15.0301 12.315C15.1501 12.525 15.2851 12.735 15.4051 12.885C15.5551 13.11 15.7051 13.305 15.8101 13.41C15.8701 13.5 15.9301 13.56 15.9451 13.59C16.2751 13.965 16.6201 14.325 16.9501 14.595C17.0401 14.685 17.1001 14.73 17.1151 14.745C17.3101 14.895 17.4901 15.06 17.6701 15.165C17.8651 15.315 18.0751 15.45 18.2851 15.57C18.5401 15.72 18.8101 15.87 19.0951 16.005C19.3801 16.14 19.6501 16.245 19.9201 16.335L14.2651 21.99ZM22.4251 13.845L21.2551 15.015C21.1801 15.09 21.0751 15.135 20.9701 15.135C20.9401 15.135 20.8801 15.135 20.8501 15.12C18.2701 14.385 16.2151 12.33 15.4801 9.75C15.4351 9.615 15.4801 9.465 15.5851 9.36L16.7701 8.175C18.7051 6.24 20.5351 6.285 22.4251 8.175C23.3851 9.135 23.8651 10.065 23.8501 11.025C23.8501 11.97 23.3851 12.885 22.4251 13.845Z"
+                      fill="#FF8F19"
+                    />
+                  </svg>
+                )}
+                <Input
+                  type="number"
+                  value={workDetailById.numberProduct}
+                  onChange={
+                    actionEdit === "edit"
+                      ? (e) => {
                         if (e.target.value.match(/^\d*$/)) {
                           setWorkDetailById({
                             ...workDetailById,
@@ -318,12 +323,14 @@ const ListModuleDetail3 = ({
                           });
                         }
                       }
-                    : undefined
-                }
-                placeholder="Số sản phẩm đã hoàn thành"
-                disabled={actionEdit == "Disable"}
-              />
-            </div>
+                      : undefined
+                  }
+                  placeholder="Số sản phẩm đã hoàn thành"
+                  disabled={actionEdit === "Disable"}
+                />
+              </div>
+            )}
+
             <div className="item-modal">
               <p>Khu vực:</p>
               {allWorkAreas && allWorkAreas.length > 0 ? (
@@ -332,9 +339,9 @@ const ListModuleDetail3 = ({
                   placeholder="Chọn khu vực"
                   value={
                     workDetailById &&
-                    allWorkAreas.some(
-                      (area) => area.workAreaId === workDetailById.workAreaId
-                    )
+                      allWorkAreas.some(
+                        (area) => area.workAreaId === workDetailById.workAreaId
+                      )
                       ? workDetailById.workAreaId
                       : undefined
                   }
@@ -346,9 +353,9 @@ const ListModuleDetail3 = ({
                   options={
                     actionWork !== "viewWork"
                       ? allWorkAreas.map((allWorkArea) => ({
-                          value: allWorkArea.workAreaId,
-                          label: allWorkArea.workAreaName,
-                        }))
+                        value: allWorkArea.workAreaId,
+                        label: allWorkArea.workAreaName,
+                      }))
                       : []
                   }
                   disabled={actionWork === "viewWork"}

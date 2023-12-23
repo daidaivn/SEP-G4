@@ -24,6 +24,9 @@ const TableCalendar = ({
     ? parseWeekRange(selectedWeek)
     : parseWeekRange(defaultValue);
 
+    console.log('selectedWeek',selectedWeek);
+    
+
   return (
     <table className="list-table-calendar">
       <thead>
