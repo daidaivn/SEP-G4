@@ -391,7 +391,7 @@ const TimekeepingComponent = () => {
               <td>Mã nhân viên</td>
               <td>Trạng thái</td>
               <td>Chi tiết điểm danh</td>
-              {checksInOut[0].checkStatus !== "CheckOut" && checksInOut[0].checkStatus !== "CheckIn" ? (
+              {checksInOut.length > 0 && checksInOut[0].checkStatus !== "CheckOut" && checksInOut[0].checkStatus !== "CheckIn" ? (
                 <></>
               ) : (
                 <td>Hành động</td>
