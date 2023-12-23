@@ -64,43 +64,66 @@ const getWeekRange = (date) => {
   };
 };
 
-const createWeekOptions = () => {
-  const today = new Date();
+const createWeekOptions = (year) => {
   const weeks = [];
 
-  for (let i = -4; i <= 4; i++) {
-    const weekDate = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() + 7 * i
-    );
-    const { start, end } = getWeekRange(weekDate);
-    weeks.push({ value: `${start}-${end}`, label: `${start} đến ${end}` });
+  // Start from the first week of the given year
+  const firstDayOfYear = new Date(year, 0, 1);
+  const lastDayOfYear = new Date(year, 11, 31);
+
+  // Get the first Monday of the given year
+  const firstMondayOfYear = new Date(
+    firstDayOfYear.setDate(firstDayOfYear.getDate() + ((1 - firstDayOfYear.getDay() + 7) % 7))
+  );
+
+  // Loop through weeks starting from the first Monday of the year
+  let currentDate = new Date(firstMondayOfYear);
+  while (currentDate <= lastDayOfYear) {
+    const { start, end } = getWeekRange(currentDate);
+
+    // Check if the week is entirely within the given year
+    if (currentDate.getFullYear() === year) {
+      weeks.push({ value: `${start}-${end}`, label: `${start} đến ${end}` });
+    } else {
+      // Automatically switch to the next year
+      const nextYear = currentDate.getFullYear() + 1;
+      weeks.push({ value: `${start}-${end}`, label: `${start} đến ${end} (${nextYear})` });
+    }
+
+    // Move to the next Monday
+    currentDate.setDate(currentDate.getDate() + 7);
   }
+
   return weeks;
 };
 
+
 const parseWeekRange = (weekRange) => {
-  const [start, end] = weekRange.split("-").map((date) => {
-    const [day, month] = date.split("/").map(Number);
-    return new Date(new Date().getFullYear(), month - 1, day);
-  });
+  const [startStr, endStr] = weekRange.split("-").map((dateStr) => dateStr.trim());
+  
+  const [startDay, startMonth] = startStr.split("/").map(Number);
+  const [endDay, endMonth] = endStr.split("/").map(Number);
+
+  const currentYear = new Date().getFullYear();
+  const nextYear = currentYear + 1;
+
+  const startDate = new Date(startMonth - 1 >= new Date().getMonth() ? currentYear : nextYear, startMonth - 1, startDay);
+  const endDate = new Date(endMonth - 1 >= new Date().getMonth() ? currentYear : nextYear, endMonth - 1, endDay);
 
   const days = [];
-  for (
-    let date = new Date(start);
-    date <= end;
-    date.setDate(date.getDate() + 1)
-  ) {
+  for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
     days.push(
       new Date(date).toLocaleDateString(undefined, {
-        month: "numeric",
-        day: "numeric",
+        month: '2-digit',
+        day: '2-digit',
       })
     );
   }
   return days;
 };
+
+
+
 export {
   createYearOptions,
   getWeekRange,
