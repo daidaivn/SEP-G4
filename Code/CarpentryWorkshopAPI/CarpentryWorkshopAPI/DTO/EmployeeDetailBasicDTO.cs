@@ -16,6 +16,7 @@
         public int? CountryId { get; set; }
         public bool? Status { get; set; }
         public string? Cic { get; set; }
+        public decimal? BasicSalary { get; set; }
         public List<RoleDepartment> RoleDepartments { get; set; }
         public class RoleDepartment
         {
