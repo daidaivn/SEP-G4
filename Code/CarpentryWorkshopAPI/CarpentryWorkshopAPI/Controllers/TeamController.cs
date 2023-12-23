@@ -815,7 +815,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     var day = new List<object>();
                     var teamworks = _context.TeamWorks.Where(tw => tw.TeamId == team.TeamId).ToList();
                     
-                    if(startDate.Date == newDateTime.Date)
+                    if(startDate.Date.AddDays(6) > newDateTime.Date)
                     {
                         endDate = endDate.AddYears(1);
                     }
