@@ -29,6 +29,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var holidaysQuery = _context.HolidaysDetails
                         .Include(x => x.Holiday)
+                        .OrderBy(x => x.Date)
                         .ToList()
                         .AsQueryable();
                 if (!string.IsNullOrEmpty(monthYearDTO.InputText))
@@ -168,15 +169,13 @@ namespace CarpentryWorkshopAPI.Controllers
                 _context.Holidays.Update(updateHoliday);
                 var updateHolidayDetail = await _context.HolidaysDetails
                     .Where(x => x.HolidayId == holidayDTO.HolidayId)
-                    .OrderBy(x => x.Date)
                     .ToListAsync();
-                int index = 0;
-                while (startDate <= endDate && index < updateHolidayDetail.Count)
+                foreach (var item in updateHolidayDetail)
                 {
-                    updateHolidayDetail[index].Date = startDate;
-                    startDate = startDate.AddDays(1);
-                    index++;
+                    _context.HolidaysDetails.Remove(item);
+                    await _context.SaveChangesAsync();
                 }
+                var newupHolidayDetail = new List<HolidaysDetail>();
                 while (startDate <= endDate)
                 {
                     var newHolidayDetail = new HolidaysDetail
@@ -184,11 +183,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         HolidayId = holidayDTO.HolidayId,
                         Date = startDate,
                     };
-                    updateHolidayDetail.Add(newHolidayDetail);
+                    newupHolidayDetail.Add(newHolidayDetail);
                     startDate = startDate.AddDays(1);
                 }
 
-                _context.HolidaysDetails.UpdateRange(updateHolidayDetail);
+                _context.HolidaysDetails.AddRange(newupHolidayDetail);
                 await _context.SaveChangesAsync();
                 return Ok("Chỉnh sửa chi tiết ngày lễ thành công");
 
