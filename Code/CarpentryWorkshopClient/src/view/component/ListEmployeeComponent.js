@@ -748,7 +748,13 @@ function ListEmployeeComponent() {
     setPreviewImage("")
     setOriginalOffice("")
     setsaveFileContract("")
+    setFilterGender(null)
+    setFilterRole(null)
+    setFilterStatus(null)
   };
+
+  console.log('filterRole',filterRole);
+  
 
   const handleCancelView1 = () => {
     setIsEditingRole(false); // Đặt trạng thái chỉnh sửa về false
