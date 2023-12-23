@@ -55,7 +55,7 @@ function ListUserHeader() {
     setUserAllVisible(false);
   };
 
-  const getDetailEmployee = () =>{
+  const getDetailEmployee = () => {
     toast.promise(
       new Promise((resolve) => {
         DetailID(userEmployeeID)
@@ -74,7 +74,7 @@ function ListUserHeader() {
 
   }
   const [isModalOpenUser, setIsModalOpenUser] = useState(false);
-  const showModalUser = () => {  
+  const showModalUser = () => {
     setIsModalOpenUser(true);
   };
   const handleOkUser = () => {
@@ -94,7 +94,7 @@ function ListUserHeader() {
   const handleCancelUserRole = () => {
     setIsModalOpenUserRole(false);
   };
- 
+
 
 
   const getSalaryDetail = () => {
@@ -143,7 +143,7 @@ function ListUserHeader() {
   };
 
   const storedUserID =
-  localStorage.getItem("userEmployeeID") || sessionStorage.getItem("userEmployeeID");
+    localStorage.getItem("userEmployeeID") || sessionStorage.getItem("userEmployeeID");
 
   useEffect(() => {
     getDetailEmployee();
@@ -328,8 +328,8 @@ function ListUserHeader() {
                     <p className="fix-input">{employee.country}</p>
                   </div>
                   <div className="div-modal-child2 fix-color">
-                    <p>Địa chỉ: </p>
-                    <p className="fix-input">{employee.address}</p>
+                    <p>Mã định danh:</p>
+                    <p className="fix-input">{employee.cic}</p>
                   </div>
                   <div className="div-modal-child2 div-detail fix-color">
                     <p>Email: </p>
@@ -348,9 +348,13 @@ function ListUserHeader() {
                       <p>Lương cơ bản:</p>
                       <p className="fix-input">4000000</p>
                     </div>
+
                     <div className="box-child-employee1 fix-color">
-                      <p>Mã định danh:</p>
-                      <p className="fix-input">{employee.cic}</p>
+                      <p>Địa chỉ: </p>
+                      <textarea
+                        disabled
+                        value={employee.address}
+                      />
                     </div>
                   </div>
                   <div className="box2-child-cn">
@@ -360,6 +364,7 @@ function ListUserHeader() {
                         type="date"
                         className="fix-input"
                         value={convertDobToISO(employee.dobstring)}
+                        disabled
                       ></Input>
                     </div>
                     <div className="box-child-employee1 fix-color">

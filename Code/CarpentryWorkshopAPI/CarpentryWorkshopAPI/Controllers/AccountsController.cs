@@ -231,13 +231,17 @@ namespace CarpentryWorkshopAPI.Controllers
                 account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
                 _context.UserAccounts.Update(account);
                 _context.SaveChanges();
-                string htmlBody = "<p>Xin chào,</p>" +
-                      "<p>Dưới đây là nội dung email của bạn:</p>" +
-                      "<p><strong>Đây là tài khoản của bạn sau khi thay đổi</strong></p>" +
-                      "<h3>Tài khoản:</h3>" + $"<h4>{user}</h4>" +
-                      "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
-                      "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
-                      "<p>Cảm ơn bạn đã đọc email này.</p>";
+                string htmlBody = $"<p>Xin chào, {account.Employee.FirstName + " " + account.Employee.LastName},</p>" +
+                    "<p>Bạn vừa yêu cầu thay đổi mật khẩu tài khoản của bạn.</p>" +
+                    "<p>Thông tin tài khoản và mật khẩu mới của bạn như sau:</p>" +
+                    "<ul>" +
+                        $"<li><strong>tên tài khoản: </strong>{user}</li>" +
+                        $"<li><strong>mật khẩu: </strong>{pass}</li>" +
+                    "</ul>" +
+                    "<p>Bạn có thể đăng nhập vào tài khoản và thay đổi tài khoản mật khẩu của mình tại <a href='https://sep-g4-client.azurewebsites.net'>https://sep-g4-client.azurewebsites.net</a>.</p>" +
+                    "<p><strong>Tuyệt đối không cung cấp tài khoản mật khẩu cho bất cứ ai</strong></p>" +
+                    "<p>Trân trọng,</p>" +
+                    "<p>Công Ty Phú Cầu</p>";
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
                 email.To.Add(MailboxAddress.Parse($"{emailInput}"));
@@ -277,13 +281,17 @@ namespace CarpentryWorkshopAPI.Controllers
                 account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
                 _context.UserAccounts.Update(account);
                 _context.SaveChanges();
-                string htmlBody = "<p>Xin chào,</p>" +
-                      "<p>Dưới đây là nội dung email của bạn:</p>" +
-                      "<p><strong>Đây là tài khoản của bạn sau khi thay đổi</strong></p>" +
-                      "<h3>Tài khoản:</h3>" + $"<h4>{user}</h4>" +
-                      "<h3>Mật khẩu: </h3>" + $"<h4>{pass}</h4>" +
-                      "<p><strong>Nghiêm cấm lộ tài khoản ra ngoài</strong></p>" +
-                      "<p>Cảm ơn bạn đã đọc email này.</p>";
+                string htmlBody = $"<p>Xin chào, {account.Employee.FirstName + " " + account.Employee.LastName},</p>" +
+                    "<p>Bạn vừa yêu cầu thay đổi tài khoản và mật khẩu của bạn.</p>" +
+                    "<p>Thông tin tài khoản và mật khẩu mới của bạn như sau:</p>" +
+                    "<ul>" +
+                        $"<li><strong>tên tài khoản: </strong>{user}</li>" +
+                        $"<li><strong>mật khẩu: </strong>{pass}</li>" +
+                    "</ul>" +
+                    "<p>Bạn có thể đăng nhập vào tài khoản và thay đổi tài khoản mật khẩu của mình tại <a href='https://sep-g4-client.azurewebsites.net'>https://sep-g4-client.azurewebsites.net</a>.</p>" +
+                    "<p><strong>Tuyệt đối không cung cấp tài khoản mật khẩu cho bất cứ ai</strong></p>" +
+                    "<p>Trân trọng,</p>" +
+                    "<p>Công Ty Phú Cầu</p>";
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse("ccmsadm12@gmail.com"));
                 email.To.Add(MailboxAddress.Parse($"{account.Employee.Email}"));

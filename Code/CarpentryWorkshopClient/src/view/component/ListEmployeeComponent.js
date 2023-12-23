@@ -221,14 +221,14 @@ function ListEmployeeComponent() {
     }
 
     if (
-      !originalCIC &&
-      !(originalCIC.length === 9 || originalCIC.length === 12)
+      originalCIC &&
+      !(!originalCIC || originalCIC.length === 9 || originalCIC.length === 12)
     ) {
       errors.push("Mã định danh phải có 9 hoặc 12 số.");
     }
 
     const taxIdRegex = /^[0-9A-Za-z]{10}$|^[0-9A-Za-z]{13}$/;
-    if (originalTaxId && !taxIdRegex.test(originalTaxId)) {
+    if (!originalTaxId && !taxIdRegex.test(originalTaxId)) {
       errors.push("Mã số thuế phải có 10 hoặc 13 và kí tự khác.");
     }
 
@@ -374,6 +374,9 @@ function ListEmployeeComponent() {
 
   const validateDataContract = () => {
     const errors = [];
+
+
+    // Existing validations
     if (!contractCode) {
       errors.push("Vui lòng nhập mã hợp đồng.");
     }
@@ -383,15 +386,22 @@ function ListEmployeeComponent() {
     if (isNaN(amount)) {
       errors.push("Vui lòng nhập số tiền là số");
     }
-
     if (!contractStartDate) {
       errors.push("Vui lòng chọn thời gian bắt đầu hợp đồng không được phép.");
     }
-
-
     if (!contractType) {
       errors.push("Vui lòng chọn loại hợp đồng.");
     }
+
+    if (saveFileContract) {
+      const maxSize = 11 * 1024 * 1024;
+      if (saveFileContract.size > maxSize) {
+        errors.push(
+          `Dung lượng file quá lớn. Vui lòng chọn file nhỏ hơn 11mb.`
+        );
+      }
+    }
+
     if (errors.length > 0) {
       errors.forEach((error) => {
         toast.warning(error);
@@ -401,6 +411,8 @@ function ListEmployeeComponent() {
     return true;
   };
 
+
+
   const storage = getStorage(app);
 
   const handleFileChange = () => {
@@ -408,11 +420,11 @@ function ListEmployeeComponent() {
     if (!isDataContract) {
       return;
     }
-  
+
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
       const storageRef = ref(storage, `contract-files/${fileName}`);
-  
+
       uploadBytes(storageRef, saveFileContract)
         .then((snapshot) => getDownloadURL(snapshot.ref))
         .then((downloadURL) => {
@@ -459,7 +471,7 @@ function ListEmployeeComponent() {
             id,
             contractStartDate,
             contractEndDate,
-            "", 
+            contractLink,
             contractStatus,
             contractType,
             contractCode,
@@ -473,8 +485,8 @@ function ListEmployeeComponent() {
               handlelDetail(id);
             })
             .catch((error) => {
-              console.log('error',error);
-              
+              console.log('error', error);
+
               resolve(Promise.reject(error));
             });
         }),
@@ -486,20 +498,22 @@ function ListEmployeeComponent() {
       );
     }
   };
+  console.log('saveFileContract', saveFileContract.size);
 
   const handleFileChangeAdd = () => {
+
     const isDataValid = validateData();
     const isDataDepartment = validateDataDepartment();
     const isDataContract = validateDataContract();
-  
+
     if (!isDataValid || !isDataDepartment || !isDataContract) {
       return;
     }
-  
+
     if (saveFileContract) {
       const fileName = `${new Date().getTime()}_${saveFileContract.name}`;
       const storageRef = ref(storage, `contract-files/${fileName}`);
-  
+
       uploadBytes(storageRef, saveFileContract)
         .then((snapshot) => getDownloadURL(snapshot.ref))
         .then((downloadURL) => {
@@ -509,9 +523,20 @@ function ListEmployeeComponent() {
           toast.error("Lỗi lưu file hợp đồng");
         });
     } else {
-      AddEmployee("");
+      const confirmUpload = window.confirm(
+        "Bạn chưa thêm file hợp đồng, bạn có muốn tiếp tục không?"
+      );
+
+      if (confirmUpload) {
+        AddEmployee("");
+      } else {
+        // Handle the case where the user cancels the upload
+        // You may choose to display a message or perform other actions
+        console.log("Upload canceled by user");
+      }
     }
   };
+
 
   const EditName = (downloadURL) => {
     toast.promise(
@@ -593,7 +618,7 @@ function ListEmployeeComponent() {
         .then((data) => {
           setIsEditing(false);
           handlelDetail(id);
-          handleSave();
+          handleBack();
           fetchData();
           return toast.success(data);
         })
@@ -1152,7 +1177,7 @@ function ListEmployeeComponent() {
             <Modal
               className="modal-employee"
               visible={isModalOpen}
-              onOk={UpdateEditEmployee}
+              onOk={handleBack}
               onCancel={handleBack}
               width={1252}
             >
@@ -1174,7 +1199,6 @@ function ListEmployeeComponent() {
                         )}
                       </div>
                     </div>
-
                     <div className="modal-child-body2">
                       <div className="div-modal-child2 div-detail div1-modal-child2">
                         <div className="div1-modal-cn">
@@ -1182,17 +1206,19 @@ function ListEmployeeComponent() {
                           <Input
                             value={originalLastName}
                             onChange={(e) => setOriginalLastName(e.target.value)}
+                            placeholder="Nhập họ, tên đệm"
                           />
                         </div>
-                        <div className="div1-modal-cn div2-fix name_reponsive">
+                        <div className="div1-modal-cn div2-fix">
                           <p>Tên:</p>
                           <Input
                             value={originalFirstName}
                             onChange={(e) => setOriginalFirstName(e.target.value)}
+                            placeholder="Nhập tên"
                           />
                         </div>
                       </div>
-                      <div className="div-modal-child2 div-detail">
+                      <div className="div-modal-child2">
                         <p>Số điện thoại:</p>
                         <Input
                           value={originalPhoneNumber}
@@ -1200,6 +1226,7 @@ function ListEmployeeComponent() {
                           placeholder="Nhập số điện thoại"
                         />
                       </div>
+
                       <div className="div-modal-child2">
                         <p>Giới tính: </p>
                         <div className="radio-employee">
@@ -1220,18 +1247,19 @@ function ListEmployeeComponent() {
                         <p>Quốc tịch:</p>
                         <Select
                           className="select-input"
-                          value={originalNationality}
+                          value={originalNationality || undefined}
                           onChange={(value) => setOriginalNationality(value)}
                           style={{
                             width: "100%",
                           }}
+                          placeholder="Chọn quốc tịch"
                           options={countries.map((country) => ({
                             value: country.countryId,
                             label: country.countryName,
                           }))}
                         />
                       </div>
-                      <div className="div-modal-child2 div-detail">
+                      <div className="div-modal-child2 div-detail fix-res">
                         <p>Ngày sinh:</p>
                         <Input
                           type="date"
@@ -1241,7 +1269,7 @@ function ListEmployeeComponent() {
                           }
                         />
                       </div>
-                      <div className="div-modal-child2 div-detail">
+                      <div className="div-modal-child2 div-detail ">
                         <p>Mã định danh: </p>
                         <Input
                           value={originalCIC}
@@ -1259,6 +1287,7 @@ function ListEmployeeComponent() {
                           <Input
                             value={originalTaxId}
                             onChange={(e) => setOriginalTaxId(e.target.value)}
+                            placeholder="Nhập mã số thuế"
                           />
                         </div>
                         <div className="box-child-employee1 div-detail">
@@ -1266,6 +1295,7 @@ function ListEmployeeComponent() {
                           <textarea
                             value={originalAddress}
                             onChange={(e) => setOriginalAddress(e.target.value)}
+                            placeholder="Nhập địa chỉ"
                           />
                         </div>
                       </div>
@@ -1587,17 +1617,19 @@ function ListEmployeeComponent() {
                     <div className="input-date">
                       <p className="salary-contract salary-file">File hợp đồng:</p>
                       <div className="input-date-cn">
-                        <Button
-                          className="download-button select-input"
-                          type="link"
-                          onClick={() => {
-                            if (contractLink) {
+                        {contractLink ? (
+                          <Button
+                            className="download-button select-input"
+                            type="link"
+                            onClick={() => {
                               window.open(contractLink, '_blank');
-                            }
-                          }}
-                        >
-                          Xem - Tải xuống
-                        </Button>
+                            }}
+                          >
+                            Xem - Tải xuống
+                          </Button>
+                        ) : (
+                          <p>Chưa có</p>
+                        )}
                       </div>
                       <div className="input-date-cn">
                         <p>Trạng thái: </p>
