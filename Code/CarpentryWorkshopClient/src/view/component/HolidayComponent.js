@@ -288,14 +288,15 @@ const HolidayComponent = () => {
             </div>
           )}
         </div>
-        <table className="list-table">
+        <table className="list-table table-holiday">
           <thead>
             <tr>
               <td>STT</td>
               <td>Tên ngày nghỉ</td>
               <td>Ngày bắt đầu nghỉ</td>
               <td>Số ngày nghỉ</td>
-              {department.includes("Phòng nhân sự") && <td>Chỉnh sửa</td>}
+              {department.includes("Phòng nhân sự") && <><td>Chỉnh sửa</td><td>Xoá</td></>}
+              
             </tr>
           </thead>
           <tbody className="scrollbar" id="style-15">
@@ -306,6 +307,7 @@ const HolidayComponent = () => {
                 <td>{holiday.date}</td>
                 <td>{holiday.numberOfHoliday} ngày</td>
                 {department.includes("Phòng nhân sự") && (
+                  <>
                   <td>
                     <p
                       onClick={() => {
@@ -326,6 +328,8 @@ const HolidayComponent = () => {
                         />
                       </svg>
                     </p>
+                  </td>
+                  <td>
                     <p
                       onClick={() => {
                         DeleteHoliday(holiday.holidayID);
@@ -347,9 +351,11 @@ const HolidayComponent = () => {
                       </svg>
                     </p>
                   </td>
+                  </>
                 )}
               </tr>
             ))}
+            
           </tbody>
         </table>
         {/* modal tạo lịch nghỉ lễ */}
