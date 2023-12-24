@@ -2,6 +2,7 @@ import React from "react";
 import { Input, Modal, TimePicker } from "antd";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+
 const EditEmployee = ({
   isModalOpenListEmployee,
   handleCancelListEmployee,
@@ -17,7 +18,6 @@ const EditEmployee = ({
 }) => {
 
   const handleTimeInputChange = (timeIn, timeOut, id) => {
-
     if (timeIn === null || timeOut === null || timeIn === '' || timeOut === '' || timeIn === 'Invalid Date' || timeOut === 'Invalid Date') {
       return;
     }

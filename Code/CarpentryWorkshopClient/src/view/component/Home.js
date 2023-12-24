@@ -10,6 +10,7 @@ import {
 } from "../../sevices/TimekeepingService";
 import { EditEmployee, AddEmployee } from "./componentCheckIn-Out";
 import "../scss/HomeComponent.scss";
+import { compareAsc, format, parse } from "date-fns";
 
 import { getMonthsInYear, createYearOptions } from "../logicTime/getWeeDays";
 
@@ -34,7 +35,15 @@ const Home = () => {
 
   const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
 
+ const currentDate = new Date();
+const day = String(currentDate.getDate()).padStart(2, '0');
+const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+const year = currentDate.getFullYear();
 
+const today = `${day}-${month}-${year}`;
+
+  console.log('today',today);
+  
 
   console.log("months", months);
   console.log("yearOptions", selectedYear);
@@ -332,9 +341,7 @@ const Home = () => {
                   const dateInfo = employee.dateScreen.find(
                     (item) => item.date === day.replace(/\s\/\s/, "-")
                   );
-                  console.log(day.replace(/\s\/\s/, "-"));
-                  console.log(dateInfo);
-                  console.log(dateInfo);
+
                   return (
                     <td key={day}>
                       {dateInfo ? (
@@ -412,11 +419,18 @@ const Home = () => {
                         )
                       ) : (
                         <i
-                          onClick={() => {
-                            if (isHumanResourcesDepartment) {
-                              setIsModalOpenAddEmployee(true);
+                        onClick={() => {
+                          console.log('dateInfo',dateInfo);
+                          
+                          if (dateInfo && dateInfo.date) {
+                            const date = dateInfo.date + "-" + selectedYear;
+                            if (date === today) {
+                              if (isHumanResourcesDepartment) {
+                                setIsModalOpenAddEmployee(true);
+                              }
                             }
-                          }}
+                          }
+                        }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
