@@ -478,6 +478,8 @@ const Home = () => {
         UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
         showModalListEmployee={showModalListEmployee}
         actionEdit={actionEdit}
+        setEmployCheckInOut={setEmployCheckInOut}
+        resetEmployeeCheckInOut={resetEmployeeCheckInOut}
       />
 
       <AddEmployee

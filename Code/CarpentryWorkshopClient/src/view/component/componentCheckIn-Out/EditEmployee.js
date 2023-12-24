@@ -15,7 +15,7 @@ const EditEmployee = ({
   date,
   employeeId,
   actionEdit,
-  setEmployCheckInOut,
+  resetEmployeeCheckInOut
 }) => {
   console.log('check', employCheckInOut);
   const handleTimeInputChange = (timeIn, timeOut, id) => {
@@ -49,10 +49,6 @@ const EditEmployee = ({
         success: "",
       }
     );
-  };
-  const resetEmployeeCheckInOut = () => {
-    console.log("reset");
-    setEmployCheckInOut([]);
   };
 
   return (
@@ -113,7 +109,6 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
-                        onOpenChange={resetEmployeeCheckInOut}
                         disabled={!actionEdit} // Disable TimePicker if actionEdit is false
                       />
                     </td>
@@ -132,7 +127,6 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
-                        onOpenChange={resetEmployeeCheckInOut}
                         disabled={!actionEdit} // Disable TimePicker if actionEdit is false
                       />
                     </td>
