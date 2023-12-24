@@ -881,7 +881,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("An error occurred while retrieving data.");
+                return BadRequest("Lỗi máy chủ");
             }
         }
     }
