@@ -27,6 +27,8 @@ const Home = () => {
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const [isModalOpenAddEmployee, setIsModalOpenAddEmployee] = useState(false);
   const [actionEdit, setActionEdit] = useState(false);
+  const [date, SetDate] = useState(false);
+
 
   let department = JSON.parse(localStorage.getItem("department")) || [];
   if (!department.length) {
@@ -35,15 +37,15 @@ const Home = () => {
 
   const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
 
- const currentDate = new Date();
-const day = String(currentDate.getDate()).padStart(2, '0');
-const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-const year = currentDate.getFullYear();
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const year = currentDate.getFullYear();
 
-const today = `${day}-${month}-${year}`;
+  const today = `${day}-${month}-${year}`;
 
-  console.log('today',today);
-  
+  console.log('today', today);
+
 
   console.log("months", months);
   console.log("yearOptions", selectedYear);
@@ -398,7 +400,22 @@ const today = `${day}-${month}-${year}`;
                             </svg>
                           </i>
                         ) : (
-                          <i                          >
+                          <i
+                            onClick={() => {
+                              if (dateInfo && dateInfo.date) {
+                                const date = dateInfo.date + "-" + selectedYear;
+                                if (date <= today) {
+                                  if (isHumanResourcesDepartment) {
+                                    setIsModalOpenAddEmployee(true);
+                                    SetDate(date)
+                                  }
+                                }
+                                else{
+                                  toast.warning("Chưa đến ngày điểm danh, vui lòng thử lại sau")
+                                }
+                              }
+                            }}
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -417,18 +434,7 @@ const today = `${day}-${month}-${year}`;
                         )
                       ) : (
                         <i
-                        onClick={() => {
-                          console.log('dateInfo',dateInfo);
-                          
-                          if (dateInfo && dateInfo.date) {
-                            const date = dateInfo.date + "-" + selectedYear;
-                            if (date === today) {
-                              if (isHumanResourcesDepartment) {
-                                setIsModalOpenAddEmployee(true);
-                              }
-                            }
-                          }
-                        }}
+
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -471,6 +477,7 @@ const today = `${day}-${month}-${year}`;
         convertTimeToInputFormat={convertTimeToInputFormat}
         isModalOpenAddEmployee={isModalOpenAddEmployee}
         handleCancelAddEmployee={handleCancelAddEmployee}
+        date={date}
       />
     </div>
   );
