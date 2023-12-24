@@ -744,8 +744,12 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                
+                if(checkInOutAddDTO.employeeId < 0 || checkInOutAddDTO.employeeId == null)
+                {
+                    return BadRequest("Lỗi dữ liệu");
+                }
                         CheckInOut checkInOut = new CheckInOut();
+                checkInOut.EmployeeId = checkInOutAddDTO.employeeId;
                         if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) || string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
@@ -760,7 +764,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Dữ liệu không thể chỉnh sửa");
                 }
-                checkInOut.Date = DateTime.ParseExact(checkInOutAddDTO.Datestring, "dd/MM/yyyy",
+                checkInOut.Date = DateTime.ParseExact(checkInOutAddDTO.Datestring, "dd-MM-yyyy",
                            System.Globalization.CultureInfo.InvariantCulture);
                         _context.CheckInOuts.Add(checkInOut);
                         _context.SaveChanges();
@@ -866,7 +870,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     EmployeeId = employee.EmployeeId,
                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
-                    EmployeeName = $"{employee.LastName}, {employee.FirstName}",
+                    EmployeeName = $"{employee.FirstName} {employee.LastName}",
                     TimeKeeping = datesInMonth.Select(date => new
                     {
                         Date = date.ToString("dd-MM"),
@@ -879,7 +883,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("An error occurred while retrieving data.");
+                return BadRequest("Lỗi máy chủ");
             }
         }
     }
