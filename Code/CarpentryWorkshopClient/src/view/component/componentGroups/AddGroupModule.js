@@ -38,12 +38,13 @@ const ModalAddGroup = ({
           <Select
             className="select-input"
             type="text"
-            defaultValue={selectedChangeid}
+            value={selectedChangeid}
             onChange={handleChange}
             options={allLeader.map((leader) => ({
               value: leader.employeeId,
               label: leader.fullName,
             }))}
+            placeholder="Chọn ca trưởng"
           />
         </div>
         <div className="info-add-department">
@@ -51,12 +52,13 @@ const ModalAddGroup = ({
           <Select
             className="select-input"
             type="text"
-            defaultValue={selectedChangeid1}
+            value={selectedChangeid1}
             onChange={handleChangeSelect}
             options={allSubLeader.map((SubLeader) => ({
               value: SubLeader.employeeId,
               label: SubLeader.fullName,
             }))}
+            placeholder="Chọn ca trưởng"
           />
         </div>
       </div>

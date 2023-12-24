@@ -21,7 +21,7 @@ const NewGroupEmployeeModule = ({
     >
       <div className="modal-add-group1">
         <div className="modal-head">
-          <h3>Thêm nhân viên nhóm {teamID}</h3>
+          <h3>Thêm nhân viên</h3>
         </div>
         <div className="body-modal-change">
           <div className="modal1-change">
@@ -40,9 +40,9 @@ const NewGroupEmployeeModule = ({
                   <Option
                     key={staff.employeeID}
                     value={staff.employeeID}
-                    label={staff.fullName}
+                    label={staff.fullName + "-" + staff.employeeID}
                   >
-                    <Space>{staff.fullName}</Space>
+                    <Space>{staff.fullName}-{staff.employeeID}</Space>
                   </Option>
                 ))}
               </Select>

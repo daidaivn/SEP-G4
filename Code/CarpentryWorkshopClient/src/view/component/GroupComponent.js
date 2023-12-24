@@ -48,9 +48,9 @@ const GroupComponent = () => {
   const [idChange, setIdChange] = useState();
   const [nameChange, setNameChange] = useState();
   const [roleMember, setRoleMember] = useState("");
-  const [selectedChangeid, setSelectedChangeid] = useState("Vui lòng chọn");
-  const [selectedChangeid1, setSelectedChangeid1] = useState("Vui lòng chọn");
-  const [changeSelectEdit, setChangeSelectEdit] = useState("Vui lòng chọn");
+  const [selectedChangeid, setSelectedChangeid] = useState("Chọn ca trưởng");
+  const [selectedChangeid1, setSelectedChangeid1] = useState("Chọn ca phó");
+  const [changeSelectEdit, setChangeSelectEdit] = useState("");
   const [allLeader, setAllLeader] = useState([]);
   const [allSubLeader, setAllSubLeader] = useState([]);
   const [teamsContinue, setTeamsContinue] = useState([]);
@@ -72,9 +72,14 @@ const GroupComponent = () => {
   const handleChangeSelect = (value) => {
     setSelectedChangeid1(value);
   };
+
+  function handleReset() {
+    setSelectedChangeid("Chọn ca trưởng");
+    setSelectedChangeid1("Chọn ca phó")
+  }
+
   const handleCancelGroup = () => {
-    setSelectedChangeid1("Vui lòng chọn");
-    setSelectedChangeid("Vui lòng chọn");
+    handleReset()
     setIsModalOpenGroup(false);
   };
 
@@ -203,8 +208,7 @@ const GroupComponent = () => {
     setIsModalOpenAdd(false);
   };
   const handleCancelAdd = () => {
-    setSelectedChangeid1("Vui lòng chọn");
-    setSelectedChangeid("Vui lòng chọn");
+    setSelectedChangeid1("Chọn ca phó");
     setIsModalOpenAdd(false);
   };
   const handleAddGroup = () => {
@@ -269,10 +273,10 @@ const GroupComponent = () => {
       new Promise((resolve) => {
         createTeam(newTeamName, selectedChangeid, selectedChangeid1)
           .then((data) => {
+            handleReset()
             setNewTeamName("");
             handleCancelGroup();
             fetchData();
-            handleDetailGroup(teamID);
             resolve(data);
           })
           .catch((error) => {
@@ -348,6 +352,8 @@ const GroupComponent = () => {
   const handleGetAllMember = () => {
     fetchAllStaffs(userEmployeeID)
       .then((data) => {
+        console.log('data11',data);
+        
         setGetStaffsNoTeam(data);
         showModalAdd();
       })
@@ -489,6 +495,7 @@ const GroupComponent = () => {
           teamID={teamID}
           getStaffsNoTeam={getStaffsNoTeam}
           handleChangeSelect={handleChangeSelect}
+          selectedChangeid1={selectedChangeid1}
         />
 
         <ChangeTeamModule
