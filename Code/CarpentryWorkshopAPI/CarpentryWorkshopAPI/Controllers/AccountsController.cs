@@ -256,7 +256,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-                return Ok("Thành công");
+                return Ok("Tài khoản của bạn đã được gửi đến Email. Vui lòng kiểm tra");
             }
             catch (Exception ex)
             {
@@ -274,8 +274,12 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Tên đăng nhập hoặc mật khẩu không đúng");
                 }
-
                 var user = loginRequest.UserName;
+                var userAccout = _context.UserAccounts.Where(ua => ua.UserName == user && ua.EmployeeId != loginRequest.Id).FirstOrDefault();
+                if (userAccout != null)
+                {
+                    return BadRequest("Tài khoản đã tồn tại");
+                }
                 var pass = loginRequest.Password;
                 account.UserName = user;
                 account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
@@ -306,7 +310,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-                return Ok("Thay đổi thành công");
+                return Ok("Tài khoản của bạn đã được gửi đến Email. Vui lòng kiểm tra");
             }
             catch (Exception ex)
             {

@@ -67,7 +67,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var roles = new List<Role>();
                 if (department == null)
                 {
-                    return NotFound($"Department with ID {departmentId} not found.");
+                    return NotFound($"Phòng ban với mã {departmentId} không tồn tại");
                 }
                 string rol = "Trưởng phòng";
                 var rolemp = await _context.RolesEmployees
@@ -94,7 +94,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 

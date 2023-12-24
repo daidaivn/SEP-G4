@@ -11,7 +11,12 @@ const TableCalendar = ({
   handlegetDataDetail,
   setWorkidDetail,
   setWorkDetailById,
+  convertDate,
+  selectedYear,
+  shift,
+  team,
   setShift,
+  setTeam,
   fetchAllShiftType,
   detailTeam
 }) => {
@@ -19,7 +24,7 @@ const TableCalendar = ({
     ? parseWeekRange(selectedWeek)
     : parseWeekRange(defaultValue);
 
-    console.log('selectedWeek',weekDays);
+    console.log('selectedWeek',selectedWeek);
     
 
   return (
@@ -105,7 +110,6 @@ const TableCalendar = ({
                         </>
                       ) : work.status === "no" ? (
                         <>
-                        <></>
                           Thêm
                           <svg
                             onClick={() => {
@@ -114,13 +118,11 @@ const TableCalendar = ({
                               setWorkidDetail(team.teamId);
                               const columnIndex = workIndex;
                               const selectedDate = weekDays[columnIndex];
-                              console.log('selectedDate',selectedDate);
-                              
                               const formattedDate = format(
                                 parse(selectedDate, "dd-MM", new Date()),
                                 "dd-MM-yyyy"
                               );
-                              console.log("date111", formattedDate);
+                              console.log("date", formattedDate);
                               setWorkDetailById({
                                 date: formattedDate,
                               });
