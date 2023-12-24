@@ -383,7 +383,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         .ThenInclude(w => w.WorkArea)
                     .Include(x => x.EmployeeTeams)
                         .ThenInclude(et => et.Employee)
-                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re =>re.EndDate == null) && et.EndDate == null))
+                    .Where(t => t.EmployeeTeams.Any(et => et.Employee.RolesEmployees.Any(re => re.EndDate == null) && et.EndDate == null))
                     .Select(t => new TeamListDTO
                     {
                         TeamId = t.TeamId,
@@ -814,8 +814,8 @@ namespace CarpentryWorkshopAPI.Controllers
                                    System.Globalization.CultureInfo.InvariantCulture);
                     var day = new List<object>();
                     var teamworks = _context.TeamWorks.Where(tw => tw.TeamId == team.TeamId).ToList();
-                    
-                    if(startDate.Date.AddDays(6) > newDateTime.Date)
+
+                    if (startDate.Date.AddDays(6) > newDateTime.Date)
                     {
                         endDate = endDate.AddYears(1);
                     }
@@ -881,10 +881,24 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                var team = _context.EmployeeTeams.Where(em=>em.TeamId == teamId).ToList();
-                if(team.Count() <= 0)
+                var team = _context.EmployeeTeams.Where(em => em.TeamId == teamId).ToList();
+                if (team.Count() <= 0)
                 {
                     return BadRequest("không thể tìm thấy nhóm");
+                }
+                else
+                {
+                    var worksToDelete = _context.Works
+                   .Include(w => w.TeamWorks)
+                   .Where(w => w.TeamWorks.Any(tw => tw.Date.Value.Date > DateTime.Now.Date && tw.TeamId == teamId))
+                   .ToList();
+
+                    if (worksToDelete.Any())
+                    {
+                        _context.Works.RemoveRange(worksToDelete);
+                        _context.SaveChanges();
+                    }
+
                 }
                 team.ForEach(ws => ws.EndDate = DateTime.Now);
                 _context.EmployeeTeams.UpdateRange(team);
