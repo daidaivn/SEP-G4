@@ -24,12 +24,13 @@ const Home = () => {
   const yearOptions = createYearOptions();
   const [employeeTimeKeepings, setEmployeeTimeKeepins] = useState("");
   const [employCheckInOut, setEmployCheckInOut] = useState([]);
+  const [employCheckInOutData, setEmployCheckInOutData] = useState([]);
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const [isModalOpenAddEmployee, setIsModalOpenAddEmployee] = useState(false);
   const [actionEdit, setActionEdit] = useState(false);
   const [date, SetDate] = useState("");
   const [employeeId, SetEmployeeId] = useState("");
-
+  const [iText, setIText] = useState("");
 
   let department = JSON.parse(localStorage.getItem("department")) || [];
   if (!department.length) {
@@ -76,6 +77,7 @@ const Home = () => {
       .then((data) => {
         console.log("data", data);
         setEmployeeTimeKeepins(data);
+        setEmployCheckInOutData(data);
       })
       .catch((error) => { });
   };
@@ -159,12 +161,19 @@ const Home = () => {
   };
 
   console.log('isModalOpenAddEmployee', isModalOpenAddEmployee);
-
-
   useEffect(() => {
     FetchTimeKeepingInfo();
   }, [months, selectedYear]);
-
+  const handleSearchChange = (e) => {
+    const searchText = e.target.value;
+    setIText(searchText);
+    console.log('search', searchText);
+    const filteredData = employCheckInOutData.filter((detail) =>
+      detail.employeeName.toLowerCase().includes(searchText.toLowerCase())
+    );
+    console.log('searchC', filteredData);
+    setEmployeeTimeKeepins(filteredData);
+  };
   return (
     <div className="col-right-container home-controller">
       <div className="list-container-header">
@@ -239,7 +248,7 @@ const Home = () => {
               </g>
             </svg>
           </i>
-          <Input placeholder="Tìm kiếm"></Input>
+          <Input placeholder="Tìm kiếm" onChange={(e) => {handleSearchChange(e)}}></Input>
         </div>
         <div className="list-filter">
           <Select
