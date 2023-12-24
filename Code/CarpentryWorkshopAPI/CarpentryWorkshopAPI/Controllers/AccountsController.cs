@@ -256,7 +256,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-                return Ok("Thành công");
+                return Ok("Tài khoản của bạn đã được gửi đến Email. Vui lòng kiểm tra");
             }
             catch (Exception ex)
             {
@@ -315,7 +315,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 smtp.Send(email);
                 smtp.Disconnect(true);
                 smtp.Dispose();
-                return Ok("Thay đổi thành công");
+                return Ok("Tài khoản của bạn đã được gửi đến Email. Vui lòng kiểm tra");
             }
             catch (Exception ex)
             {
