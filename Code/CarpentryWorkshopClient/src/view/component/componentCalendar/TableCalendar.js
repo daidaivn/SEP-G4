@@ -119,7 +119,7 @@ const TableCalendar = ({
                               const columnIndex = workIndex;
                               const selectedDate = weekDays[columnIndex];
                               const formattedDate = format(
-                                parse(selectedDate, "MM/dd", new Date()),
+                                parse(selectedDate, "dd/MM", new Date()),
                                 "dd-MM-yyyy"
                               );
                               console.log("date", formattedDate);
