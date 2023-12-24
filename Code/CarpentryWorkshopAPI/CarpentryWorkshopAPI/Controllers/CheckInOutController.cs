@@ -866,7 +866,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     EmployeeId = employee.EmployeeId,
                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
-                    EmployeeName = $"{employee.LastName}, {employee.FirstName}",
+                    EmployeeName = $"{employee.FirstName} {employee.LastName}",
                     TimeKeeping = datesInMonth.Select(date => new
                     {
                         Date = date.ToString("dd-MM"),
@@ -879,7 +879,7 @@ namespace CarpentryWorkshopAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("An error occurred while retrieving data.");
+                return BadRequest("Lỗi máy chủ");
             }
         }
     }
