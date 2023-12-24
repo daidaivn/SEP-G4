@@ -2,7 +2,6 @@
 {
     public class CheckInOutAddDTO
     {
-        public int? Id { get; set; }
         public int? employeeId { get; set; }
         public string? CheckIn { get; set; }
         public string? CheckOut { get; set; }

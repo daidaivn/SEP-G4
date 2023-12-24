@@ -6,7 +6,8 @@ import dayjs from "dayjs";
 const AddEmployee = ({
     handleCancelListEmployee,
     isModalOpenAddEmployee,
-    handleCancelAddEmployee
+    handleCancelAddEmployee,
+    date
 }) => {
 
     const [employeeTimeKeepings, setEmployeeTimeKeepins] = useState({
