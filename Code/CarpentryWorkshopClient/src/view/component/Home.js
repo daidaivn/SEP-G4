@@ -10,6 +10,7 @@ import {
 } from "../../sevices/TimekeepingService";
 import { EditEmployee, AddEmployee } from "./componentCheckIn-Out";
 import "../scss/HomeComponent.scss";
+import { compareAsc, format, parse } from "date-fns";
 
 import { getMonthsInYear, createYearOptions } from "../logicTime/getWeeDays";
 
@@ -26,8 +27,7 @@ const Home = () => {
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const [isModalOpenAddEmployee, setIsModalOpenAddEmployee] = useState(false);
   const [actionEdit, setActionEdit] = useState(false);
-  const [date, setDate] = useState("");
-  const [employeeId, setEmployeeId] = useState("");
+
   let department = JSON.parse(localStorage.getItem("department")) || [];
   if (!department.length) {
     department = JSON.parse(sessionStorage.getItem("department")) || [];
@@ -35,18 +35,26 @@ const Home = () => {
 
   const isHumanResourcesDepartment = department.includes("Phòng nhân sự");
 
+ const currentDate = new Date();
+const day = String(currentDate.getDate()).padStart(2, '0');
+const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+const year = currentDate.getFullYear();
+
+const today = `${day}-${month}-${year}`;
+
+  console.log('today',today);
+  
+
   console.log("months", months);
   console.log("yearOptions", selectedYear);
 
   const getDaysInMonthArray = () => {
-    // Get the number of days in the selected month and year
     const daysInMonth = new Date(
       selectedYear,
       monthOptions.findIndex((month) => month.value === months) + 1,
       0
     ).getDate();
 
-    // Create an array of formatted dates in "DD/MM" format
     return Array.from({ length: daysInMonth }, (_, index) => {
       const day = index + 1;
       const formattedDay = day < 10 ? `0${day}` : day;
@@ -66,7 +74,7 @@ const Home = () => {
         console.log("data", data);
         setEmployeeTimeKeepins(data);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleChangeYear = (newYear) => {
@@ -92,14 +100,15 @@ const Home = () => {
       const parts = timeString.split(":");
 
       if (parts.length >= 2 && parts.length <= 3) {
-        const hours = parts[0].padStart(2, "0"); // Ensure two-digit representation
-        const minutes = parts[1].padStart(2, "0"); // Ensure two-digit representation
+        const hours = parts[0];
+        const minutes = parts[1];
 
         // If seconds are present, extract and remove fractional seconds
-        const seconds =
-          parts.length === 3 ? parts[2].split(".")[0].padStart(2, "0") : "00";
-        console.log('time', `${hours}:${minutes}:${seconds}`);
-        // Format the parsed time as "HH:mm:ss"
+        const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
+        const parsedTime = dayjs(`${hours}:${minutes}:${seconds}`, "HH:mm");
+
+        // Format the parsed time as desired
+        const formattedTime = parsedTime.format("HH:mm");
         return `${hours}:${minutes}:${seconds}`;
       }
 
@@ -124,8 +133,6 @@ const Home = () => {
   };
 
   const showModalListEmployee = (id, date) => {
-    setDate(date);
-    setEmployeeId(id);
     toast.promise(
       GetDataCheckInOutByDateAndEmployeeId(id, date + "-" + selectedYear)
         .then((data) => {
@@ -148,7 +155,8 @@ const Home = () => {
     );
   };
 
-  console.log("isModalOpenAddEmployee", isModalOpenAddEmployee);
+  console.log('isModalOpenAddEmployee', isModalOpenAddEmployee);
+
 
   useEffect(() => {
     FetchTimeKeepingInfo();
@@ -328,12 +336,10 @@ const Home = () => {
                   <div>{employee.employeeName}</div>
                 </td>
                 {getDaysInMonthArray().map((day) => {
-                  const dateInfo = employee.dateScreen.find(
+                  const dateInfo = employee.timeKeeping.find(
                     (item) => item.date === day.replace(/\s\/\s/, "-")
                   );
-                  console.log(day.replace(/\s\/\s/, "-"));
-                  console.log(dateInfo);
-                  console.log(dateInfo);
+
                   return (
                     <td key={day}>
                       {dateInfo ? (
@@ -392,7 +398,7 @@ const Home = () => {
                             </svg>
                           </i>
                         ) : (
-                          <i>
+                          <i                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
@@ -411,11 +417,18 @@ const Home = () => {
                         )
                       ) : (
                         <i
-                          onClick={() => {
-                            if (isHumanResourcesDepartment) {
-                              setIsModalOpenAddEmployee(true);
+                        onClick={() => {
+                          console.log('dateInfo',dateInfo);
+                          
+                          if (dateInfo && dateInfo.date) {
+                            const date = dateInfo.date + "-" + selectedYear;
+                            if (date === today) {
+                              if (isHumanResourcesDepartment) {
+                                setIsModalOpenAddEmployee(true);
+                              }
                             }
-                          }}
+                          }
+                        }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -449,10 +462,7 @@ const Home = () => {
         handleOkListEmployee={handleOkListEmployee}
         UpdateCheckInOutForEmployee={UpdateCheckInOutForEmployee}
         showModalListEmployee={showModalListEmployee}
-        date={date}
-        employeeId={employeeId}
         actionEdit={actionEdit}
-        setEmployCheckInOut={setEmployCheckInOut}
       />
 
       <AddEmployee

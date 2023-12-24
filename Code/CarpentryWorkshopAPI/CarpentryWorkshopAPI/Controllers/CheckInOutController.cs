@@ -2,6 +2,7 @@
 using CarpentryWorkshopAPI.DTO;
 using CarpentryWorkshopAPI.Models;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -745,7 +746,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 
                         CheckInOut checkInOut = new CheckInOut();
-                        if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) || string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
+                        if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) && string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
                         }
@@ -763,7 +764,7 @@ namespace CarpentryWorkshopAPI.Controllers
                            System.Globalization.CultureInfo.InvariantCulture);
                         _context.CheckInOuts.Add(checkInOut);
                         _context.SaveChanges();
-                        return Ok("Thêm thông tin điểm danh thành công");
+                        return Ok("success");
                     
                     
             }
@@ -797,7 +798,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         Timeout = ci.TimeCheckOut,
                         EmployeeName = ci.Employee.LastName + " " + ci.Employee.FirstName,
                     })
-                    .ToListAsync();               
+                    .ToListAsync();
+                
                     var hourWork = _context.HoursWorkDays.Where(s => s.EmployeeId == employeeId && s.Day.Value.Date == parsedDate.Date).Sum(s => s.Hour);
                 if(hourWork == null)
                 {
@@ -833,7 +835,6 @@ namespace CarpentryWorkshopAPI.Controllers
 
             if (lastAttendance != null && lastAttendance.TimeCheckOut == null)
             {
-                // Tự động thêm "check-in" cho ngày hôm nay
                 var autoCheckin = new CheckInOut
                 {
                     EmployeeId = employeeId,
@@ -854,35 +855,32 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
                 var employeeIdLength = maxEmployeeId.ToString().Length;
+                var employees = await _context.Employees
+                    .Include(e => e.HoursWorkDays)
+                    .Where(e => e.HoursWorkDays.Any())
+                    .ToListAsync();
 
-                var employeeAttendance = await _context.Employees
-                    .Where(e=>e.Status == true)
-                 .Select(employee => new
-                 {
-                     EmployeeId = employee.EmployeeId,
-                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
-                     EmployeeName = $"{employee.FirstName} {employee.LastName}",
-                     DateScreen = _context.HoursWorkDays
-                         .Where(hwd => hwd.EmployeeId == employee.EmployeeId 
-                         && hwd.Day.Value.Month == month && hwd.Day.Value.Year == year)
-                         .OrderBy(x => x.Day)
-                         .Select(hwd => new
-                         { 
-                             Date = hwd.Day.Value.ToString("dd'-'MM"),
-                             Status = hwd.Hour >= 6.5 ? "Yes" : "No"
-                         })
-                         .ToList()
-                 })
-                 .ToListAsync();
-                if (employeeAttendance == null)
+                var datesInMonth = Enumerable.Range(1, DateTime.DaysInMonth(year, month))
+                    .Select(day => new DateTime(year, month, day))
+                    .ToList();
+                var timeKeepingData = employees.Select(employee => new
                 {
-                    return NotFound("Không tìm thấy dữ liệu");
-                }
-                return Ok(employeeAttendance);
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
+                    EmployeeName = $"{employee.LastName}, {employee.FirstName}",
+                    TimeKeeping = datesInMonth.Select(date => new
+                    {
+                        Date = date.ToString("dd-MM"),
+                        Status = employee.HoursWorkDays.Any(h => h.Day == date && h.Hour >= 6.5) ? "Yes" :
+                            (employee.HoursWorkDays.Any(h => h.Day == date) ? "No" : "")
+                    }).ToList()
+                }).ToList();
+
+                return Ok(timeKeepingData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return BadRequest("Lỗi máy chủ");
+                return BadRequest("An error occurred while retrieving data.");
             }
         }
     }

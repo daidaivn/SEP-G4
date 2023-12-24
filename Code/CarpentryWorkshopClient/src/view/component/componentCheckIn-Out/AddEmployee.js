@@ -55,7 +55,7 @@ const AddEmployee = ({
                             </div>
                             <div className="footer-modal">
                                 <span className="back" onClick={handleCancelAddEmployee}>
-                                    Hủy bỏ
+                                    Thoát
                                 </span>
                                 <span className="edit save" onClick={handleCancelAddEmployee}>
                                     Lưu
