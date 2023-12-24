@@ -78,6 +78,7 @@ const CalendarComponent = () => {
   const [team, setTeam] = useState([]);
   const [shiftType, setShiftType] = useState([]);
   const [detailTeamID, setDetailTeamID] = useState([]);
+
   const handleOkGroup = () => {
     setIsModalOpenGroup(false);
   };
