@@ -19,6 +19,7 @@ const EditEmployee = ({
 }) => {
   console.log('check', employCheckInOut);
   const handleTimeInputChange = (timeIn, timeOut, id) => {
+
     if (timeIn === null || timeOut === null || timeIn === '' || timeOut === '' || timeIn === 'Invalid Date' || timeOut === 'Invalid Date') {
       return;
     }
@@ -34,19 +35,14 @@ const EditEmployee = ({
       UpdateCheckInOutForEmployee(id, timeIn, timeOut)
         .then((data) => {
           showModalListEmployee(employeeId, date);
-          return data;
+          return toast.success(data);
         })
 
         .catch((error) => {
-          if (error.response && error.response.status === 404) {
             throw toast.error(error.response.data);
-          } else {
-            throw toast.error(error.response.data);
-          }
         }),
       {
         pending: "Đang xử lý",
-        success: "",
       }
     );
   };
