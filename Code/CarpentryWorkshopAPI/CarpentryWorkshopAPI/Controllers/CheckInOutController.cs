@@ -859,29 +859,23 @@ namespace CarpentryWorkshopAPI.Controllers
                     .Where(e => e.HoursWorkDays.Any())
                     .ToListAsync();
 
-                var employeeAttendance = await _context.Employees
-                 .Select(employee => new
-                 {
-                     EmployeeId = employee.EmployeeId,
-                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
-                     EmployeeName = $"{employee.FirstName} {employee.LastName}",
-                     DateScreen = _context.HoursWorkDays
-                         .Where(hwd => hwd.EmployeeId == employee.EmployeeId 
-                         && hwd.Day.Value.Month == month && hwd.Day.Value.Year == year)
-                         .OrderBy(x => x.Day)
-                         .Select(hwd => new
-                         { 
-                             Date = hwd.Day.Value.ToString("dd'-'MM"),
-                             Status = hwd.Hour >= 6.5 ? "Yes" : "No"
-                         })
-                         .ToList()
-                 })
-                 .ToListAsync();
-                if (employeeAttendance == null)
+                var datesInMonth = Enumerable.Range(1, DateTime.DaysInMonth(year, month))
+                    .Select(day => new DateTime(year, month, day))
+                    .ToList();
+                var timeKeepingData = employees.Select(employee => new
                 {
-                    return NotFound("Không tìm thấy dữ liệu");
-                }
-                return Ok(employeeAttendance);
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
+                    EmployeeName = $"{employee.LastName}, {employee.FirstName}",
+                    TimeKeeping = datesInMonth.Select(date => new
+                    {
+                        Date = date.ToString("dd-MM"),
+                        Status = employee.HoursWorkDays.Any(h => h.Day == date && h.Hour >= 6.5) ? "Yes" :
+                            (employee.HoursWorkDays.Any(h => h.Day == date) ? "No" : "")
+                    }).ToList()
+                }).ToList();
+
+                return Ok(timeKeepingData);
             }
             catch (Exception ex)
             {
