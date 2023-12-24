@@ -3,31 +3,38 @@
   .list-table-scroll-x {
     max-width: 1137px;
   }
+
   .table-scroll-x {
     height: 400px;
   }
+
   .excel {
     svg {
       width: 23px;
       height: 23px;
     }
+
     font-size: 16px;
   }
+
   .buttonAdd {
     svg {
       width: 23px;
       height: 23px;
     }
   }
+
   .table-scroll-x thead tr {
     padding: 17px 32px 17px 12px;
   }
+
   .head-excel,
   .text-head p,
   .modal-payroll .modal-head {
-    font-size: 35px !important;
+    font-size: 30px !important;
     padding: 26px 20px !important;
   }
+
   .modal-excel .body-excel .item p,
   .modal-excel .body-excel .item .ant-select .ant-select-selector,
   .modal-excel .body-excel .footer,
@@ -44,31 +51,65 @@
   .modal-allowance-all .body-allowance-all thead tr .item-child,
   .modal-allowance-all .body-allowance-all .tbody .item-body .item-child-body,
   .modal-allowance-all .body-allowance-all .tbody .item-body {
-    font-size: 18px;
+    font-size: 14px;
   }
-  .modal-type-reward-all {
-  }
+
+  .modal-type-reward-all {}
+
   .modal-payroll .modal-head .body-payroll1 p {
     font-size: 35px !important;
   }
+
   .body-payroll1 {
     padding: unset !important;
   }
+
   .modal-reward-company {
     width: 1244px;
   }
+
   .modal-allowance-all .head-allowance-all .text-head p {
     padding: unset !important;
   }
+
   .modal-allowance-all .head-allowance-all {
     padding: 30px 20px !important;
   }
+
   .modal-allowance-all {
     width: 1400px;
     height: 700px;
   }
+
   .year {
     width: 130px !important;
     padding: 12px 10px !important;
+  }
+}
+
+.modal-allowance-all {
+  .body-allowance-all {
+    thead {
+      tr {
+        padding: 0px 12px;
+      }
+    }
+  }
+}
+
+.modal-allowance-all .body-allowance-all {
+  padding: 18px 31px;
+}
+
+.item-child{
+  padding: 18px 0px !important;
+}
+
+.table-payroll{
+  .tbody{
+    max-height: 461px !important;
+    .item-body{
+      padding: 8px 12px !important;
+    }
   }
 }

@@ -12,7 +12,7 @@ const Other = ({
       {/* Modal hiển thị tất cả danh sách phụ cấp */}
       <div className="AllowanceAll">
         <Modal
-          className="modal-AllowanceAll"
+          className="modal-AllowanceAll table-payroll"
           open={isModalOpenOther}
           onOk={handleOkOther}
           onCancel={handleCancelOther}

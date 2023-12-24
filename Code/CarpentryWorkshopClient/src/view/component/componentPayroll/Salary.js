@@ -39,7 +39,7 @@ const Salary = ({
                 </svg>
               </div>
             </div>
-            <div className="body-allowance-all">
+            <div className="body-allowance-all table-payroll">
               <thead>
                 <tr>
                   <div className="child1">MNV</div>
