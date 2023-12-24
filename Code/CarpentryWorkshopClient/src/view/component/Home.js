@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, Select } from "antd";
 import dayjs from "dayjs";
-
+import { Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 import { GetTimeKeepingInfo } from "../../sevices/HomeService";
 import {
@@ -346,91 +346,98 @@ const Home = () => {
                     <td key={day}>
                       {dateInfo ? (
                         dateInfo.status === "Yes" ? (
-                          <i
-                            onClick={() => {
-                              if (isHumanResourcesDepartment) {
-                                setActionEdit(true);
-                              }
-                              showModalListEmployee(
-                                employee.employeeId,
-                                dateInfo.date
-                              );
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="17"
-                              height="16"
-                              viewBox="0 0 17 16"
-                              fill="none"
+                          <Tooltip title={isHumanResourcesDepartment ? "Cập nhật điểm danh" : "Chi tiết điểm danh"} arrow placement="top">
+                            <i
+                              onClick={() => {
+                                if (isHumanResourcesDepartment) {
+                                  setActionEdit(true);
+                                }
+                                showModalListEmployee(
+                                  employee.employeeId,
+                                  dateInfo.date
+                                );
+                              }}
                             >
-                              <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M16.356 8C16.356 3.58172 12.7742 0 8.35596 0C3.93768 0 0.355957 3.58172 0.355957 8C0.355957 12.4183 3.93768 16 8.35596 16C12.7742 16 16.356 12.4183 16.356 8ZM12.653 6.06689L11.7203 5.1141L6.83169 9.80226L5.28606 8.3901L4.35596 9.34545L6.83441 11.6661L12.653 6.06689Z"
-                                fill="#007C2E"
-                              />
-                            </svg>
-                          </i>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="17"
+                                height="16"
+                                viewBox="0 0 17 16"
+                                fill="none"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M16.356 8C16.356 3.58172 12.7742 0 8.35596 0C3.93768 0 0.355957 3.58172 0.355957 8C0.355957 12.4183 3.93768 16 8.35596 16C12.7742 16 16.356 12.4183 16.356 8ZM12.653 6.06689L11.7203 5.1141L6.83169 9.80226L5.28606 8.3901L4.35596 9.34545L6.83441 11.6661L12.653 6.06689Z"
+                                  fill="#007C2E"
+                                />
+                              </svg>
+                            </i>
+                          </Tooltip>
+
                         ) : dateInfo.status === "No" ? (
-                          <i
-                            onClick={() => {
-                              if (isHumanResourcesDepartment) {
-                                setActionEdit(true);
-                              }
-                              showModalListEmployee(
-                                employee.employeeId,
-                                dateInfo.date
-                              );
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="17"
-                              height="16"
-                              viewBox="0 0 17 16"
-                              fill="none"
+                          <Tooltip title={isHumanResourcesDepartment ? "Cập nhật điểm danh" : "Chi tiết điểm danh"} arrow placement="top">
+                            <i
+                              onClick={() => {
+                                if (isHumanResourcesDepartment) {
+                                  setActionEdit(true);
+                                }
+                                showModalListEmployee(
+                                  employee.employeeId,
+                                  dateInfo.date
+                                );
+                              }}
                             >
-                              <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M0.721191 8C0.721191 3.58817 4.30937 0 8.72119 0C13.1323 0 16.7212 3.58817 16.7212 8C16.7212 12.4118 13.1323 16 8.72119 16C4.30937 16 0.721191 12.4118 0.721191 8ZM8.72119 3.33333C9.27348 3.33333 9.72119 3.78105 9.72119 4.33333C9.72119 4.88562 9.27348 5.33333 8.72119 5.33333C8.16891 5.33333 7.72119 4.88562 7.72119 4.33333C7.72119 3.78105 8.16891 3.33333 8.72119 3.33333ZM6.72119 12.6667V11.3333H8.05452V8H6.72119V6.66667H9.38786V11.3333H10.7212V12.6667H6.72119Z"
-                                fill="#FF8F19"
-                              />
-                            </svg>
-                          </i>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="17"
+                                height="16"
+                                viewBox="0 0 17 16"
+                                fill="none"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M0.721191 8C0.721191 3.58817 4.30937 0 8.72119 0C13.1323 0 16.7212 3.58817 16.7212 8C16.7212 12.4118 13.1323 16 8.72119 16C4.30937 16 0.721191 12.4118 0.721191 8ZM8.72119 3.33333C9.27348 3.33333 9.72119 3.78105 9.72119 4.33333C9.72119 4.88562 9.27348 5.33333 8.72119 5.33333C8.16891 5.33333 7.72119 4.88562 7.72119 4.33333C7.72119 3.78105 8.16891 3.33333 8.72119 3.33333ZM6.72119 12.6667V11.3333H8.05452V8H6.72119V6.66667H9.38786V11.3333H10.7212V12.6667H6.72119Z"
+                                  fill="#FF8F19"
+                                />
+                              </svg>
+                            </i>
+                          </Tooltip>
                         ) : (
-                          <i
-                            onClick={() => {
-                              if (dateInfo && dateInfo.date) {
-                                const date = dateInfo.date + "-" + selectedYear;
-                                if (date <= today) {
-                                  if (isHumanResourcesDepartment) {
-                                    setIsModalOpenAddEmployee(true);
-                                    SetDate(date)
+                          <Tooltip title={isHumanResourcesDepartment && "Điểm danh bù"} arrow placement="top">
+                            <i
+                              onClick={() => {
+                                if (dateInfo && dateInfo.date) {
+                                  const date = dateInfo.date + "-" + selectedYear;
+                                  if (date <= today) {
+                                    if (isHumanResourcesDepartment) {
+                                      setIsModalOpenAddEmployee(true);
+                                      SetDate(date)
+                                    }
+                                  }
+                                  else {
+                                    toast.warning("Chưa đến ngày điểm danh, vui lòng thử lại sau")
                                   }
                                 }
-                                else{
-                                  toast.warning("Chưa đến ngày điểm danh, vui lòng thử lại sau")
-                                }
-                              }
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="17"
-                              height="16"
-                              viewBox="0 0 17 16"
-                              fill="none"
+                              }}
                             >
-                              <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M0.408219 7.98398C0.416567 3.58121 4.00473 0 8.40751 0C12.8346 0.00834781 16.4165 3.60417 16.4082 8.01459C16.3991 12.4181 12.8103 16 8.4082 16H8.3929C6.25586 15.9958 4.24821 15.1596 2.74004 13.6459C1.23187 12.1315 0.404045 10.121 0.408219 7.98398ZM11.7415 5.61904L10.7891 4.66666L8.40819 7.04799L6.02724 4.66666L5.07486 5.61904L7.45619 7.99999L5.07486 10.3809L6.02724 11.3333L8.40819 8.95198L10.7891 11.3333L11.7415 10.3809L9.36019 7.99999L11.7415 5.61904Z"
-                                fill="#C30000"
-                              />
-                            </svg>
-                          </i>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="17"
+                                height="16"
+                                viewBox="0 0 17 16"
+                                fill="none"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M0.408219 7.98398C0.416567 3.58121 4.00473 0 8.40751 0C12.8346 0.00834781 16.4165 3.60417 16.4082 8.01459C16.3991 12.4181 12.8103 16 8.4082 16H8.3929C6.25586 15.9958 4.24821 15.1596 2.74004 13.6459C1.23187 12.1315 0.404045 10.121 0.408219 7.98398ZM11.7415 5.61904L10.7891 4.66666L8.40819 7.04799L6.02724 4.66666L5.07486 5.61904L7.45619 7.99999L5.07486 10.3809L6.02724 11.3333L8.40819 8.95198L10.7891 11.3333L11.7415 10.3809L9.36019 7.99999L11.7415 5.61904Z"
+                                  fill="#C30000"
+                                />
+                              </svg>
+                            </i>
+                          </Tooltip>
                         )
                       ) : (
                         <i
