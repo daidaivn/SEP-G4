@@ -27,7 +27,8 @@ const Home = () => {
   const [isModalOpenListEmployee, setIsModalOpenListEmployee] = useState(false);
   const [isModalOpenAddEmployee, setIsModalOpenAddEmployee] = useState(false);
   const [actionEdit, setActionEdit] = useState(false);
-  const [date, SetDate] = useState(false);
+  const [date, SetDate] = useState("");
+  const [employeeId, SetEmployeeId] = useState(""); 
 
 
   let department = JSON.parse(localStorage.getItem("department")) || [];
@@ -407,7 +408,8 @@ const Home = () => {
                                 if (date <= today) {
                                   if (isHumanResourcesDepartment) {
                                     setIsModalOpenAddEmployee(true);
-                                    SetDate(date)
+                                    SetDate(date);
+                                    SetEmployeeId(dateInfo.employeeId)
                                   }
                                 }
                                 else{
@@ -478,6 +480,8 @@ const Home = () => {
         isModalOpenAddEmployee={isModalOpenAddEmployee}
         handleCancelAddEmployee={handleCancelAddEmployee}
         date={date}
+        employeeId={employeeId}
+        FetchTimeKeepingInfo={FetchTimeKeepingInfo}
       />
     </div>
   );
