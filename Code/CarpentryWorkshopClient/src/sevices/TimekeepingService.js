@@ -47,7 +47,7 @@ const AddCheckInOutForEmployee = (id, checkIn, checkOut, date) => {
     checkOut: checkOut,
     datestring: date,
   };
-  console.log("dataCheckIn", requestBody);
+  console.log("DataAddCheckIn", requestBody);
   return axios.post(
     `/CWMSapi/CheckInOut/AddHomeCheckInOutForEmployee`,
     requestBody

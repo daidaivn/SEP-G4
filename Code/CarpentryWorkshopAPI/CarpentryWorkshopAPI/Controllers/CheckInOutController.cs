@@ -744,8 +744,12 @@ namespace CarpentryWorkshopAPI.Controllers
         {
             try
             {
-                
+                if(checkInOutAddDTO.employeeId < 0 || checkInOutAddDTO.employeeId == null)
+                {
+                    return BadRequest("Lỗi dữ liệu");
+                }
                         CheckInOut checkInOut = new CheckInOut();
+                checkInOut.EmployeeId = checkInOutAddDTO.employeeId;
                         if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) || string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");

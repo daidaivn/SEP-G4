@@ -409,7 +409,7 @@ const Home = () => {
                                   if (isHumanResourcesDepartment) {
                                     setIsModalOpenAddEmployee(true);
                                     SetDate(date);
-                                    SetEmployeeId(dateInfo.employeeId)
+                                    SetEmployeeId(employee.employeeId)
                                   }
                                 }
                                 else{
