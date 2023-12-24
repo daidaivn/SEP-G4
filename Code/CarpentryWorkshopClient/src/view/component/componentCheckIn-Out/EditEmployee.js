@@ -29,8 +29,6 @@ const EditEmployee = ({
     if (timeOut === 1) {
       timeOut = "";
     }
-    console.log('timeIn', timeIn);
-    console.log('timeOut', timeOut);
     toast.promise(
       UpdateCheckInOutForEmployee(id, timeIn, timeOut)
         .then((data) => {

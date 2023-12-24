@@ -704,10 +704,11 @@ namespace CarpentryWorkshopAPI.Controllers
                         checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutDTO.CheckIn) && TimeSpan.TryParse(checkInOutDTO.CheckIn, out var checkIn) ? checkIn : checkInOut.TimeCheckIn;
                         if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
-                            return BadRequest("Dữ liệu không thể chỉnh sửa");
+                            return BadRequest("Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc");
                         }
                         var checKInOutDay = _context.CheckInOuts
                             .Where(ce => ce.Date == checkInOut.Date
+                            && ce.EmployeeId == checkInOut.EmployeeId
                             && ce.CheckInOutId != checkInOutDTO.Id
                              && (
                                 (ce.TimeCheckIn >= checkInOut.TimeCheckIn && ce.TimeCheckIn < checkInOut.TimeCheckOut) ||
@@ -717,9 +718,8 @@ namespace CarpentryWorkshopAPI.Controllers
 
                         if (checKInOutDay.Count() > 0)
                         {
-                            return BadRequest("Dữ liệu không hợp lệ");
+                            return BadRequest("Thời gian bắt đầu và kết thúc không hợp lệ");
                         }
-
                         _context.CheckInOuts.Update(checkInOut);
                         _context.SaveChanges();
                         return Ok("success");
@@ -749,7 +749,7 @@ namespace CarpentryWorkshopAPI.Controllers
                     return BadRequest("Lỗi dữ liệu");
                 }
                         CheckInOut checkInOut = new CheckInOut();
-                checkInOut.EmployeeId = checkInOutAddDTO.employeeId;
+                        checkInOut.EmployeeId = checkInOutAddDTO.employeeId;
                         if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) || string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
@@ -758,8 +758,8 @@ namespace CarpentryWorkshopAPI.Controllers
                         checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutAddDTO.CheckIn) && TimeSpan.TryParse(checkInOutAddDTO.CheckIn, out var checkIn) ? checkIn : TimeSpan.Zero;
                         if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                         {
-                            return BadRequest("Dữ liệu không thể chỉnh sửa");
-                        }
+                           return BadRequest("Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc");
+                }
                 if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
                 {
                     return BadRequest("Dữ liệu không thể chỉnh sửa");

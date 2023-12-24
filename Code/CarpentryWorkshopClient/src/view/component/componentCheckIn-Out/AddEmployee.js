@@ -48,8 +48,8 @@ const AddEmployee = ({
       AddCheckInOutForEmployee(employeeId, timeIn, timeOut, date)
         .then((data) => {
           FetchTimeKeepingInfo();
-          setTimeIn("");
-          setTimeOut("");
+          setTimeIn("00:00:01");
+          setTimeOut("00:00:01");
           handleCancelAddEmployee();
           return data;
         })
