@@ -281,11 +281,6 @@ namespace CarpentryWorkshopAPI.Controllers
                     return BadRequest("Tài khoản đã tồn tại");
                 }
                 var pass = loginRequest.Password;
-                var accountExist = YourAuthenticationLogicAsync(user,pass);
-                if(accountExist != null)
-                {
-                    return BadRequest("Tài khoản đã tồn tại");
-                }
                 account.UserName = user;
                 account.Password = BCrypt.Net.BCrypt.HashPassword(pass);
                 _context.UserAccounts.Update(account);
