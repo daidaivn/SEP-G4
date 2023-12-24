@@ -11,7 +11,8 @@ const AddEmployee = ({
   employeeId,
   FetchTimeKeepingInfo,
 }) => {
-
+    const [timeIn, setTimeIn] = useState("");
+    const [timeOut, setTimeOut] = useState("");
   const handleTimeInputChange = (timeIn, timeOut) => {
     if (
       timeIn === null ||
@@ -25,10 +26,15 @@ const AddEmployee = ({
     }
     console.log("timeIn", timeIn);
     console.log("timeOut", timeOut);
+    console.log("enmployId", employeeId);
+    console.log("date", date);
     toast.promise(
-        AddCheckInOutForEmployee(employeeId, timeIn, timeOut, date)
+      AddCheckInOutForEmployee(employeeId, timeIn, timeOut, date)
         .then((data) => {
-            FetchTimeKeepingInfo();
+          FetchTimeKeepingInfo();
+          setTimeIn("");
+          setTimeOut("");
+          handleCancelAddEmployee();
           return data;
         })
 
@@ -41,7 +47,7 @@ const AddEmployee = ({
         }),
       {
         pending: "Đang xử lý",
-        success: "",
+        success: "Thêm dữ liệu điểm danh thành công",
       }
     );
   };
@@ -71,12 +77,20 @@ const AddEmployee = ({
                   <td>
                     <TimePicker
                       disableClock
-                      format="HH:mm"
-                      onBlur={handleCancelListEmployee}
+                      format="HH:mm:ss"
+                      onChange={(newTime) =>
+                        setTimeIn(dayjs(newTime).format("HH:mm:ss"))
+                      }
                     />
                   </td>
                   <td>
-                    <TimePicker disableClock format="HH:mm" />
+                    <TimePicker
+                      disableClock
+                      format="HH:mm:ss"
+                      onChange={(newTime) =>
+                        setTimeOut(dayjs(newTime).format("HH:mm:ss"))
+                      }
+                    />
                   </td>
                 </tr>
                 <tr></tr>
@@ -85,7 +99,7 @@ const AddEmployee = ({
                 <span className="back" onClick={handleCancelAddEmployee}>
                   Thoát
                 </span>
-                <span className="edit save" onClick={handleCancelAddEmployee}>
+                <span className="edit save" onClick={() => handleTimeInputChange(timeIn, timeOut)}>
                   Lưu
                 </span>
               </div>
