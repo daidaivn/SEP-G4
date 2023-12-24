@@ -49,14 +49,12 @@ const today = `${day}-${month}-${year}`;
   console.log("yearOptions", selectedYear);
 
   const getDaysInMonthArray = () => {
-    // Get the number of days in the selected month and year
     const daysInMonth = new Date(
       selectedYear,
       monthOptions.findIndex((month) => month.value === months) + 1,
       0
     ).getDate();
 
-    // Create an array of formatted dates in "DD/MM" format
     return Array.from({ length: daysInMonth }, (_, index) => {
       const day = index + 1;
       const formattedDay = day < 10 ? `0${day}` : day;

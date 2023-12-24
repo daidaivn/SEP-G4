@@ -706,11 +706,20 @@ namespace CarpentryWorkshopAPI.Controllers
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
                         }
-                        var checKInOutDay = _context.CheckInOuts.Where(ce => ce.Date == checkInOut.Date && ce.CheckInOutId != checkInOutDTO.Id && (ce.TimeCheckIn.Value >= checkInOut.TimeCheckIn || ce.TimeCheckOut <= checkInOut.TimeCheckOut)).ToList();
+                        var checKInOutDay = _context.CheckInOuts
+                            .Where(ce => ce.Date == checkInOut.Date
+                            && ce.CheckInOutId != checkInOutDTO.Id
+                             && (
+                                (ce.TimeCheckIn >= checkInOut.TimeCheckIn && ce.TimeCheckIn < checkInOut.TimeCheckOut) ||
+                                (ce.TimeCheckOut > checkInOut.TimeCheckIn && ce.TimeCheckOut <= checkInOut.TimeCheckOut)
+                            ))
+                            .ToList();
+
                         if (checKInOutDay.Count() > 0)
                         {
                             return BadRequest("Dữ liệu không hợp lệ");
                         }
+
                         _context.CheckInOuts.Update(checkInOut);
                         _context.SaveChanges();
                         return Ok("success");
@@ -724,6 +733,40 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     return BadRequest("Không tìm thấy dữ liệu");
                 }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi dữ liệu");
+            }
+        }
+        [HttpPost]
+        public IActionResult AddHomeCheckInOutForEmployee([FromBody] CheckInOutAddDTO checkInOutAddDTO)
+        {
+            try
+            {
+                
+                        CheckInOut checkInOut = new CheckInOut();
+                        if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) && string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
+                        {
+                            return BadRequest("Dữ liệu không thể chỉnh sửa");
+                        }
+                        checkInOut.TimeCheckOut = !string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) && TimeSpan.TryParse(checkInOutAddDTO.CheckOut, out var checkOut) ? checkOut : TimeSpan.Zero;
+                        checkInOut.TimeCheckIn = !string.IsNullOrEmpty(checkInOutAddDTO.CheckIn) && TimeSpan.TryParse(checkInOutAddDTO.CheckIn, out var checkIn) ? checkIn : TimeSpan.Zero;
+                        if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
+                        {
+                            return BadRequest("Dữ liệu không thể chỉnh sửa");
+                        }
+                if (checkInOut.TimeCheckIn > checkInOut.TimeCheckOut)
+                {
+                    return BadRequest("Dữ liệu không thể chỉnh sửa");
+                }
+                checkInOut.Date = DateTime.ParseExact(checkInOutAddDTO.Datestring, "dd/MM/yyyy",
+                           System.Globalization.CultureInfo.InvariantCulture);
+                        _context.CheckInOuts.Add(checkInOut);
+                        _context.SaveChanges();
+                        return Ok("success");
+                    
+                    
             }
             catch (Exception ex)
             {

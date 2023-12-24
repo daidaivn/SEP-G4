@@ -14,9 +14,10 @@ const EditEmployee = ({
   showModalListEmployee,
   date,
   employeeId,
-  actionEdit
+  actionEdit,
+  setEmployCheckInOut,
 }) => {
-
+  console.log('check', employCheckInOut);
   const handleTimeInputChange = (timeIn, timeOut, id) => {
     if (timeIn === null || timeOut === null || timeIn === '' || timeOut === '' || timeIn === 'Invalid Date' || timeOut === 'Invalid Date') {
       return;
@@ -49,7 +50,10 @@ const EditEmployee = ({
       }
     );
   };
-
+  const resetEmployeeCheckInOut = () => {
+    console.log("reset");
+    setEmployCheckInOut([]);
+  };
 
   return (
     <>
@@ -97,11 +101,11 @@ const EditEmployee = ({
                     <td>
                       <TimePicker
                         disableClock
-                        defaultValue={dayjs(
+                        value={dayjs(
                           convertTimeToInputFormat(employee.timeIn),
-                          "HH:mm"
+                          "HH:mm:ss"
                         )}
-                        format="HH:mm"
+                        format="HH:mm:ss"
                         onChange={(newTime) =>
                           handleTimeInputChange(
                             dayjs(newTime).format("HH:mm"),
@@ -109,18 +113,18 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
-                        onBlur={handleCancelListEmployee}
+                        onOpenChange={resetEmployeeCheckInOut}
                         disabled={!actionEdit} // Disable TimePicker if actionEdit is false
                       />
                     </td>
                     <td>
                       <TimePicker
                         disableClock
-                        defaultValue={dayjs(
+                        value={dayjs(
                           convertTimeToInputFormat(employee.timeout),
-                          "HH:mm"
+                          "HH:mm:ss"
                         )}
-                        format="HH:mm"
+                        format="HH:mm:ss"
                         onChange={(newTime) =>
                           handleTimeInputChange(
                             1,
@@ -128,6 +132,7 @@ const EditEmployee = ({
                             employee.checkInOutId
                           )
                         }
+                        onOpenChange={resetEmployeeCheckInOut}
                         disabled={!actionEdit} // Disable TimePicker if actionEdit is false
                       />
                     </td>
