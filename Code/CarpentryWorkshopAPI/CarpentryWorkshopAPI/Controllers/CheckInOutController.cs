@@ -855,25 +855,24 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 var maxEmployeeId = _context.Employees.Max(emp => emp.EmployeeId);
                 var employeeIdLength = maxEmployeeId.ToString().Length;
-
                 var employees = await _context.Employees
-                    .Include(e => e.HoursWorkDays) 
+                    .Include(e => e.HoursWorkDays)
                     .Where(e => e.HoursWorkDays.Any())
                     .ToListAsync();
 
                 var datesInMonth = Enumerable.Range(1, DateTime.DaysInMonth(year, month))
                     .Select(day => new DateTime(year, month, day))
                     .ToList();
-
                 var timeKeepingData = employees.Select(employee => new
                 {
                     EmployeeId = employee.EmployeeId,
                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
-                    EmployeeName = $"{employee.LastName}, {employee.FirstName}", 
+                    EmployeeName = $"{employee.LastName}, {employee.FirstName}",
                     TimeKeeping = datesInMonth.Select(date => new
                     {
                         Date = date.ToString("dd-MM"),
-                        Status = employee.HoursWorkDays.Any(h => h.Day == date && h.Hour >= 6.5) ? "Yes" : "No"
+                        Status = employee.HoursWorkDays.Any(h => h.Day == date && h.Hour >= 6.5) ? "Yes" :
+                            (employee.HoursWorkDays.Any(h => h.Day == date) ? "No" : "")
                     }).ToList()
                 }).ToList();
 

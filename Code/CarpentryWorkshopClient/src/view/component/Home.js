@@ -336,7 +336,7 @@ const today = `${day}-${month}-${year}`;
                   <div>{employee.employeeName}</div>
                 </td>
                 {getDaysInMonthArray().map((day) => {
-                  const dateInfo = employee.dateScreen.find(
+                  const dateInfo = employee.timeKeeping.find(
                     (item) => item.date === day.replace(/\s\/\s/, "-")
                   );
 
