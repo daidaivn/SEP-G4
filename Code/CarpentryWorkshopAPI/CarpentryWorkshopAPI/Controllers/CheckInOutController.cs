@@ -745,7 +745,7 @@ namespace CarpentryWorkshopAPI.Controllers
             {
                 
                         CheckInOut checkInOut = new CheckInOut();
-                        if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) && string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
+                        if (string.IsNullOrEmpty(checkInOutAddDTO.CheckOut) || string.IsNullOrEmpty(checkInOutAddDTO.CheckIn))
                         {
                             return BadRequest("Dữ liệu không thể chỉnh sửa");
                         }
@@ -763,7 +763,7 @@ namespace CarpentryWorkshopAPI.Controllers
                            System.Globalization.CultureInfo.InvariantCulture);
                         _context.CheckInOuts.Add(checkInOut);
                         _context.SaveChanges();
-                        return Ok("success");
+                        return Ok("Thêm thông tin điểm danh thành công");
                     
                     
             }
@@ -797,8 +797,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         Timeout = ci.TimeCheckOut,
                         EmployeeName = ci.Employee.LastName + " " + ci.Employee.FirstName,
                     })
-                    .ToListAsync();
-                
+                    .ToListAsync();               
                     var hourWork = _context.HoursWorkDays.Where(s => s.EmployeeId == employeeId && s.Day.Value.Date == parsedDate.Date).Sum(s => s.Hour);
                 if(hourWork == null)
                 {
@@ -857,6 +856,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 var employeeIdLength = maxEmployeeId.ToString().Length;
 
                 var employeeAttendance = await _context.Employees
+                    .Where(e=>e.Status == true)
                  .Select(employee => new
                  {
                      EmployeeId = employee.EmployeeId,
