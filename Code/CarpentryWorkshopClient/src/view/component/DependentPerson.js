@@ -55,7 +55,7 @@ function DependentPerson() {
     searchandfilter(inputSearch, filterGender, value);
   };
 
-  console.log("em",employeeId)
+  console.log("em", employeeId);
   const handleChangeFilterGender = (value) => {
     setFilterGender(value);
     searchandfilter(inputSearch, value, filterStatus);
@@ -95,17 +95,16 @@ function DependentPerson() {
     setIdentifier("");
     setDate("");
     setStatus(false);
-    setDependentGenderr(undefined)
+    setDependentGenderr(undefined);
   }
 
   const handleCancelDependent = () => {
     setIsModalOpenDependent(false);
-    reset()
+    reset();
   };
   const handleEdit = () => {
     setIsEditing(true);
     setIsModalOpenDependent(false);
-
   };
   const handleSave = () => {
     setIsModalOpenDependent(true);
@@ -113,15 +112,15 @@ function DependentPerson() {
   };
 
   const fetchDepartmentById = (value) => {
-    console.log('value',value);
-    
+    console.log("value", value);
+
     toast.promise(
       new Promise((resolve) => {
         GetDependentPeopleById(value)
           .then((data) => {
             showModalDependent();
             resolve(data);
-            console.log('detail', data);
+            console.log("detail", data);
             const {
               dependentId,
               employeesName,
@@ -130,7 +129,7 @@ function DependentPerson() {
               identifierCode,
               dobString,
               status,
-              gender
+              gender,
             } = data;
             setemployeesName(employeesName);
             setGuardian(data.fullName);
@@ -138,7 +137,7 @@ function DependentPerson() {
             setIdentifier(identifierCode);
             setDate(dobString);
             setRelationshipName(relationshipName);
-            setDependentGenderr(gender)
+            setDependentGenderr(gender);
             setEmployeeId(data.employeeId);
             setIsChecked(status);
             setdependentId(dependentId);
@@ -227,7 +226,7 @@ function DependentPerson() {
         dependentGender,
         date,
         isChecked,
-        Relationship,
+        Relationship
       )
         .then((data) => {
           setIsModalOpenAdd(false);
@@ -249,8 +248,7 @@ function DependentPerson() {
       .then((data) => {
         setRelationshipsType(data);
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const getchAllEmplyees = () => {
@@ -258,8 +256,7 @@ function DependentPerson() {
       .then((rs) => {
         setEmployees(rs);
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const searchandfilter = (ipSearch, ftGender, ftStatus) => {
@@ -267,8 +264,7 @@ function DependentPerson() {
       .then((data) => {
         setDependent(data);
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   const fetchData = () => {
@@ -297,8 +293,7 @@ function DependentPerson() {
     }, 1500);
   };
 
-  console.log('dependentGender',dependentGender);
-  
+  console.log("dependentGender", dependentGender);
 
   useEffect(() => {
     fetchRelationshipsType();
@@ -448,9 +443,9 @@ function DependentPerson() {
                 },
                 filterGender !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn giới tính"
@@ -507,9 +502,9 @@ function DependentPerson() {
                 },
                 filterStatus !== null
                   ? {
-                    value: null,
-                    label: "Bỏ chọn",
-                  }
+                      value: null,
+                      label: "Bỏ chọn",
+                    }
                   : null,
               ].filter(Boolean)}
               placeholder="Chọn trạng thái"
@@ -588,7 +583,7 @@ function DependentPerson() {
             </tbody>
           )}
         </table>
-        
+
         <div className="modal-dependent-all">
           {" "}
           <Modal
@@ -607,8 +602,8 @@ function DependentPerson() {
               <div className="info-detail-dependent">
                 <Row>
                   <Col span={24}>
-                    <table className="table-info-detail">
-                      <tbody>
+                    <table className="table-info-detail modal-scroll-end">
+                      <tbody className="scrollbar" id="style-15">
                         <tr>
                           <th className="text">Người phụ thuộc:</th>
                           <td className="input-text">
@@ -634,7 +629,8 @@ function DependentPerson() {
                                   key={employee.employeeID}
                                   value={employee.employeeID}
                                 >
-                                  {employee.employeeIdstring} - {employee.fullName}
+                                  {employee.employeeIdstring} -{" "}
+                                  {employee.fullName}
                                 </option>
                               ))}
                             </select>
@@ -647,9 +643,7 @@ function DependentPerson() {
                               name="Relationship"
                               id="Relationship"
                               className="select"
-                              onChange={(e) =>
-                                setRelationship(e.target.value)
-                              }
+                              onChange={(e) => setRelationship(e.target.value)}
                               value={Relationship}
                             >
                               {!Relationship && (
@@ -680,7 +674,9 @@ function DependentPerson() {
                               className="select"
                               value={dependentGender}
                               placeholder="Chọn giới tính"
-                              onChange={(e) => setDependentGenderr(e.target.value)}
+                              onChange={(e) =>
+                                setDependentGenderr(e.target.value)
+                              }
                             >
                               <option value={true}>Nam</option>
                               <option value={false}>Nữ</option>
@@ -837,10 +833,10 @@ function DependentPerson() {
               <h3>Thêm người phụ thuộc</h3>
             </div>
             <div className="modal-body modal-body-dependent dependent-container-modal">
-              <div className="info-detail-dependent">
+              <div className="info-detail-dependent scrollbar" id="style-15">
                 <Row>
                   <Col span={24}>
-                    <table className="table-info-detail">
+                    <table className="table-info-detail ">
                       <tbody>
                         <tr>
                           <th className="text">Người phụ thuộc:</th>
@@ -855,7 +851,6 @@ function DependentPerson() {
                             style={{
                               color: "red",
                               fontSize: "16px",
-                              marginLeft: "65px",
                             }}
                           >
                             {guardianError}
@@ -885,7 +880,6 @@ function DependentPerson() {
                             style={{
                               color: "red",
                               fontSize: "16px",
-                              marginLeft: "65px",
                             }}
                           >
                             {employeeIdError}
@@ -923,7 +917,6 @@ function DependentPerson() {
                             style={{
                               color: "red",
                               fontSize: "16px",
-                              marginLeft: "65px",
                             }}
                           >
                             {relationshipError}
@@ -938,7 +931,9 @@ function DependentPerson() {
                               className="select"
                               value={dependentGender}
                               placeholder="Chọn giới tính"
-                              onChange={(e) => setDependentGenderr(e.target.value)}
+                              onChange={(e) =>
+                                setDependentGenderr(e.target.value)
+                              }
                             >
                               <option value={true}>Nam</option>
                               <option value={false}>Nữ</option>
@@ -958,7 +953,6 @@ function DependentPerson() {
                             style={{
                               color: "red",
                               fontSize: "16px",
-                              marginLeft: "65px",
                             }}
                           >
                             {identifierError}
@@ -980,7 +974,6 @@ function DependentPerson() {
                             style={{
                               color: "red",
                               fontSize: "16px",
-                              marginLeft: "65px",
                             }}
                           >
                             {dateError}

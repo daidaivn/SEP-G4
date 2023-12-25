@@ -13,18 +13,18 @@
   .modal-dependent-all {
     position: relative;
   }
-  .modal-dependent .modal-group{
-    width: 100% !important
+  .modal-dependent .modal-group {
+    width: 100% !important;
   }
   .dependent-container-modal-edit .ant-modal-content {
     right: -378px !important;
     top: -106px !important;
   }
 
-  .dependent-container-modal-edit .modal-head{
+  .dependent-container-modal-edit .modal-head {
     height: 88px !important;
   }
-  .dependent-container-modal-edit .modal-head h3{
+  .dependent-container-modal-edit .modal-head h3 {
     padding-top: 25px;
   }
 
@@ -41,7 +41,31 @@
     font-size: 18px !important;
   }
 
-  .department-scroll{
+  .department-scroll {
     max-height: 322px;
+  }
+  .ant-input,
+  .modal-footer button {
+    font-size: 18px !important;
+  }
+  .modal-body-dependent {
+    padding: 10px 65px;
+  }
+  .table-info-detail tr .text {
+    width: 160px;
+  }
+  .table-info-detail tr .input-text {
+    padding-left: unset !important;
+  }
+  .modal-footer .btn-save {
+    padding: unset !important;
+  }
+
+  .dependent-container-modal {
+    .info-detail-dependent {
+      max-height: 530px !important;
+      overflow: hidden !important;
+      overflow-y: auto !important;
+    }
   }
 }
