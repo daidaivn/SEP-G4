@@ -833,7 +833,7 @@ namespace CarpentryWorkshopAPI.Controllers
                         }
                         else if (startDate.Date == DateTime.Now.Date)
                         {
-                            status = (timeShift == null || DateTime.Now.TimeOfDay > timeShift.TimeIn) ? "end" : (teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no");
+                            status = (timeShift == null || DateTime.Now.TimeOfDay > timeShift.TimeIn) ? (teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "end" : (string)null) : (teamworks.Any(tw => tw.Date.Value.Date == startDate.Date) ? "yes" : "no");
                         }
                         else
                         {
