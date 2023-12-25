@@ -528,16 +528,20 @@ namespace CarpentryWorkshopAPI.Controllers
                 var query = _context.Teams
                     .Include(x => x.EmployeeTeams)
                     .ThenInclude(et => et.Employee)
+                    .ThenInclude(et=>et.RolesEmployees)
+                    .Where(t => t.EmployeeTeams.Any(et => et.EndDate == null))
                     .ToList()
                     .AsQueryable();
                 if (!string.IsNullOrEmpty(input))
                 {
                     string work = input.ToLower();
                     query = query.Where(x =>
-                        x.TeamName.ToLower().Contains(input) ||
+                        (x.TeamName.ToLower().Contains(input) ||
                         x.EmployeeTeams.Any(et =>
-                            (et.Employee.FirstName + et.Employee.LastName).ToLower().Contains(input)
-                        )
+                            (et.Employee.FirstName + et.Employee.LastName).ToLower().Contains(input) &&
+                            et.Employee.RolesEmployees.Any(re => re.EndDate == null)
+                        ))
+
                     );
                 }
                 var dto = query.Select(t => new TeamListDTO
