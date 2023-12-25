@@ -108,3 +108,13 @@
     }
   }
 }
+
+.table-holiday{
+  td:nth-child(5) {
+    max-width: 91px !important;
+  }
+  td:nth-child(6){
+    max-width: 91px !important;
+  }
+}
+

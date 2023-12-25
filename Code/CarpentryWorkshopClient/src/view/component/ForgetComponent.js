@@ -32,8 +32,7 @@ const ForgetComponent = () => {
     toast.promise(
       forgotPassword(email)
         .then((data) => {
-          setEmail("");
-          return data;
+          setMess(data);
         })
         .catch((error) => {
           if (error.response && error.response.status === 409) {
@@ -45,10 +44,8 @@ const ForgetComponent = () => {
         }),
       {
         pending: "Đang xử lý",
-        success: "Success",
       }
     );
-    setMess("Tài khoản của bạn đã được gửi đến Email. Vui lòng kiểm tra");
   };
   return (
     <div className="main-login">

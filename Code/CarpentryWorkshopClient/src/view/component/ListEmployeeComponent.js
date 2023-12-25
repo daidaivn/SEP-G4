@@ -623,6 +623,8 @@ function ListEmployeeComponent() {
           return toast.success(data);
         })
         .catch((error) => {
+          console.log('error',error);
+          
           throw toast.error(error.response.data);
         }),
       {
