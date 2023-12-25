@@ -123,7 +123,7 @@ const GroupComponent = () => {
     setIsModalOpenChange(true);
     fetDataTeamContinue();
   };
-
+  
   const DelteMemberForTeam = (id) => {
     toast.promise(
       new Promise((resolve) => {
@@ -165,13 +165,14 @@ const GroupComponent = () => {
       }
     );
   };
-
+  console.log('rolemember', roleMember);
   const handleOkChange = () => {
     setIsModalOpenChange(false);
     fetchData();
   };
   const handleChangeSucssecfully = () => {
     setChangeSelectEdit("");
+
     if (roleMember === 1) {
       handleChangeLeader();
       setSelectedChangeid("");
@@ -403,6 +404,7 @@ const GroupComponent = () => {
     );
   };
   const handleChangeStaff = () => {
+    console.log('handleChangeStaff');
     toast.promise(
       new Promise((resolve) => {
         changeStafId(changeSelectEdit, idChange)
