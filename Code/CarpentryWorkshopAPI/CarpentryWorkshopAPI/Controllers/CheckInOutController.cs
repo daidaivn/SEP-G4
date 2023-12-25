@@ -870,7 +870,7 @@ namespace CarpentryWorkshopAPI.Controllers
                 {
                     EmployeeId = employee.EmployeeId,
                     EmployeeIdstring = employee.EmployeeId.ToString($"D{employeeIdLength}"),
-                    EmployeeName = $"{employee.FirstName} {employee.LastName}",
+                    EmployeeName = $"{employee.LastName} {employee.FirstName}",
                     TimeKeeping = datesInMonth.Select(date => new
                     {
                         Date = date.ToString("dd-MM"),
