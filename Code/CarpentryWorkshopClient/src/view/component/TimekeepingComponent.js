@@ -126,7 +126,7 @@ const TimekeepingComponent = () => {
 
         // If seconds are present, extract and remove fractional seconds
         const seconds = parts.length === 3 ? parts[2].split(".")[0] : "00";
-        
+
         // Format the parsed time as desired
         return `${hours}:${minutes}:${seconds}`;
       }
@@ -388,12 +388,14 @@ const TimekeepingComponent = () => {
               <td>Tên nhân viên</td>
               <td>Mã nhân viên</td>
               <td>Trạng thái</td>
-              {checksInOut.length > 0 && checksInOut[0].status !== 7 && (
+              {checksInOut.length > 0 && checksInOut[0].result.status !== 7 && (
                 <>
                   <td>Chi tiết điểm danh</td>
-                  {checksInOut[0].status !== 6 && (
-                    <td>Hành động</td>
-                  )}
+                  {checksInOut[0].result.map((resultItem, index) => (
+                    resultItem.status !== 6 && (
+                      <td key={index}>Hành động</td>
+                    )
+                  ))}
                 </>
               )}
             </tr>
