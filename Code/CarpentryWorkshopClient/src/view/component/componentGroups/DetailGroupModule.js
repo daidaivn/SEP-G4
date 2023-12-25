@@ -199,7 +199,8 @@ const DetailModal = ({
                                 if (staffMember) {
                                   showModalChange(
                                     staffMember.employeeId,
-                                    staffMember.fullName
+                                    staffMember.fullName,
+                                    3
                                   );
                                 }
                               }}
