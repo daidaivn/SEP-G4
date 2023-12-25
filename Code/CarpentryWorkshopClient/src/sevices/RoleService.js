@@ -50,4 +50,11 @@ const GetRolesByDepartmentId = (departmentID) => {
   );
 };
 
-export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole , EditRole, GetRolesByDepartmentId};
+const GetAllRolesByDepartmentId = (departmentID) => {
+  const departmentId = departmentID;
+  return axios.get(
+    `/CWMSapi/Role/GetAllRolesByDepartmentId?departmentId=${departmentId}`
+  );
+};
+
+export { fetchAllRole, SearchRoles, GetRoleById, UpdateRole , EditRole, GetRolesByDepartmentId,GetAllRolesByDepartmentId};

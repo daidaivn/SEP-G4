@@ -36,7 +36,7 @@ import {
   EditRoleDepartmentModule,
   ViewRoleDepartmentModule,
 } from "./componentEmployee";
-import { EditRole, GetRolesByDepartmentId } from "../../sevices/RoleService";
+import { EditRole, GetRolesByDepartmentId, GetAllRolesByDepartmentId } from "../../sevices/RoleService";
 import avt from "../assets/images/Frame 1649.svg";
 import ViewRole1 from "./componentEmployee/ViewRole1";
 function ListEmployeeComponent() {
@@ -149,13 +149,13 @@ function ListEmployeeComponent() {
   const handleEdit = () => {
     fetchAllCountry();
     setIsEditing(true);
-    allRole(idDetail.roleDepartments[0]?.departmentID)
-
+    GetallRole(idDetail.roleDepartments[0]?.departmentID)
   };
 
   const handleBack = () => {
     setIsEditing(false);
   };
+
   const updatedRoleDepartments = (updatedIdDetail?.roleDepartments || []).map(
     (roleDept) => ({
       roleID: roleDept.roleID,
@@ -767,6 +767,13 @@ function ListEmployeeComponent() {
     setIsModalOpenEditContract(true);
   };
 
+const GetallRole = (departmentID) => {
+  GetAllRolesByDepartmentId(departmentID)
+      .then((data) => {
+        setRoles(data);
+      })
+      .catch((error) => { });
+  };
 
   const allRole = (departmentID) => {
     GetRolesByDepartmentId(departmentID)
