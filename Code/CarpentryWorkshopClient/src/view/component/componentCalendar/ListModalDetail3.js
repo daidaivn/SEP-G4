@@ -351,7 +351,7 @@ const ListModuleDetail3 = ({
                       : undefined
                   }
                   options={
-                    actionWork !== "viewWork"
+                    actionWork
                       ? allWorkAreas.map((allWorkArea) => ({
                         value: allWorkArea.workAreaId,
                         label: allWorkArea.workAreaName,
