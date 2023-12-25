@@ -172,41 +172,6 @@ const TableCalendar = ({
                         </>
                       ) : (
                         <>
-                          Thêm
-                          <svg
-                            onClick={() => {
-                              showModalDetailShift();
-                              setActionWork("addWork");
-                              setWorkidDetail(team.teamId);
-                              const columnIndex = workIndex;
-                              const selectedDate = weekDays[columnIndex];
-                              const formattedDate = format(
-                                parse(selectedDate, "dd-MM", new Date()),
-                                "dd-MM-yyyy"
-                              );
-                              console.log("date", formattedDate);
-                              setWorkDetailById({
-                                date: formattedDate,
-                              });
-                            }}
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="30"
-                            height="30"
-                            viewBox="0 0 30 30"
-                            fill="none"
-                          >
-                            <g clip-path="url(#clip0_1943_4151)">
-                              <path
-                                d="M15 30C18.9782 30 22.7936 28.4196 25.6066 25.6066C28.4196 22.7936 30 18.9782 30 15C30 11.0218 28.4196 7.20644 25.6066 4.3934C22.7936 1.58035 18.9782 0 15 0C11.0218 0 7.20644 1.58035 4.3934 4.3934C1.58035 7.20644 0 11.0218 0 15C0 18.9782 1.58035 22.7936 4.3934 25.6066C7.20644 28.4196 11.0218 30 15 30ZM13.5938 20.1562V16.4062H9.84375C9.06445 16.4062 8.4375 15.7793 8.4375 15C8.4375 14.2207 9.06445 13.5938 9.84375 13.5938H13.5938V9.84375C13.5938 9.06445 14.2207 8.4375 15 8.4375C15.7793 8.4375 16.4062 9.06445 16.4062 9.84375V13.5938H20.1562C20.9355 13.5938 21.5625 14.2207 21.5625 15C21.5625 15.7793 20.9355 16.4062 20.1562 16.4062H16.4062V20.1562C16.4062 20.9355 15.7793 21.5625 15 21.5625C14.2207 21.5625 13.5938 20.9355 13.5938 20.1562Z"
-                                fill="#556A59"
-                              />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_1943_4151">
-                                <rect width="30" height="30" fill="white" />
-                              </clipPath>
-                            </defs>
-                          </svg>
                         </>
                       )}
                     </td>
