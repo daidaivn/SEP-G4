@@ -6,7 +6,7 @@ const userToken = sessionToken || localToken;
 
 
 const instance = axios.create({
-  baseURL: "https://sep-g4-api.azurewebsites.net",
+  baseURL: "https://localhost:7003",
 });
 
 instance.interceptors.request.use((config) => {
