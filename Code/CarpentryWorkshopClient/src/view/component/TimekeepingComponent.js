@@ -391,11 +391,9 @@ const TimekeepingComponent = () => {
               {checksInOut.length > 0 && checksInOut[0].result.status !== 7 && (
                 <>
                   <td>Chi tiết điểm danh</td>
-                  {checksInOut[0].result.map((resultItem, index) => (
-                    resultItem.status !== 6 && (
-                      <td key={index}>Hành động</td>
-                    )
-                  ))}
+                  {checksInOut[0].result.some(resultItem => resultItem.status !== 6) && (
+                    <td>Hành động</td>
+                  )}
                 </>
               )}
             </tr>
